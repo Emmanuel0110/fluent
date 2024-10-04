@@ -1,0 +1,689 @@
+body {
+  overflow: hidden; /* To avoid random flickering on opening of bootstrap overlay (https://github.com/react-bootstrap/react-bootstrap/issues/3393) */
+}
+
+.buttonHeader {
+  position: sticky;
+  top: 0;
+  z-index: 9;
+  background-color: #f8f8f8;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 10px 0 10px 0;
+}
+
+#form,
+#middle {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#container {
+  display: grid;
+  grid:
+    "navbar navbar"
+    "leftSideMenu mainPannel" 1fr
+    /200px;
+  height: 100vh;
+}
+
+#container2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#navbar {
+  grid-area: navbar;
+}
+
+.navb {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+#leftSideMenu {
+  grid-area: leftSideMenu;
+  background-color: #303f9f;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 10px;
+}
+
+#statusSection > div {
+  cursor: pointer;
+  color: white;
+  padding: 6px;
+  display: flex;
+  gap: 10px;
+  letter-spacing: 0.2px;
+}
+
+#statusSection > div:hover {
+  background-color: #3f51b5;
+}
+
+#statusSection .selected {
+  width: 5px;
+  background-color: rgb(131, 150, 236);
+}
+
+#statusSection .unselected {
+  width: 5px;
+}
+
+#mainPannel {
+  grid-area: mainPannel;
+  background-color: #f8f8f8;
+  height: 100%;
+  overflow: auto;
+}
+
+#mainArea {
+  height: 100%;
+}
+
+#loginForm {
+  width: 18em;
+  margin: 20px auto;
+}
+
+#registerForm {
+  width: 18em;
+  margin: 20px auto;
+}
+
+.form-control {
+  margin-bottom: 10px;
+}
+
+.navButton {
+  padding: 5px 10px 10px 5px;
+  color: rgb(153, 153, 153);
+}
+
+.navButton:hover {
+  padding: 5px 10px 10px 5px;
+  color: #fafafa;
+  cursor: pointer;
+  /* text-decoration: none; */
+}
+
+.form-label {
+  margin-top: 10px;
+}
+
+#searchAreaInput {
+  width: 20em;
+}
+#searchAreaInput input {
+  border: none;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: none;
+}
+
+#searchArea {
+  margin: auto;
+  display: flex;
+}
+
+.line {
+  display: flex;
+  justify-content: space-between;
+  height: 40px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+.line:hover {
+  box-shadow: rgba(0, 0, 0, 0.3) 1.95px 1.95px 2.6px;
+}
+
+.selectedFlashcard {
+  background-color: #ededed;
+}
+
+.lineTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+}
+.lineTitle.hasBeenRead {
+  font-weight: 400;
+}
+
+#flashcardList {
+  padding: 10px;
+}
+
+.line {
+  cursor: pointer;
+}
+
+#flashcard {
+  padding: 10px;
+  display: flex;
+  flex-flow: row;
+  width: 100%;
+}
+
+#previous {
+  flex: 0 0 40px;
+  position: relative;
+  margin-right: 10px;
+  padding-top: 20px;
+}
+
+#middle {
+  flex: 1 1 auto;
+  width: calc(100% - 100px);
+}
+
+#next {
+  flex: 0 0 40px;
+  position: relative;
+  margin-left: 10px;
+  padding-top: 20px;
+}
+
+#flashcard #question {
+  padding: 10px;
+  height: 25vh;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: auto;
+}
+
+#flashcard #answer {
+  padding: 10px;
+  height: 40vh;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  background-color: #fff;
+  overflow: auto;
+}
+
+#previousArrow {
+  position: absolute;
+  top: 190px;
+  cursor: pointer;
+  mask: url(./images/circle-chevron-left-solid.svg); /*https://fontawesome.com/license*/
+  background: #303f9f;
+  width: 40px;
+  height: 40px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+#nextArrow {
+  position: absolute;
+  top: 190px;
+  cursor: pointer;
+  mask: url(./images/circle-chevron-right-solid.svg); /*https://fontawesome.com/license*/
+  background: #303f9f;
+  width: 40px;
+  height: 40px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+.lineOptions {
+  display: flex;
+  gap: 10px;
+}
+
+.subscribe {
+  cursor: pointer;
+  mask: url(./images/star-regular.svg); /*google icons*/
+  background: #8a8a8a;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+.subscribed {
+  background: orange;
+}
+
+.edit {
+  cursor: pointer;
+  mask: url(./images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  background: #8a8a8a;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+.delete {
+  cursor: pointer;
+  mask: url(./images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  background: #8a8a8a;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+.review {
+  cursor: pointer;
+  mask: url(./images/alarm_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  background: #00a7e8;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+.learnt {
+  cursor: pointer;
+  mask: url(./images/done_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  background: #6bc901;
+  margin: auto;
+  width: 24px;
+  height: 24px;
+  mask-repeat: no-repeat;
+  background-position: center;
+}
+
+#answerButtons {
+  display: flex;
+  justify-content: space-around;
+}
+
+#flashcardForm {
+  margin-left: 20px;
+  padding-right: 10px;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+#flashCardComponent {
+  position: relative;
+  margin-left: 20px;
+  padding-right: 10px;
+  height: 100%;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.infiniteScrollComponent {
+  height: 100%;
+  overflow: auto;
+}
+
+#cancelFilterForSearch {
+  cursor: pointer;
+  mask: url("./images/filter_alt_off_FILL0_wght400_GRAD0_opsz24.svg"); /*google icons*/
+  background: #848383;
+  background-size: cover;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-position: center;
+  vertical-align: middle;
+  margin-right: 5px;
+  position: absolute;
+  right: 0px;
+  top: 2px;
+}
+
+#searchAreaContainer {
+  position: relative;
+  padding: 2px 28px 2px 2px;
+  background: white;
+  border-radius: 5px;
+}
+
+#searchAreaContainer input {
+  border: none;
+}
+
+#githubIconArea {
+  position: absolute;
+  padding: 5px 5px;
+  height: 40px;
+  top: 0;
+  left: 0;
+}
+
+.githubIcon {
+  cursor: pointer;
+  mask: url(./images/github-mark-white.svg);
+  background: rgb(255, 255, 255);
+  width: 39px;
+  height: 100%;
+  mask-repeat: no-repeat;
+  background-position: center;
+  float: right;
+}
+
+.dropdownList {
+  z-index: 1;
+  padding: 5px 0px;
+  background: white;
+  list-style-type: none;
+  -moz-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
+  -webkit-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
+  box-shadow: 1px 0 5px 0 rgb(165, 165, 165);
+  border-radius: 3px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.dropdownItem {
+  padding: 5px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.dropdownItem:hover {
+  background: lightgrey;
+}
+
+.dropdownItem.selected {
+  background: lightgrey;
+}
+
+#tags {
+  display: flex;
+}
+
+.tag {
+  cursor: pointer;
+  padding: 5px 10px;
+  background-color: gray;
+  color: white;
+  border-radius: 4px;
+  margin-right: 7px;
+}
+
+.tagInput,
+.prerequisiteInput {
+  padding: 5px;
+  background: white;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+
+.tagInput input,
+.prerequisiteInput input {
+  border: none;
+  width: 100%;
+}
+
+.flashcardSection {
+  color: rgb(119, 119, 119);
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+#filterList {
+  list-style-type: none;
+  padding: 10px 0 0 10px;
+  margin: 0;
+  display: flex;
+  direction: ltr;
+  overflow: auto;
+}
+
+.filterItem {
+  cursor: pointer;
+  padding: 0.2em 2em 0.3em 1em;
+  margin: 5px;
+  border-radius: 1em;
+  color: rgb(34, 34, 34);
+  border: solid lightgrey 1.5px;
+  position: relative;
+  color: #424242;
+  background-color: rgb(252, 252, 252);
+}
+
+.filterItem.inactive {
+  color: rgb(175, 175, 175);
+}
+
+.filterClose {
+  cursor: pointer;
+  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  background: rgb(151, 151, 151);
+  display: inline-block;
+  width: 1.5ch;
+  height: 1.5ch;
+  mask-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  position: absolute;
+  top: 50%;
+  right: 0.5em;
+  transform: translate(0%, -50%);
+}
+
+.lineClose {
+  cursor: pointer;
+  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  background: rgb(151, 151, 151);
+  width: 1.5ch;
+  height: 1.5ch;
+  mask-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(0%, -50%);
+}
+
+.lineContainer {
+  padding-right: 25px;
+  position: relative;
+}
+
+.tabClose {
+  cursor: pointer;
+  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  background: rgb(151, 151, 151);
+  width: 1.5ch;
+  height: 1.5ch;
+  mask-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+  margin: -1px 0px 0px 0.5px;
+}
+
+.tabCloseContainer {
+  position: relative;
+}
+
+.tabCloseHover {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  position: absolute;
+  top: -30px;
+  right: -12px;
+  padding: 5px;
+}
+
+.tabCloseHover:hover {
+  background-color: rgb(227, 227, 227);
+}
+
+#startAReviewButton {
+  font-weight: 600;
+  border: 2px solid;
+  margin: 10px;
+  color: #d1e8fc;
+  background-color: #007bff;
+}
+
+#startAReviewButton:hover {
+  color: #007bff;
+  background-color: #e7f4ff;
+}
+
+.gutter {
+  background-color: #eee;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+  /* background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg=='); */
+  cursor: col-resize;
+}
+
+.gutter.gutter-vertical {
+  /* background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII='); */
+  cursor: row-resize;
+}
+
+.split {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+#splitContainer {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+#left {
+  height: 100%;
+}
+
+#right {
+  height: 100%;
+}
+
+#openedFlashcards {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+#pannelCloseContainer {
+  cursor: pointer;
+  padding: 7px;
+}
+
+.pannelHeader {
+  display: flex;
+}
+
+.pannelClose {
+  mask: url(images/tab_close_FILL0_wght400_GRAD0_opsz24.svg); /*https://fontawesome.com/license*/
+  background: rgb(129, 129, 129);
+  width: 3ch;
+  height: 3ch;
+  mask-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+a.nav-link {
+  color: #636b74;
+}
+
+#tabNav {
+  flex: 0 1 auto;
+  margin-top: 5px;
+}
+
+.dot {
+  position: absolute;
+  top: -27px;
+  left: -10px;
+  mask: url(images/circle-solid.svg); /*https://fontawesome.com/license*/
+  background: rgb(151, 151, 151);
+  width: 5px;
+  height: 5px;
+  mask-repeat: no-repeat;
+  background-position: center;
+  vertical-align: middle;
+}
+
+#above {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 150px;
+  margin-top: 50vh; /* poussé de la moitié de hauteur de viewport */
+  transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
+  background-color: white;
+  border-radius: 15px;
+  overflow: auto;
+  padding: 20px;
+}
+
+.blockerDarkBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  background-color: rgba(0, 0, 0, 0.5);
+}

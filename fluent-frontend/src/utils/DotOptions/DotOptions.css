@@ -1,0 +1,44 @@
+
+.dotsOptions {
+  width: 2ch;
+  height: 3ch;
+  margin: auto;
+}
+  
+.dots {
+  width: 2ch;
+  height: 3ch;
+  cursor: pointer;
+  background-color: rgb(168, 168, 168);
+  mask: url(more_vert_FILL0_wght400_GRAD0_opsz24.svg); /*https://fontawesome.com/license*/
+  mask-repeat: no-repeat;
+}
+
+.dots:hover {
+  background-color: rgb(82, 82, 82);
+}
+
+.dotsOptionMenu {
+  width: 150px;
+  position: absolute;
+  right: 17px;
+  top: 0px;
+  text-align: left;
+  -moz-box-shadow:    -1px 0 5px 0 rgb(165, 165, 165);
+  -webkit-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
+  box-shadow:         1px 0 5px 0 rgb(165, 165, 165);
+  border-radius: 9px;
+  padding: 3px;
+  background-color: white;
+  z-index: 1000;
+}
+
+.optionLabel {
+  background-color: white;
+  cursor: pointer;
+  padding: 5px 10px 5px 10px;
+}
+
+.optionLabel:hover {
+  background-color: rgb(235, 235, 235);
+}
