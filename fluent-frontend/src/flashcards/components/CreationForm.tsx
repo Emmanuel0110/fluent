@@ -2,12 +2,14 @@ import "../../App.css";
 import { Dispatch, useContext, useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { saveNewTag } from "../flashcardActions";
-import { ConfigContext, url } from "../../App";
+import { ConfigContext, updateCacheWithNewConversations, updateCacheWithNewMultiLingualSentences, updateCacheWithNewSentences, url } from "../../App";
 import { Context, Language, MultiLingualSentence, Sentence, Word } from "../../types";
 import { Flashcard, Tag } from "../../types";
 import AutoComplete from "../../utils/Autocomplete";
 import { WordLine } from "./WordLine";
 import { authHeaders, customFetch } from "../../utils/http-helpers";
+import AutoCompleteFetch from "../../utils/AutocompleteFetch";
+import _ from "lodash";
 
 export default function CreationForm() {
   const [sourceSentence, setSourceSentence] = useState<Sentence | null>(null);
@@ -24,7 +26,7 @@ export default function CreationForm() {
   const selectedTargetTranslationRef = useRef<Word | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState<Language>("fr");
   const [targetLanguage, setTargetLanguage] = useState<Language>("en");
-  const [conversationData, setConversationData] = useState<string[]>([]);
+  const [conversationData, setConversationData] = useState<{ _id: string; label: string }[]>([]);
 
   const {
     words,
@@ -33,8 +35,10 @@ export default function CreationForm() {
     setTags,
     saveSentence,
     sentences,
+    setSentences,
     multiLingualSentences,
     setMultiLingualSentences,
+    setConversations,
     sourceLanguage: appSourceLanguage,
     targetLanguage: appTargetLanguage,
   } = useContext(ConfigContext) as Context;
@@ -138,13 +142,8 @@ export default function CreationForm() {
     label?: string;
     setLocalDescription: Dispatch<React.SetStateAction<string>>;
   }) => {
-    if (_id) {
-      const id = multiLingualSentences.find(
-        (multiLingualSentence) => multiLingualSentence[sourceLanguage] === _id
-      )?._id;
-      if (id) {
-        setConversationData((conversationData) => [...conversationData, id]);
-      }
+    if (_id && label) {
+      setConversationData((conversationData) => [...conversationData, { _id, label }]);
       setLocalDescription("");
     } else if (label) {
       setLocalDescription("");
@@ -196,6 +195,20 @@ export default function CreationForm() {
         });
       }
     };
+
+  const saveConversation = () => {
+    const formattedArgs = conversationData.map(({ _id }) => _id);
+    const body = JSON.stringify(formattedArgs);
+    customFetch(url + "conversations", { method: "POST", headers: authHeaders(), body })
+    .then(({ newConversation, newMultiLingualSentences, newSentences }) => {
+      setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversation));
+      setMultiLingualSentences((multiLingualSentences) => updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences));
+      setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+  };
 
   const saveNewTranslation =
     (source: React.MutableRefObject<Word | null>, target: React.MutableRefObject<Word | null>) => () => {
@@ -257,6 +270,15 @@ export default function CreationForm() {
       });
   };
 
+  const fetchSentenceDropDownList = (searchString: string): Promise<{ _id: string; label: string }[]> => {
+    const searchParams = new URLSearchParams({ language: sourceLanguage, searchString: searchString.trim() });
+    return customFetch(url + `sentences?${searchParams}`, { method: "GET", headers: authHeaders() }).then(
+      (sentences: Sentence[]) => {
+        return sentences.map(({ _id, text }) => ({ _id, label: text }));
+      }
+    );
+  };
+
   return (
     <div id="flashcardForm">
       <div id="form">
@@ -280,26 +302,19 @@ export default function CreationForm() {
           </select>
         </div>
         <div>
-          {conversationData.map((multiLingualSentenceId) => (
-            <div>
-              {sentences.find(
-                ({ _id }) =>
-                  _id === multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId)![sourceLanguage]
-              )?.text || ""}
-            </div>
+          {conversationData.map(({ _id, label }, index) => (
+            <div key={index}>{label}</div>
           ))}
         </div>
         <div className="prerequisiteInput">
-          <AutoComplete
-            dropdownList={sentences.map(({ _id, text }) => ({ _id, label: text }))}
+          <AutoCompleteFetch
+            fetchCallback={fetchSentenceDropDownList}
             callback={addSentenceToConversation}
             placeholder="Sentence"
             placement="bottom-start"
           />
         </div>
-        <button onClick={saveNewTranslation(selectedSourceWordRef, selectedSourceTranslationRef)}>
-          Save conversation
-        </button>
+        <button onClick={saveConversation}>Save conversation</button>
         <div id="sourceText">
           <input ref={selectedSourceSentenceRef} style={{ width: "100%" }} type="text" placeholder="Sentence" />
         </div>

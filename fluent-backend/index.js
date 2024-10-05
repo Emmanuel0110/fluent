@@ -284,24 +284,36 @@ app.delete("/api/flashcards/:id", auth, async function (req, res) {
 app.put("/api/userwordinfo/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { user: req.user._id, word: _id };
-  const update = [{$set: {nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined}}];
-  if (req.body.nextReviewDate === null) {update.push({$unset: "nextReviewDate"});}
+  const update = [
+    { $set: { nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined } },
+  ];
+  if (req.body.nextReviewDate === null) {
+    update.push({ $unset: "nextReviewDate" });
+  }
   UserFlashcardInfoModel.updateOne(filter, update, { upsert: true }).then((data) => res.json({ success: true }));
 });
 
 app.put("/api/usermultilingualsentenceinfo/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { user: req.user._id, language: req.body.language, multiLingualSentence: _id };
-  const update = [{$set: {nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined}}];
-  if (req.body.nextReviewDate === null) {update.push({$unset: "nextReviewDate"});}
+  const update = [
+    { $set: { nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined } },
+  ];
+  if (req.body.nextReviewDate === null) {
+    update.push({ $unset: "nextReviewDate" });
+  }
   UserFlashcardInfoModel.updateOne(filter, update, { upsert: true }).then((data) => res.json({ success: true }));
 });
 
 app.put("/api/userconversationinfo/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { user: req.user._id, language: req.body.language, conversation: _id };
-  const update = [{$set: {nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined}}];
-  if (req.body.nextReviewDate === null) {update.push({$unset: "nextReviewDate"});}
+  const update = [
+    { $set: { nextReviewDate: req.body.nextReviewDate ? new Date(req.body.nextReviewDate) : undefined } },
+  ];
+  if (req.body.nextReviewDate === null) {
+    update.push({ $unset: "nextReviewDate" });
+  }
   UserFlashcardInfoModel.updateOne(filter, update, { upsert: true }).then((data) => res.json({ success: true }));
 });
 
@@ -387,15 +399,15 @@ const userFlashcardInfoSchema = new Schema({
 });
 export const UserFlashcardInfoModel = model("UserFlashcardInfo", userFlashcardInfoSchema);
 
-app.post("/api/sentences", auth, (req, res) => {
-  const newSentence = new SentenceModel({
+app.post("/api/conversations", auth, (req, res) => {
+  const newMultiLingualSentence = new MultiLingualSentenceModel({
     _id: new mongoose.Types.ObjectId(),
     ...req.body,
   });
-  newSentence
+  newMultiLingualSentence
     .save()
     .then((newElement) => {
-      res.send(newElement._id);
+      res.send({ data: newElement });
     })
     .catch(function (err) {
       console.log("save error ", err);
@@ -445,6 +457,36 @@ app.post("/api/multilingualsentences", auth, (req, res) => {
     .save()
     .then((newElement) => {
       res.send({ data: newElement });
+    })
+    .catch(function (err) {
+      console.log("save error ", err);
+      if (err.name === "MongoError" && err.code === 11000) {
+        res.json({ success: false, message: "already exists" });
+        return;
+      }
+      res.json({ success: false, message: "some error happened" });
+      return;
+    });
+});
+
+app.get("/api/sentences", auth, (req, res) => {
+  SentenceModel.find({ language: req.query.language, text: { $regex: req.query.searchString, $options: "i" } })
+    .limit(20)
+    .select({ _id: 1, text: 1 })
+    .then((sentences) => {
+      res.send(sentences);
+    });
+});
+
+app.post("/api/sentences", auth, (req, res) => {
+  const newSentence = new SentenceModel({
+    _id: new mongoose.Types.ObjectId(),
+    ...req.body,
+  });
+  newSentence
+    .save()
+    .then((newElement) => {
+      res.send(newElement._id);
     })
     .catch(function (err) {
       console.log("save error ", err);
