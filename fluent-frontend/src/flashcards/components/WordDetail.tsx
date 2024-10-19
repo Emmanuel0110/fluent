@@ -19,6 +19,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
     user,
     status,
     setStatus,
+    words,
     setSearchFilter,
     saveAsNewFlashcard,
     editCurrentFlashcard,
@@ -32,11 +33,6 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
   };
 
-  console.log("word");
-  console.log(word);
-  console.log(word.sourceLanguage === sourceLanguage);
-  console.log(word[targetLanguage]);
-
   const onSubscribe = (e: React.MouseEvent, word: Word) => {
     e.stopPropagation();
     subscribeToWord(word);
@@ -44,9 +40,9 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
 
   const translation = useMemo(() => {
     if (word.sourceLanguage === sourceLanguage) {
-      return word[targetLanguage]!.join(",");
+      return words[targetLanguage]!.filter(({_id}) => word[targetLanguage]!.includes(_id)).map(({text}) => text).join(",");
     } else if (word.sourceLanguage === targetLanguage) {
-      return word[sourceLanguage]!.join(",");
+      return words[sourceLanguage]!.filter(({_id}) => word[sourceLanguage]!.includes(_id)).map(({text}) => text).join(",");
     }
   }, [word, sourceLanguage, targetLanguage]);
 

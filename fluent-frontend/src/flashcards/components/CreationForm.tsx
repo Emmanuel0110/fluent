@@ -1,8 +1,13 @@
 import "../../App.css";
 import { Dispatch, useContext, useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import { saveNewTag } from "../flashcardActions";
-import { ConfigContext, updateCacheWithNewConversations, updateCacheWithNewMultiLingualSentences, updateCacheWithNewSentences, url } from "../../App";
+import {
+  ConfigContext,
+  updateCacheWithNewConversations,
+  updateCacheWithNewMultiLingualSentences,
+  updateCacheWithNewSentences,
+  url,
+} from "../../App";
 import { Context, Language, MultiLingualSentence, Sentence, Word } from "../../types";
 import { Flashcard, Tag } from "../../types";
 import AutoComplete from "../../utils/Autocomplete";
@@ -20,6 +25,9 @@ export default function CreationForm() {
   const newTargetWordTextRef = useRef<HTMLInputElement | null>(null);
   const selectedSourceSentenceRef = useRef<HTMLInputElement | null>(null);
   const selectedTargetSentenceRef = useRef<HTMLInputElement | null>(null);
+  const selectedTagTypeRef = useRef<HTMLInputElement | null>(null);
+  const selectedSourceTagRef = useRef<HTMLInputElement | null>(null);
+  const selectedTargetTagRef = useRef<HTMLInputElement | null>(null);
   const selectedSourceWordRef = useRef<Word | null>(null);
   const selectedSourceTranslationRef = useRef<Word | null>(null);
   const selectedTargetWordRef = useRef<Word | null>(null);
@@ -150,6 +158,35 @@ export default function CreationForm() {
     }
   };
 
+  const saveNewTag =
+    (
+      typeInput: React.MutableRefObject<HTMLInputElement | null>,
+      source: React.MutableRefObject<HTMLInputElement | null>,
+      target: React.MutableRefObject<HTMLInputElement | null>
+    ) =>
+    () => {
+      const type = typeInput.current?.value;
+      const sourceTag = source.current?.value;
+      const targetTag = target.current?.value;
+      if (sourceTag && targetTag && (type === "wordTag" || type === "conversationTag")) {
+        const formattedArgs = {
+          [sourceLanguage]: sourceTag,
+          [targetLanguage]: targetTag,
+          type,
+        };
+        const body = JSON.stringify(formattedArgs);
+        customFetch(url + "tags", { method: "POST", headers: authHeaders(), body })
+          .then(({ data: tag }) => {
+            setTags((tags) => ({
+              ...tags, [type]: [...tags[type === "wordTag"? "wordTags" : "conversationTags"], tag[sourceLanguage]]
+            }));
+          })
+          .catch((err: Error) => {
+            console.log(err);
+          });
+      }
+    };
+
   const saveNewMultilingualSentence =
     (
       source: React.MutableRefObject<HTMLInputElement | null>,
@@ -184,10 +221,10 @@ export default function CreationForm() {
           const body = JSON.stringify(formattedArgs);
           customFetch(url + "multilingualsentences", { method: "POST", headers: authHeaders(), body })
             .then(({ data: newMultiLingualSentence }) => {
-              setMultiLingualSentences((multiLingualSentences) => ({
+              setMultiLingualSentences((multiLingualSentences) => ([
                 ...multiLingualSentences,
                 newMultiLingualSentence,
-              }));
+              ]));
             })
             .catch((err: Error) => {
               console.log(err);
@@ -197,17 +234,19 @@ export default function CreationForm() {
     };
 
   const saveConversation = () => {
-    const formattedArgs = conversationData.map(({ _id }) => _id);
+    const formattedArgs = { sourceLanguage, targetLanguage, sentenceIds: conversationData.map(({ _id }) => _id) };
     const body = JSON.stringify(formattedArgs);
     customFetch(url + "conversations", { method: "POST", headers: authHeaders(), body })
-    .then(({ newConversation, newMultiLingualSentences, newSentences }) => {
-      setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversation));
-      setMultiLingualSentences((multiLingualSentences) => updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences));
-      setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
-    })
-    .catch((err: Error) => {
-      console.log(err);
-    });
+      .then(({ newConversation, newMultiLingualSentences, newSentences }) => {
+        setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversation));
+        setMultiLingualSentences((multiLingualSentences) =>
+          updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
+        );
+        setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+      })
+      .catch((err: Error) => {
+        console.log(err);
+      });
   };
 
   const saveNewTranslation =
@@ -388,6 +427,16 @@ export default function CreationForm() {
             )}
           </div>
         </div>
+        <div id="tagType">
+          <input ref={selectedTagTypeRef} style={{ width: "100%" }} type="text" placeholder="Type" />
+        </div>
+        <div id="sourceTagText">
+          <input ref={selectedSourceTagRef} style={{ width: "100%" }} type="text" placeholder="Tag" />
+        </div>
+        <div id="targetTagText">
+          <input ref={selectedTargetTagRef} style={{ width: "100%" }} type="text" placeholder="Translation" />
+        </div>
+        <button onClick={saveNewTag(selectedTagTypeRef, selectedSourceTagRef, selectedTargetTagRef)}>Save tag</button>
       </div>
     </div>
   );

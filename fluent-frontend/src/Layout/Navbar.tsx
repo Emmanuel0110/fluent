@@ -85,7 +85,7 @@ function Navbar() {
     setLocalDescription: Dispatch<React.SetStateAction<string>>;
   }) => {
     if (_id) {
-      const tag = tags.find((tag) => tag._id === _id)!;
+      const tag = tags.wordTags.find((tag) => tag._id === _id)!;
       setLocalDescription(insertTag(tag.label, inputRef));
     } else if (label) {
       setSearchFilter([...searchFilter, { isActive: true, data: parseLabel(label) }]);
@@ -95,17 +95,12 @@ function Navbar() {
 
   return (
     <div id="navbar" className="navb">
-      <div id="githubIconArea">
-        <a href="https://github.com/Emmanuel0110/flashcard-manager">
-          <div className="githubIcon"></div>
-        </a>
-      </div>
       <div id="searchArea">
         <div id="searchAreaContainer">
           <div id="searchAreaInput">
             <AutoComplete
               ref={inputRef}
-              dropdownList={tags.map((tag) => ({ ...tag, label: "#" + tag.label }))}
+              dropdownList={tags.wordTags.map((tag) => ({ ...tag, label: "#" + tag.label }))}
               callback={search}
               placeholder="Search..."
               placement="bottom-start"

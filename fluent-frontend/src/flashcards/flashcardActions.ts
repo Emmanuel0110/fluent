@@ -1,6 +1,6 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Flashcard, MultiLingualSentence, Sentence, Word } from "../types";
+import { Flashcard, Language, MultiLingualSentence, Sentence, Tag, Word } from "../types";
 
 export const getRemoteMultiLingualSentenceById = async (id: string, sourceLanguage: string, targetLanguage: string): Promise<{newMultiLingualSentence: MultiLingualSentence, newSentences: Sentence[]}> => {
   return customFetch(url + "multilingualsentences/" + id + "?languages=" + sourceLanguage + "-" + targetLanguage, { method: "GET", headers: authHeaders() });
@@ -60,10 +60,10 @@ export const readRemoteFlashcard = async (flashcard: Flashcard) => {
   return customFetch(url + "userflashcardinfo/" + flashcard._id, { method: "PUT", headers: authHeaders(), body });
 };
 
-export const saveNewTag = async ({ label }: { label: string }) => {
-  const body = JSON.stringify({ label });
-  return customFetch(url + "tags", { method: "POST", headers: authHeaders(), body });
-};
+// export const saveNewTag = async ({ label }: { label: string }) => {
+//   const body = JSON.stringify({ label });
+//   return customFetch(url + "tags", { method: "POST", headers: authHeaders(), body });
+// };
 
 export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Word[]> => {
   return customFetch(url + "search", {
@@ -73,8 +73,8 @@ export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Wor
   });
 };
 
-export const fetchTags = () => {
-  return customFetch(url + "tags", { headers: authHeaders() }).catch((err: Error) => {
+export const fetchTags = (sourceLanguage: Language): Promise<{ wordTags: Tag[]; conversationTags: Tag[] }> => {
+  return customFetch(url + `tags?sourceLanguage=${sourceLanguage}`, { headers: authHeaders() }).catch((err: Error) => {
     console.log(err);
   });
 };

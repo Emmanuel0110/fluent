@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import { Schema, model } from "mongoose";
 import auth from "./middleware/auth.js";
+import { escapeRegExp } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -45,7 +46,7 @@ const completeFlashcard = async (flashcard, userFlashcardInfos) => {
   };
 };
 
-const completeMultiLingualSentence = async (multiLingualSentence, userFlashcardInfos) => {
+const completeMultiLingualSentence = (multiLingualSentence, userFlashcardInfos) => {
   const info =
     userFlashcardInfos.find((info) => {
       return info.multiLingualSentence.equals(multiLingualSentence._id);
@@ -324,9 +325,24 @@ app.patch("/api/userWordinfo/:id", auth, function (req, res) {
 });
 
 app.get("/api/tags", auth, (req, res) => {
-  TagModel.find()
-    .limit(1000)
-    .then((tags) => res.send(tags));
+  TagModel.find({ [req.query.sourceLanguage]: { $exists: true } })
+    .limit(10000)
+    .select({ _id: 1, text: 1, [req.query.sourceLanguage]: 1 })
+    .then((tags) => {
+       // Group tags by their type
+       const groupedTags = {
+        wordTags: [],
+        conversationTags: []
+      };
+      tags.forEach(tag => {
+        if (tag.type === "wordTag") {
+          groupedTags.wordTags.push(tag);
+        } else if (tag.type === "conversationTag") {
+          groupedTags.conversationTags.push(tag);
+        }
+      });
+      res.json(groupedTags);
+    });
 });
 
 app.post("/api/tags", auth, (req, res) => {
@@ -352,7 +368,10 @@ app.post("/api/tags", auth, (req, res) => {
 
 const tagSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  label: { type: String, required: true },
+  type: { type: String, required: true, enum: ["wordTag", "conversationTag"] },
+  en: { type: String },
+  fr: { type: String },
+  kr: { type: String },
 });
 export const TagModel = model("Tag", tagSchema);
 
@@ -400,24 +419,58 @@ const userFlashcardInfoSchema = new Schema({
 export const UserFlashcardInfoModel = model("UserFlashcardInfo", userFlashcardInfoSchema);
 
 app.post("/api/conversations", auth, (req, res) => {
-  const newMultiLingualSentence = new MultiLingualSentenceModel({
-    _id: new mongoose.Types.ObjectId(),
-    ...req.body,
-  });
-  newMultiLingualSentence
-    .save()
-    .then((newElement) => {
-      res.send({ data: newElement });
-    })
-    .catch(function (err) {
-      console.log("save error ", err);
-      if (err.name === "MongoError" && err.code === 11000) {
-        res.json({ success: false, message: "already exists" });
-        return;
-      }
-      res.json({ success: false, message: "some error happened" });
-      return;
+  const { sourceLanguage, targetLanguage, sentenceIds } = req.body;
+  try {
+    UserFlashcardInfoModel.find({ user: req.user._id }).then((userFlashcardInfos) => {
+      MultiLingualSentenceModel.find({
+        [sourceLanguage]: { $in: sentenceIds.map((id) => new mongoose.Types.ObjectId(id)) },
+      }).then((multiLingualSentences) => {
+        const newConversation = new ConversationModel({
+          _id: new mongoose.Types.ObjectId(),
+          tags: [],
+          languages: [sourceLanguage, targetLanguage],
+          multiLingualSentences: multiLingualSentences.map(({ _id }) => _id),
+        });
+        newConversation
+          .save()
+          .then((newConversation) => {
+            const completedMultiLingualSentences = multiLingualSentences.map((multiLingualSentence) =>
+              completeMultiLingualSentence(multiLingualSentence, userFlashcardInfos)
+            );
+            SentenceModel.find({
+              _id: {
+                $in: [
+                  ...multiLingualSentences
+                    .map((multiLingualSentence) => multiLingualSentence[sourceLanguage])
+                    .map((id) => new mongoose.Types.ObjectId(id)),
+                  ...multiLingualSentences
+                    .map((multiLingualSentence) => multiLingualSentence[targetLanguage])
+                    .map((id) => new mongoose.Types.ObjectId(id)),
+                ],
+              },
+            }).then((sentences) => {
+              const completedSentences = sentences.map((sentence) => completeSentence(sentence, userFlashcardInfos));
+              res.send({
+                newConversation,
+                multiLingualSentences: completedMultiLingualSentences,
+                sentences: completedSentences,
+              });
+            });
+          })
+          .catch(function (err) {
+            console.log("save error ", err);
+            if (err.name === "MongoError" && err.code === 11000) {
+              res.json({ success: false, message: "already exists" });
+              return;
+            }
+            res.json({ success: false, message: "some error happened" });
+            return;
+          });
+      });
     });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.get("/api/multilingualsentences/:id", auth, (req, res) => {
@@ -428,8 +481,8 @@ app.get("/api/multilingualsentences/:id", auth, (req, res) => {
       UserFlashcardInfoModel.find({ user: req.user._id }).then((userFlashcardInfos) => {
         MultiLingualSentenceModel.findById(id)
           .lean()
-          .then(async (multiLingualSentence) => {
-            const completedMultiLingualSentence = await completeMultiLingualSentence(
+          .then((multiLingualSentence) => {
+            const completedMultiLingualSentence = completeMultiLingualSentence(
               multiLingualSentence,
               userFlashcardInfos
             );
@@ -446,6 +499,27 @@ app.get("/api/multilingualsentences/:id", auth, (req, res) => {
       console.log(err);
     }
   }
+});
+
+app.post("/api/tags", auth, (req, res) => {
+  const tag = new TagModel({
+    _id: new mongoose.Types.ObjectId(),
+    ...req.body,
+  });
+  tag
+    .save()
+    .then((newElement) => {
+      res.send({ data: newElement });
+    })
+    .catch(function (err) {
+      console.log("save error ", err);
+      if (err.name === "MongoError" && err.code === 11000) {
+        res.json({ success: false, message: "already exists" });
+        return;
+      }
+      res.json({ success: false, message: "some error happened" });
+      return;
+    });
 });
 
 app.post("/api/multilingualsentences", auth, (req, res) => {
@@ -470,7 +544,10 @@ app.post("/api/multilingualsentences", auth, (req, res) => {
 });
 
 app.get("/api/sentences", auth, (req, res) => {
-  SentenceModel.find({ language: req.query.language, text: { $regex: req.query.searchString, $options: "i" } })
+  SentenceModel.find({
+    language: req.query.language,
+    text: { $regex: escapeRegExp(req.query.searchString), $options: "i" },
+  })
     .limit(20)
     .select({ _id: 1, text: 1 })
     .then((sentences) => {
@@ -502,11 +579,11 @@ app.post("/api/sentences", auth, (req, res) => {
 app.get("/api/words", auth, (req, res) => {
   LexicalItemModel.find({ sourceLanguage: req.query.sourceLanguage })
     .limit(10000)
-    .select({ _id: 1, sourceLanguage: 1, text: 1, [req.query.targetLanguage]: 1 })
+    .select({ _id: 1, sourceLanguage: 1, text: 1, [req.query.targetLanguage]: 1, tags: 1 })
     .then((sourceWords) => {
       LexicalItemModel.find({ sourceLanguage: req.query.targetLanguage })
         .limit(10000)
-        .select({ _id: 1, sourceLanguage: 1, text: 1, [req.query.sourceLanguage]: 1 })
+        .select({ _id: 1, sourceLanguage: 1, text: 1, [req.query.sourceLanguage]: 1, tags: 1 })
         .then((targetWords) => {
           res.send({ [req.query.sourceLanguage]: sourceWords, [req.query.targetLanguage]: targetWords });
         });

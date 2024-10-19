@@ -1,7 +1,6 @@
 import "../../App.css";
 import { Dispatch, useContext, useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
-import { saveNewTag } from "../flashcardActions";
 import { ConfigContext, url } from "../../App";
 import { Context, Language, MultiLingualSentence, Sentence, Word } from "../../types";
 import { Flashcard, Tag } from "../../types";

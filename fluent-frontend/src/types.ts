@@ -27,6 +27,8 @@ export interface Flashcard {
   usedIn: string[];
 }
 
+export type TagType = "wordTag" | "conversationTag";
+
 export interface Tag {
   _id: string;
   label: string;
@@ -125,8 +127,8 @@ export interface Context {
   setUser: Dispatch<SetStateAction<User | null>>;
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
-  tags: Tag[];
-  setTags: Dispatch<SetStateAction<Tag[]>>;
+  tags: { [key: string]: Tag[] };
+  setTags: Dispatch<SetStateAction<{ wordTags: Tag[]; conversationTags: Tag[] }>>;
   fetchMoreUsedInMultiLingualSentences: (wordId: string) => void;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   deleteFlashcard: (id: string) => void;
