@@ -176,7 +176,7 @@ export default function App() {
   const [openedFlashcards, setOpenedFlashcards] = useState([] as OpenFlashcardData[]);
   const [openedWords, setOpenedWords] = useState([] as OpenWordData[]);
   const [openedMultiLingualSentences, setOpenedMultiLingualSentences] = useState([] as OpenMultiLingualSentenceData[]);
-  const [status, setStatus] = useState("Published");
+  const [status, setStatus] = useState("words");
   const [tags, setTags] = useState({ wordTags: [], conversationTags: [] } as { wordTags: Tag[]; conversationTags: Tag[] });
   const navigate = useNavigate();
 
@@ -184,12 +184,13 @@ export default function App() {
     if (isAuthenticated) {
       fetchTags(sourceLanguage).then((tags) => setTags(tags));
       fetchWords(sourceLanguage, targetLanguage).then((words) => setWords(words));
+      fetchMoreConversations(sourceLanguage, targetLanguage);
     }
   }, [isAuthenticated]);
 
   // useEffect(() => {
   //   if (isAuthenticated && filteredMultiLingualSentences.length < 30) {
-  //     fetchMoreSentences(0, 30).then(() => {
+  //     fetchMoreConversations(0, 30).then(() => {
   //       if (status === "To be reviewed" && filteredMultiLingualSentences.length > 0) {
   //         setOpenedFlashcards([]);
   //         navigate("/flashcards/" + filteredMultiLingualSentences[0]._id);
@@ -210,6 +211,7 @@ export default function App() {
   }, [flashcards]);
 
   const filteredWords = useMemo(() => {
+    console.log(words[sourceLanguage]);
     return words[sourceLanguage]
       ? words[sourceLanguage].filter((word) => {
           return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilter, treeFilter);
@@ -220,7 +222,7 @@ export default function App() {
   const filteredConversations = useMemo(() => {
     return conversations.filter((conversation) => {
       return (
-        status === "words" &&
+        status === "conversations" &&
         (!someConversationFilter(conversationFilter) || isConversationFiltered(conversation, conversationFilter))
       );
     });
@@ -291,32 +293,6 @@ export default function App() {
     navigate(location);
   };
 
-  // const fetchMoreWords = (skip: number, limit: number) => {
-  //   //Replace tag label by tag id
-  //   const filter = searchFilter
-  //     .filter(({ isActive }) => isActive)
-  //     .map((el) =>
-  //       el.data.map((el) =>
-  //         el.replace(/\#\S+/, (substring) =>
-  //           substring.length > 1 && tags.map(({ label }) => label).includes(substring.slice(1))
-  //             ? "#" + tags.find(({ label }) => label === substring.slice(1))!._id
-  //             : ""
-  //         )
-  //       )
-  //     );
-  //   return customFetch(url + "search", {
-  //     method: "POST", // we want to GET flashcards but with a complex filter (string[][])
-  //     headers: authHeaders(),
-  //     body: JSON.stringify({ status, filter, skip, limit }),
-  //   })
-  //     .then((newWords: Word[]) => {
-  //       setWords((words) => updateCacheWithNewWords(words, newWords));
-  //     })
-  //     .catch((err: Error) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const fetchMoreUsedInMultiLingualSentences = (wordId: string) => {
     return customFetch(url + "multiLingualSentences?wordId=" + wordId, { headers: authHeaders() })
       .then(({ multiLingualSentences: newMultiLingualSentences, sentences: newSentences }) => {
@@ -332,6 +308,28 @@ export default function App() {
 
   const fetchMoreUsedInConversations = (multiLingualSentenceId: string) => {
     return customFetch(url + "conversations?multilingualsentenceId=" + multiLingualSentenceId, {
+      headers: authHeaders(),
+    })
+      .then(
+        ({
+          conversations: newConversations,
+          multiLingualSentences: newMultiLingualSentences,
+          sentences: newSentences,
+        }) => {
+          setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversations));
+          setMultiLingualSentences((multiLingualSentences) =>
+            updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
+          );
+          setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+        }
+      )
+      .catch((err: Error) => {
+        console.log(err);
+      });
+  };
+
+  const fetchMoreConversations = (sourceLanguage: Language, targetLanguage: Language) => {
+    return customFetch(url + `conversations?sourceLanguage=${sourceLanguage}&targetLanguage=${targetLanguage}`, {
       headers: authHeaders(),
     })
       .then(

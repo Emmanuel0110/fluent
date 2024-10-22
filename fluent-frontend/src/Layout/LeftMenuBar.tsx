@@ -43,12 +43,12 @@ function LeftMenuBar() {
           </Button>
         </div>
         <div id="statusSection">
-          <div onClick={() => navigate("/words")}>
-            <div className={status === "Published" ? "selected" : "unselected"}></div>
+          <div onClick={() => {setStatus("words");navigate("/words")}}>
+            <div className={status === "words" ? "selected" : "unselected"}></div>
             <div>Words</div>
           </div>
-          <div onClick={() => navigate("/conversations")}>
-            <div className={status === "Draft" ? "selected" : "unselected"}></div>
+          <div onClick={() => {setStatus("conversations");navigate("/conversations")}}>
+            <div className={status === "conversations" ? "selected" : "unselected"}></div>
             <div>Conversations</div>
           </div>
         </div>
