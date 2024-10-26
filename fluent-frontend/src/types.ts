@@ -52,8 +52,8 @@ export interface OpenWordData {
 
 export interface OpenMultiLingualSentenceData {
   id: string;
-  data: MultiLingualSentence;
-  unsavedData?: MultiLingualSentence;
+  data: CompletedMultiLingualSentence;
+  unsavedData?: CompletedMultiLingualSentence;
 }
 
 export interface View {
@@ -91,6 +91,14 @@ export interface MultiLingualSentence {
   en?: string;
   fr?: string;
   kr?: string;
+  nextReviewDate: Date | undefined;
+}
+
+export interface CompletedMultiLingualSentence {
+  _id: string;
+  en?: Sentence;
+  fr?: Sentence;
+  kr?: Sentence;
   nextReviewDate: Date | undefined;
 }
 

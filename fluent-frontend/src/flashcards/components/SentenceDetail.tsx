@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConfigContext } from "../../App";
-import { Context, Conversation, MultiLingualSentence, Word } from "../../types";
+import { CompletedMultiLingualSentence, Context, Conversation, MultiLingualSentence, Word } from "../../types";
 import { Flashcard } from "../../types";
 import DotOptions from "../../utils/DotOptions/DotOptions";
 import { Button } from "react-bootstrap";
@@ -16,7 +16,7 @@ export default function SentenceDetail({
   targetPrerequisites,
   usedIn,
 }: {
-  multiLingualSentence: MultiLingualSentence;
+  multiLingualSentence: CompletedMultiLingualSentence;
   sourcePrerequisites: Word[];
   targetPrerequisites: Word[];
   usedIn: {multiLingualSentences: MultiLingualSentence[]}[];
@@ -24,9 +24,9 @@ export default function SentenceDetail({
   const { subscribeToMultiLingualSentence, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
 
-  const onSubscribe = (e: React.MouseEvent, multiLingualSentence: MultiLingualSentence) => {
+  const onSubscribe = (e: React.MouseEvent, { _id, nextReviewDate }: Partial<MultiLingualSentence>) => {
     e.stopPropagation();
-    subscribeToMultiLingualSentence(multiLingualSentence);
+    subscribeToMultiLingualSentence({ _id, nextReviewDate });
   };
 
   return (
@@ -35,12 +35,12 @@ export default function SentenceDetail({
         <div id="previous">
           <div
             className={"subscribe" + (multiLingualSentence.nextReviewDate instanceof Date ? " subscribed" : "")}
-            onClick={(e) => onSubscribe(e, multiLingualSentence)}
+            onClick={(e) => onSubscribe(e, { _id: multiLingualSentence._id, nextReviewDate: multiLingualSentence.nextReviewDate })}
           ></div>
         </div>
         <div id="middle">
-          <div onClick={() => setIsTargetSentenceSelected(false)}>{multiLingualSentence[sourceLanguage]}</div>
-          <div onClick={() => setIsTargetSentenceSelected(true)}>{multiLingualSentence[targetLanguage]}</div>
+          <div onClick={() => setIsTargetSentenceSelected(false)}>{multiLingualSentence[sourceLanguage]?.text}</div>
+          <div onClick={() => setIsTargetSentenceSelected(true)}>{multiLingualSentence[targetLanguage]?.text}</div>
           {sourcePrerequisites.length > 0 && !isTargetSentenceSelected && (
             <div id="sourcePrerequisites">
               {sourcePrerequisites.map((word, index) => (

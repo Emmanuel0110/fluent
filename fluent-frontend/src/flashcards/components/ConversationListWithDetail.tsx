@@ -1,4 +1,5 @@
 import {
+  CompletedMultiLingualSentence,
   Conversation,
   Flashcard,
   MultiLingualSentence,
@@ -56,15 +57,13 @@ export default function ConversationListWithDetail({
 
   useEffect(() => {
     if (!loading.current) {
-      const currentOpenedMultiLingualSentence = openedMultiLingualSentences.find(
-        ({ id }) => id === multiLingualSentenceId
-      );
-      if (currentOpenedMultiLingualSentence) {
-        setCurrentOpenedMultiLingualSentence(currentOpenedMultiLingualSentence);
+      const openedMultiLingualSentence = openedMultiLingualSentences.find(({ id }) => id === multiLingualSentenceId);
+      if (openedMultiLingualSentence) {
+        setCurrentOpenedMultiLingualSentence(openedMultiLingualSentence);
       } else {
         const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId);
         if (multiLingualSentence) {
-          const currentOpenedWordOrMultiLingualSentence: OpenMultiLingualSentenceData = {
+          const openedMultiLingualSentence: OpenMultiLingualSentenceData = {
             id: multiLingualSentence._id,
             data: {
               _id: multiLingualSentence._id,
@@ -73,8 +72,8 @@ export default function ConversationListWithDetail({
               [targetLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[targetLanguage])!,
             },
           };
-          setOpenedMultiLingualSentences([...openedMultiLingualSentences, currentOpenedWordOrMultiLingualSentence]); //Why is it too slow when I use function in setOpenedFlashcards ?
-          setCurrentOpenedMultiLingualSentence(currentOpenedWordOrMultiLingualSentence);
+          setOpenedMultiLingualSentences([...openedMultiLingualSentences, openedMultiLingualSentence]); //Why is it too slow when I use function in setOpenedFlashcards ?
+          setCurrentOpenedMultiLingualSentence(openedMultiLingualSentence);
         } else {
           loading.current = true;
           getMultiLingualSentenceById(multiLingualSentenceId).then(() => (loading.current = false));
@@ -103,14 +102,14 @@ export default function ConversationListWithDetail({
     }
   }, [conversations]);
 
-  const getPrerequisites = (multiLingualSentence: MultiLingualSentence) => {
+  const getPrerequisites = (multiLingualSentence: CompletedMultiLingualSentence) => {
     return [
-      sentences
-        .find(({ _id }) => _id === multiLingualSentence[sourceLanguage])!
-        .prerequisites.map((prerequisiteId) => words[sourceLanguage].find(({ _id }) => _id === prerequisiteId)!),
-      sentences
-        .find(({ _id }) => _id === multiLingualSentence[targetLanguage])!
-        .prerequisites.map((prerequisiteId) => words[targetLanguage].find(({ _id }) => _id === prerequisiteId)!),
+      multiLingualSentence[sourceLanguage]!.prerequisites.map(
+        (prerequisiteId) => words[sourceLanguage].find(({ _id }) => _id === prerequisiteId)!
+      ),
+      multiLingualSentence[targetLanguage]!.prerequisites.map(
+        (prerequisiteId) => words[targetLanguage].find(({ _id }) => _id === prerequisiteId)!
+      ),
     ];
   };
 
@@ -185,11 +184,13 @@ export default function ConversationListWithDetail({
         {currentOpenedMultiLingualSentence && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedMultiLingualSentences.map(({ id, data: { [sourceLanguage]: text }, unsavedData }) => ({
-                id,
-                text: text || "",
-                unsaved: !!unsavedData,
-              }))}
+              tabsData={openedMultiLingualSentences.map(({ id, data, unsavedData }) => {
+                return {
+                  id,
+                  text: data[sourceLanguage]?.text || "",
+                  unsaved: !!unsavedData,
+                };
+              })}
               selectedId={multiLingualSentenceId}
               closeTab={closeTab}
               closeOtherTabs={closeOtherTabs}

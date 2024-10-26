@@ -424,48 +424,47 @@ app.get("/api/conversations", auth, (req, res) => {
     UserFlashcardInfoModel.find({ user: req.user._id }).then((userFlashcardInfos) => {
       ConversationModel.find({
         languages: { $all: [sourceLanguage, targetLanguage] },
-      })
-        .then((conversations) => {
-          let completedMultiLingualSentences = [];
-          let completedSentences = [];
-          conversations.forEach((conversation) => {
-            MultiLingualSentenceModel.find({
+      }).then((conversations) => {
+        Promise.all(
+          conversations.map(async (conversation) => {
+            const multiLingualSentences = await MultiLingualSentenceModel.find({
               _id: { $in: conversation.multiLingualSentences },
-            }).then((multiLingualSentences) => {
-              completedMultiLingualSentences = [
-                ...completedMultiLingualSentences,
-                multiLingualSentences.map((multiLingualSentence) =>
-                  completeMultiLingualSentence(multiLingualSentence, userFlashcardInfos)
-                ),
-              ];
-              SentenceModel.find({
-                _id: {
-                  $in: [
-                    ...multiLingualSentences
-                      .map((multiLingualSentence) => multiLingualSentence[sourceLanguage])
-                      .map((id) => new mongoose.Types.ObjectId(id)),
-                    ...multiLingualSentences
-                      .map((multiLingualSentence) => multiLingualSentence[targetLanguage])
-                      .map((id) => new mongoose.Types.ObjectId(id)),
-                  ],
-                },
-              }).then((sentences) => {
-                completedSentences = [
-                  ...completedSentences,
-                  sentences.map((sentence) => completeSentence(sentence, userFlashcardInfos)),
+            }).lean();
+            const sentences = await SentenceModel.find({
+              _id: {
+                $in: [
+                  ...multiLingualSentences
+                    .map((multiLingualSentence) => multiLingualSentence[sourceLanguage])
+                    .map((id) => new mongoose.Types.ObjectId(id)),
+                  ...multiLingualSentences
+                    .map((multiLingualSentence) => multiLingualSentence[targetLanguage])
+                    .map((id) => new mongoose.Types.ObjectId(id)),
+                ],
+              },
+            }).lean();
+            return [multiLingualSentences, sentences];
+          })
+        )
+          .then((multiLingualSentencesAndSentences) => {
+            const [completedMultiLingualSentences, completedSentences] = multiLingualSentencesAndSentences.reduce(
+              ([completedMultiLingualSentences, completedSentences], [multiLingualSentences, sentences]) => {
+                return [
+                  [...completedMultiLingualSentences, ...multiLingualSentences],
+                  [...completedSentences, ...sentences],
                 ];
-              });
+              },
+              [[], []]
+            );
+            res.send({
+              conversations,
+              multiLingualSentences: completedMultiLingualSentences,
+              sentences: completedSentences,
             });
+          })
+          .catch(function (err) {
+            console.log(err);
           });
-          res.send({
-            conversations,
-            multiLingualSentences: completedMultiLingualSentences,
-            sentences: completedSentences,
-          });
-        })
-        .catch(function (err) {
-          console.log(err);
-        });
+      });
     });
   } catch (err) {
     console.log(err);

@@ -211,7 +211,6 @@ export default function App() {
   }, [flashcards]);
 
   const filteredWords = useMemo(() => {
-    console.log(words[sourceLanguage]);
     return words[sourceLanguage]
       ? words[sourceLanguage].filter((word) => {
           return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilter, treeFilter);
@@ -359,15 +358,15 @@ export default function App() {
   };
 
   const openMultiLingualSentence = (multiLingualSentenceId: string) => {
-    const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId);
-    if (multiLingualSentence) {
-      setOpenedMultiLingualSentences((openedMultiLingualSentences) =>
-        openedMultiLingualSentences.find(({ id }) => id === multiLingualSentenceId)
-          ? openedMultiLingualSentences
-          : [...openedMultiLingualSentences, { id: multiLingualSentenceId, data: multiLingualSentence }]
-      );
+    // const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId);
+    // if (multiLingualSentence) {
+    //   setOpenedMultiLingualSentences((openedMultiLingualSentences) =>
+    //     openedMultiLingualSentences.find(({ id }) => id === multiLingualSentenceId)
+    //       ? openedMultiLingualSentences
+    //       : [...openedMultiLingualSentences, { id: multiLingualSentenceId, data: multiLingualSentence }]
+    //   );
       navigate("multilingualsentences/" + multiLingualSentenceId);
-    }
+    // }
   };
 
   const openWord = (wordId: string, language: Language) => {
@@ -564,7 +563,7 @@ export default function App() {
             />
             <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
             <Route
-              path="multilingualsentences/:multilingualsentenceId"
+              path="multilingualsentences/:multiLingualSentenceId"
               element={
                 <ConversationListWithDetail
                   filteredConversations={filteredConversations}
