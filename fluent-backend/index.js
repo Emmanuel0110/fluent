@@ -58,7 +58,7 @@ const completeMultiLingualSentence = (multiLingualSentence, userFlashcardInfos) 
   };
 };
 
-const completeSentence = async (sentence, userFlashcardInfos) => {
+const completeSentence = (sentence, userFlashcardInfos) => {
   const info =
     userFlashcardInfos.find((info) => {
       return info.sentence.equals(sentence._id);
@@ -449,8 +449,16 @@ app.get("/api/conversations", auth, (req, res) => {
             const [completedMultiLingualSentences, completedSentences] = multiLingualSentencesAndSentences.reduce(
               ([completedMultiLingualSentences, completedSentences], [multiLingualSentences, sentences]) => {
                 return [
-                  [...completedMultiLingualSentences, ...multiLingualSentences],
-                  [...completedSentences, ...sentences],
+                  [
+                    ...completedMultiLingualSentences,
+                    ...multiLingualSentences.map((multiLingualSentence) =>
+                      completeMultiLingualSentence(multiLingualSentence, userFlashcardInfos)
+                    ),
+                  ],
+                  [
+                    ...completedSentences,
+                    ...sentences.map((sentence) => completeSentence(sentence, userFlashcardInfos)),
+                  ],
                 ];
               },
               [[], []]
@@ -667,8 +675,6 @@ app.post("/api/words", auth, (req, res) => {
 app.patch("/api/words/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
-  console.log(req.params);
-  console.log(req.body);
   LexicalItemModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
 });
 

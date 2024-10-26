@@ -14,7 +14,6 @@ import WordList from "./WordList";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ConfigContext, updateCacheWithNewWords } from "../../App";
 import { Context } from "../../types";
-import FlashcardForm from "./FlashcardForm";
 import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
 import WordDetail from "./WordDetail";

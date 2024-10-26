@@ -177,7 +177,10 @@ export default function App() {
   const [openedWords, setOpenedWords] = useState([] as OpenWordData[]);
   const [openedMultiLingualSentences, setOpenedMultiLingualSentences] = useState([] as OpenMultiLingualSentenceData[]);
   const [status, setStatus] = useState("words");
-  const [tags, setTags] = useState({ wordTags: [], conversationTags: [] } as { wordTags: Tag[]; conversationTags: Tag[] });
+  const [tags, setTags] = useState({ wordTags: [], conversationTags: [] } as {
+    wordTags: Tag[];
+    conversationTags: Tag[];
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -365,7 +368,7 @@ export default function App() {
     //       ? openedMultiLingualSentences
     //       : [...openedMultiLingualSentences, { id: multiLingualSentenceId, data: multiLingualSentence }]
     //   );
-      navigate("multilingualsentences/" + multiLingualSentenceId);
+    navigate("multilingualsentences/" + multiLingualSentenceId);
     // }
   };
 
@@ -473,10 +476,14 @@ export default function App() {
       ? Promise.resolve(multiLingualSentence)
       : getRemoteMultiLingualSentenceById(id, sourceLanguage, targetLanguage).then(
           ({ newMultiLingualSentence, newSentences }) => {
-            setMultiLingualSentences((multiLingualSentences) =>
-              updateCacheWithNewMultiLingualSentences(multiLingualSentences, [newMultiLingualSentence])
-            );
-            setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+            if (newMultiLingualSentence) {
+              setMultiLingualSentences((multiLingualSentences) =>
+                updateCacheWithNewMultiLingualSentences(multiLingualSentences, [newMultiLingualSentence])
+              );
+            }
+            if (newSentences) {
+              setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+            }
             return newMultiLingualSentence;
           }
         );
