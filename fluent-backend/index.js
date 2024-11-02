@@ -337,9 +337,9 @@ app.get("/api/tags", auth, (req, res) => {
       };
       tags.forEach((tag) => {
         if (tag.type === "wordTag") {
-          groupedTags.wordTags.push({_id: tag._id, label: tag[language]});
+          groupedTags.wordTags.push({ _id: tag._id, label: tag[language] });
         } else if (tag.type === "conversationTag") {
-          groupedTags.conversationTags.push({_id, label: tag[language]});
+          groupedTags.conversationTags.push({ _id, label: tag[language] });
         }
       });
       res.json(groupedTags);
@@ -555,6 +555,41 @@ app.get("/api/multilingualsentences/:id", auth, (req, res) => {
     } catch (err) {
       console.log(err);
     }
+  }
+});
+
+app.get("/api/multilingualsentences", auth, (req, res) => {
+  const { wordId, sourceLanguage, targetLanguage } = req.query;
+  try {
+    UserFlashcardInfoModel.find({ user: req.user._id }).then((userFlashcardInfos) => {
+      SentenceModel.find({ prerequisites: new mongoose.Types.ObjectId(wordId) })
+        .then((sentences) => {
+          return sentences.map((sentence) => sentence._id);
+        })
+        .then((ids) => {
+          MultiLingualSentenceModel.find({ [sourceLanguage]: { $in: ids } })
+            .lean()
+            .then((multiLingualSentences) => {
+              const completedMultiLingualSentences = multiLingualSentences.map((multiLingualSentence) =>
+                completeMultiLingualSentence(multiLingualSentence, userFlashcardInfos)
+              );
+              const sentenceIds = multiLingualSentences.reduce((acc, multiLingualSentence) => {
+                return [...acc, multiLingualSentence[sourceLanguage], multiLingualSentence[targetLanguage]];
+              }, []);
+              SentenceModel.find({
+                _id: { $in: sentenceIds },
+              })
+              .lean()
+              .then((sentences) => {
+                const completedSentences = sentences.map((sentence) => completeSentence(sentence, userFlashcardInfos));
+                res.send({ multiLingualSentences: completedMultiLingualSentences, sentences: completedSentences });
+              });
+            })
+            .catch((err) => console.log(err));
+        });
+    });
+  } catch (err) {
+    console.log(err);
   }
 });
 

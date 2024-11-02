@@ -301,7 +301,7 @@ export default function App() {
   };
 
   const fetchMoreUsedInMultiLingualSentences = (wordId: string) => {
-    return customFetch(url + "multiLingualSentences?wordId=" + wordId, { headers: authHeaders() })
+    return customFetch(url + `multilingualsentences?wordId=${wordId}&sourceLanguage=${sourceLanguage}&targetLanguage=${targetLanguage}`, { headers: authHeaders() })
       .then(({ multiLingualSentences: newMultiLingualSentences, sentences: newSentences }) => {
         setMultiLingualSentences((multiLingualSentences) =>
           updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
