@@ -2,8 +2,15 @@ import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
 import { Flashcard, Language, MultiLingualSentence, Sentence, Tag, Word } from "../types";
 
-export const getRemoteMultiLingualSentenceById = async (id: string, sourceLanguage: string, targetLanguage: string): Promise<{newMultiLingualSentence: MultiLingualSentence, newSentences: Sentence[]}> => {
-  return customFetch(url + "multilingualsentences/" + id + "?languages=" + sourceLanguage + "-" + targetLanguage, { method: "GET", headers: authHeaders() });
+export const getRemoteMultiLingualSentenceById = async (
+  id: string,
+  sourceLanguage: string,
+  targetLanguage: string
+): Promise<{ newMultiLingualSentence: MultiLingualSentence; newSentences: Sentence[] }> => {
+  return customFetch(url + "multilingualsentences/" + id + "?languages=" + sourceLanguage + "-" + targetLanguage, {
+    method: "GET",
+    headers: authHeaders(),
+  });
 };
 
 export const saveNewFlashcard = async (args: Partial<Flashcard>) => {
@@ -12,9 +19,18 @@ export const saveNewFlashcard = async (args: Partial<Flashcard>) => {
   return customFetch(url + "flashcards", { method: "POST", headers: authHeaders(), body });
 };
 
+export const getRemoteSentenceById = async (_id: string): Promise<Sentence> => {
+  return customFetch(url + "sentences?_id=" + _id, { method: "GET", headers: authHeaders() });
+};
+
 export const editRemoteSentence = async ({ _id, ...args }: Partial<Sentence>) => {
   const body = JSON.stringify(args);
   return customFetch(url + "sentences/" + _id, { method: "PATCH", headers: authHeaders(), body });
+};
+
+export const editRemoteWord = async ({ _id, ...args }: Partial<Word>) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "words/" + _id, { method: "PATCH", headers: authHeaders(), body });
 };
 
 export const deleteRemoteFlashcard = async (flashcardId: string) => {
@@ -29,7 +45,10 @@ export const subscribeToRemoteWord = async ({ _id, nextReviewDate }: Partial<Wor
   return customFetch(url + "userwordinfo/" + _id, { method: "PUT", headers: authHeaders(), body });
 };
 
-export const subscribeToRemoteMultiLingualSentence = async ({ _id, nextReviewDate }: Partial<MultiLingualSentence>, language: string) => {
+export const subscribeToRemoteMultiLingualSentence = async (
+  { _id, nextReviewDate }: Partial<MultiLingualSentence>,
+  language: string
+) => {
   const body = JSON.stringify({
     language,
     nextReviewDate: nextReviewDate ? null : new Date(),
@@ -38,7 +57,10 @@ export const subscribeToRemoteMultiLingualSentence = async ({ _id, nextReviewDat
   return customFetch(url + "usermultilingualsentenceinfo/" + _id, { method: "PUT", headers: authHeaders(), body });
 };
 
-export const subscribeToRemoteConversation = async ({ _id, nextReviewDate }: Partial<MultiLingualSentence>, language: string) => {
+export const subscribeToRemoteConversation = async (
+  { _id, nextReviewDate }: Partial<MultiLingualSentence>,
+  language: string
+) => {
   const body = JSON.stringify({
     language,
     nextReviewDate: nextReviewDate ? null : new Date(),

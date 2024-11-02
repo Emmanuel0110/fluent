@@ -70,7 +70,7 @@ export interface Word {
   _id: string;
   sourceLanguage: Language;
   targetLanguages: Language[];
-  tags: Tag[];
+  tags: string[];
   text: string;
   en?: string[];
   fr?: string[];
@@ -82,6 +82,7 @@ export interface Word {
 export interface Sentence {
   _id: string;
   text: string;
+  language: Language;
   prerequisites: string[];
   nextReviewDate: Date | undefined; //TODO: necessary or enough at multiLingualSentence level ?
 }
@@ -144,9 +145,10 @@ export interface Context {
   openWord: (id: string, language: Language) => void;
   editFlashcard: (id: string) => void;
   editCurrentFlashcard: (flashcard: Flashcard) => void;
-  subscribeToWord: ({ _id, nextReviewDate }: Partial<Flashcard>) => void;
+  subscribeToWord: ({ _id, nextReviewDate }: Partial<Word>) => void;
   subscribeToMultiLingualSentence: ({ _id, nextReviewDate }: Partial<Flashcard>) => void;
   saveSentence: (infos: Partial<Sentence>) => void;
+  saveWord: (infos: Partial<Word>) => void;
   saveAsNewFlashcard: (infos: Partial<Flashcard>) => Promise<Flashcard>;
   getMultiLingualSentenceById: (id: string) => Promise<MultiLingualSentence>;
   treeFilter: string[];

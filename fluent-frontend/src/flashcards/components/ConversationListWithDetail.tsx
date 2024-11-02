@@ -16,7 +16,6 @@ import { ConfigContext, updateCacheWithNewWords } from "../../App";
 import { Context } from "../../types";
 import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
-import WordDetail from "./WordDetail";
 import ConversationList from "./ConversationList";
 import SentenceDetail from "./SentenceDetail";
 

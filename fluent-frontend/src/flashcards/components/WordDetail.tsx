@@ -20,6 +20,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
     status,
     setStatus,
     words,
+    tags,
     setSearchFilter,
     saveAsNewFlashcard,
     editCurrentFlashcard,
@@ -40,9 +41,13 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
 
   const translation = useMemo(() => {
     if (word.sourceLanguage === sourceLanguage) {
-      return words[targetLanguage]!.filter(({_id}) => word[targetLanguage]!.includes(_id)).map(({text}) => text).join(",");
+      return words[targetLanguage]!.filter(({ _id }) => word[targetLanguage]!.includes(_id))
+        .map(({ text }) => text)
+        .join(",");
     } else if (word.sourceLanguage === targetLanguage) {
-      return words[sourceLanguage]!.filter(({_id}) => word[sourceLanguage]!.includes(_id)).map(({text}) => text).join(",");
+      return words[sourceLanguage]!.filter(({ _id }) => word[sourceLanguage]!.includes(_id))
+        .map(({ text }) => text)
+        .join(",");
     }
   }, [word, sourceLanguage, targetLanguage]);
 
@@ -60,11 +65,15 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
 
           <div id="tags">
             {word &&
-              word.tags.map((tag, index) => (
-                <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
-                  {"#" + tag.label}
-                </div>
-              ))}
+              word.tags.map((tagId, index) => {
+                const tag = tags["wordTags"].find(tag => tag._id === tagId);
+                if (tag)
+                return (
+                  <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
+                    {"#" + tag.label}
+                  </div>
+                );
+              })}
           </div>
 
           {usedIn.length > 0 && (

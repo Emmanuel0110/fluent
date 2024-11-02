@@ -29,6 +29,7 @@ import WordListWithDetail from "./flashcards/components/WordListWithDetail";
 import {
   deleteRemoteFlashcard,
   editRemoteSentence,
+  editRemoteWord,
   fetchTags,
   fetchWords,
   getRemoteMultiLingualSentenceById,
@@ -135,7 +136,7 @@ export const someFilter = (searchFilter: SearchFilter, treeFilter: string[]): bo
 const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
   if (filterString.toLowerCase().startsWith("not ")) {
     if (filterString.toLowerCase().slice(4).trim().startsWith("#")) {
-      return !word.tags.find(({ label }) => label.toLowerCase() === filterString.toLowerCase().trim().slice(5));
+      return !word.tags.includes(filterString.toLowerCase().trim().slice(5));
     } else {
       return !word.text
         .toLowerCase()
@@ -143,7 +144,7 @@ const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
     }
   } else {
     if (filterString.toLowerCase().trim().startsWith("#")) {
-      return word.tags.find(({ label }) => label.toLowerCase() === filterString.toLowerCase().trim().slice(1));
+      return word.tags.includes(filterString.toLowerCase().trim().slice(1));
     } else {
       return word.text.toLowerCase().includes(filterString.toLowerCase().replace(/^\"/, "").replace(/\"$/, ""));
     }
@@ -191,17 +192,6 @@ export default function App() {
     }
   }, [isAuthenticated]);
 
-  // useEffect(() => {
-  //   if (isAuthenticated && filteredMultiLingualSentences.length < 30) {
-  //     fetchMoreConversations(0, 30).then(() => {
-  //       if (status === "To be reviewed" && filteredMultiLingualSentences.length > 0) {
-  //         setOpenedFlashcards([]);
-  //         navigate("/flashcards/" + filteredMultiLingualSentences[0]._id);
-  //       }
-  //     });
-  //   }
-  // }, [status, searchFilter, isAuthenticated]);
-
   useEffect(() => {
     if (openedFlashcards.length !== 0) {
       setOpenedFlashcards((openFlashcards) =>
@@ -214,9 +204,24 @@ export default function App() {
   }, [flashcards]);
 
   const filteredWords = useMemo(() => {
+    const searchFilterWithTagIds = searchFilter.map((filterItem) => {
+      return {
+        ...filterItem,
+        data: filterItem.data.map((dataItem) => {
+          const split = dataItem.split("#");
+          if (split.length === 2) {
+            const tagId = tags["wordTags"].find((tag) => tag.label === split[1])?._id;
+            if (tagId) {
+              return split[0] + "#" + tagId;
+            }
+          }
+          return dataItem;
+        }),
+      };
+    });
     return words[sourceLanguage]
       ? words[sourceLanguage].filter((word) => {
-          return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilter, treeFilter);
+          return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilterWithTagIds, treeFilter);
         })
       : [];
   }, [words, status, searchFilter, treeFilter]);
@@ -361,15 +366,7 @@ export default function App() {
   };
 
   const openMultiLingualSentence = (multiLingualSentenceId: string) => {
-    // const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId);
-    // if (multiLingualSentence) {
-    //   setOpenedMultiLingualSentences((openedMultiLingualSentences) =>
-    //     openedMultiLingualSentences.find(({ id }) => id === multiLingualSentenceId)
-    //       ? openedMultiLingualSentences
-    //       : [...openedMultiLingualSentences, { id: multiLingualSentenceId, data: multiLingualSentence }]
-    //   );
     navigate("multilingualsentences/" + multiLingualSentenceId);
-    // }
   };
 
   const openWord = (wordId: string, language: Language) => {
@@ -454,6 +451,16 @@ export default function App() {
     );
   };
 
+  const saveWord = (infos: Partial<Word>) => {
+    editRemoteWord(infos).catch((err: Error) => console.log(err));
+    setWords((words) => ({
+      ...words,
+      [infos.sourceLanguage as string]: words[infos.sourceLanguage!].map((word) =>
+        word._id === infos._id ? { ...word, ...infos } : word
+      ),
+    }));
+  };
+
   const saveAsNewFlashcard = (infos: Partial<Flashcard>): Promise<Flashcard> => {
     return saveNewFlashcard(infos)
       .then(({ data: newFlashcard }) => {
@@ -529,6 +536,7 @@ export default function App() {
         subscribeToWord,
         subscribeToMultiLingualSentence,
         saveSentence,
+        saveWord,
         saveAsNewFlashcard,
         getMultiLingualSentenceById,
         treeFilter,

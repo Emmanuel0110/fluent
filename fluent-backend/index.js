@@ -246,7 +246,7 @@ app.patch("/api/sentences/:id", auth, function (req, res) {
             { $addToSet: { usedIn: newSentence._id } }
           );
 
-        const removedPrerequisites = originalSentence.filter((el) => !(el in prerequisites));
+        const removedPrerequisites = originalSentence.prerequisites.filter((el) => !(el in prerequisites));
         if (removedPrerequisites.length)
           await LexicalItemModel.updateMany(
             { _id: { $in: removedPrerequisites } },
@@ -325,9 +325,10 @@ app.patch("/api/userWordinfo/:id", auth, function (req, res) {
 });
 
 app.get("/api/tags", auth, (req, res) => {
-  TagModel.find({ [req.query.sourceLanguage]: { $exists: true } })
+  const language = req.query.sourceLanguage;
+  TagModel.find({ [language]: { $exists: true } })
     .limit(10000)
-    .select({ _id: 1, text: 1, [req.query.sourceLanguage]: 1 })
+    .select({ _id: 1, type: 1, [language]: 1 })
     .then((tags) => {
       // Group tags by their type
       const groupedTags = {
@@ -336,9 +337,9 @@ app.get("/api/tags", auth, (req, res) => {
       };
       tags.forEach((tag) => {
         if (tag.type === "wordTag") {
-          groupedTags.wordTags.push(tag);
+          groupedTags.wordTags.push({_id: tag._id, label: tag[language]});
         } else if (tag.type === "conversationTag") {
-          groupedTags.conversationTags.push(tag);
+          groupedTags.conversationTags.push({_id, label: tag[language]});
         }
       });
       res.json(groupedTags);
@@ -399,11 +400,6 @@ const flashcardSchema = new Schema({
   usedIn: [{ type: Schema.Types.ObjectId, ref: "Flashcard" }],
 });
 
-// flashcardSchema.index({ question: "text", answer: "text" }); //for full text search
-//Only one text index by collection in mongoDB. Can be solved by adding a merged attribute question+answer
-//Does not allow regex search
-//A query can specify, at most, one $text expression.
-//To use a $text query in an $or expression, all clauses in the $or array must be indexed.
 export const FlashcardModel = model("Flashcard", flashcardSchema);
 
 const userFlashcardInfoSchema = new Schema({
@@ -605,15 +601,22 @@ app.post("/api/multilingualsentences", auth, (req, res) => {
 });
 
 app.get("/api/sentences", auth, (req, res) => {
-  SentenceModel.find({
-    language: req.query.language,
-    text: { $regex: escapeRegExp(req.query.searchString), $options: "i" },
-  })
-    .limit(20)
-    .select({ _id: 1, text: 1 })
-    .then((sentences) => {
-      res.send(sentences);
+  const _id = req.query._id;
+  if (_id) {
+    SentenceModel.findById(_id).then((sentence) => {
+      res.send(sentence);
     });
+  } else {
+    SentenceModel.find({
+      language: req.query.language,
+      text: { $regex: escapeRegExp(req.query.searchString), $options: "i" },
+    })
+      .limit(20)
+      .select({ _id: 1, text: 1 })
+      .then((sentences) => {
+        res.send(sentences);
+      });
+  }
 });
 
 app.post("/api/sentences", auth, (req, res) => {

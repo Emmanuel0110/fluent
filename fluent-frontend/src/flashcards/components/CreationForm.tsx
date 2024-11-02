@@ -15,17 +15,22 @@ import { WordLine } from "./WordLine";
 import { authHeaders, customFetch } from "../../utils/http-helpers";
 import AutoCompleteFetch from "../../utils/AutocompleteFetch";
 import _ from "lodash";
+import { getRemoteSentenceById } from "../flashcardActions";
 
 export default function CreationForm() {
   const [sourceSentence, setSourceSentence] = useState<Sentence | null>(null);
-  const [sourcePrerequisites, setSourcePrerequisites] = useState<string[] | null>(null);
+  const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[] | null>(null);
   const [targetSentence, setTargetSentence] = useState<Sentence | null>(null);
-  const [targetPrerequisites, setTargetPrerequisites] = useState<string[] | null>(null);
+  const [targetPrerequisites, setTargetPrerequisites] = useState<Word[] | null>(null);
+  const [sourceWordForTag, setSourceWordForTag] = useState<Word | null>(null);
+  const [targetWordForTag, setTargetWordForTag] = useState<Word | null>(null);
+  const [sourceTags, setSourceTags] = useState<Tag[] | null>(null);
+  const [targetTags, setTargetTags] = useState<Tag[] | null>(null);
   const newSourceWordTextRef = useRef<HTMLInputElement | null>(null);
   const newTargetWordTextRef = useRef<HTMLInputElement | null>(null);
   const selectedSourceSentenceRef = useRef<HTMLInputElement | null>(null);
   const selectedTargetSentenceRef = useRef<HTMLInputElement | null>(null);
-  const selectedTagTypeRef = useRef<HTMLInputElement | null>(null);
+  const selectedTagTypeRef = useRef<HTMLSelectElement | null>(null);
   const selectedSourceTagRef = useRef<HTMLInputElement | null>(null);
   const selectedTargetTagRef = useRef<HTMLInputElement | null>(null);
   const selectedSourceWordRef = useRef<Word | null>(null);
@@ -42,6 +47,7 @@ export default function CreationForm() {
     tags,
     setTags,
     saveSentence,
+    saveWord,
     sentences,
     setSentences,
     multiLingualSentences,
@@ -56,18 +62,191 @@ export default function CreationForm() {
     setTargetLanguage(appTargetLanguage);
   }, []);
 
-  const save = ({ _id, text, prerequisites }: Sentence) => {
-    saveSentence({
-      _id,
-      text,
-      prerequisites,
-    });
-  };
-
   const availableWordsIds = (language: string, sentence: Sentence) =>
     words[language]
       .map(({ _id, text }) => ({ _id, label: text }))
       .filter(({ _id }) => !sentence.prerequisites.includes(_id));
+
+  const selectSourceWordForTag = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      const word = words[sourceLanguage].find((word) => word._id === _id)!;
+      setSourceWordForTag(word);
+      setSourceTags(
+        word.tags.map((tagId) => {
+          return tags["wordTags"].find(({ _id }) => _id === tagId)!;
+        })
+      );
+      setLocalDescription(word.text);
+    } else if (label) {
+      setLocalDescription("");
+    }
+  };
+
+  const selectTargetWordForTag = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      const word = words[targetLanguage].find((word) => word._id === _id)!;
+      setTargetWordForTag(word);
+      setTargetTags(word.tags.map((tagId) => tags["wordTags"].find(({ _id }) => _id === tagId)!));
+      setLocalDescription(word.text);
+    } else if (label) {
+      setLocalDescription("");
+    }
+  };
+
+  const addSourceTag = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      setSourceTags((sourceTags) => [...(sourceTags || []), tags["wordTags"].find(({ _id: id }) => id === _id)!]);
+      setLocalDescription("");
+    }
+  };
+
+  const addTargetTag = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      setTargetTags((targetTags) => [...(targetTags || []), tags["wordTags"].find(({ _id: id }) => id === _id)!]);
+      setLocalDescription("");
+    }
+  };
+
+  const selectSourceSentence = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      getRemoteSentenceById(_id).then((sentence) => {
+        setSourceSentence(sentence);
+        setSourcePrerequisites(
+          sentence.prerequisites.map((id) => words[sentence.language].find(({ _id }) => id === _id)!)
+        );
+        setLocalDescription(sentence.text);
+      });
+    } else if (label) {
+      setLocalDescription("");
+    }
+  };
+
+  const selectTargetSentence = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      getRemoteSentenceById(_id).then((sentence) => {
+        setTargetSentence(sentence);
+        setTargetPrerequisites(
+          sentence.prerequisites.map((id) => words[sentence.language].find(({ _id }) => id === _id)!)
+        );
+        setLocalDescription(sentence.text);
+      });
+    } else if (label) {
+      setLocalDescription("");
+    }
+  };
+
+  const addSourcePrerequisite = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      setSourcePrerequisites((prerequisites) => [
+        ...(prerequisites || []),
+        words[sourceLanguage].find(({ _id: id }) => id === _id)!,
+      ]);
+      setLocalDescription("");
+    }
+  };
+
+  const addTargetPrerequisite = ({
+    _id,
+    label,
+    setLocalDescription,
+  }: {
+    _id?: string;
+    label?: string;
+    setLocalDescription: Dispatch<React.SetStateAction<string>>;
+  }) => {
+    if (_id) {
+      setTargetPrerequisites((prerequisites) => [
+        ...(prerequisites || []),
+        words[targetLanguage].find(({ _id: id }) => id === _id)!,
+      ]);
+      setLocalDescription("");
+    }
+  };
+
+  const saveSourcePrerequisites = () => {
+    saveSentence({
+      _id: sourceSentence?._id,
+      prerequisites: sourcePrerequisites?.map(({ _id }) => _id),
+    });
+  };
+
+  const saveTargetPrerequisites = () => {
+    saveSentence({
+      _id: targetSentence?._id,
+      prerequisites: targetPrerequisites?.map(({ _id }) => _id),
+    });
+  };
+
+  const saveSourceTags = () => {
+    saveWord({
+      _id: sourceWordForTag?._id,
+      sourceLanguage: sourceWordForTag?.sourceLanguage,
+      tags: (sourceTags || []).map((tag) => tag._id),
+    });
+  };
+
+  const saveTargetTags = () => {
+    saveWord({
+      _id: targetWordForTag?._id,
+      tags: (targetTags || []).map((tag) => tag._id),
+    });
+  };
 
   const selectSourceWord = ({
     _id,
@@ -160,7 +339,7 @@ export default function CreationForm() {
 
   const saveNewTag =
     (
-      typeInput: React.MutableRefObject<HTMLInputElement | null>,
+      typeInput: React.MutableRefObject<HTMLSelectElement | null>,
       source: React.MutableRefObject<HTMLInputElement | null>,
       target: React.MutableRefObject<HTMLInputElement | null>
     ) =>
@@ -178,7 +357,8 @@ export default function CreationForm() {
         customFetch(url + "tags", { method: "POST", headers: authHeaders(), body })
           .then(({ data: tag }) => {
             setTags((tags) => ({
-              ...tags, [type]: [...tags[type === "wordTag"? "wordTags" : "conversationTags"], tag[sourceLanguage]]
+              ...tags,
+              [type]: [...tags[type === "wordTag" ? "wordTags" : "conversationTags"], tag[sourceLanguage]],
             }));
           })
           .catch((err: Error) => {
@@ -221,10 +401,7 @@ export default function CreationForm() {
           const body = JSON.stringify(formattedArgs);
           customFetch(url + "multilingualsentences", { method: "POST", headers: authHeaders(), body })
             .then(({ data: newMultiLingualSentence }) => {
-              setMultiLingualSentences((multiLingualSentences) => ([
-                ...multiLingualSentences,
-                newMultiLingualSentence,
-              ]));
+              setMultiLingualSentences((multiLingualSentences) => [...multiLingualSentences, newMultiLingualSentence]);
             })
             .catch((err: Error) => {
               console.log(err);
@@ -309,14 +486,16 @@ export default function CreationForm() {
       });
   };
 
-  const fetchSentenceDropDownList = (searchString: string): Promise<{ _id: string; label: string }[]> => {
-    const searchParams = new URLSearchParams({ language: sourceLanguage, searchString: searchString.trim() });
-    return customFetch(url + `sentences?${searchParams}`, { method: "GET", headers: authHeaders() }).then(
-      (sentences: Sentence[]) => {
-        return sentences.map(({ _id, text }) => ({ _id, label: text }));
-      }
-    );
-  };
+  const fetchSentenceDropDownList =
+    (language: Language) =>
+    (searchString: string): Promise<{ _id: string; label: string }[]> => {
+      const searchParams = new URLSearchParams({ language: language, searchString: searchString.trim() });
+      return customFetch(url + `sentences?${searchParams}`, { method: "GET", headers: authHeaders() }).then(
+        (sentences: Sentence[]) => {
+          return sentences.map(({ _id, text }) => ({ _id, label: text }));
+        }
+      );
+    };
 
   return (
     <div id="flashcardForm">
@@ -347,13 +526,61 @@ export default function CreationForm() {
         </div>
         <div className="prerequisiteInput">
           <AutoCompleteFetch
-            fetchCallback={fetchSentenceDropDownList}
+            fetchCallback={fetchSentenceDropDownList(sourceLanguage)}
             callback={addSentenceToConversation}
             placeholder="Sentence"
             placement="bottom-start"
           />
         </div>
         <button onClick={saveConversation}>Save conversation</button>
+        <div className="prerequisiteInput">
+          <AutoCompleteFetch
+            fetchCallback={fetchSentenceDropDownList(sourceLanguage)}
+            callback={selectSourceSentence}
+            placeholder="Source Sentence"
+            placement="bottom-start"
+          />
+        </div>
+        {sourcePrerequisites && sourcePrerequisites.length > 0 && (
+          <div id="sourcePrerequisites">
+            {sourcePrerequisites.map((word, index) => (
+              <WordLine key={index} word={word} />
+            ))}
+          </div>
+        )}
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={words[sourceLanguage].map(({ _id, text }) => ({ _id, label: text }))}
+            callback={addSourcePrerequisite}
+            placeholder="Source prerequisites"
+            placement="bottom-start"
+          />
+        </div>
+        <button onClick={saveSourcePrerequisites}>Save source prerequisites</button>
+        <div className="prerequisiteInput">
+          <AutoCompleteFetch
+            fetchCallback={fetchSentenceDropDownList(targetLanguage)}
+            callback={selectTargetSentence}
+            placeholder="Target Sentence"
+            placement="bottom-start"
+          />
+        </div>
+        {targetPrerequisites && targetPrerequisites.length > 0 && (
+          <div id="sourcePrerequisites">
+            {targetPrerequisites.map((word, index) => (
+              <WordLine key={index} word={word} />
+            ))}
+          </div>
+        )}
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={words[targetLanguage].map(({ _id, text }) => ({ _id, label: text }))}
+            callback={addTargetPrerequisite}
+            placeholder="Target prerequisites"
+            placement="bottom-start"
+          />
+        </div>
+        <button onClick={saveTargetPrerequisites}>Save target prerequisites</button>
         <div id="sourceText">
           <input ref={selectedSourceSentenceRef} style={{ width: "100%" }} type="text" placeholder="Sentence" />
         </div>
@@ -363,6 +590,54 @@ export default function CreationForm() {
         <button onClick={saveNewMultilingualSentence(selectedSourceSentenceRef, selectedTargetSentenceRef)}>
           Save sentence
         </button>
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={words[sourceLanguage].map(({ _id, text }) => ({ _id, label: text }))}
+            callback={selectSourceWordForTag}
+            placeholder="Source word"
+            placement="bottom-start"
+          />
+        </div>
+        {sourceTags && sourceTags.length > 0 && (
+          <div id="sourcePrerequisites">
+            {sourceTags.map((tag, index) => (
+              <div>{tag.label}</div>
+            ))}
+          </div>
+        )}
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={tags["wordTags"]}
+            callback={addSourceTag}
+            placeholder="Source tag"
+            placement="bottom-start"
+          />
+        </div>
+        <button onClick={saveSourceTags}>Save source tags</button>
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={words[targetLanguage].map(({ _id, text }) => ({ _id, label: text }))}
+            callback={selectTargetWordForTag}
+            placeholder="Target word"
+            placement="bottom-start"
+          />
+        </div>
+        {targetTags && targetTags.length > 0 && (
+          <div id="sourcePrerequisites">
+            {targetTags.map((tag, index) => (
+              <div>{tag.label}</div>
+            ))}
+          </div>
+        )}
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={tags["wordTag"]}
+            callback={addTargetTag}
+            placeholder="Target tag"
+            placement="bottom-start"
+          />
+        </div>
+        <button onClick={saveTargetTags}>Save target tags</button>
         <div id="container2">
           <div id="sourceLanguageForm">
             {sourceLanguage && targetLanguage && (
@@ -428,7 +703,10 @@ export default function CreationForm() {
           </div>
         </div>
         <div id="tagType">
-          <input ref={selectedTagTypeRef} style={{ width: "100%" }} type="text" placeholder="Type" />
+          <select ref={selectedTagTypeRef} style={{ width: "100%" }}>
+            <option value="wordTag">Word tag</option>
+            <option value="conversationTag">Conversation tag</option>
+          </select>
         </div>
         <div id="sourceTagText">
           <input ref={selectedSourceTagRef} style={{ width: "100%" }} type="text" placeholder="Tag" />

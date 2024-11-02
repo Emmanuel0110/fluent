@@ -7,6 +7,7 @@ import { Context } from "../../types";
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
   const {
+    sourceLanguage,
     targetLanguage,
     words,
     user,
@@ -24,8 +25,8 @@ export const WordLine = ({ word }: { word: Word }) => {
     }
   }, [wordId]);
 
-  const { _id, text, sourceLanguage, [targetLanguage]: translations, nextReviewDate, learntDate } = word;
-
+  const { _id, text, nextReviewDate, learntDate } = word;
+  const translations = word.sourceLanguage === sourceLanguage ? word[targetLanguage] : word[sourceLanguage];
   const onEdit = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     editFlashcard(id);
@@ -45,12 +46,12 @@ export const WordLine = ({ word }: { word: Word }) => {
     <div
       ref={lineRef}
       className={"line" + (_id === wordId ? " selectedFlashcard" : "")}
-      onClick={() => openWord(_id, sourceLanguage)}
+      onClick={() => openWord(_id, word.sourceLanguage)}
     >
       <div className={"lineTitle"}>
         {text +
           " : " +
-          translations!.map((wordId) => words[targetLanguage].find(({ _id }) => _id === wordId)!.text).join(", ")}
+          translations!.map((wordId) => words[word.sourceLanguage === sourceLanguage ? targetLanguage : sourceLanguage].find(({ _id }) => _id === wordId)!.text).join(", ")}
       </div>
       <div className="lineOptions">
         <div
