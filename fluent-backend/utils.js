@@ -1,3 +1,3 @@
 export function escapeRegExp(text) {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }

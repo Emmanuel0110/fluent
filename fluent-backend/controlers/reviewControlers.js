@@ -1,6 +1,10 @@
 import { MultiLingualConversationModel, StoryNodeModel } from "../models";
+import express from "express";
+const router = express.Router();
 
-export async function getNextReviewItems(req, res) {
+router.get("/", auth, getNextReviewItems)
+
+async function getNextReviewItems(req, res) {
   try {
     const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first choose a language
     res.json({ status: "success", data: nextReviewItems });
@@ -26,8 +30,6 @@ async function getReviewItems(userLearningData) {
   }
   return [];
 }
-
-//Design : Review items are always conversations
 
 async function getLateReviewItems(userLearningData) {
   const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);

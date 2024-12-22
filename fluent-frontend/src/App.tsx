@@ -41,12 +41,8 @@ import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
 import CreationForm from "./flashcards/components/CreationForm";
 
-export let url = "/api/";
-
-if (process.env.NODE_ENV === "production") {
-  url = process.env.PUBLIC_URL + url;
-}
-
+export const url = process.env.REACT_APP_API_URL;
+console.log("process.env", process.env);
 export const ConfigContext = createContext<Context | null>(null);
 
 export const updateCacheWithNewWords = (

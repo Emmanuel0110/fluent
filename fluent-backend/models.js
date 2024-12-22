@@ -29,12 +29,17 @@ export const UserModel = model("User", userSchema);
 
 const UserCourseSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  language: { type: String, required: true },
+  sourceLanguage: { type: Schema.Types.ObjectId, ref: "Language", required: true },
+  targetLanguage: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   wishListConversations: [{ type: Schema.Types.ObjectId, ref: "MultiLingualConversation" }],
   story: { type: Schema.Types.ObjectId, ref: "Story" },
   nextStoryNode: { type: Schema.Types.ObjectId, ref: "StoryNode" },
   words: [
-    { _id: { type: Schema.Types.ObjectId, ref: "LexicalItem", required: true }, nextReviewDate: { type: Date, index: true } },
+    {
+      _id: { type: Schema.Types.ObjectId, ref: "LexicalItem", required: true },
+      nextReviewDate: { type: Date, index: true },
+      reviewDelayInMs: Number
+    },
   ],
   conversations: [
     {
@@ -49,20 +54,16 @@ export const UserCourseModel = model("UserCourse", UserCourseSchema);
 const StorySchema = new Schema({
   _id: Schema.Types.ObjectId,
   title: { type: String },
+  language: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   nodes: [{ type: Schema.Types.ObjectId, ref: "StoryNode" }],
 });
 export const StoryModel = model("Story", StorySchema);
 
 const StoryNodeSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  node: {
-    language: { type: Schema.Types.ObjectId, ref: "Language", required: true },
-    content: {
-      title: { type: String },
-      text: { type: String },
-      prerequisites: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
-    },
-  },
+  title: { type: String },
+  text: { type: String },
+  prerequisites: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
   nextIds: [{ type: Schema.Types.ObjectId, ref: "StoryNode" }],
 });
 export const StoryNodeModel = model("StoryNode", StoryNodeSchema);
