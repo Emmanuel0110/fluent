@@ -2,71 +2,47 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConfigContext } from "../../App";
 import {
-  CompletedMultiLingualSentence,
   Context,
   Conversation,
-  MultiLingualSentence,
   Sentence,
   Word,
 } from "../../types";
 import { Flashcard } from "../../types";
 import DotOptions from "../../utils/DotOptions/DotOptions";
 import { Button } from "react-bootstrap";
-import { editUserFlashcardInfo, readRemoteFlashcard } from "../flashcardActions";
+import { editUserFlashcardInfo } from "../flashcardActions";
 import { WordLine } from "./WordLine";
 import { Editor } from "@tinymce/tinymce-react";
 import { ConversationLine } from "./ConversationLine";
 
 export default function SentenceDetail({
-  multiLingualSentence,
+  multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },
 }: {
   multiLingualSentence: {
     sourceLanguage: Sentence;
     targetLanguage: Sentence;
   };
 }) {
-  const { subscribeToConversation, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
+  const { words, subscribeToConversation, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
-
-  const onSubscribe = (e: React.MouseEvent, { _id, nextReviewDate }: Partial<MultiLingualSentence>) => {
-    e.stopPropagation();
-    subscribeToConversation(_id);
-  };
-
   return (
     <div id="flashCardComponent">
       <div id="flashcard">
-        <div id="previous">
-          <div
-            className={"subscribe" + (multiLingualSentence.nextReviewDate instanceof Date ? " subscribed" : "")}
-            onClick={(e) =>
-              onSubscribe(e, { _id: multiLingualSentence._id, nextReviewDate: multiLingualSentence.nextReviewDate })
-            }
-          ></div>
-        </div>
         <div id="middle">
-          <div onClick={() => setIsTargetSentenceSelected(false)}>{multiLingualSentence[sourceLanguage]?.text}</div>
-          <div onClick={() => setIsTargetSentenceSelected(true)}>{multiLingualSentence[targetLanguage]?.text}</div>
-          {sourcePrerequisites.length > 0 && !isTargetSentenceSelected && (
+          <div onClick={() => setIsTargetSentenceSelected(false)}>{sourceSentence.text}</div>
+          <div onClick={() => setIsTargetSentenceSelected(true)}>{targetSentence.text}</div>
+          {sourceSentence.prerequisites.length > 0 && !isTargetSentenceSelected && (
             <div id="sourcePrerequisites">
-              {sourcePrerequisites.map((word, index) => (
-                <WordLine key={index} word={word} />
-              ))}
+              {sourceSentence.prerequisites.map((wordId, index) =>
+                words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
+              )}
             </div>
           )}
-          {targetPrerequisites.length > 0 && isTargetSentenceSelected && (
+          {targetSentence.prerequisites.length > 0 && isTargetSentenceSelected && (
             <div id="targetPrerequisites">
-              {sourcePrerequisites.map((word, index) => (
-                <WordLine key={index} word={word} />
-              ))}
-            </div>
-          )}
-          {usedIn.length > 0 && (
-            <div id="usedIn">
-              <div className="flashcardSection">Used in</div>
-              {usedIn.map((conversation, index) => (
-                <ConversationLine key={index} conversation={conversation} />
-              ))}
+              {targetSentence.prerequisites.map((wordId, index) =>
+                words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
+              )}
             </div>
           )}
         </div>

@@ -1,40 +1,45 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Sentence, Tag, Word } from "../types";
+import { Conversation, Sentence, Tag, Word } from "../types";
 
-export const getRemoteMultiLingualSentenceById = async (
-  id: string,
-  sourceLanguage: string,
-  targetLanguage: string
-): Promise<{ newMultiLingualSentence: MultiLingualSentence; newSentences: Sentence[] }> => {
-  return customFetch(url + "multilingualsentences/" + id + "?languages=" + sourceLanguage + "-" + targetLanguage, {
+export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
+  return customFetch(url + "multilingualsentences/" + id, {
     method: "GET",
     headers: authHeaders(),
+  }).catch((err: Error) => {
+    console.log(err);
   });
 };
 
-export const saveNewFlashcard = async (args: Partial<Flashcard>) => {
-  const formattedArgs = { ...args, tags: args.tags?.map((tag) => tag._id) || [] };
-  const body = JSON.stringify(formattedArgs);
-  return customFetch(url + "flashcards", { method: "POST", headers: authHeaders(), body });
-};
-
-export const getRemoteSentenceById = async (_id: string): Promise<Sentence> => {
-  return customFetch(url + "sentences?_id=" + _id, { method: "GET", headers: authHeaders() });
-};
-
-export const editRemoteSentence = async ({ _id, ...args }: Partial<Sentence>) => {
+export const saveNewWord = async (args: Partial<Word>) => {
   const body = JSON.stringify(args);
-  return customFetch(url + "sentences/" + _id, { method: "PATCH", headers: authHeaders(), body });
+  return customFetch(url + "words", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const saveNewConversation = async (args: Partial<Conversation>) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "conversations", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
 };
 
 export const editRemoteWord = async ({ _id, ...args }: Partial<Word>) => {
   const body = JSON.stringify(args);
-  return customFetch(url + "words/" + _id, { method: "PATCH", headers: authHeaders(), body });
+  return customFetch(url + "words/" + _id, { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
 };
 
-export const deleteRemoteFlashcard = async (flashcardId: string) => {
-  return customFetch(url + "flashcards/" + flashcardId, { method: "DELETE", headers: authHeaders() }).catch(
+export const deleteRemoteWord = async (wordId: string) => {
+  return customFetch(url + "words/" + wordId, { method: "DELETE", headers: authHeaders() }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const deleteRemoteConversation = async (conversationId: string) => {
+  return customFetch(url + "conversations/" + conversationId, { method: "DELETE", headers: authHeaders() }).catch(
     (err: Error) => {
       console.log(err);
     }
@@ -58,15 +63,6 @@ export const editUserFlashcardInfo = async ({ _id, ...body }: any) => {
   }).catch((err: Error) => {
     console.log(err);
   });
-};
-
-export const readRemoteFlashcard = async (flashcard: Flashcard) => {
-  const body = JSON.stringify({ hasBeenRead: true, nextReviewDate: flashcard.nextReviewDate });
-  return customFetch(url + "userflashcardinfo/" + flashcard._id, { method: "PUT", headers: authHeaders(), body }).catch(
-    (err: Error) => {
-      console.log(err);
-    }
-  );
 };
 
 // export const saveNewTag = async ({ label }: { label: string }) => {

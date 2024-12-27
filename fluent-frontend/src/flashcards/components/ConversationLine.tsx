@@ -7,7 +7,7 @@ import { SentenceLine } from "./SentenceLine";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId } = useParams();
-  const { user, openMultiLingualSentence, editFlashcard, deleteConversation, subscribeToConversation } = useContext(
+  const { user, openConversation, editFlashcard, deleteConversation, subscribeToConversation } = useContext(
     ConfigContext
   ) as Context;
 
@@ -38,7 +38,7 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
     <div
       ref={lineRef}
       className={"line" + (conversation._id === conversationId ? " selectedFlashcard" : "")}
-      onClick={() => openMultiLingualSentence(conversation._id)}
+      onClick={() => openConversation(conversation._id)}
     >
       {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
         <SentenceLine key={index} multiLingualSentence={multiLingualSentence} />

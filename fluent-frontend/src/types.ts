@@ -38,26 +38,9 @@ export type SearchFilter = { isActive: boolean; data: string[] }[];
 
 export type conversationFilter = { tag?: string };
 
-export interface OpenFlashcardData {
-  id: string;
-  data: Flashcard;
-  unsavedData?: Flashcard;
-}
-
-export interface OpenWordData {
-  id: string;
-  data: Word;
-  unsavedData?: Word;
-}
-
-export interface OpenMultiLingualSentenceData {
-  id: string;
-  data: CompletedMultiLingualSentence;
-  unsavedData?: CompletedMultiLingualSentence;
-}
-
 export interface View {
-  openedFlashcards: OpenFlashcardData[];
+  openedConversations: Conversation[];
+  openedWords: Word[];
   status: string;
   searchFilter: SearchFilter;
   treeFilter: string[];
@@ -90,13 +73,13 @@ export interface Context {
   setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
   conversations: Conversation[];
   setConversations: Dispatch<SetStateAction<Conversation[]>>;
-  sourceLanguage: Language;
-  targetLanguage: Language;
-  openedWords: OpenWordData[];
-  setOpenedWords: Dispatch<SetStateAction<OpenWordData[]>>;
-  setOpenedConversations: Dispatch<SetStateAction<OpenMultiLingualSentenceData[]>>;
+  sourceLanguage: string;
+  targetLanguage: string;
+  openedWords: Word[];
+  setOpenedWords: Dispatch<SetStateAction<Word[]>>;
+  setOpenedConversations: Dispatch<SetStateAction<Conversation[]>>;
   getConversationById: (id: string) => Promise<Conversation>;
-  openedConversations: OpenMultiLingualSentenceData[];
+  openedConversations: Conversation[];
   isAuthenticated: boolean | null;
   setIsAuthenticated: Dispatch<SetStateAction<boolean | null>>;
   searchFilter: SearchFilter;
@@ -108,16 +91,12 @@ export interface Context {
   tags: { [key: string]: Tag[] };
   setTags: Dispatch<SetStateAction<{ wordTags: Tag[]; conversationTags: Tag[] }>>;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
-  openMultiLingualSentence: (id: string) => void;
   openWord: (id: string) => void;
-  editFlashcard: (id: string) => void;
-  editCurrentFlashcard: (flashcard: Flashcard) => void;
+  openConversation: (id: string) => void;
   deleteConversation: (_id: string) => void;
   deleteWord: (_id: string) => void;
   subscribeToConversation: (_id: string) => void;
-  saveSentence: (infos: Partial<Sentence>) => void;
   saveWord: (infos: Partial<Word>) => void;
-  saveAsNewFlashcard: (infos: Partial<Flashcard>) => Promise<Flashcard>;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;

@@ -11,7 +11,7 @@ function TabNav({
   closeAllTabs,
   selectTab,
 }: {
-  tabsData: { id: string; text: string; unsaved: boolean }[];
+  tabsData: { id: string; text: string }[];
   selectedId: string;
   closeTab: (index: number) => void;
   closeOtherTabs: (e: React.MouseEvent<HTMLElement>, index: number) => void;
@@ -61,7 +61,6 @@ function TabNav({
                             >
                               <div className="tabClose"></div>
                             </div>
-                            {tabData.unsaved && <div className="dot"></div>}
                           </div>
                         </>
                       }
@@ -72,10 +71,7 @@ function TabNav({
             })}
         </Nav>
         {tabsData.length > 1 && (
-          <div
-            id="pannelCloseContainer"
-            onClick={closeAllTabs}
-          >
+          <div id="pannelCloseContainer" onClick={closeAllTabs}>
             <div className="pannelClose"></div>
           </div>
         )}

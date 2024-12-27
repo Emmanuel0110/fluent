@@ -1,9 +1,9 @@
-import { Conversation, OpenFlashcardData, OpenWordData, Word } from "../../types";
+import { Conversation, Word } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../../utils/useSplitPane";
 import WordList from "./WordList";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ConfigContext, updateCacheWithNewWords } from "../../App";
+import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
@@ -16,14 +16,19 @@ export default function WordListWithDetail({
   openedWords,
 }: {
   filteredWords: Word[];
-  openedWords: OpenWordData[];
+  openedWords: Word[];
 }) {
-  const { sourceLanguage, targetLanguage, words, setWords, setOpenedWords, conversations, fetchMoreUsedInConversations } = useContext(
-    ConfigContext
-  ) as Context;
+  const {
+    sourceLanguage,
+    targetLanguage,
+    words,
+    setWords,
+    setOpenedWords,
+    conversations,
+    fetchMoreUsedInConversations,
+  } = useContext(ConfigContext) as Context;
   const wordId = useParams().wordId!;
-  const [currentOpenedFlashcard, setCurrentOpenedFlashcard] = useState<OpenFlashcardData | null>(null);
-  const [currentOpenedWord, setCurrentOpenedWord] = useState<OpenWordData | null>(null);
+  const [currentOpenedWord, setCurrentOpenedWord] = useState<Word | null>(null);
   const [prerequisites, setPrerequisites] = useState<Word[]>([]);
   const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
   const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
@@ -35,13 +40,13 @@ export default function WordListWithDetail({
   useSplitPane(["#left", "#right"], "horizontal", [50, 50]);
 
   useEffect(() => {
-    let currentOpenedWord = openedWords.find(({ id }) => id === wordId);
+    let currentOpenedWord = openedWords.find(({ _id }) => _id === wordId);
     if (currentOpenedWord) {
       setCurrentOpenedWord(currentOpenedWord);
     } else {
       const word = words[wordId];
       if (word) {
-        currentOpenedWord = { id: word._id, data: word };
+        currentOpenedWord = word;
         setOpenedWords([...openedWords, currentOpenedWord]);
         setCurrentOpenedWord(currentOpenedWord);
       }
@@ -61,9 +66,12 @@ export default function WordListWithDetail({
   }, [conversations]);
 
   const fillUsedIn = () => {
-    const usedInConversations = conversations.filter(({multiLingualSentences}) =>
-      multiLingualSentences.some(sentence => sentence.sourceLanguage.prerequisites.includes(wordId) ||
-    sentence.targetLanguage.prerequisites.includes(wordId))
+    const usedInConversations = conversations.filter(({ multiLingualSentences }) =>
+      multiLingualSentences.some(
+        (sentence) =>
+          sentence.sourceLanguage.prerequisites.includes(wordId) ||
+          sentence.targetLanguage.prerequisites.includes(wordId)
+      )
     );
     setdUsedIn(usedInConversations);
     return usedInConversations;
@@ -72,13 +80,13 @@ export default function WordListWithDetail({
   const closeTab = (tabIndex: number) => {
     setOpenedWords((openedWords) => openedWords.filter((word, index) => index !== tabIndex));
     navigate(
-      openedWords.length > 1 ? "/words/" + (openedWords[tabIndex + 1]?.id || openedWords[tabIndex - 1]?.id) : "/words"
+      openedWords.length > 1 ? "/words/" + (openedWords[tabIndex + 1]?._id || openedWords[tabIndex - 1]?._id) : "/words"
     );
   };
 
   const closeOtherTabs = (e: React.MouseEvent<HTMLElement>, index: number) => {
     e.preventDefault();
-    navigate("/words/" + openedWords[index].id);
+    navigate("/words/" + openedWords[index]._id);
     setOpenedWords([openedWords[index]]);
   };
 
@@ -98,10 +106,9 @@ export default function WordListWithDetail({
         {currentOpenedWord && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedWords.map(({ id, data: { sourceLanguage }, unsavedData }) => ({
-                id,
+              tabsData={openedWords.map(({ _id, sourceLanguage }) => ({
+                id: _id,
                 text: sourceLanguage,
-                unsaved: !!unsavedData,
               }))}
               selectedId={wordId}
               closeTab={closeTab}
@@ -109,7 +116,7 @@ export default function WordListWithDetail({
               closeAllTabs={closeAllTabs}
               selectTab={selectTab}
             />
-            <WordDetail word={currentOpenedWord.data} usedIn={usedIn} />
+            <WordDetail word={currentOpenedWord} usedIn={usedIn} />
             {/* )} */}
           </div>
         )}

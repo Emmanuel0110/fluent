@@ -1,16 +1,9 @@
-import {
-  Conversation,
-  Flashcard,
-  OpenFlashcardData,
-  OpenConversationData,
-  Sentence,
-  Word,
-} from "../../types";
+import { Conversation, Flashcard, Sentence, Word } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../../utils/useSplitPane";
 import WordList from "./WordList";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ConfigContext, updateCacheWithNewWords } from "../../App";
+import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
@@ -25,7 +18,7 @@ export default function ConversationListWithDetail({
   openedConversations,
 }: {
   filteredConversations: Conversation[];
-  openedConversations: OpenConversationData[];
+  openedConversations: Conversation[];
 }) {
   const {
     sourceLanguage,
@@ -34,11 +27,10 @@ export default function ConversationListWithDetail({
     setWords,
     conversations,
     setOpenedConversations,
-    getConversationById
+    getConversationById,
   } = useContext(ConfigContext) as Context;
   const conversationId = useParams().conversationId!;
-  const [currentOpenedConversation, setCurrentOpenedConversation] =
-    useState<OpenConversationData | null>(null);
+  const [currentOpenedConversation, setCurrentOpenedConversation] = useState<Conversation | null>(null);
   const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
   const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
   const [usedIn, setdUsedIn] = useState<any[]>([]);
@@ -50,23 +42,14 @@ export default function ConversationListWithDetail({
 
   useEffect(() => {
     if (!loading.current) {
-      const openedConversation = openedConversations.find(({ id }) => id === conversationId);
+      const openedConversation = openedConversations.find(({ _id }) => _id === conversationId);
       if (openedConversation) {
         setCurrentOpenedConversation(openedConversation);
       } else {
         const conversation = conversations.find(({ _id }) => _id === conversationId);
         if (conversation) {
-          const openedConversation: OpenConversationData = {
-            id: conversation._id,
-            data: {
-              _id: conversation._id,
-              nextReviewDate: conversation.nextReviewDate,
-              [sourceLanguage]: sentences.find(({ _id }) => _id === conversation[sourceLanguage])!,
-              [targetLanguage]: sentences.find(({ _id }) => _id === conversation[targetLanguage])!,
-            },
-          };
-          setOpenedConversations([...openedConversations, openedConversation]); //Why is it too slow when I use function in setOpenedFlashcards ?
-          setCurrentOpenedConversation(openedConversation);
+          setOpenedConversations([...openedConversations, conversation]);
+          setCurrentOpenedConversation(conversation);
         } else {
           loading.current = true;
           getConversationById(conversationId).then(() => (loading.current = false));
@@ -81,15 +64,14 @@ export default function ConversationListWithDetail({
     );
     navigate(
       openedConversations.length > 1
-        ? "/conversations/" +
-            (openedConversations[tabIndex + 1]?.id || openedConversations[tabIndex - 1]?.id)
+        ? "/conversations/" + (openedConversations[tabIndex + 1]?._id || openedConversations[tabIndex - 1]?._id)
         : "/conversations"
     );
   };
 
   const closeOtherTabs = (e: React.MouseEvent<HTMLElement>, index: number) => {
     e.preventDefault();
-    navigate("/conversations/" + openedConversations[index].id);
+    navigate("/conversations/" + openedConversations[index]._id);
     setOpenedConversations([openedConversations[index]]);
   };
 
@@ -109,11 +91,10 @@ export default function ConversationListWithDetail({
         {currentOpenedConversation && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedConversations.map(({ id, data, unsavedData }) => {
+              tabsData={openedConversations.map(({ _id, multiLingualSentences }) => {
                 return {
-                  id,
-                  text: data[sourceLanguage]?.text || "",
-                  unsaved: !!unsavedData,
+                  id: _id,
+                  text: multiLingualSentences[0]?.sourceLanguage?.text || "",
                 };
               })}
               selectedId={conversationId}
@@ -122,9 +103,7 @@ export default function ConversationListWithDetail({
               closeAllTabs={closeAllTabs}
               selectTab={selectTab}
             />
-            <ConversationDetail conversation={currentOpenedConversation.data}
-            />
-            {/* )} */}
+            <ConversationDetail conversation={currentOpenedConversation} />
           </div>
         )}
       </div>

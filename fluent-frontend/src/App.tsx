@@ -6,34 +6,20 @@ import Layout from "./Layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";
-import {
-  Context,
-  Conversation,
-  conversationFilter,
-  Words,
-  OpenFlashcardData,
-  OpenMultiLingualSentenceData,
-  OpenWordData,
-  SearchFilter,
-  Tag,
-  User,
-  View,
-  Word,
-} from "./types";
+import { Context, Conversation, conversationFilter, SearchFilter, Tag, User, View, Word } from "./types";
 import WordList from "./flashcards/components/WordList";
 import { authHeaders, customFetch } from "./utils/http-helpers";
 import WordListWithDetail from "./flashcards/components/WordListWithDetail";
 import {
-  deleteRemoteFlashcard,
-  editRemoteSentence,
+  deleteRemoteWord,
+  deleteRemoteConversation,
   editRemoteWord,
   fetchTags,
   fetchWords,
-  getRemoteMultiLingualSentenceById,
-  saveNewFlashcard,
+  getRemoteConversationById,
+  saveNewWord,
+  saveNewConversation,
   subscribeToRemoteConversation,
-  subscribeToRemoteMultiLingualSentence,
-  subscribeToRemoteWord,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -42,69 +28,11 @@ import CreationForm from "./flashcards/components/CreationForm";
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
 
-export const updateCacheWithNewWords = (
-  words: { [key: string]: Word[] },
-  newWords: Word[]
-): { [key: string]: Word[] } => {
-  return newWords.reduce((acc: { [key: string]: Word[] }, value: Word) => {
-    value = {
-      ...value,
-      nextReviewDate: value.nextReviewDate ? new Date(value.nextReviewDate) : undefined,
-    };
-    var index: number = acc[value.sourceLanguage].findIndex((word) => word._id === value._id);
-    if (index === -1) {
-      return { ...acc, [value.sourceLanguage]: [...acc[value.sourceLanguage], value] };
-    } else {
-      acc[value.sourceLanguage].splice(index, 1, value);
-      return { ...acc, [value.sourceLanguage]: [...acc[value.sourceLanguage]] };
-    }
-  }, words);
-};
-
-export const updateCacheWithNewSentences = (sentences: Sentence[], newSentences: Sentence[]): Sentence[] => {
-  return newSentences.reduce((acc: Sentence[], value: Sentence) => {
-    value = {
-      ...value,
-      nextReviewDate: value.nextReviewDate ? new Date(value.nextReviewDate) : undefined,
-    };
-    var index: number = acc.findIndex((sentence) => sentence._id === value._id);
-    if (index === -1) {
-      return [...acc, value];
-    } else {
-      acc.splice(index, 1, value);
-      return [...acc];
-    }
-  }, sentences);
-};
-
-export const updateCacheWithNewMultiLingualSentences = (
-  multiLingualSentences: MultiLingualSentence[],
-  newMultiLingualSentences: MultiLingualSentence[]
-): MultiLingualSentence[] => {
-  return newMultiLingualSentences.reduce((acc: MultiLingualSentence[], value: MultiLingualSentence) => {
-    value = {
-      ...value,
-      nextReviewDate: value.nextReviewDate ? new Date(value.nextReviewDate) : undefined,
-    };
-    var index: number = acc.findIndex((sentence) => sentence._id === value._id);
-    if (index === -1) {
-      return [...acc, value];
-    } else {
-      acc.splice(index, 1, value);
-      return [...acc];
-    }
-  }, multiLingualSentences);
-};
-
 export const updateCacheWithNewConversations = (
   conversations: Conversation[],
   newConversations: Conversation[]
 ): Conversation[] => {
   return newConversations.reduce((acc: Conversation[], value: Conversation) => {
-    value = {
-      ...value,
-      nextReviewDate: value.nextReviewDate ? new Date(value.nextReviewDate) : undefined,
-    };
     var index: number = acc.findIndex((sentence) => sentence._id === value._id);
     if (index === -1) {
       return [...acc, value];
@@ -131,7 +59,7 @@ const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
     if (filterString.toLowerCase().slice(4).trim().startsWith("#")) {
       return !word.tags.includes(filterString.toLowerCase().trim().slice(5));
     } else {
-      return !word.text
+      return !word.sourceLanguage
         .toLowerCase()
         .includes(filterString.toLowerCase().trim().slice(4).replace(/^\"/, "").replace(/\"$/, ""));
     }
@@ -139,7 +67,9 @@ const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
     if (filterString.toLowerCase().trim().startsWith("#")) {
       return word.tags.includes(filterString.toLowerCase().trim().slice(1));
     } else {
-      return word.text.toLowerCase().includes(filterString.toLowerCase().replace(/^\"/, "").replace(/\"$/, ""));
+      return word.sourceLanguage
+        .toLowerCase()
+        .includes(filterString.toLowerCase().replace(/^\"/, "").replace(/\"$/, ""));
     }
   }
 };
@@ -160,14 +90,12 @@ export default function App() {
   const [treeFilter, setTreeFilter] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState<SearchFilter>([]);
   const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
-  const [flashcards, setFlashcards] = useState([] as Flashcard[]);
   const [conversations, setConversations] = useState([] as Conversation[]);
   const [words, setWords] = useState<{ [id: string]: Word }>({});
-  const [sourceLanguage, setSourceLanguage] = useState("fr" as Language);
-  const [targetLanguage, setTargetLanguage] = useState("en" as Language);
-  const [openedFlashcards, setOpenedFlashcards] = useState([] as OpenFlashcardData[]);
-  const [openedWords, setOpenedWords] = useState([] as OpenWordData[]);
-  const [openedMultiLingualSentences, setOpenedMultiLingualSentences] = useState([] as OpenMultiLingualSentenceData[]);
+  const [sourceLanguage, setSourceLanguage] = useState("");
+  const [targetLanguage, setTargetLanguage] = useState("");
+  const [openedWords, setOpenedWords] = useState([] as Word[]);
+  const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [status, setStatus] = useState("words");
   const [tags, setTags] = useState({ wordTags: [], conversationTags: [] } as {
     wordTags: Tag[];
@@ -181,17 +109,6 @@ export default function App() {
       fetchWords(sourceLanguage, targetLanguage).then((words) => setWords(words));
     }
   }, [isAuthenticated]);
-
-  useEffect(() => {
-    if (openedFlashcards.length !== 0) {
-      setOpenedFlashcards((openFlashcards) =>
-        openFlashcards.map((openFlashcard) => {
-          const flashcard = flashcards.find(({ _id }) => _id === openFlashcard.id);
-          return flashcard ? { ...openFlashcard, data: flashcard } : openFlashcard;
-        })
-      );
-    }
-  }, [flashcards]);
 
   const filteredWords = useMemo(() => {
     const searchFilterWithTagIds = searchFilter.map((filterItem) => {
@@ -209,11 +126,9 @@ export default function App() {
         }),
       };
     });
-    return words[sourceLanguage]
-      ? words[sourceLanguage].filter((word) => {
-          return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilterWithTagIds, treeFilter);
-        })
-      : [];
+    return Object.values(words).filter((word) => {
+      return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilterWithTagIds, treeFilter);
+    });
   }, [words, status, searchFilter, treeFilter]);
 
   const filteredConversations = useMemo(() => {
@@ -240,7 +155,8 @@ export default function App() {
       }
       viewIndex.current =
         viewHistory.current.push({
-          openedFlashcards,
+          openedWords,
+          openedConversations,
           status,
           searchFilter,
           treeFilter,
@@ -282,8 +198,9 @@ export default function App() {
 
   const refreshView = (index: number) => {
     preventHistorization.current = true;
-    const { openedFlashcards, status, searchFilter, treeFilter, location } = viewHistory.current[index];
-    setOpenedFlashcards(openedFlashcards);
+    const { openedWords, openedConversations, status, searchFilter, treeFilter, location } = viewHistory.current[index];
+    setOpenedWords(openedWords);
+    setOpenedConversations(openedConversations);
     setStatus(status);
     setSearchFilter(searchFilter);
     setTreeFilter(treeFilter);
@@ -302,43 +219,26 @@ export default function App() {
       });
   };
 
-  const openMultiLingualSentence = (multiLingualSentenceId: string) => {
-    navigate("multilingualsentences/" + multiLingualSentenceId);
-  };
-
   const openWord = (wordId: string) => {
     const word = words[wordId];
     if (word) {
       setOpenedWords((openedWords) =>
-        openedWords.find(({ id }) => id === wordId) ? openedWords : [...openedWords, { id: wordId, data: word }]
+        openedWords.find(({ _id }) => _id === wordId) ? openedWords : [...openedWords, word]
       );
       navigate("words/" + wordId);
     }
   };
 
-  const editFlashcard = (flashcardId: string) => {
-    const flashcard = flashcards.find(({ _id }) => _id === flashcardId);
-    if (flashcard) {
-      setOpenedFlashcards((openedFlashcards) => {
-        const openedFlashcard = openedFlashcards.find(({ id }) => id === flashcardId);
-        if (openedFlashcard) {
-          return openedFlashcard.unsavedData
-            ? openedFlashcards
-            : openedFlashcards.map((el) => (el.id === flashcardId ? { ...el, unsavedData: flashcard } : el));
-        } else {
-          return [...openedFlashcards, { id: flashcardId, data: flashcard, unsavedData: flashcard }];
-        }
-      });
-      navigate("ds/" + flashcardId);
+  const openConversation = (conversationId: string) => {
+    const conversation = conversations.find(({ _id }) => (_id = conversationId));
+    if (conversation) {
+      setOpenedConversations((openedConversations) =>
+        openedConversations.find(({ _id }) => _id === conversationId)
+          ? openedConversations
+          : [...openedConversations, conversation]
+      );
+      navigate("conversations/" + conversationId);
     }
-  };
-
-  const editCurrentFlashcard = (flashcard: Flashcard) => {
-    setOpenedFlashcards((openedFlashcards) =>
-      openedFlashcards.map((openedFlashcard) =>
-        openedFlashcard.id === flashcard._id ? { ...openedFlashcard, unsavedData: flashcard } : openedFlashcard
-      )
-    );
   };
 
   const subscribeToConversation = (id: string) => {
@@ -346,67 +246,48 @@ export default function App() {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
-            conversation._id === id
-              ? { ...conversation, subscribed: !conversation.subscribed }
-              : conversation
+            conversation._id === id ? { ...conversation, subscribed: !conversation.subscribed } : conversation
           )
         );
       }
     });
   };
 
-  const saveSentence = (infos: Partial<Sentence>) => {
-    editRemoteSentence(infos).catch((err: Error) => console.log(err));
-    setSentences((sentences: Sentence[]) =>
-      sentences.map((sentence) => {
-        return sentence._id === infos._id ? { ...sentence, ...infos } : sentence;
-      })
-    );
+  const saveWord = async (infos: Partial<Word>) => {
+    await editRemoteWord(infos);
+    const { _id } = infos;
+    if (_id) {
+      setWords((words) => ({
+        ...words,
+        [_id]: { ...words[_id], ...infos },
+      }));
+    }
   };
 
-  const saveWord = (infos: Partial<Word>) => {
-    editRemoteWord(infos).catch((err: Error) => console.log(err));
-    setWords((words) => ({
-      ...words,
-      [infos.sourceLanguage as string]: words[infos.sourceLanguage!].map((word) =>
-        word._id === infos._id ? { ...word, ...infos } : word
-      ),
-    }));
-  };
-
-  const saveAsNewFlashcard = (infos: Partial<Flashcard>): Promise<Flashcard> => {
-    return saveNewFlashcard(infos)
-      .then(({ data: newFlashcard }) => {
-        setFlashcards((flashcards: Flashcard[]) => [...flashcards, newFlashcard]);
-        setOpenedFlashcards((openedFlashcards) => [
-          ...openedFlashcards,
-          { id: newFlashcard._id, data: newFlashcard, unsavedData: newFlashcard },
-        ]);
-        navigate("/flashcards/" + newFlashcard._id);
-        return newFlashcard;
-      })
-      .catch((err: Error) => {
-        console.log(err);
-      });
-  };
-
-  const getMultiLingualSentenceById = (id: string): Promise<MultiLingualSentence> => {
-    const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === id);
-    return multiLingualSentence
-      ? Promise.resolve(multiLingualSentence)
-      : getRemoteMultiLingualSentenceById(id, sourceLanguage, targetLanguage).then(
-          ({ newMultiLingualSentence, newSentences }) => {
-            if (newMultiLingualSentence) {
-              setMultiLingualSentences((multiLingualSentences) =>
-                updateCacheWithNewMultiLingualSentences(multiLingualSentences, [newMultiLingualSentence])
-              );
-            }
-            if (newSentences) {
-              setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
-            }
-            return newMultiLingualSentence;
+  const getConversationById = (id: string): Promise<Conversation> => {
+    const conversation = conversations.find(({ _id }) => _id === id);
+    return conversation
+      ? Promise.resolve(conversation)
+      : getRemoteConversationById(id).then(({ newConversation }) => {
+          if (newConversation) {
+            setConversations((conversations) => updateCacheWithNewConversations(conversations, [newConversation]));
           }
-        );
+          return newConversation;
+        });
+  };
+
+  const deleteConversation = async (_id: string) => {
+    await deleteRemoteConversation(_id);
+    setConversations((conversations) => conversations.filter(conversation => conversation._id === _id));
+  };
+
+  const deleteWord = async (_id: string) => {
+    await deleteRemoteWord(_id);
+    setWords((words) => {
+      const newState = { ...words };
+      delete newState[_id];
+      return newState;
+    });
   };
 
   return (
@@ -421,8 +302,8 @@ export default function App() {
         targetLanguage,
         openedWords,
         setOpenedWords,
-        openedMultiLingualSentences,
-        setOpenedMultiLingualSentences,
+        openedConversations,
+        setOpenedConversations,
         isAuthenticated,
         setIsAuthenticated,
         searchFilter,
@@ -434,15 +315,13 @@ export default function App() {
         tags,
         setTags,
         fetchMoreUsedInConversations,
-        openMultiLingualSentence,
         openWord,
-        editFlashcard,
-        editCurrentFlashcard,
+        deleteConversation,
+        deleteWord,
+        openConversation,
         subscribeToConversation,
-        saveSentence,
         saveWord,
-        saveAsNewFlashcard,
-        getMultiLingualSentenceById,
+        getConversationById,
         treeFilter,
         setTreeFilter,
         searchInput,
@@ -486,7 +365,7 @@ export default function App() {
               element={
                 <ConversationListWithDetail
                   filteredConversations={filteredConversations}
-                  openedMultiLingualSentences={openedMultiLingualSentences}
+                  openedConversations={openedConversations}
                 />
               }
             />
