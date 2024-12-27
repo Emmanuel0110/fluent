@@ -1,4 +1,5 @@
-import { MultiLingualConversationModel, StoryNodeModel } from "../models";
+import auth from '../middleware/auth.js';
+import { MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
@@ -138,3 +139,5 @@ async function getConversationsForWords(wordIds, userLearningData) {
     },
   ]).lean();
 }
+
+export default router;

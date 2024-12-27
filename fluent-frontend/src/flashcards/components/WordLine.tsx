@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Flashcard, Word } from "../../types";
+import { Word } from "../../types";
 import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
@@ -7,59 +7,52 @@ import { Context } from "../../types";
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
   const {
-    sourceLanguage,
-    targetLanguage,
     words,
-    user,
+    user, // TODO: add condition on user.admin to edit/delete
     openWord,
-    deleteFlashcard,
     editFlashcard,
-    subscribeToWord: subscribeToFlashcard,
+    deleteWord,
   } = useContext(ConfigContext) as Context;
 
   const lineRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const { current } = lineRef;
-    if (current !== null && _id === wordId) {
+    if (current !== null && word._id === wordId) {
       current.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [wordId]);
 
-  const { _id, text, nextReviewDate, learntDate } = word;
-  const translations = word.sourceLanguage === sourceLanguage ? word[targetLanguage] : word[sourceLanguage];
-  const onEdit = (e: React.MouseEvent, id: string) => {
+  const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editFlashcard(id);
+    editFlashcard(word._id);
   };
 
-  const onDelete = (e: React.MouseEvent, id: string) => {
+  const onDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    deleteFlashcard(id);
-  };
-
-  const onSubscribe = (e: React.MouseEvent, { _id, nextReviewDate }: Partial<Flashcard>) => {
-    e.stopPropagation();
-    subscribeToFlashcard({ _id, nextReviewDate });
+    deleteWord(word._id);
   };
 
   return (
     <div
       ref={lineRef}
-      className={"line" + (_id === wordId ? " selectedFlashcard" : "")}
-      onClick={() => openWord(_id, word.sourceLanguage)}
+      className={"line" + (word._id === wordId ? " selectedFlashcard" : "")}
+      onClick={() => openWord(word._id)}
     >
       <div className={"lineTitle"}>
-        {text +
+        {word.sourceLanguage +
           " : " +
-          translations!.map((wordId) => words[word.sourceLanguage === sourceLanguage ? targetLanguage : sourceLanguage].find(({ _id }) => _id === wordId)!.text).join(", ")}
+          word.targetLanguage.map(({ id, label }) => (
+            <span className="wordLabel" onClick={e => openWord(id)}>
+              {label}
+            </span>
+          ))}
       </div>
       <div className="lineOptions">
         <div
-          className={"subscribe" + (nextReviewDate instanceof Date ? " subscribed" : "")}
-          onClick={(e) => onSubscribe(e, { _id, nextReviewDate })}
+          className={"subscribe" + (word.subscribed ? " subscribed" : "")}
         ></div>
-        <div className="edit" onClick={(e) => onEdit(e, _id)}></div>
-        <div className="delete" onClick={(e) => onDelete(e, _id)}></div>
+        <div className="edit" onClick={onEdit}></div>
+        <div className="delete" onClick={onDelete}></div>
       </div>
     </div>
   );

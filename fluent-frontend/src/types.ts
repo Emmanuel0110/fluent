@@ -64,70 +64,39 @@ export interface View {
   location: string;
 }
 
-export type Language = "en" | "fr" | "kr";
-
 export interface Word {
   _id: string;
-  sourceLanguage: Language;
-  targetLanguages: Language[];
+  sourceLanguage: string;
+  targetLanguage: { id: string; label: string }[];
   tags: string[];
-  text: string;
-  en?: string[];
-  fr?: string[];
-  kr?: string[];
-  nextReviewDate: Date | undefined;
-  learntDate: Date | undefined;
+  subscribed: boolean;
 }
 
 export interface Sentence {
-  _id: string;
   text: string;
-  language: Language;
   prerequisites: string[];
-  nextReviewDate: Date | undefined; //TODO: necessary or enough at multiLingualSentence level ?
-}
-
-export interface MultiLingualSentence {
-  _id: string;
-  en?: string;
-  fr?: string;
-  kr?: string;
-  nextReviewDate: Date | undefined;
-}
-
-export interface CompletedMultiLingualSentence {
-  _id: string;
-  en?: Sentence;
-  fr?: Sentence;
-  kr?: Sentence;
-  nextReviewDate: Date | undefined;
 }
 
 export interface Conversation {
   _id: string;
   tags: string[];
-  multiLingualSentences: string[];
-  nextReviewDate: Date | undefined;
+  multiLingualSentences: { sourceLanguage: Sentence; targetLanguage: Sentence }[];
+  subscribed: boolean;
 }
 
 export interface Context {
-  flashcards: Flashcard[];
-  multiLingualSentences: MultiLingualSentence[];
-  setMultiLingualSentences: Dispatch<SetStateAction<MultiLingualSentence[]>>;
   filteredWords: Word[];
-  setFlashcards: Dispatch<SetStateAction<Flashcard[]>>;
-  words: { [key: string]: Word[] };
-  setWords: Dispatch<SetStateAction<{ [key: string]: Word[] }>>;
-  sentences: Sentence[];
-  setSentences: Dispatch<SetStateAction<Sentence[]>>;
+  words: { [id: string]: Word };
+  setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
   conversations: Conversation[];
   setConversations: Dispatch<SetStateAction<Conversation[]>>;
   sourceLanguage: Language;
   targetLanguage: Language;
   openedWords: OpenWordData[];
   setOpenedWords: Dispatch<SetStateAction<OpenWordData[]>>;
-  openedMultiLingualSentences: OpenMultiLingualSentenceData[];
-  setOpenedMultiLingualSentences: Dispatch<SetStateAction<OpenMultiLingualSentenceData[]>>;
+  setOpenedConversations: Dispatch<SetStateAction<OpenMultiLingualSentenceData[]>>;
+  getConversationById: (id: string) => Promise<Conversation>;
+  openedConversations: OpenMultiLingualSentenceData[];
   isAuthenticated: boolean | null;
   setIsAuthenticated: Dispatch<SetStateAction<boolean | null>>;
   searchFilter: SearchFilter;
@@ -138,19 +107,17 @@ export interface Context {
   setStatus: Dispatch<SetStateAction<string>>;
   tags: { [key: string]: Tag[] };
   setTags: Dispatch<SetStateAction<{ wordTags: Tag[]; conversationTags: Tag[] }>>;
-  fetchMoreUsedInMultiLingualSentences: (wordId: string) => void;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
-  deleteFlashcard: (id: string) => void;
   openMultiLingualSentence: (id: string) => void;
-  openWord: (id: string, language: Language) => void;
+  openWord: (id: string) => void;
   editFlashcard: (id: string) => void;
   editCurrentFlashcard: (flashcard: Flashcard) => void;
-  subscribeToWord: ({ _id, nextReviewDate }: Partial<Word>) => void;
-  subscribeToMultiLingualSentence: ({ _id, nextReviewDate }: Partial<Flashcard>) => void;
+  deleteConversation: (_id: string) => void;
+  deleteWord: (_id: string) => void;
+  subscribeToConversation: (_id: string) => void;
   saveSentence: (infos: Partial<Sentence>) => void;
   saveWord: (infos: Partial<Word>) => void;
   saveAsNewFlashcard: (infos: Partial<Flashcard>) => Promise<Flashcard>;
-  getMultiLingualSentenceById: (id: string) => Promise<MultiLingualSentence>;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;

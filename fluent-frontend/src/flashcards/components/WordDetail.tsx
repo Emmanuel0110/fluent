@@ -1,67 +1,37 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
 import { ConfigContext } from "../../App";
-import { Context, MultiLingualSentence, Word } from "../../types";
-import { Flashcard } from "../../types";
-import DotOptions from "../../utils/DotOptions/DotOptions";
-import { Button } from "react-bootstrap";
-import { editUserFlashcardInfo, readRemoteFlashcard } from "../flashcardActions";
-import { WordLine } from "./WordLine";
-import { Editor } from "@tinymce/tinymce-react";
-import { SentenceLine } from "./SentenceLine";
+import { Context, Conversation, Word } from "../../types";
+import { ConversationLine } from "./ConversationLine";
 
-export default function WordDetail({ word, usedIn }: { word: Word; usedIn: MultiLingualSentence[] }) {
+export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const {
-    flashcards,
-    setFlashcards,
-    openedMultiLingualSentences,
-    setOpenedMultiLingualSentences,
-    user,
-    status,
-    setStatus,
-    words,
+    openWord,
     tags,
     setSearchFilter,
-    saveAsNewFlashcard,
-    editCurrentFlashcard,
-    subscribeToWord,
-    setTreeFilter,
-    sourceLanguage,
-    targetLanguage,
   } = useContext(ConfigContext) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
   };
 
-  const onSubscribe = (e: React.MouseEvent, word: Word) => {
-    e.stopPropagation();
-    subscribeToWord(word);
-  };
-
-  const translation = useMemo(() => {
-    if (word.sourceLanguage === sourceLanguage) {
-      return words[targetLanguage]!.filter(({ _id }) => word[targetLanguage]!.includes(_id))
-        .map(({ text }) => text)
-        .join(",");
-    } else if (word.sourceLanguage === targetLanguage) {
-      return words[sourceLanguage]!.filter(({ _id }) => word[sourceLanguage]!.includes(_id))
-        .map(({ text }) => text)
-        .join(",");
-    }
-  }, [word, sourceLanguage, targetLanguage]);
-
   return (
     <div id="flashCardComponent">
       <div id="flashcard">
         <div id="previous">
           <div
-            className={"subscribe" + (word.nextReviewDate instanceof Date ? " subscribed" : "")}
-            onClick={(e) => onSubscribe(e, word)}
+            className={"subscribe" + (word.subscribed ? " subscribed" : "")}
           ></div>
         </div>
         <div id="middle">
-          <div>{word.text + " : " + translation}</div>
+        <div className={"lineTitle"}>
+        {word.sourceLanguage +
+          " : " +
+          word.targetLanguage.map(({ id, label }) => (
+            <span className="wordLabel" onClick={e => openWord(id)}>
+              {label}
+            </span>
+          ))}
+      </div>
 
           <div id="tags">
             {word &&
@@ -79,8 +49,8 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Multi
           {usedIn.length > 0 && (
             <div id="usedIn">
               <div className="flashcardSection">Used in</div>
-              {usedIn.map((multiLingualSentence, index) => (
-                <SentenceLine key={index} multiLingualSentence={multiLingualSentence} />
+              {usedIn.map((conversation, index) => (
+                <ConversationLine key={index} conversation={conversation} />
               ))}
             </div>
           )}

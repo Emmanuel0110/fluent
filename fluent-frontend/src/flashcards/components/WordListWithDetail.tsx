@@ -1,4 +1,4 @@
-import { Flashcard, MultiLingualSentence, OpenFlashcardData, OpenWordData, Sentence, Word } from "../../types";
+import { Conversation, OpenFlashcardData, OpenWordData, Word } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../../utils/useSplitPane";
 import WordList from "./WordList";
@@ -11,13 +11,6 @@ import WordDetail from "./WordDetail";
 
 const MIN_USEDIN_LENGTH = 10;
 
-const findWord = (words: { [key: string]: Word[] }, wordId: string) => {
-  for (const key in words) {
-    let word = words[key].find(({ _id }) => _id === wordId);
-    if (word) return word;
-  }
-};
-
 export default function WordListWithDetail({
   filteredWords,
   openedWords,
@@ -25,26 +18,16 @@ export default function WordListWithDetail({
   filteredWords: Word[];
   openedWords: OpenWordData[];
 }) {
-  const {
-    sourceLanguage,
-    targetLanguage,
-    words,
-    setWords,
-    sentences,
-    setSentences,
-    multiLingualSentences,
-    setOpenedWords,
-    setFlashcards,
-    getMultiLingualSentenceById,
-    fetchMoreUsedInMultiLingualSentences,
-  } = useContext(ConfigContext) as Context;
+  const { sourceLanguage, targetLanguage, words, setWords, setOpenedWords, conversations, fetchMoreUsedInConversations } = useContext(
+    ConfigContext
+  ) as Context;
   const wordId = useParams().wordId!;
   const [currentOpenedFlashcard, setCurrentOpenedFlashcard] = useState<OpenFlashcardData | null>(null);
   const [currentOpenedWord, setCurrentOpenedWord] = useState<OpenWordData | null>(null);
   const [prerequisites, setPrerequisites] = useState<Word[]>([]);
   const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
   const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
-  const [usedIn, setdUsedIn] = useState<MultiLingualSentence[]>([]);
+  const [usedIn, setdUsedIn] = useState<Conversation[]>([]);
   const loading = useRef(false);
   const usedInLoading = useRef(false);
   const navigate = useNavigate();
@@ -56,62 +39,35 @@ export default function WordListWithDetail({
     if (currentOpenedWord) {
       setCurrentOpenedWord(currentOpenedWord);
     } else {
-      const word = findWord(words, wordId);
+      const word = words[wordId];
       if (word) {
-        currentOpenedWord = {
-          id: word._id,
-          data: word,
-        };
+        currentOpenedWord = { id: word._id, data: word };
         setOpenedWords([...openedWords, currentOpenedWord]);
         setCurrentOpenedWord(currentOpenedWord);
       }
     }
     if (currentOpenedWord) {
-      const usedInMultiLingualSentences = fillUsedIn(currentOpenedWord);
+      const usedInMultiLingualSentences = fillUsedIn();
       if (usedInMultiLingualSentences.length < MIN_USEDIN_LENGTH) {
-        fetchMoreUsedInMultiLingualSentences(wordId);
+        fetchMoreUsedInConversations(wordId);
       }
     }
   }, [words, wordId, openedWords]);
 
   useEffect(() => {
     if (currentOpenedWord) {
-      fillUsedIn(currentOpenedWord);
+      fillUsedIn();
     }
-  }, [multiLingualSentences]);
+  }, [conversations]);
 
-  const fillUsedIn = (currentOpenedWord: OpenWordData) => {
-    const usedInSentencesIds = sentences
-      .filter((sentence) => sentence.prerequisites.includes(wordId))
-      .map(({ _id }) => _id);
-    const usedInMultiLingualSentences = multiLingualSentences.filter((multiLingualSentence) =>
-      usedInSentencesIds.includes(multiLingualSentence[currentOpenedWord.data.sourceLanguage]!)
+  const fillUsedIn = () => {
+    const usedInConversations = conversations.filter(({multiLingualSentences}) =>
+      multiLingualSentences.some(sentence => sentence.sourceLanguage.prerequisites.includes(wordId) ||
+    sentence.targetLanguage.prerequisites.includes(wordId))
     );
-    setdUsedIn(
-      usedInMultiLingualSentences.map((multiLingualSentence) => ({
-        ...multiLingualSentence,
-        [sourceLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[sourceLanguage])?.text,
-        [targetLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[targetLanguage])?.text,
-      }))
-    );
-    return usedInMultiLingualSentences;
+    setdUsedIn(usedInConversations);
+    return usedInConversations;
   };
-
-  // const updateUnsavedData = (args: Partial<Word>) => {
-  //   setOpenedWords((openedWords) =>
-  //     openedWords.map((openedWord) =>
-  //       openedWord.id === wordId && openedWord.unsavedData
-  //         ? {
-  //             ...openedWord,
-  //             unsavedData: {
-  //               ...openedWord.unsavedData,
-  //               args,
-  //             },
-  //           }
-  //         : openedWord
-  //     )
-  //   );
-  // };
 
   const closeTab = (tabIndex: number) => {
     setOpenedWords((openedWords) => openedWords.filter((word, index) => index !== tabIndex));
@@ -142,9 +98,9 @@ export default function WordListWithDetail({
         {currentOpenedWord && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedWords.map(({ id, data: { text }, unsavedData }) => ({
+              tabsData={openedWords.map(({ id, data: { sourceLanguage }, unsavedData }) => ({
                 id,
-                text,
+                text: sourceLanguage,
                 unsaved: !!unsavedData,
               }))}
               selectedId={wordId}
@@ -153,17 +109,7 @@ export default function WordListWithDetail({
               closeAllTabs={closeAllTabs}
               selectTab={selectTab}
             />
-            {/* {currentOpenedWord.unsavedData ? (
-              <FlashcardForm
-                updateUnsavedData={updateUnsavedData}
-                multiLingualSentenceId={wordId}
-                sourceSentence={currentOpenedWord.unsavedData[sourceLanguage]}
-                sourcePrerequisites={sourcePrerequisites}
-                targetSentence={currentOpenedWord.unsavedData[targetLanguage]}
-                targetPrerequisites={targetPrerequisites}
-              />
-            ) : ( */}
-              <WordDetail word={currentOpenedWord.data} usedIn={usedIn} />
+            <WordDetail word={currentOpenedWord.data} usedIn={usedIn} />
             {/* )} */}
           </div>
         )}

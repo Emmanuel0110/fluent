@@ -1,4 +1,5 @@
-import { UserCourseModel } from "../models";
+import auth from '../middleware/auth.js';
+import { UserCourseModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
@@ -94,3 +95,5 @@ const nextReviewDelay = (delay) => {
   const index = delays.indexof(delay);
   return index >= 0 && index < delays.length - 1 ? delays[index + 1] : delay;
 };
+
+export default router;

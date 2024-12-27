@@ -1,10 +1,8 @@
 import {
-  CompletedMultiLingualSentence,
   Conversation,
   Flashcard,
-  MultiLingualSentence,
   OpenFlashcardData,
-  OpenMultiLingualSentenceData,
+  OpenConversationData,
   Sentence,
   Word,
 } from "../../types";
@@ -18,32 +16,29 @@ import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
 import ConversationList from "./ConversationList";
 import SentenceDetail from "./SentenceDetail";
+import ConversationDetail from "./ConversationDetail";
 
 const MIN_USEDIN_LENGTH = 10;
 
 export default function ConversationListWithDetail({
   filteredConversations,
-  openedMultiLingualSentences,
+  openedConversations,
 }: {
   filteredConversations: Conversation[];
-  openedMultiLingualSentences: OpenMultiLingualSentenceData[];
+  openedConversations: OpenConversationData[];
 }) {
   const {
     sourceLanguage,
     targetLanguage,
     words,
     setWords,
-    sentences,
-    setSentences,
     conversations,
-    multiLingualSentences,
-    setOpenedMultiLingualSentences,
-    getMultiLingualSentenceById,
-    fetchMoreUsedInConversations,
+    setOpenedConversations,
+    getConversationById
   } = useContext(ConfigContext) as Context;
-  const multiLingualSentenceId = useParams().multiLingualSentenceId!;
-  const [currentOpenedMultiLingualSentence, setCurrentOpenedMultiLingualSentence] =
-    useState<OpenMultiLingualSentenceData | null>(null);
+  const conversationId = useParams().conversationId!;
+  const [currentOpenedConversation, setCurrentOpenedConversation] =
+    useState<OpenConversationData | null>(null);
   const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
   const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
   const [usedIn, setdUsedIn] = useState<any[]>([]);
@@ -55,123 +50,55 @@ export default function ConversationListWithDetail({
 
   useEffect(() => {
     if (!loading.current) {
-      const openedMultiLingualSentence = openedMultiLingualSentences.find(({ id }) => id === multiLingualSentenceId);
-      if (openedMultiLingualSentence) {
-        setCurrentOpenedMultiLingualSentence(openedMultiLingualSentence);
+      const openedConversation = openedConversations.find(({ id }) => id === conversationId);
+      if (openedConversation) {
+        setCurrentOpenedConversation(openedConversation);
       } else {
-        const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId);
-        if (multiLingualSentence) {
-          const openedMultiLingualSentence: OpenMultiLingualSentenceData = {
-            id: multiLingualSentence._id,
+        const conversation = conversations.find(({ _id }) => _id === conversationId);
+        if (conversation) {
+          const openedConversation: OpenConversationData = {
+            id: conversation._id,
             data: {
-              _id: multiLingualSentence._id,
-              nextReviewDate: multiLingualSentence.nextReviewDate,
-              [sourceLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[sourceLanguage])!,
-              [targetLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[targetLanguage])!,
+              _id: conversation._id,
+              nextReviewDate: conversation.nextReviewDate,
+              [sourceLanguage]: sentences.find(({ _id }) => _id === conversation[sourceLanguage])!,
+              [targetLanguage]: sentences.find(({ _id }) => _id === conversation[targetLanguage])!,
             },
           };
-          setOpenedMultiLingualSentences([...openedMultiLingualSentences, openedMultiLingualSentence]); //Why is it too slow when I use function in setOpenedFlashcards ?
-          setCurrentOpenedMultiLingualSentence(openedMultiLingualSentence);
+          setOpenedConversations([...openedConversations, openedConversation]); //Why is it too slow when I use function in setOpenedFlashcards ?
+          setCurrentOpenedConversation(openedConversation);
         } else {
           loading.current = true;
-          getMultiLingualSentenceById(multiLingualSentenceId).then(() => (loading.current = false));
+          getConversationById(conversationId).then(() => (loading.current = false));
         }
       }
     }
-    if (currentOpenedMultiLingualSentence) {
-      const usedInMultiLingualSentences = fillUsedIn();
-      if (usedInMultiLingualSentences.length < MIN_USEDIN_LENGTH) {
-        fetchMoreUsedInConversations(multiLingualSentenceId);
-      }
-    }
-  }, [multiLingualSentences, multiLingualSentenceId, openedMultiLingualSentences]);
-
-  useEffect(() => {
-    if (currentOpenedMultiLingualSentence && !prerequisitesAndusedInLoading.current) {
-      const [sourcePrerequisites, targetPrerequisites] = getPrerequisites(currentOpenedMultiLingualSentence.data);
-      setSourcePrerequisites(sourcePrerequisites);
-      setTargetPrerequisites(targetPrerequisites);
-    }
-  }, [currentOpenedMultiLingualSentence, multiLingualSentences]);
-
-  useEffect(() => {
-    if (currentOpenedMultiLingualSentence) {
-      fillUsedIn();
-    }
-  }, [conversations]);
-
-  const getPrerequisites = (multiLingualSentence: CompletedMultiLingualSentence) => {
-    return [
-      multiLingualSentence[sourceLanguage]!.prerequisites.map(
-        (prerequisiteId) => words[sourceLanguage].find(({ _id }) => _id === prerequisiteId)!
-      ),
-      multiLingualSentence[targetLanguage]!.prerequisites.map(
-        (prerequisiteId) => words[targetLanguage].find(({ _id }) => _id === prerequisiteId)!
-      ),
-    ];
-  };
-
-  const fillUsedIn = () => {
-    const usedInConversations = conversations.filter((conversation) =>
-      conversation.multiLingualSentences.includes(multiLingualSentenceId)
-    );
-    setdUsedIn(
-      usedInConversations.map((usedInConversation) => ({
-        ...usedInConversation,
-        multiLingualSentences: usedInConversation.multiLingualSentences.map((multiLingualSentenceId) => {
-          const multiLingualSentence = multiLingualSentences.find(({ _id }) => _id === multiLingualSentenceId)!;
-          return {
-            ...multiLingualSentence,
-            [sourceLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[sourceLanguage])?.text,
-            [targetLanguage]: sentences.find(({ _id }) => _id === multiLingualSentence[targetLanguage])?.text,
-          };
-        }),
-      }))
-    );
-    return usedInConversations;
-  };
-
-  // const updateUnsavedData = (language: string, args: Partial<Sentence>) => {
-  //   setOpenedMultiLingualSentences((openedMultiLingualSentences) =>
-  //     openedMultiLingualSentences.map((openedMultiLingualSentence) =>
-  //       openedMultiLingualSentence.id === multiLingualSentenceId &&
-  //       openedMultiLingualSentence.unsavedData![language as keyof OpenFlashcardData]
-  //         ? {
-  //             ...openedMultiLingualSentence,
-  //             unsavedData: {
-  //               ...openedMultiLingualSentence.unsavedData,
-  //               [language]: { ...openedMultiLingualSentence.unsavedData![language], args },
-  //             },
-  //           }
-  //         : openedMultiLingualSentence
-  //     )
-  //   );
-  // };
+  }, [conversations, conversationId, openedConversations]);
 
   const closeTab = (tabIndex: number) => {
-    setOpenedMultiLingualSentences((openedMultiLingualSentence) =>
-      openedMultiLingualSentence.filter((multiLingualSentence, index) => index !== tabIndex)
+    setOpenedConversations((openedConversation) =>
+      openedConversation.filter((conversation, index) => index !== tabIndex)
     );
     navigate(
-      openedMultiLingualSentences.length > 1
-        ? "/multilingualsentences/" +
-            (openedMultiLingualSentences[tabIndex + 1]?.id || openedMultiLingualSentences[tabIndex - 1]?.id)
-        : "/multilingualsentences"
+      openedConversations.length > 1
+        ? "/conversations/" +
+            (openedConversations[tabIndex + 1]?.id || openedConversations[tabIndex - 1]?.id)
+        : "/conversations"
     );
   };
 
   const closeOtherTabs = (e: React.MouseEvent<HTMLElement>, index: number) => {
     e.preventDefault();
-    navigate("/multilingualsentences/" + openedMultiLingualSentences[index].id);
-    setOpenedMultiLingualSentences([openedMultiLingualSentences[index]]);
+    navigate("/conversations/" + openedConversations[index].id);
+    setOpenedConversations([openedConversations[index]]);
   };
 
   const closeAllTabs = () => {
-    navigate("/multilingualsentences");
-    setOpenedMultiLingualSentences([]);
+    navigate("/conversations");
+    setOpenedConversations([]);
   };
 
-  const selectTab = (id: string | null) => navigate("/multilingualsentences/" + id!);
+  const selectTab = (id: string | null) => navigate("/conversations/" + id!);
 
   return (
     <div id="splitContainer">
@@ -179,37 +106,23 @@ export default function ConversationListWithDetail({
         <ConversationList filteredConversations={filteredConversations} />
       </div>
       <div id="right">
-        {currentOpenedMultiLingualSentence && (
+        {currentOpenedConversation && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedMultiLingualSentences.map(({ id, data, unsavedData }) => {
+              tabsData={openedConversations.map(({ id, data, unsavedData }) => {
                 return {
                   id,
                   text: data[sourceLanguage]?.text || "",
                   unsaved: !!unsavedData,
                 };
               })}
-              selectedId={multiLingualSentenceId}
+              selectedId={conversationId}
               closeTab={closeTab}
               closeOtherTabs={closeOtherTabs}
               closeAllTabs={closeAllTabs}
               selectTab={selectTab}
             />
-            {/* {currentOpenedMultiLingualSentence.unsavedData ? (
-              <FlashcardForm
-                updateUnsavedData={updateUnsavedData}
-                multiLingualSentenceId={multiLingualSentenceId}
-                sourceSentence={currentOpenedMultiLingualSentence.unsavedData[sourceLanguage]}
-                sourcePrerequisites={sourcePrerequisites}
-                targetSentence={currentOpenedMultiLingualSentence.unsavedData[targetLanguage]}
-                targetPrerequisites={targetPrerequisites}
-              />
-            ) : ( */}
-            <SentenceDetail
-              multiLingualSentence={currentOpenedMultiLingualSentence.data}
-              sourcePrerequisites={sourcePrerequisites}
-              targetPrerequisites={targetPrerequisites}
-              usedIn={usedIn}
+            <ConversationDetail conversation={currentOpenedConversation.data}
             />
             {/* )} */}
           </div>

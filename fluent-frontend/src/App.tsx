@@ -10,14 +10,11 @@ import {
   Context,
   Conversation,
   conversationFilter,
-  Flashcard,
-  Language,
-  MultiLingualSentence,
+  Words,
   OpenFlashcardData,
   OpenMultiLingualSentenceData,
   OpenWordData,
   SearchFilter,
-  Sentence,
   Tag,
   User,
   View,
@@ -34,6 +31,7 @@ import {
   fetchWords,
   getRemoteMultiLingualSentenceById,
   saveNewFlashcard,
+  subscribeToRemoteConversation,
   subscribeToRemoteMultiLingualSentence,
   subscribeToRemoteWord,
 } from "./flashcards/flashcardActions";
@@ -42,7 +40,6 @@ import ConversationListWithDetail from "./flashcards/components/ConversationList
 import CreationForm from "./flashcards/components/CreationForm";
 
 export const url = process.env.REACT_APP_API_URL;
-console.log("process.env", process.env);
 export const ConfigContext = createContext<Context | null>(null);
 
 export const updateCacheWithNewWords = (
@@ -165,9 +162,7 @@ export default function App() {
   const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
   const [flashcards, setFlashcards] = useState([] as Flashcard[]);
   const [conversations, setConversations] = useState([] as Conversation[]);
-  const [multiLingualSentences, setMultiLingualSentences] = useState([] as MultiLingualSentence[]);
-  const [sentences, setSentences] = useState([] as Sentence[]);
-  const [words, setWords] = useState({ en: [], fr: [], kr: [] } as { [key: string]: Word[] });
+  const [words, setWords] = useState<{ [id: string]: Word }>({});
   const [sourceLanguage, setSourceLanguage] = useState("fr" as Language);
   const [targetLanguage, setTargetLanguage] = useState("en" as Language);
   const [openedFlashcards, setOpenedFlashcards] = useState([] as OpenFlashcardData[]);
@@ -184,7 +179,6 @@ export default function App() {
     if (isAuthenticated) {
       fetchTags(sourceLanguage).then((tags) => setTags(tags));
       fetchWords(sourceLanguage, targetLanguage).then((words) => setWords(words));
-      fetchMoreConversations(sourceLanguage, targetLanguage);
     }
   }, [isAuthenticated]);
 
@@ -296,77 +290,24 @@ export default function App() {
     navigate(location);
   };
 
-  const fetchMoreUsedInMultiLingualSentences = (wordId: string) => {
-    return customFetch(url + `multilingualsentences?wordId=${wordId}&sourceLanguage=${sourceLanguage}&targetLanguage=${targetLanguage}`, { headers: authHeaders() })
-      .then(({ multiLingualSentences: newMultiLingualSentences, sentences: newSentences }) => {
-        setMultiLingualSentences((multiLingualSentences) =>
-          updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
-        );
-        setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
+  const fetchMoreUsedInConversations = async (wordId: string) => {
+    return customFetch(url + "conversations?wordId=" + wordId, {
+      headers: authHeaders(),
+    })
+      .then(({ conversations: newConversations }) => {
+        setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversations));
       })
       .catch((err: Error) => {
         console.log(err);
       });
   };
 
-  const fetchMoreUsedInConversations = (multiLingualSentenceId: string) => {
-    return customFetch(url + "conversations?multilingualsentenceId=" + multiLingualSentenceId, {
-      headers: authHeaders(),
-    })
-      .then(
-        ({
-          conversations: newConversations,
-          multiLingualSentences: newMultiLingualSentences,
-          sentences: newSentences,
-        }) => {
-          setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversations));
-          setMultiLingualSentences((multiLingualSentences) =>
-            updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
-          );
-          setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
-        }
-      )
-      .catch((err: Error) => {
-        console.log(err);
-      });
-  };
-
-  const fetchMoreConversations = (sourceLanguage: Language, targetLanguage: Language) => {
-    return customFetch(url + `conversations?sourceLanguage=${sourceLanguage}&targetLanguage=${targetLanguage}`, {
-      headers: authHeaders(),
-    })
-      .then(
-        ({
-          conversations: newConversations,
-          multiLingualSentences: newMultiLingualSentences,
-          sentences: newSentences,
-        }) => {
-          setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversations));
-          setMultiLingualSentences((multiLingualSentences) =>
-            updateCacheWithNewMultiLingualSentences(multiLingualSentences, newMultiLingualSentences)
-          );
-          setSentences((sentences) => updateCacheWithNewSentences(sentences, newSentences));
-        }
-      )
-      .catch((err: Error) => {
-        console.log(err);
-      });
-  };
-
-  const deleteFlashcard = (flashcardId: string) => {
-    deleteRemoteFlashcard(flashcardId).then((res) => {
-      if (res.success) {
-        setFlashcards((flashcards: Flashcard[]) => flashcards.filter((flashcard) => flashcard._id !== flashcardId));
-      }
-    });
-  };
-
   const openMultiLingualSentence = (multiLingualSentenceId: string) => {
     navigate("multilingualsentences/" + multiLingualSentenceId);
   };
 
-  const openWord = (wordId: string, language: Language) => {
-    const word = words[language].find(({ _id }) => _id === wordId);
+  const openWord = (wordId: string) => {
+    const word = words[wordId];
     if (word) {
       setOpenedWords((openedWords) =>
         openedWords.find(({ id }) => id === wordId) ? openedWords : [...openedWords, { id: wordId, data: word }]
@@ -400,39 +341,15 @@ export default function App() {
     );
   };
 
-  const subscribeToWord = (wordToSubscribe: Partial<Word>) => {
-    subscribeToRemoteWord(wordToSubscribe).then((res) => {
+  const subscribeToConversation = (id: string) => {
+    subscribeToRemoteConversation(id).then((res) => {
       if (res.success) {
-        setWords((words) => ({
-          ...words,
-          [sourceLanguage]: words[sourceLanguage].map((word) => {
-            return word._id === wordToSubscribe._id
-              ? { ...word, nextReviewDate: word.nextReviewDate instanceof Date ? undefined : new Date() }
-              : word;
-          }),
-          [targetLanguage]: words[targetLanguage].map((word) => {
-            return word._id === wordToSubscribe._id
-              ? { ...word, nextReviewDate: word.nextReviewDate instanceof Date ? undefined : new Date() }
-              : word;
-          }),
-        }));
-      }
-    });
-  };
-
-  const subscribeToMultiLingualSentence = (multiLingualSentenceToSubscribe: Partial<MultiLingualSentence>) => {
-    const language = sourceLanguage + "-" + targetLanguage;
-    subscribeToRemoteMultiLingualSentence(multiLingualSentenceToSubscribe, language).then((res) => {
-      if (res.success) {
-        setMultiLingualSentences((multiLingualSentences) =>
-          multiLingualSentences.map((multiLingualSentence) => {
-            return multiLingualSentence._id === multiLingualSentenceToSubscribe._id
-              ? {
-                  ...multiLingualSentence,
-                  nextReviewDate: multiLingualSentence.nextReviewDate instanceof Date ? undefined : new Date(),
-                }
-              : multiLingualSentence;
-          })
+        setConversations((conversations) =>
+          conversations.map((conversation) =>
+            conversation._id === id
+              ? { ...conversation, subscribed: !conversation.subscribed }
+              : conversation
+          )
         );
       }
     });
@@ -495,15 +412,9 @@ export default function App() {
   return (
     <ConfigContext.Provider
       value={{
-        flashcards,
-        multiLingualSentences,
-        setMultiLingualSentences,
         filteredWords,
-        setFlashcards,
         words,
         setWords,
-        sentences,
-        setSentences,
         conversations,
         setConversations,
         sourceLanguage,
@@ -522,15 +433,12 @@ export default function App() {
         setStatus,
         tags,
         setTags,
-        fetchMoreUsedInMultiLingualSentences,
         fetchMoreUsedInConversations,
-        deleteFlashcard,
         openMultiLingualSentence,
         openWord,
         editFlashcard,
         editCurrentFlashcard,
-        subscribeToWord,
-        subscribeToMultiLingualSentence,
+        subscribeToConversation,
         saveSentence,
         saveWord,
         saveAsNewFlashcard,

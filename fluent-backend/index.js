@@ -1,28 +1,18 @@
 import dotenv from "dotenv";
 import express from "express";
 import path from "path";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import mongoose from "mongoose";
-import auth from "./middleware/auth.js";
 import cors from "cors";
-import {
-  TagModel,
-  UserModel,
-  UserFlashcardInfoModel,
-  LexicalItemModel,
-  SentenceModel,
-  MultiLingualSentenceModel,
-  ConversationModel,
-} from "./models old.js";
-// import logger from "./middleware/logger.js"
-// import errorHandler from "./middleware/errorHandler.js"
-import { escapeRegExp, completeMultiLingualSentence, completeSentence, getFilterSearch } from "./utils.js";
-import redis from "redis";
-const redisClient = redis.createClient();
+import conversationRoutes from "./controlers/conversationControlers.js";
+import reviewItemsRoutes from "./controlers/reviewControlers.js";
+import tagRoutes from "./controlers/tagControlers.js";
+import userRoutes from "./controlers/userControlers.js";
+import userCourseRoutes from "./controlers/userCourseControlers.js";
+import wordRoutes from "./controlers/wordControlers.js";
 
+const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -39,6 +29,15 @@ app.use(
 );
 app.use(express.json());
 app.use("/", express.static(path.join(__dirname, "./public")));
+router.use("/api/conversations", conversationRoutes);
+router.use("/api/reviewItem", reviewItemsRoutes);
+router.use("/api/tags", tagRoutes);
+router.use("/api/users", userRoutes);
+router.use("/api/usercourses", userCourseRoutes);
+router.use("/api/words", wordRoutes);
+router.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 const whitelist = ['https://www.fluent.study'];
 

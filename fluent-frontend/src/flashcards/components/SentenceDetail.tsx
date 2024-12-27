@@ -1,7 +1,14 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConfigContext } from "../../App";
-import { CompletedMultiLingualSentence, Context, Conversation, MultiLingualSentence, Word } from "../../types";
+import {
+  CompletedMultiLingualSentence,
+  Context,
+  Conversation,
+  MultiLingualSentence,
+  Sentence,
+  Word,
+} from "../../types";
 import { Flashcard } from "../../types";
 import DotOptions from "../../utils/DotOptions/DotOptions";
 import { Button } from "react-bootstrap";
@@ -12,21 +19,18 @@ import { ConversationLine } from "./ConversationLine";
 
 export default function SentenceDetail({
   multiLingualSentence,
-  sourcePrerequisites,
-  targetPrerequisites,
-  usedIn,
 }: {
-  multiLingualSentence: CompletedMultiLingualSentence;
-  sourcePrerequisites: Word[];
-  targetPrerequisites: Word[];
-  usedIn: {multiLingualSentences: MultiLingualSentence[]}[];
+  multiLingualSentence: {
+    sourceLanguage: Sentence;
+    targetLanguage: Sentence;
+  };
 }) {
-  const { subscribeToMultiLingualSentence, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
+  const { subscribeToConversation, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
 
   const onSubscribe = (e: React.MouseEvent, { _id, nextReviewDate }: Partial<MultiLingualSentence>) => {
     e.stopPropagation();
-    subscribeToMultiLingualSentence({ _id, nextReviewDate });
+    subscribeToConversation(_id);
   };
 
   return (
@@ -35,7 +39,9 @@ export default function SentenceDetail({
         <div id="previous">
           <div
             className={"subscribe" + (multiLingualSentence.nextReviewDate instanceof Date ? " subscribed" : "")}
-            onClick={(e) => onSubscribe(e, { _id: multiLingualSentence._id, nextReviewDate: multiLingualSentence.nextReviewDate })}
+            onClick={(e) =>
+              onSubscribe(e, { _id: multiLingualSentence._id, nextReviewDate: multiLingualSentence.nextReviewDate })
+            }
           ></div>
         </div>
         <div id="middle">
