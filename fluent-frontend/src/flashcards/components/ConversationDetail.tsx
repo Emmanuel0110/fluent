@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { ConfigContext } from "../../App";
-import { Context, Conversation, Word } from "../../types";
+import { Context, Conversation } from "../../types";
 import SentenceDetail from "./SentenceDetail";
 
 export default function ConversationDetail({ conversation }: { conversation: Conversation }) {

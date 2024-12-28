@@ -1,17 +1,12 @@
-import { Conversation, Flashcard, Sentence, Word } from "../../types";
+import { Conversation } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../../utils/useSplitPane";
-import WordList from "./WordList";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
-import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
 import ConversationList from "./ConversationList";
-import SentenceDetail from "./SentenceDetail";
 import ConversationDetail from "./ConversationDetail";
-
-const MIN_USEDIN_LENGTH = 10;
 
 export default function ConversationListWithDetail({
   filteredConversations,
@@ -20,23 +15,11 @@ export default function ConversationListWithDetail({
   filteredConversations: Conversation[];
   openedConversations: Conversation[];
 }) {
-  const {
-    sourceLanguage,
-    targetLanguage,
-    words,
-    setWords,
-    conversations,
-    setOpenedConversations,
-    getConversationById,
-  } = useContext(ConfigContext) as Context;
+  const { conversations, setOpenedConversations, getConversationById } = useContext(ConfigContext) as Context;
   const conversationId = useParams().conversationId!;
   const [currentOpenedConversation, setCurrentOpenedConversation] = useState<Conversation | null>(null);
-  const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
-  const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
-  const [usedIn, setdUsedIn] = useState<any[]>([]);
   const loading = useRef(false);
   const navigate = useNavigate();
-  const prerequisitesAndusedInLoading = useRef(false);
 
   useSplitPane(["#left", "#right"], "horizontal", [50, 50]);
 

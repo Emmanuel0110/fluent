@@ -20,6 +20,7 @@ import {
   saveNewWord,
   saveNewConversation,
   subscribeToRemoteConversation,
+  editRemoteConversation,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -254,13 +255,26 @@ export default function App() {
   };
 
   const saveWord = async (infos: Partial<Word>) => {
-    await editRemoteWord(infos);
-    const { _id } = infos;
-    if (_id) {
-      setWords((words) => ({
-        ...words,
-        [_id]: { ...words[_id], ...infos },
-      }));
+    const res = await editRemoteWord(infos);
+    if (res.success) {
+      const { _id } = infos;
+      if (_id) {
+        setWords((words) => ({
+          ...words,
+          [_id]: { ...words[_id], ...infos },
+        }));
+      }
+    }
+  };
+
+  const saveConversation = async (infos: Partial<Word>) => {
+    const res = await editRemoteConversation(infos);
+    if (res.success) {
+      setConversations((conversations) =>
+        conversations.map((conversation) =>
+          conversation._id === infos._id ? { ...conversation, ...infos } : conversation
+        )
+      );
     }
   };
 
@@ -278,7 +292,7 @@ export default function App() {
 
   const deleteConversation = async (_id: string) => {
     await deleteRemoteConversation(_id);
-    setConversations((conversations) => conversations.filter(conversation => conversation._id === _id));
+    setConversations((conversations) => conversations.filter((conversation) => conversation._id === _id));
   };
 
   const deleteWord = async (_id: string) => {
@@ -290,15 +304,20 @@ export default function App() {
     });
   };
 
+  
+
   return (
     <ConfigContext.Provider
       value={{
         filteredWords,
         words,
         setWords,
+        editWord,
         conversations,
         setConversations,
+        saveConversation,
         sourceLanguage,
+        editConversation,
         targetLanguage,
         openedWords,
         setOpenedWords,

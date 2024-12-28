@@ -1,8 +1,4 @@
-import { useParams } from "react-router-dom";
-import { Flashcard, Sentence, Word } from "../../types";
-import { Fragment, useContext, useEffect, useRef } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
+import { Sentence } from "../../types";
 
 export const SentenceLine = ({
   multiLingualSentence,

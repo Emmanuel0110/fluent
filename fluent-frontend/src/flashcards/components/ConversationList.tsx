@@ -1,10 +1,6 @@
-import { Fragment, useContext } from "react";
-import { Conversation, Flashcard, Word } from "../../types";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
-import InfiniteScrollComponent from "../../utils/InfiniteScrollComponent";
+import { Fragment } from "react";
+import { Conversation} from "../../types";
 import FilterBar from "./FilterBar";
-import { WordLine } from "./WordLine";
 import { ConversationLine } from "./ConversationLine";
 
 export default function ConversationList({ filteredConversations }: { filteredConversations: Conversation[] }) {

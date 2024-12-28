@@ -1,6 +1,6 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, Sentence, Tag, Word } from "../types";
+import { Conversation, Tag, Word } from "../types";
 
 export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
   return customFetch(url + "multilingualsentences/" + id, {
@@ -30,6 +30,15 @@ export const editRemoteWord = async ({ _id, ...args }: Partial<Word>) => {
   return customFetch(url + "words/" + _id, { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
+};
+
+export const editRemoteConversation = async ({ _id, ...args }: Partial<Word>) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "conversations/" + _id, { method: "PATCH", headers: authHeaders(), body }).catch(
+    (err: Error) => {
+      console.log(err);
+    }
+  );
 };
 
 export const deleteRemoteWord = async (wordId: string) => {

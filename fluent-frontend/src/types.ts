@@ -71,8 +71,11 @@ export interface Context {
   filteredWords: Word[];
   words: { [id: string]: Word };
   setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
+  editWord: (id: string) => void;
   conversations: Conversation[];
   setConversations: Dispatch<SetStateAction<Conversation[]>>;
+  saveConversation: (infos: Partial<Conversation>) => void;
+  editConversation: (id: string) => void;
   sourceLanguage: string;
   targetLanguage: string;
   openedWords: Word[];

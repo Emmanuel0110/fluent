@@ -2,10 +2,9 @@ import { Conversation, Word } from "../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../../utils/useSplitPane";
 import WordList from "./WordList";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
-import { getRemotePrerequisiteAndUsedIn } from "../flashcardActions";
 import TabNav from "../../Layout/TabNav";
 import WordDetail from "./WordDetail";
 
@@ -19,22 +18,14 @@ export default function WordListWithDetail({
   openedWords: Word[];
 }) {
   const {
-    sourceLanguage,
-    targetLanguage,
     words,
-    setWords,
     setOpenedWords,
     conversations,
     fetchMoreUsedInConversations,
   } = useContext(ConfigContext) as Context;
   const wordId = useParams().wordId!;
   const [currentOpenedWord, setCurrentOpenedWord] = useState<Word | null>(null);
-  const [prerequisites, setPrerequisites] = useState<Word[]>([]);
-  const [sourcePrerequisites, setSourcePrerequisites] = useState<Word[]>([]);
-  const [targetPrerequisites, setTargetPrerequisites] = useState<Word[]>([]);
   const [usedIn, setdUsedIn] = useState<Conversation[]>([]);
-  const loading = useRef(false);
-  const usedInLoading = useRef(false);
   const navigate = useNavigate();
 
   useSplitPane(["#left", "#right"], "horizontal", [50, 50]);

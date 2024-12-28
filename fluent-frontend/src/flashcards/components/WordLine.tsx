@@ -7,10 +7,9 @@ import { Context } from "../../types";
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
   const {
-    words,
     user, // TODO: add condition on user.admin to edit/delete
     openWord,
-    editFlashcard,
+    editWord,
     deleteWord,
   } = useContext(ConfigContext) as Context;
 
@@ -24,7 +23,7 @@ export const WordLine = ({ word }: { word: Word }) => {
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editFlashcard(word._id);
+    editWord(word._id);
   };
 
   const onDelete = (e: React.MouseEvent) => {

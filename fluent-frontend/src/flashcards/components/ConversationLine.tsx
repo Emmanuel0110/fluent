@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { Conversation, Word } from "../../types";
+import { Conversation } from "../../types";
 import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
@@ -7,13 +7,13 @@ import { SentenceLine } from "./SentenceLine";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId } = useParams();
-  const { user, openConversation, editFlashcard, deleteConversation, subscribeToConversation } = useContext(
+  const { openConversation, editConversation, deleteConversation, subscribeToConversation } = useContext(
     ConfigContext
   ) as Context;
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
-    editFlashcard(conversation._id);
+    editConversation(conversation._id);
   };
 
   const onSubscribe = (e: React.MouseEvent) => {

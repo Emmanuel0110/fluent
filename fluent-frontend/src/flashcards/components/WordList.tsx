@@ -1,8 +1,6 @@
-import { Fragment, useContext } from "react";
-import { Flashcard, Word } from "../../types";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
-import InfiniteScrollComponent from "../../utils/InfiniteScrollComponent";
+import { Fragment } from "react";
+import { Word } from "../../types";
+import InfiniteScrollComponent from "../../utils/InfiniteScrollComponent"; // TODO
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
 

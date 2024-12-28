@@ -1,19 +1,7 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import { ConfigContext } from "../../App";
-import {
-  Context,
-  Conversation,
-  Sentence,
-  Word,
-} from "../../types";
-import { Flashcard } from "../../types";
-import DotOptions from "../../utils/DotOptions/DotOptions";
-import { Button } from "react-bootstrap";
-import { editUserFlashcardInfo } from "../flashcardActions";
+import { Context, Sentence } from "../../types";
 import { WordLine } from "./WordLine";
-import { Editor } from "@tinymce/tinymce-react";
-import { ConversationLine } from "./ConversationLine";
 
 export default function SentenceDetail({
   multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },
@@ -23,7 +11,7 @@ export default function SentenceDetail({
     targetLanguage: Sentence;
   };
 }) {
-  const { words, subscribeToConversation, sourceLanguage, targetLanguage } = useContext(ConfigContext) as Context;
+  const { words } = useContext(ConfigContext) as Context;
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
   return (
     <div id="flashCardComponent">
