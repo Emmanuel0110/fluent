@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 function LeftMenuBar() {
   const navigate = useNavigate();
-  const { status, setStatus, saveAsNewFlashcard } = useContext(ConfigContext) as Context;
+  const { status, setStatus } = useContext(ConfigContext) as Context;
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);

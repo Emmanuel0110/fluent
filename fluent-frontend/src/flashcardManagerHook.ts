@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Flashcard } from './types';
+import { useState } from 'react';
 
 export default function useFlashcardManager() {
-  const [flashcards2, setFlascards2] = useState<Flashcard[] | null >(null);
+  // const [flashcards2, setFlascards2] = useState<Flashcard[] | null >(null);
 
 
   const flashcardManager = {

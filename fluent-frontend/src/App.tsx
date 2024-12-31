@@ -17,7 +17,6 @@ import {
   fetchTags,
   fetchWords,
   getRemoteConversationById,
-  saveNewWord,
   saveNewConversation,
   subscribeToRemoteConversation,
   editRemoteConversation,
@@ -264,17 +263,18 @@ export default function App() {
           [_id]: { ...words[_id], ...infos },
         }));
       }
+      navigate("/words" + res.data._id);
     }
   };
 
-  const saveConversation = async (infos: Partial<Word>) => {
-    const res = await editRemoteConversation(infos);
+  const saveConversation = async (infos: Conversation) => {
+    const res = await (infos._id
+      ? editRemoteConversation(infos, sourceLanguage, targetLanguage)
+      : saveNewConversation(infos, sourceLanguage, targetLanguage));
     if (res.success) {
-      setConversations((conversations) =>
-        conversations.map((conversation) =>
-          conversation._id === infos._id ? { ...conversation, ...infos } : conversation
-        )
-      );
+      setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data]));
+
+      navigate("/conversations" + res.data._id);
     }
   };
 
@@ -304,7 +304,13 @@ export default function App() {
     });
   };
 
-  
+  const editWord = (id: string) => {
+    navigate(`/words/${id}/edit`);
+  };
+
+  const editConversation = (id: string) => {
+    navigate(`/conversations/${id}/edit`);
+  };
 
   return (
     <ConfigContext.Provider
@@ -312,12 +318,12 @@ export default function App() {
         filteredWords,
         words,
         setWords,
+        editConversation,
         editWord,
         conversations,
         setConversations,
         saveConversation,
         sourceLanguage,
-        editConversation,
         targetLanguage,
         openedWords,
         setOpenedWords,

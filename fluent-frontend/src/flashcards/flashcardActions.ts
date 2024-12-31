@@ -1,6 +1,7 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
 import { Conversation, Tag, Word } from "../types";
+import { convertCompilerOptionsFromJson } from "typescript";
 
 export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
   return customFetch(url + "multilingualsentences/" + id, {
@@ -18,8 +19,26 @@ export const saveNewWord = async (args: Partial<Word>) => {
   });
 };
 
-export const saveNewConversation = async (args: Partial<Conversation>) => {
-  const body = JSON.stringify(args);
+const formatConversation = (conversation: Conversation, appSourceLanguage: string, appTargetLanguage: string) => {
+  const { _id, multiLingualSentences, tags, subscribed } = conversation;
+  return {
+    _id,
+    tags,
+    subscribed,
+    conversations: [
+      { language: appSourceLanguage, sentences: multiLingualSentences.map((sentence) => sentence.sourceLanguage) },
+      { language: appTargetLanguage, sentences: multiLingualSentences.map((sentence) => sentence.targetLanguage) },
+    ],
+  };
+};
+
+export const saveNewConversation = async (
+  conversation: Conversation,
+  appSourceLanguage: string,
+  appTargetLanguage: string
+) => {
+  const formattedConversation = formatConversation(conversation, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedConversation);
   return customFetch(url + "conversations", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
@@ -32,9 +51,14 @@ export const editRemoteWord = async ({ _id, ...args }: Partial<Word>) => {
   });
 };
 
-export const editRemoteConversation = async ({ _id, ...args }: Partial<Word>) => {
-  const body = JSON.stringify(args);
-  return customFetch(url + "conversations/" + _id, { method: "PATCH", headers: authHeaders(), body }).catch(
+export const editRemoteConversation = async (
+  conversation: Conversation,
+  appSourceLanguage: string,
+  appTargetLanguage: string
+) => {
+  const formattedConversation = formatConversation(conversation, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedConversation);
+  return customFetch(url + "conversations/" + conversation._id, { method: "PUT", headers: authHeaders(), body }).catch(
     (err: Error) => {
       console.log(err);
     }

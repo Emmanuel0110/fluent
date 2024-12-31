@@ -5,27 +5,7 @@ export interface User {
   username: string;
 }
 
-export type Status = "Draft" | "To be validated" | "Published" | "Obsolete";
-
-export interface Flashcard {
-  _id: string;
-  author: User;
-  title: string;
-  question: string;
-  answer: string;
-  tags: Tag[];
-  status: Status;
-  nextReviewDate: Date | undefined;
-  hasBeenRead: boolean;
-  creationDate: Date | undefined;
-  submitDate: Date | undefined;
-  publishDate: Date | undefined;
-  publishAuthor: User;
-  lastModificationDate: Date | undefined;
-  learntDate: Date | undefined;
-  prerequisites: string[];
-  usedIn: string[];
-}
+export type Status = "word" | "conversation";
 
 export type TagType = "wordTag" | "conversationTag";
 
@@ -49,6 +29,7 @@ export interface View {
 
 export interface Word {
   _id: string;
+  language: string;
   sourceLanguage: string;
   targetLanguage: { id: string; label: string }[];
   tags: string[];
@@ -71,11 +52,11 @@ export interface Context {
   filteredWords: Word[];
   words: { [id: string]: Word };
   setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
-  editWord: (id: string) => void;
   conversations: Conversation[];
   setConversations: Dispatch<SetStateAction<Conversation[]>>;
-  saveConversation: (infos: Partial<Conversation>) => void;
+  saveConversation: (infos: Conversation) => Promise<void>;
   editConversation: (id: string) => void;
+  editWord: (id: string) => void;
   sourceLanguage: string;
   targetLanguage: string;
   openedWords: Word[];
