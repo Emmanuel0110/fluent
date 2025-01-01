@@ -47,7 +47,7 @@ const insertTag = (tagLabel: string, inputRef: RefObject<HTMLInputElement>) => {
 };
 
 function Navbar() {
-  const { user, searchFilter, setSearchFilter, setIsAuthenticated, tags, treeFilter, setTreeFilter, searchInput } =
+  const { user, searchFilter, setSearchFilter, setIsAuthenticated, wordTags, treeFilter, setTreeFilter, searchInput } =
     useContext(ConfigContext) as Context;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +85,7 @@ function Navbar() {
     setLocalDescription: Dispatch<React.SetStateAction<string>>;
   }) => {
     if (_id) {
-      const tag = tags.wordTags.find((tag) => tag._id === _id)!;
+      const tag = wordTags.find((tag) => tag._id === _id)!;
       setLocalDescription(insertTag(tag.label, inputRef));
     } else if (label) {
       setSearchFilter([...searchFilter, { isActive: true, data: parseLabel(label) }]);
@@ -100,7 +100,7 @@ function Navbar() {
           <div id="searchAreaInput">
             <AutoComplete
               ref={inputRef}
-              dropdownList={tags.wordTags.map((tag) => ({ ...tag, label: "#" + tag.label }))}
+              dropdownList={wordTags.map((tag) => ({ ...tag, label: "#" + tag.label }))}
               callback={search}
               placeholder="Search..."
               placement="bottom-start"

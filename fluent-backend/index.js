@@ -7,7 +7,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import conversationRoutes from "./controlers/conversationControlers.js";
 import reviewItemsRoutes from "./controlers/reviewControlers.js";
-import wordTagRoutes from "./controlers/conversationTagControlers.js";
+import wordTagRoutes from "./controlers/wordTagControlers.js";
 import conversationTagRoutes from "./controlers/conversationTagControlers.js";
 import userRoutes from "./controlers/userControlers.js";
 import userCourseRoutes from "./controlers/userCourseControlers.js";

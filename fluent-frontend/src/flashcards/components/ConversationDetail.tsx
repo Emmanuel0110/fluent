@@ -4,7 +4,7 @@ import { Context, Conversation } from "../../types";
 import SentenceDetail from "./SentenceDetail";
 
 export default function ConversationDetail({ conversation }: { conversation: Conversation }) {
-  const { tags, setSearchFilter, subscribeToConversation } = useContext(ConfigContext) as Context;
+  const { conversationTags, setSearchFilter, subscribeToConversation } = useContext(ConfigContext) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
@@ -25,14 +25,12 @@ export default function ConversationDetail({ conversation }: { conversation: Con
           ))}
           <div id="tags">
             {conversation.tags.map((tagId, index) => {
-              const tag = tags["wordTags"].find((tag) => tag._id === tagId);
-              if (tag) {
+              const tag = conversationTags.find((tag) => tag._id === tagId);
                 return tag ? (
-                  <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
-                    {"#" + tag.label}
+                  <div key={index} className="tag" onClick={(e) => searchTag(tag.sourceLabel)}>
+                    {"#" + tag.sourceLabel}
                   </div>
                 ) : <div/>;
-              }
             })}
           </div>
         </div>

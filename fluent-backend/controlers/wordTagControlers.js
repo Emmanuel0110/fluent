@@ -4,8 +4,8 @@ import express from "express";
 const router = express.Router();
 
 router.get("/", auth, (req, res) => {
-  const language = req.query.sourceLanguage;
-  WordTagModel.find({ language })
+  const { sourceLanguage } = req.userLearningData;
+  WordTagModel.find({ language: sourceLanguage })
     .limit(10000)
     .then((tags) => {
       res.json({ success: true, data: tags });

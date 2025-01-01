@@ -125,7 +125,7 @@ export const fetchConversationTags = async () => {
 };
 
 export const fetchWords = async (sourceLanguage: string, targetLanguage: string) => {
-  return customFetch(url + `words?sourceLanguage=${sourceLanguage}&targetLanguage=${targetLanguage}`, {
+  return customFetch(url + "words", {
     headers: authHeaders(),
   }).catch((err: Error) => {
     console.log(err);

@@ -1,10 +1,11 @@
 import auth from "../middleware/auth.js";
 import { ConversationTagModel } from "../models.js";
 import express from "express";
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", auth, (req, res) => {
-  const { sourceLanguage, targetLanguage } = req.userLearningData.sourceLanguage;
+  const { sourceLanguage, targetLanguage } = req.userLearningData;
   ConversationTagModel.aggregate([
     {
       $match: {
@@ -16,7 +17,7 @@ router.get("/", auth, (req, res) => {
         _id: 1,
         labels: {
           $filter: {
-            input: "$conversations", // The array to filter
+            input: "$labels", // The array to filter
             as: "label", // Alias for each element in the array
             cond: {
               $in: ["$$label.language", [sourceLanguage, targetLanguage]], // Keep only source and target languages

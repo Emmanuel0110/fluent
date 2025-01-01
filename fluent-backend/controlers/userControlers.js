@@ -1,19 +1,20 @@
 import auth from "../middleware/auth.js";
-import { UserModel } from "../models.js";
+import { UserModel, UserCourseModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
+import mongoose from "mongoose";
 const router = express.Router();
 
 //register
-router.post("/", function (req, res) {
+router.post("/", async function (req, res) {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
-  UserModel.findOne({ username }).then((user) => {
-    if (user) return res.status(400).json({ msg: "User already exists" });
-  });
+  const user = await UserModel.findOne({ username });
+  if (user) return res.status(400).json({ msg: "User already exists" });
+
   const newUser = new UserModel({
     _id: new mongoose.Types.ObjectId(),
     username,

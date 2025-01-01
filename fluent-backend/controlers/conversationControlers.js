@@ -2,6 +2,7 @@ import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", auth, cache, async (req, res) => {

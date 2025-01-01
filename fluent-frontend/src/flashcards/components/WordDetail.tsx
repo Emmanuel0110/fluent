@@ -6,7 +6,7 @@ import { ConversationLine } from "./ConversationLine";
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const {
     openWord,
-    tags,
+    wordTags,
     setSearchFilter,
   } = useContext(ConfigContext) as Context;
 
@@ -36,7 +36,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
           <div id="tags">
             {word &&
               word.tags.map((tagId, index) => {
-                const tag = tags["wordTags"].find(tag => tag._id === tagId);
+                const tag = wordTags.find(tag => tag._id === tagId);
                 if (tag)
                 return (
                   <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
