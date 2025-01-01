@@ -1,9 +1,10 @@
 import auth from '../middleware/auth.js';
+import cache from '../middleware/cache.js';
 import { MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
-router.get("/", auth, getNextReviewItems)
+router.get("/", auth, cache, getNextReviewItems);
 
 async function getNextReviewItems(req, res) {
   try {

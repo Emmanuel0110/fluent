@@ -7,12 +7,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import conversationRoutes from "./controlers/conversationControlers.js";
 import reviewItemsRoutes from "./controlers/reviewControlers.js";
-import tagRoutes from "./controlers/tagControlers.js";
+import wordTagRoutes from "./controlers/conversationTagControlers.js";
+import conversationTagRoutes from "./controlers/conversationTagControlers.js";
 import userRoutes from "./controlers/userControlers.js";
 import userCourseRoutes from "./controlers/userCourseControlers.js";
 import wordRoutes from "./controlers/wordControlers.js";
 
-const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -28,16 +28,6 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/", express.static(path.join(__dirname, "./public")));
-router.use("/api/conversations", conversationRoutes);
-router.use("/api/reviewItem", reviewItemsRoutes);
-router.use("/api/tags", tagRoutes);
-router.use("/api/users", userRoutes);
-router.use("/api/usercourses", userCourseRoutes);
-router.use("/api/words", wordRoutes);
-router.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
-});
 
 const whitelist = ['https://www.fluent.study'];
 
@@ -59,6 +49,18 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
+app.use("/", express.static(path.join(__dirname, "./public")));
+app.use("/api/conversations", conversationRoutes);
+app.use("/api/reviewItem", reviewItemsRoutes);
+app.use("/api/wordtags", wordTagRoutes);
+app.use("/api/conversationtags", conversationTagRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/usercourses", userCourseRoutes);
+app.use("/api/words", wordRoutes);
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
+});
 
 mongoose.set("debug", true);
 mongoose.set("strictQuery", true);

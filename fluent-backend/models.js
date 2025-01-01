@@ -10,13 +10,23 @@ const languageSchema = new Schema({
 });
 export const LanguageModel = model("Language", languageSchema);
 
-const tagSchema = new Schema({
+const wordTagSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  type: { type: String, required: true, enum: ["wordTag", "conversationTag"] },
   language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
   label: { type: String, required: true },
 });
-export const TagModel = model("Tag", tagSchema);
+export const WordTagModel = model("WordTag", wordTagSchema);
+
+const ConversationTagSchema = new Schema({
+  _id: Schema.Types.ObjectId,
+  labels: [
+    {
+      language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
+      label: { type: String, required: true },
+    },
+  ],
+});
+export const ConversationTagModel = model("ConversationTag", ConversationTagSchema);
 
 const userSchema = new Schema({
   _id: Schema.Types.ObjectId,
@@ -38,7 +48,7 @@ const UserCourseSchema = new Schema({
     {
       _id: { type: Schema.Types.ObjectId, ref: "LexicalItem", required: true },
       nextReviewDate: { type: Date, index: true },
-      reviewDelayInMs: Number
+      reviewDelayInMs: Number,
     },
   ],
   conversations: [

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, createContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { createContext, useEffect, useMemo, useRef, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 import Register from "./auth/components/Register";
@@ -6,7 +6,7 @@ import Layout from "./Layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";
-import { Context, Conversation, conversationFilter, SearchFilter, Tag, User, View, Word } from "./types";
+import { Context, Conversation, conversationFilter, ConversationTag, SearchFilter, User, View, Word, WordTag } from "./types";
 import WordList from "./flashcards/components/WordList";
 import { authHeaders, customFetch } from "./utils/http-helpers";
 import WordListWithDetail from "./flashcards/components/WordListWithDetail";
@@ -14,7 +14,8 @@ import {
   deleteRemoteWord,
   deleteRemoteConversation,
   editRemoteWord,
-  fetchTags,
+  fetchWordTags,
+  fetchConversationTags,
   fetchWords,
   getRemoteConversationById,
   saveNewConversation,
@@ -97,15 +98,14 @@ export default function App() {
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [status, setStatus] = useState("words");
-  const [tags, setTags] = useState({ wordTags: [], conversationTags: [] } as {
-    wordTags: Tag[];
-    conversationTags: Tag[];
-  });
+  const [wordTags, setWordTags] = useState<WordTag[]>([]);
+  const [conversationTags, setConversationTags] = useState<ConversationTag[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchTags(sourceLanguage).then((tags) => setTags(tags));
+      fetchWordTags().then((wordTags) => setWordTags(wordTags));
+      fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
       fetchWords(sourceLanguage, targetLanguage).then((words) => setWords(words));
     }
   }, [isAuthenticated]);
@@ -117,7 +117,7 @@ export default function App() {
         data: filterItem.data.map((dataItem) => {
           const split = dataItem.split("#");
           if (split.length === 2) {
-            const tagId = tags["wordTags"].find((tag) => tag.label === split[1])?._id;
+            const tagId = wordTags.find((tag) => tag.label === split[1])?._id;
             if (tagId) {
               return split[0] + "#" + tagId;
             }
@@ -337,8 +337,10 @@ export default function App() {
         setUser,
         status,
         setStatus,
-        tags,
-        setTags,
+        wordTags,
+        setWordTags,
+        conversationTags,
+        setConversationTags,
         fetchMoreUsedInConversations,
         openWord,
         deleteConversation,

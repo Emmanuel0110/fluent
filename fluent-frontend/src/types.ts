@@ -7,11 +7,15 @@ export interface User {
 
 export type Status = "word" | "conversation";
 
-export type TagType = "wordTag" | "conversationTag";
-
-export interface Tag {
+export interface WordTag {
   _id: string;
   label: string;
+}
+
+export interface ConversationTag {
+  _id: string;
+  sourceLabel: string;
+  targetLabel: string; 
 }
 
 export type SearchFilter = { isActive: boolean; data: string[] }[];
@@ -72,8 +76,10 @@ export interface Context {
   setUser: Dispatch<SetStateAction<User | null>>;
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
-  tags: { [key: string]: Tag[] };
-  setTags: Dispatch<SetStateAction<{ wordTags: Tag[]; conversationTags: Tag[] }>>;
+  wordTags: WordTag[];
+  setWordTags: Dispatch<SetStateAction<WordTag[]>>;
+  conversationTags: ConversationTag[];
+  setConversationTags: Dispatch<SetStateAction<ConversationTag[]>>;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   openWord: (id: string) => void;
   openConversation: (id: string) => void;

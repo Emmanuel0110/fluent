@@ -1,7 +1,6 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, Tag, Word } from "../types";
-import { convertCompilerOptionsFromJson } from "typescript";
+import { Conversation, Word } from "../types";
 
 export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
   return customFetch(url + "multilingualsentences/" + id, {
@@ -113,8 +112,14 @@ export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Wor
   });
 };
 
-export const fetchTags = async (sourceLanguage: string): Promise<{ wordTags: Tag[]; conversationTags: Tag[] }> => {
-  return customFetch(url + `tags?sourceLanguage=${sourceLanguage}`, { headers: authHeaders() }).catch((err: Error) => {
+export const fetchWordTags = async () => {
+  return customFetch(url + "wordtags", { headers: authHeaders() }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const fetchConversationTags = async () => {
+  return customFetch(url + "conversationtags", { headers: authHeaders() }).catch((err: Error) => {
     console.log(err);
   });
 };

@@ -1,5 +1,5 @@
-
 import auth from "../middleware/auth.js";
+import { UserModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
@@ -51,6 +51,7 @@ router.post("/", function (req, res) {
 //login
 router.post("/auth", function (req, res) {
   const { username, password } = req.body;
+  console.log("req.body2", req.body);
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
@@ -77,7 +78,7 @@ router.post("/auth", function (req, res) {
     });
 });
 
-router.get("/", auth, function (req, res) {
+router.get("/auth", auth, function (req, res) {
   UserModel.findById(req.user._id).then((user) => res.json({ user }));
 });
 

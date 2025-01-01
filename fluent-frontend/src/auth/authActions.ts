@@ -9,7 +9,7 @@ export const loadUser = (
   setIsAuthenticated: Dispatch<React.SetStateAction<boolean | null>>,
   setUserIsLoading: Dispatch<React.SetStateAction<boolean>>
 ) => {
-  customFetch(url + "auth/user", { headers: authHeaders() })
+  customFetch(url + "users/auth", { headers: authHeaders() })
     .then((res) => {
       setIsAuthenticated(true);
       setUser(res.user);
@@ -55,7 +55,7 @@ export const login = (
     "Content-Type": "application/json",
   };
   const body = JSON.stringify({ username, password });
-  customFetch(url + "auth", { method: "POST", headers, body })
+  customFetch(url + "users/auth", { method: "POST", headers, body })
     .then((res) => {
       if (!res.token) {
         throw Error(res.msg);

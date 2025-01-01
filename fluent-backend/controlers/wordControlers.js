@@ -1,5 +1,6 @@
 import auth from '../middleware/auth.js';
 import express from "express";
+import { LexicalItemModel } from "../models.js";
 const router = express.Router();
 
 router.get("/", auth, (req, res) => {
@@ -25,7 +26,7 @@ router.post("/", auth, (req, res) => {
   newWord
     .save()
     .then((newElement) => {
-      res.send({ data: newElement });
+      res.send({success: true, data: newElement });
     })
     .catch(function (err) {
       console.log("save error ", err);
@@ -38,7 +39,7 @@ router.post("/", auth, (req, res) => {
     });
 });
 
-router.patch("/api/words/:id", auth, function (req, res) {
+router.patch("/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   LexicalItemModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
