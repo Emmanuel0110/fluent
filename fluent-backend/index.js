@@ -12,6 +12,11 @@ import conversationTagRoutes from "./controlers/conversationTagControlers.js";
 import userRoutes from "./controlers/userControlers.js";
 import userCourseRoutes from "./controlers/userCourseControlers.js";
 import wordRoutes from "./controlers/wordControlers.js";
+import { createClient } from 'redis';
+
+export const redisClient = createClient();
+redisClient.on('error', err => console.log('Redis Client Error', err));
+await redisClient.connect();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

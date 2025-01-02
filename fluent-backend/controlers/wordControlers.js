@@ -15,7 +15,8 @@ router.get("/", auth, cache, (req, res) => {
   // Run both queries using Promise.all
   Promise.all([LexicalItemModel.aggregate(sourceWordsPipeline), LexicalItemModel.aggregate(targetWordsPipeline)])
     .then(([sourceWords, targetWords]) => {
-      res.json({ success: true, data: sourceWords.concat(targetWords) });
+      const completedWords = completeWords(sourceWords.concat(targetWords), userLearningData.words);
+      res.json({ success: true, data: completedWords });
     })
     .catch((err) => {
       res.status(500).json({ success: false, message: err.message });
@@ -71,6 +72,10 @@ function generateAggregationPipeline(language, translationLanguage) {
       },
     },
   ];
+}
+
+function completeWords(words, userWords) {
+  return words.map((word) => ({ ...word, subscribed: !!userWords.find((userWord) => userWord._id === word._id) }));
 }
 
 export default router;

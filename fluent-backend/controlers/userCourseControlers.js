@@ -1,13 +1,15 @@
-import auth from '../middleware/auth.js';
+import auth from "../middleware/auth.js";
+import cache from "../middleware/cache.js";
 import { UserCourseModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
-router.patch("/", auth, updateLearningData);
+router.patch("/", auth, cache, updateLearningData);
 
 export async function updateLearningData(req, res) {
   try {
-    const { userLearningData, reviewedConversationId, wordIds, success } = req;
+    const { reviewedConversationId, wordIds, success } = req.body;
+    const { userLearningData } = req;
     if (userLearningData && reviewedConversationId) {
       if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
         UserCourseModel.updateOne(
@@ -30,8 +32,8 @@ export async function updateLearningData(req, res) {
       );
       if (wordUpdates.length > 0) updateWords(userLearningData._id, wordUpdates);
       if (newWordIds.length > 0) addNewWords(userLearningData._id, newWordIds);
+      res.json({ status: "success" });
     }
-    res.json({ status: "success" });
   } catch (error) {
     console.error(error);
     res.status(500).json({

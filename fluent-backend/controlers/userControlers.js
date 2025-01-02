@@ -1,9 +1,10 @@
 import auth from "../middleware/auth.js";
-import { UserModel, UserCourseModel } from "../models.js";
+import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
 import mongoose from "mongoose";
+import {redisClient} from "../index.js";
 const router = express.Router();
 
 //register
@@ -52,7 +53,6 @@ router.post("/", async function (req, res) {
 //login
 router.post("/auth", function (req, res) {
   const { username, password } = req.body;
-  console.log("req.body2", req.body);
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
   }
@@ -68,11 +68,7 @@ router.post("/auth", function (req, res) {
         jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
           if (err) throw err;
           delete user.password;
-          const lastCourse = await UserCourseModel.findOne({ _id: user.lastCourseId });
-          if (lastCourse) {
-            redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(lastCourse));
-          }
-
+          cacheUserlearningData(user);
           res.json({ token, user });
         });
       });
@@ -82,5 +78,27 @@ router.post("/auth", function (req, res) {
 router.get("/auth", auth, function (req, res) {
   UserModel.findById(req.user._id).then((user) => res.json({ user }));
 });
+
+async function cacheUserlearningData(user) {
+  if (user.lastCourse) {
+    const lastCourse = await UserCourseModel.findOne({ _id: user.lastCourseId });
+    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(lastCourse));
+  } else if (user.courses.length > 0) {
+    const course = await UserCourseModel.findOne({ _id: user.courses[0] });
+    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(course));
+  } else {
+    const availableLanguages = await LanguageModel.find().select("-flag");
+    const newCourse = new UserCourseModel({
+      _id: new mongoose.Types.ObjectId(),
+      sourceLanguage: availableLanguages.find(language => language.label === "fr")?._id,
+      targetLanguage: availableLanguages.find(language => language.label === "en")?._id,
+      wishListConversations: [],
+      words: [],
+      conversations: [],
+    });
+    await newCourse.save();
+    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(newCourse));
+  }
+}
 
 export default router;

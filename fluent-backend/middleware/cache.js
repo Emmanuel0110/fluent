@@ -1,3 +1,4 @@
+import {redisClient} from "../index.js";
 
 function cache(req, res, next) {
   const userId = req.user;
