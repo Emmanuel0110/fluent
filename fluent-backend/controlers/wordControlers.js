@@ -15,7 +15,7 @@ router.get("/", auth, cache, (req, res) => {
   // Run both queries using Promise.all
   Promise.all([LexicalItemModel.aggregate(sourceWordsPipeline), LexicalItemModel.aggregate(targetWordsPipeline)])
     .then(([sourceWords, targetWords]) => {
-      const completedWords = completeWords(sourceWords.concat(targetWords), userLearningData.words);
+      const completedWords = completeWords(sourceWords.concat(targetWords), req.userLearningData.words);
       res.json({ success: true, data: completedWords });
     })
     .catch((err) => {
@@ -53,7 +53,7 @@ router.patch("/:id", auth, function (req, res) {
 // Create a reusable function to generate the aggregation pipeline
 function generateAggregationPipeline(language, translationLanguage) {
   return [
-    { $match: { language: language, "translations.language": translationLanguage } },
+    { $match: { language, "translations.language": translationLanguage } },
     {
       $project: {
         _id: 1,
@@ -65,7 +65,10 @@ function generateAggregationPipeline(language, translationLanguage) {
             input: "$translations", // The array to filter
             as: "translation", // Alias for each element in the array
             cond: {
-              "$$translation.language": translationLanguage, // Keep only the specific language
+              '$eq': [
+                '$$translation.language', // correct usage of $$translation in filter
+                translationLanguage
+              ]
             },
           },
         },

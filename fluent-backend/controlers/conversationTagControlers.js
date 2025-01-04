@@ -1,10 +1,11 @@
 import auth from "../middleware/auth.js";
+import cache from "../middleware/cache.js";
 import { ConversationTagModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
 const router = express.Router();
 
-router.get("/", auth, (req, res) => {
+router.get("/", auth, cache, (req, res) => {
   const { sourceLanguage, targetLanguage } = req.userLearningData;
   ConversationTagModel.aggregate([
     {
@@ -26,11 +27,9 @@ router.get("/", auth, (req, res) => {
         },
       },
     },
-  ])
-    .lean()
-    .then((tags) => {
-      res.json({ success: true, data: tags });
-    });
+  ]).then((tags) => {
+    res.json({ success: true, data: tags });
+  });
 });
 
 router.post("/", auth, (req, res) => {

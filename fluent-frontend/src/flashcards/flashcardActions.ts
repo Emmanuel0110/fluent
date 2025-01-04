@@ -113,21 +113,41 @@ export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Wor
 };
 
 export const fetchWordTags = async () => {
-  return customFetch(url + "wordtags", { headers: authHeaders() }).catch((err: Error) => {
+  return customFetch(url + "wordtags", { headers: authHeaders() }).then(res => {
+    if (res.success) {
+      return res.data;
+    } else {
+      console.log(res?.message);
+      return [];
+    }
+  }).catch((err: Error) => {
     console.log(err);
   });
 };
 
 export const fetchConversationTags = async () => {
-  return customFetch(url + "conversationtags", { headers: authHeaders() }).catch((err: Error) => {
+  return customFetch(url + "conversationtags", { headers: authHeaders() }).then(res => {
+    if (res.success) {
+      return res.data;
+    } else {
+      console.log(res?.message);
+      return [];
+    }
+  }).catch((err: Error) => {
     console.log(err);
   });
 };
 
-export const fetchWords = async (sourceLanguage: string, targetLanguage: string) => {
-  return customFetch(url + "words", {
-    headers: authHeaders(),
+export const fetchWords = async () => {
+  return customFetch(url + "words", { headers: authHeaders() }).then(res => {
+    if (res.success) {
+      return res.data;
+    } else {
+      console.log(res?.message);
+      return [];
+    }
   }).catch((err: Error) => {
     console.log(err);
+    return [];
   });
 };

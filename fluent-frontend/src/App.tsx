@@ -6,7 +6,17 @@ import Layout from "./Layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";
-import { Context, Conversation, conversationFilter, ConversationTag, SearchFilter, User, View, Word, WordTag } from "./types";
+import {
+  Context,
+  Conversation,
+  conversationFilter,
+  ConversationTag,
+  SearchFilter,
+  User,
+  View,
+  Word,
+  WordTag,
+} from "./types";
 import WordList from "./flashcards/components/WordList";
 import { authHeaders, customFetch } from "./utils/http-helpers";
 import WordListWithDetail from "./flashcards/components/WordListWithDetail";
@@ -84,6 +94,12 @@ const isFilteredBySearchFilter = (word: Word, searchFilter: SearchFilter) => {
 const isFiltered = (word: Word, searchFilter: SearchFilter, treeFilter: string[]) =>
   isFilteredBySearchFilter(word, searchFilter) && (treeFilter.length === 0 || treeFilter.includes(word._id));
 
+const groupById = (ObjectArr: {_id: string}[]) => {
+  return ObjectArr.reduce((acc, value) => {
+    return ({...acc, [value._id]: value});
+  }, {});
+}
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null as boolean | null);
   const [user, setUser] = useState(null as User | null);
@@ -106,7 +122,7 @@ export default function App() {
     if (isAuthenticated) {
       fetchWordTags().then((wordTags) => setWordTags(wordTags));
       fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords(sourceLanguage, targetLanguage).then((words) => setWords(words));
+      fetchWords().then((words) => setWords(groupById(words)));
     }
   }, [isAuthenticated]);
 
@@ -359,13 +375,25 @@ export default function App() {
         <Route
           path="register/*"
           element={
-            <Register isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+            <Register
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+              setUser={setUser}
+              setSourceLanguage={setSourceLanguage}
+              setTargetLanguage={setTargetLanguage}
+            />
           }
         />
         <Route
           path="login/*"
           element={
-            <Login isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+            <Login
+              isAuthenticated={isAuthenticated}
+              setIsAuthenticated={setIsAuthenticated}
+              setUser={setUser}
+              setSourceLanguage={setSourceLanguage}
+              setTargetLanguage={setTargetLanguage}
+            />
           }
         />
         <Route
@@ -379,7 +407,7 @@ export default function App() {
           }
         >
           <Route element={<Layout />}>
-            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />
+            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} /> {/*TODO: remove if unused ? */}
             <Route path="new" element={<CreationForm />} />
             <Route path="words" element={<WordList filteredWords={filteredWords} />} />
             <Route
@@ -388,7 +416,7 @@ export default function App() {
             />
             <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
             <Route
-              path="multilingualsentences/:multiLingualSentenceId"
+              path="conversations/:conversationId"
               element={
                 <ConversationListWithDetail
                   filteredConversations={filteredConversations}
@@ -400,7 +428,13 @@ export default function App() {
             <Route
               path="/"
               element={
-                <Login isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} setUser={setUser} />
+                <Login
+                  isAuthenticated={isAuthenticated}
+                  setIsAuthenticated={setIsAuthenticated}
+                  setUser={setUser}
+                  setSourceLanguage={setSourceLanguage}
+                  setTargetLanguage={setTargetLanguage}
+                />
               }
             />
           </Route>

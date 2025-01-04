@@ -1,5 +1,5 @@
-import auth from '../middleware/auth.js';
-import cache from '../middleware/cache.js';
+import auth from "../middleware/auth.js";
+import cache from "../middleware/cache.js";
 import { MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import express from "express";
 const router = express.Router();
@@ -138,7 +138,7 @@ async function getConversationsForWords(wordIds, userLearningData) {
         },
       },
     },
-  ]).lean();
+  ]);
 }
 
 export default router;

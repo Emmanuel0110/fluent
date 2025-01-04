@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
 import mongoose from "mongoose";
-import {redisClient} from "../index.js";
+import { redisClient } from "../index.js";
 const router = express.Router();
 
 //register
@@ -40,10 +40,11 @@ router.post("/", async function (req, res) {
           return;
         }
 
-        jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, (err, token) => {
+        jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
           if (err) throw err;
           delete user.password;
-          res.json({ token, user });
+          const {sourceLanguage, targetLanguage} = await cacheUserLearningData(user);
+          res.json({ token, user, sourceLanguage, targetLanguage });
         });
       });
     });
@@ -58,6 +59,7 @@ router.post("/auth", function (req, res) {
   }
   UserModel.findOne({ username: username.trim() })
     .select("+password")
+    .lean()
     .then((user) => {
       if (!user) return res.status(400).json({ msg: "User does not exist" });
 
@@ -68,8 +70,8 @@ router.post("/auth", function (req, res) {
         jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
           if (err) throw err;
           delete user.password;
-          cacheUserlearningData(user);
-          res.json({ token, user });
+          const {sourceLanguage, targetLanguage} = await cacheUserLearningData(user);
+          res.json({ token, user, sourceLanguage, targetLanguage });
         });
       });
     });
@@ -79,26 +81,28 @@ router.get("/auth", auth, function (req, res) {
   UserModel.findById(req.user._id).then((user) => res.json({ user }));
 });
 
-async function cacheUserlearningData(user) {
-  if (user.lastCourse) {
-    const lastCourse = await UserCourseModel.findOne({ _id: user.lastCourseId });
-    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(lastCourse));
+export async function cacheUserLearningData(user) {
+  let course;
+  if (user.lastCourseId) {
+    course = await UserCourseModel.findById(user.lastCourseId);
   } else if (user.courses.length > 0) {
-    const course = await UserCourseModel.findOne({ _id: user.courses[0] });
-    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(course));
+    await UserModel.findByIdAndUpdate(user._id, { lastCourseId: user.courses[0] });
+    course = await UserCourseModel.findById(user.courses[0]);
   } else {
     const availableLanguages = await LanguageModel.find().select("-flag");
-    const newCourse = new UserCourseModel({
+    course = new UserCourseModel({
       _id: new mongoose.Types.ObjectId(),
-      sourceLanguage: availableLanguages.find(language => language.label === "fr")?._id,
-      targetLanguage: availableLanguages.find(language => language.label === "en")?._id,
+      sourceLanguage: availableLanguages.find((language) => language.label === "fr")?._id,
+      targetLanguage: availableLanguages.find((language) => language.label === "en")?._id,
       wishListConversations: [],
       words: [],
       conversations: [],
     });
-    await newCourse.save();
-    redisClient.setex(`userLearningData:${user._id}`, 3600, JSON.stringify(newCourse));
+    await course.save();
+    await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
   }
+  await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+  return course;
 }
 
 export default router;

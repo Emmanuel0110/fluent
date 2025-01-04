@@ -1,23 +1,14 @@
-import {redisClient} from "../index.js";
+import { cacheUserLearningData } from "../controlers/userControlers.js";
+import { redisClient } from "../index.js";
+import { UserModel } from "../models.js";
 
-function cache(req, res, next) {
-  const userId = req.user;
-
-  redisClient.get(`userLearningData:${userId}`, (err, data) => {
-    if (err) {
-      console.error("Error accessing Redis:", err);
-      return res.status(500).json({msg: "Redis error"});
-    }
-
-    if (data) {
-      // Data found in Redis, attach to request
-      req.userLearningData = JSON.parse(data);
-      return next();
-    }
-
-    // If not in cache, proceed to fetch from the database
-    next();
-  });
+async function cache(req, res, next) {
+  const userId = req.user._id;
+  const cachedData = await redisClient.get(`userLearningData:${userId}`);
+  req.userLearningData = cachedData
+    ? JSON.parse(cachedData)
+    : await UserModel.findById(userId).then((user) => cacheUserLearningData(user));
+  next();
 }
 
 export default cache;

@@ -8,17 +8,21 @@ function Register({
   isAuthenticated,
   setIsAuthenticated,
   setUser,
+  setSourceLanguage,
+  setTargetLanguage,
 }: {
   isAuthenticated: boolean | null;
   setIsAuthenticated: (b: boolean) => void;
   setUser: (user: any) => void;
+  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>;
+  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const onSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    register({ username, password }, setIsAuthenticated, setUser);
+    register({ username, password }, setIsAuthenticated, setUser, setSourceLanguage, setTargetLanguage);
   };
 
   if (isAuthenticated) {

@@ -32,7 +32,7 @@ const userSchema = new Schema({
   _id: Schema.Types.ObjectId,
   username: { type: String, required: true, unique: true, trim: true },
   password: { type: String, required: true, select: false },
-  lastCourseId: { type: String },
+  lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },
   courses: [{ type: Schema.Types.ObjectId, ref: "UserCourse" }],
 });
 export const UserModel = model("User", userSchema);
