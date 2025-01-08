@@ -80,13 +80,13 @@ export const StoryNodeModel = model("StoryNode", StoryNodeSchema);
 
 const LexicalItemSchema = new Schema({
   _id: Schema.Types.ObjectId,
-  sourceLanguage: {
+  language: {
     required: true,
     type: Schema.Types.ObjectId,
     ref: "Language",
     index: true,
   },
-  tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
+  tags: [{ type: Schema.Types.ObjectId, ref: "WordTag" }],
   text: String,
   translations: [
     {
@@ -99,10 +99,10 @@ export const LexicalItemModel = model("LexicalItem", LexicalItemSchema);
 
 const MultiLingualConversationSchema = new Schema({
   _id: Schema.Types.ObjectId,
+  tags: [{ type: Schema.Types.ObjectId, ref: "ConversationTag", index: true }],
   conversations: [
     {
       language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
-      tags: [{ type: Schema.Types.ObjectId, ref: "Tag", index: true }],
       sentences: [
         {
           _id: Schema.Types.ObjectId,

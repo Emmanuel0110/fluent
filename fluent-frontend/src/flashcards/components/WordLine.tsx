@@ -8,6 +8,7 @@ export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
   const {
     user, // TODO: add condition on user.admin to edit/delete
+    words,
     openWord,
     editWord,
     deleteWord,
@@ -38,11 +39,11 @@ export const WordLine = ({ word }: { word: Word }) => {
       onClick={() => openWord(word._id)}
     >
       <div className={"lineTitle"}>
-        {word.sourceLanguage +
+        {word.text +
           " : " +
-          word.targetLanguage.map(({ id, label }) => (
-            <span className="wordLabel" onClick={e => openWord(id)}>
-              {label}
+          word.translations.map(wordId => (
+            <span className="wordLabel" onClick={e => openWord(wordId)}>
+              {words[wordId].text}
             </span>
           ))}
       </div>

@@ -31,6 +31,9 @@ import {
   saveNewConversation,
   subscribeToRemoteConversation,
   editRemoteConversation,
+  editRemoteConversationTag,
+  saveNewConversationTag,
+  saveNewWord,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -54,6 +57,25 @@ export const updateCacheWithNewConversations = (
   }, conversations);
 };
 
+export const updateCacheWithNewWords = (words: { [id: string]: Word }, newWords: Word[]): { [id: string]: Word } => {
+  return { ...words, ...newWords.reduce((acc, value) => ({ ...acc, [value._id]: value }), {}) };
+};
+
+export const updateCacheWithNewConversationTags = (
+  conversationTags: ConversationTag[],
+  newConversationTags: ConversationTag[]
+): ConversationTag[] => {
+  return newConversationTags.reduce((acc: ConversationTag[], value: ConversationTag) => {
+    var index: number = acc.findIndex((sentence) => sentence._id === value._id);
+    if (index === -1) {
+      return [...acc, value];
+    } else {
+      acc.splice(index, 1, value);
+      return [...acc];
+    }
+  }, conversationTags);
+};
+
 export const someConversationFilter = (conversationFilter: conversationFilter) => {
   return conversationFilter.tag !== undefined;
 };
@@ -70,7 +92,7 @@ const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
     if (filterString.toLowerCase().slice(4).trim().startsWith("#")) {
       return !word.tags.includes(filterString.toLowerCase().trim().slice(5));
     } else {
-      return !word.sourceLanguage
+      return !word.text
         .toLowerCase()
         .includes(filterString.toLowerCase().trim().slice(4).replace(/^\"/, "").replace(/\"$/, ""));
     }
@@ -78,9 +100,7 @@ const wordHasTagOrIncludeString = (word: Word, filterString: string) => {
     if (filterString.toLowerCase().trim().startsWith("#")) {
       return word.tags.includes(filterString.toLowerCase().trim().slice(1));
     } else {
-      return word.sourceLanguage
-        .toLowerCase()
-        .includes(filterString.toLowerCase().replace(/^\"/, "").replace(/\"$/, ""));
+      return word.text.toLowerCase().includes(filterString.toLowerCase().replace(/^\"/, "").replace(/\"$/, ""));
     }
   }
 };
@@ -94,11 +114,11 @@ const isFilteredBySearchFilter = (word: Word, searchFilter: SearchFilter) => {
 const isFiltered = (word: Word, searchFilter: SearchFilter, treeFilter: string[]) =>
   isFilteredBySearchFilter(word, searchFilter) && (treeFilter.length === 0 || treeFilter.includes(word._id));
 
-const groupById = (ObjectArr: {_id: string}[]) => {
+const groupById = (ObjectArr: { _id: string }[]) => {
   return ObjectArr.reduce((acc, value) => {
-    return ({...acc, [value._id]: value});
+    return { ...acc, [value._id]: value };
   }, {});
-}
+};
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null as boolean | null);
@@ -269,17 +289,21 @@ export default function App() {
     });
   };
 
-  const saveWord = async (infos: Partial<Word>) => {
-    const res = await editRemoteWord(infos);
+  const saveWord = async (infos: Word) => {
+    const res = await (infos._id ? editRemoteWord(infos) : saveNewWord(infos));
     if (res.success) {
-      const { _id } = infos;
+      const { _id } = res.data;
       if (_id) {
-        setWords((words) => ({
-          ...words,
-          [_id]: { ...words[_id], ...infos },
-        }));
+        setWords((words) => ({ ...words, [_id]: res.data }));
+        return res.data;
       }
-      navigate("/words" + res.data._id);
+    }
+  };
+
+  const saveConversationTag = async (infos: ConversationTag) => {
+    const res = await (infos._id ? editRemoteConversationTag(infos) : saveNewConversationTag(infos));
+    if (res.success) {
+      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
     }
   };
 
@@ -289,7 +313,6 @@ export default function App() {
       : saveNewConversation(infos, sourceLanguage, targetLanguage));
     if (res.success) {
       setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data]));
-
       navigate("/conversations" + res.data._id);
     }
   };
@@ -364,6 +387,7 @@ export default function App() {
         openConversation,
         subscribeToConversation,
         saveWord,
+        saveConversationTag,
         getConversationById,
         treeFilter,
         setTreeFilter,
@@ -407,7 +431,8 @@ export default function App() {
           }
         >
           <Route element={<Layout />}>
-            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} /> {/*TODO: remove if unused ? */}
+            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />{" "}
+            {/*TODO: remove if unused ? */}
             <Route path="new" element={<CreationForm />} />
             <Route path="words" element={<WordList filteredWords={filteredWords} />} />
             <Route

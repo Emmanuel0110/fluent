@@ -4,11 +4,7 @@ import { Context, Conversation, Word } from "../../types";
 import { ConversationLine } from "./ConversationLine";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
-  const {
-    openWord,
-    wordTags,
-    setSearchFilter,
-  } = useContext(ConfigContext) as Context;
+  const { openWord, words, wordTags, setSearchFilter } = useContext(ConfigContext) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
@@ -18,31 +14,29 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
     <div id="flashCardComponent">
       <div id="flashcard">
         <div id="previous">
-          <div
-            className={"subscribe" + (word.subscribed ? " subscribed" : "")}
-          ></div>
+          <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         </div>
         <div id="middle">
-        <div className={"lineTitle"}>
-        {word.sourceLanguage +
-          " : " +
-          word.targetLanguage.map(({ id, label }) => (
-            <span className="wordLabel" onClick={e => openWord(id)}>
-              {label}
-            </span>
-          ))}
-      </div>
+          <div className={"lineTitle"}>
+            {word.text +
+              " : " +
+              word.translations.map((wordId) => (
+                <span className="wordLabel" onClick={(e) => openWord(wordId)}>
+                  {words[wordId].text}
+                </span>
+              ))}
+          </div>
 
           <div id="tags">
             {word &&
               word.tags.map((tagId, index) => {
-                const tag = wordTags.find(tag => tag._id === tagId);
+                const tag = wordTags.find((tag) => tag._id === tagId);
                 if (tag)
-                return (
-                  <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
-                    {"#" + tag.label}
-                  </div>
-                );
+                  return (
+                    <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
+                      {"#" + tag.label}
+                    </div>
+                  );
               })}
           </div>
 

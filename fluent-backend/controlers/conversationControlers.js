@@ -11,11 +11,7 @@ router.get("/", auth, cache, async (req, res) => {
     const userConversations = req.userLearningData.conversations;
     if (tag) {
       const conversations = await MultiLingualConversationModel.find({ tags: { $in: [tag] } }).lean();
-      const completedConversations = conversations.map((conversation) => ({
-        ...conversation,
-        subscribed: !!userConversations.find(({ _id }) => _id === conversation._id),
-      }));
-      res.json({ success: true, data: completedConversations });
+      res.json({ success: true, data: completeConversations(conversations, userConversations) });
     } else if (wordId) {
       const conversation = await MultiLingualConversationModel.findById(wordId);
       const completedConversation = {
@@ -32,7 +28,7 @@ router.get("/", auth, cache, async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     const newConversation = new MultiLingualConversationModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
-    newConversation.save().then((newConversation) => res.json({ success: true, data: newConversation }));
+    newConversation.save().then((newConversation) => res.json({ success: true, data: {...newConversation, subscribed: false} }));
   } catch (err) {
     console.log("save error ", err);
     if (err.name === "MongoError" && err.code === 11000) {
@@ -44,10 +40,33 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.patch("/:id", auth, function (req, res) {
+router.put("/:id", auth, cache, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
-  MultiLingualConversationModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
+  const { tags, conversations } = req.body;
+  await MultiLingualConversationModel.updateOne(filter, { tags });
+  await MultiLingualConversationModel.updateOne(filter, {
+    $pull: {
+      conversations: { language: { $in: [req.userLearningData.sourceLanguage, req.userLearningData.sourceLanguage] } },
+    },
+  });
+  const conversation = await MultiLingualConversationModel.findOneAndUpdate(
+    filter,
+    { $push: { ids: { $each: conversations } } },
+    { new: true }
+  );
+  const completedConversation = {
+    ...conversation,
+    subscribed: !!req.userLearningData.conversations.find(({ _id }) => _id === conversation._id),
+  };
+  res.json({ success: true, data: completedConversation });
 });
+
+function completeConversations(conversations, userConversations) {
+  return conversations.map((conversation) => ({
+    ...conversation,
+    subscribed: !!userConversations.find((userConversation) => userConversation._id === conversation._id),
+  }));
+}
 
 export default router;

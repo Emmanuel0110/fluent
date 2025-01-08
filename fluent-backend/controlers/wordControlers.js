@@ -12,7 +12,7 @@ router.get("/", auth, cache, (req, res) => {
   const sourceWordsPipeline = generateAggregationPipeline(sourceLanguage, targetLanguage);
   const targetWordsPipeline = generateAggregationPipeline(targetLanguage, sourceLanguage);
 
-  // Run both queries using Promise.all
+  // Run both queries
   Promise.all([LexicalItemModel.aggregate(sourceWordsPipeline), LexicalItemModel.aggregate(targetWordsPipeline)])
     .then(([sourceWords, targetWords]) => {
       const completedWords = completeWords(sourceWords.concat(targetWords), req.userLearningData.words);
@@ -44,7 +44,7 @@ router.post("/", auth, (req, res) => {
     });
 });
 
-router.patch("/:id", auth, function (req, res) {
+router.put("/:id", auth, function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   LexicalItemModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
@@ -57,7 +57,7 @@ function generateAggregationPipeline(language, translationLanguage) {
     {
       $project: {
         _id: 1,
-        sourceLanguage: 1,
+        language: 1,
         tags: 1,
         text: 1,
         translations: {

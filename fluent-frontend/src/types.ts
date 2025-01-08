@@ -9,6 +9,7 @@ export type Status = "word" | "conversation";
 
 export interface WordTag {
   _id: string;
+  language: string;
   label: string;
 }
 
@@ -34,8 +35,8 @@ export interface View {
 export interface Word {
   _id: string;
   language: string;
-  sourceLanguage: string;
-  targetLanguage: { id: string; label: string }[];
+  text: string;
+  translations: string[];
   tags: string[];
   subscribed: boolean;
 }
@@ -86,7 +87,8 @@ export interface Context {
   deleteConversation: (_id: string) => void;
   deleteWord: (_id: string) => void;
   subscribeToConversation: (_id: string) => void;
-  saveWord: (infos: Partial<Word>) => void;
+  saveWord: (infos: Word) => Promise<void | Word>;
+  saveConversationTag: (infos: ConversationTag) => Promise<void>;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;

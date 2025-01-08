@@ -97,9 +97,9 @@ export default function WordListWithDetail({
         {currentOpenedWord && (
           <div id="openedFlashcards">
             <TabNav
-              tabsData={openedWords.map(({ _id, sourceLanguage }) => ({
+              tabsData={openedWords.map(({ _id, text }) => ({
                 id: _id,
-                text: sourceLanguage,
+                text,
               }))}
               selectedId={wordId}
               closeTab={closeTab}

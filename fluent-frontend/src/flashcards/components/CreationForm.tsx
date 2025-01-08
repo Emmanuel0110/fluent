@@ -1,31 +1,63 @@
-import React, { Dispatch, useContext, useEffect, useState } from "react";
+import React, { Dispatch, Fragment, useContext, useEffect, useMemo, useState } from "react";
 import "../../App.css";
-import { Context, Conversation } from "../../types";
-import { ConfigContext, updateCacheWithNewConversations } from "../../App";
+import { Context, Conversation, ConversationTag, Word } from "../../types";
+import { ConfigContext } from "../../App";
 import AutoComplete from "../../utils/Autocomplete";
 import { WordLine } from "./WordLine";
-import { editRemoteConversation, saveNewConversation } from "../flashcardActions";
-import { useNavigate } from "react-router-dom";
 
 type SourceOrTarget = "sourceLanguage" | "targetLanguage";
+type Callback = {
+  _id?: string;
+  label?: string;
+  setLocalDescription: Dispatch<React.SetStateAction<string>>;
+};
 
 CreationForm.defaultProps = {
   initialConversation: { _id: "", tags: [], multiLingualSentences: [], subscribed: false },
+  initialSourceWord: { _id: "", tags: [], sourcelanguage: "", targetLanguage: [] },
+  initialTargetWord: { _id: "", tags: [], sourcelanguage: "", targetLanguage: [] },
 };
 
-function CreationForm({ initialConversation }: { initialConversation?: Conversation }) {
+function CreationForm({
+  initialConversation,
+  initialSourceWord,
+  initialTargetWord,
+}: {
+  initialConversation: Conversation;
+  initialSourceWord: Word;
+  initialTargetWord: Word;
+}) {
   const [conversation, setConversation] = useState<Conversation | undefined>();
+  const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
+  const [sourceWord, setSourceWord] = useState<Word | undefined>();
+  const [targetWord, setTargetWord] = useState<Word | undefined>();
+
   const {
     words,
-    setConversations,
+    saveWord,
     saveConversation,
+    conversationTags,
+    wordTags,
+    saveConversationTag,
     sourceLanguage: appSourceLanguage,
     targetLanguage: appTargetLanguage,
   } = useContext(ConfigContext) as Context;
-  const navigate = useNavigate();
+
   useEffect(() => {
     setConversation(initialConversation);
-  }, [initialConversation]);
+    setSourceWord({ ...initialSourceWord, language: appSourceLanguage });
+    setTargetWord({ ...initialTargetWord, language: appTargetLanguage });
+  }, []);
+
+  const getWordList = (words: { [key: string]: Word }, language: string) =>
+    Object.values(words)
+      .filter((word) => word.language === language)
+      .map(({ _id, text }) => ({ _id, label: text }));
+
+  const [sourceWords, targetWords] = useMemo(
+    () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
+    [words, appSourceLanguage]
+  );
 
   const addSentence = () => {
     setConversation((conversation) =>
@@ -76,15 +108,7 @@ function CreationForm({ initialConversation }: { initialConversation?: Conversat
 
   const addPrerequisite =
     (sentenceIndex: number, sourceOrTarget: SourceOrTarget) =>
-    ({
-      _id,
-      label,
-      setLocalDescription,
-    }: {
-      _id?: string;
-      label?: string;
-      setLocalDescription: Dispatch<React.SetStateAction<string>>;
-    }) => {
+    ({ _id, label, setLocalDescription }: Callback) => {
       if (_id) {
         setConversation((conversation) =>
           conversation
@@ -110,20 +134,140 @@ function CreationForm({ initialConversation }: { initialConversation?: Conversat
       }
     };
 
+  const selectConversationTag = ({ _id, label, setLocalDescription }: Callback) => {
+    if (_id) {
+      setConversationTag(conversationTags.find((tag) => tag._id === _id));
+      setLocalDescription("");
+    }
+  };
+
+  const changeConversationTagTranslation = (text: string) => {
+    setConversationTag((tag) => (tag ? { ...tag, targetLabel: text } : undefined));
+  };
+
+  const addTagToConversation = () => {
+    setConversation((conversation) =>
+      conversation
+        ? { ...conversation, tags: conversationTag ? [...conversation.tags, conversationTag._id] : conversation.tags }
+        : undefined
+    );
+    setConversationTag(undefined);
+  };
+
+  const selectSourceWord = ({ _id, label, setLocalDescription }: Callback) => {
+    if (label) {
+      const labelId = sourceWords.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id) {
+      setSourceWord(words[_id]);
+      setLocalDescription("");
+    } else if (label && sourceWord) {
+      saveWord({ ...sourceWord, text: label }).then((word) => {
+        if (word) {
+          setSourceWord(word);
+          setLocalDescription("");
+        }
+      });
+    }
+  };
+
+  const selectSourceTranslation = ({ _id, label, setLocalDescription }: Callback) => {
+    if (label) {
+      const labelId = targetWords.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id) {
+      setSourceWord((word) => (word ? { ...word, translations: [...word.translations, _id!] } : undefined)); // TS2345 error if I don't put a !
+      setLocalDescription("");
+    } else if (label && sourceWord) {
+      saveWord({
+        _id: "",
+        language: appTargetLanguage,
+        text: label,
+        translations: [sourceWord._id],
+        tags: [],
+        subscribed: false,
+      }).then((word) => {
+        if (word) {
+          setSourceWord({ ...sourceWord, translations: [...sourceWord.translations, word._id] });
+        }
+      });
+    }
+  };
+
+  const selectSourceWordTag = ({ _id, label, setLocalDescription }: Callback) => {
+    if (_id) {
+      setTargetWord((word) => (word ? { ...word, tags: [...word.tags, _id] } : undefined));
+      setLocalDescription("");
+    }
+  };
+
+  const selectTargetWord = ({ _id, label, setLocalDescription }: Callback) => {
+    if (label) {
+      const labelId = targetWords.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id) {
+      setTargetWord(words[_id]);
+      setLocalDescription("");
+    } else if (label && targetWord) {
+      saveWord({ ...targetWord, text: label }).then((word) => {
+        if (word) {
+          setTargetWord(word);
+          setLocalDescription("");
+        }
+      });
+    }
+  };
+
+  const selectTargetTranslation = ({ _id, label, setLocalDescription }: Callback) => {
+    if (label) {
+      const labelId = sourceWords.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id) {
+      setTargetWord((word) => (word ? { ...word, targetLanguage: [...word.translations, _id!] } : undefined));
+      setLocalDescription("");
+    } else if (label && targetWord) {
+      saveWord({
+        _id: "",
+        language: appSourceLanguage,
+        text: label,
+        translations: [targetWord._id],
+        tags: [],
+        subscribed: false,
+      }).then((word) => {
+        if (word) {
+          setTargetWord({ ...targetWord, translations: [...targetWord.translations, word._id] });
+        }
+      });
+    }
+  };
+
+  const selectTargetWordTag = ({ _id, label, setLocalDescription }: Callback) => {
+    if (_id) {
+      setTargetWord((word) => (word ? { ...word, tags: [...word.tags, _id] } : undefined));
+      setLocalDescription("");
+    }
+  };
+
   const removePrerequisite = (sentenceIndex: number, prerequisiteIndex: number, sourceOrTarget: SourceOrTarget) => {};
 
   const addTag = (tagId: string) => {};
 
   const removeTag = (index: number) => {};
 
-  const onSubmit = async () => {
-    if (conversation) {
-      await saveConversation(conversation);
-    }
-  };
-
   return (
-    <form onSubmit={onSubmit}>
+    <Fragment>
       {conversation &&
         conversation.multiLingualSentences.map((sentence, index) => (
           <div key={index} style={{ marginBottom: "1em" }}>
@@ -139,9 +283,7 @@ function CreationForm({ initialConversation }: { initialConversation?: Conversat
               })}
               <div className="prerequisiteInput">
                 <AutoComplete
-                  dropdownList={Object.values(words)
-                    .filter(({ sourceLanguage }) => sourceLanguage === appSourceLanguage)
-                    .map(({ _id, sourceLanguage }) => ({ _id, label: sourceLanguage }))}
+                  dropdownList={sourceWords}
                   callback={addPrerequisite(index, "sourceLanguage")}
                   placeholder="add prerequisite"
                   placement="bottom-start"
@@ -160,11 +302,9 @@ function CreationForm({ initialConversation }: { initialConversation?: Conversat
               })}
               <div className="prerequisiteInput">
                 <AutoComplete
-                  dropdownList={Object.values(words)
-                    .filter(({ language }) => language === appTargetLanguage)
-                    .map(({ _id, sourceLanguage }) => ({ _id, label: sourceLanguage }))}
+                  dropdownList={targetWords}
                   callback={addPrerequisite(index, "targetLanguage")}
-                  placeholder="add prerequisite"
+                  placeholder="Add prerequisite"
                   placement="bottom-start"
                 />
               </div>
@@ -174,8 +314,113 @@ function CreationForm({ initialConversation }: { initialConversation?: Conversat
       <button type="button" onClick={(e) => addSentence()}>
         Add sentence
       </button>
-      <button type="submit">Save conversation</button>
-    </form>
+      <div className="prerequisiteInput">
+        <AutoComplete
+          dropdownList={conversationTags.map(({ _id, sourceLabel }) => ({ _id, label: sourceLabel }))}
+          callback={selectConversationTag}
+          placeholder="Add tag"
+          placement="bottom-start"
+        />
+      </div>
+      {conversationTag && (
+        <div>
+          <div>{`${conversationTag.sourceLabel}: ${conversationTag.targetLabel}`}</div>
+          <input
+            type="text"
+            value={conversationTag.targetLabel}
+            onChange={(e) => changeConversationTagTranslation(e.target.value)}
+          />
+          <button onClick={() => saveConversationTag(conversationTag)}>Save tag translation</button>
+          <button onClick={() => addTagToConversation()}>Add tag to conversation</button>
+        </div>
+      )}
+      <button
+        onClick={() => {
+          if (conversation) {
+            saveConversation(conversation);
+          }
+        }}
+      >
+        Save conversation
+      </button>
+
+      <div id="sourceLanguage">
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={sourceWords}
+            callback={selectSourceWord}
+            placeholder="Add word"
+            placement="bottom-start"
+          />
+        </div>
+        {sourceWord?.text && (
+          <div>
+            <div>{`${sourceWord.text}: ${sourceWord.translations.map((wordId) => (
+              <div>{words[wordId].text}</div>
+            ))}`}</div>
+            <div className="prerequisiteInput">
+              <AutoComplete
+                dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
+                callback={selectSourceTranslation}
+                placeholder="Add translation"
+                placement="bottom-start"
+              />
+            </div>
+            {sourceWord.tags.map((tagId) => {
+              const tag = wordTags.find((tag) => tag._id === tagId);
+              return tag ? <div>{tag.label}</div> : undefined;
+            })}
+            <div className="prerequisiteInput">
+              <AutoComplete
+                dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
+                callback={selectSourceWordTag}
+                placeholder="Add tag"
+                placement="bottom-start"
+              />
+            </div>
+            <button onClick={() => saveWord(sourceWord)}>Save word</button>
+          </div>
+        )}
+      </div>
+      <div id="targetLanguage">
+        <div className="prerequisiteInput">
+          <AutoComplete
+            dropdownList={targetWords}
+            callback={selectTargetWord}
+            placeholder="Add word"
+            placement="bottom-start"
+          />
+        </div>
+        {targetWord?.text && (
+          <div>
+            <div>{`${targetWord.text}: ${targetWord.translations.map((wordId) => (
+              <div>{words[wordId].text}</div>
+            ))}`}</div>
+            <div className="prerequisiteInput">
+              <AutoComplete
+                dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}
+                callback={selectTargetTranslation}
+                placeholder="Add translation"
+                placement="bottom-start"
+              />
+            </div>
+            {targetWord.tags.map((tagId) => {
+              const tag = wordTags.find((tag) => tag._id === tagId);
+              return tag ? <div>{tag.label}</div> : undefined;
+            })}
+            <div className="prerequisiteInput">
+              <AutoComplete
+                dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
+                callback={selectTargetWordTag}
+                placeholder="Add tag"
+                placement="bottom-start"
+              />
+            </div>
+            <button onClick={() => saveWord(targetWord)}>Save word</button>
+          </div>
+        )}
+      </div>
+    </Fragment>
   );
 }
 

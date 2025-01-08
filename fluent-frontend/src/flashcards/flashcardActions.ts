@@ -1,19 +1,12 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, Word } from "../types";
+import { Conversation, ConversationTag, Word } from "../types";
 
 export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
   return customFetch(url + "multilingualsentences/" + id, {
     method: "GET",
     headers: authHeaders(),
   }).catch((err: Error) => {
-    console.log(err);
-  });
-};
-
-export const saveNewWord = async (args: Partial<Word>) => {
-  const body = JSON.stringify(args);
-  return customFetch(url + "words", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };
@@ -31,6 +24,20 @@ const formatConversation = (conversation: Conversation, appSourceLanguage: strin
   };
 };
 
+export const saveNewWord = async ({_id, ...args}: Word) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "words", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const editRemoteWord = async ({ _id, ...args }: Word) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "words/" + _id, { method: "PUT", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
 export const saveNewConversation = async (
   conversation: Conversation,
   appSourceLanguage: string,
@@ -43,13 +50,6 @@ export const saveNewConversation = async (
   });
 };
 
-export const editRemoteWord = async ({ _id, ...args }: Partial<Word>) => {
-  const body = JSON.stringify(args);
-  return customFetch(url + "words/" + _id, { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
-    console.log(err);
-  });
-};
-
 export const editRemoteConversation = async (
   conversation: Conversation,
   appSourceLanguage: string,
@@ -58,6 +58,22 @@ export const editRemoteConversation = async (
   const formattedConversation = formatConversation(conversation, appSourceLanguage, appTargetLanguage);
   const body = JSON.stringify(formattedConversation);
   return customFetch(url + "conversations/" + conversation._id, { method: "PUT", headers: authHeaders(), body }).catch(
+    (err: Error) => {
+      console.log(err);
+    }
+  );
+};
+
+export const saveNewConversationTag = async ({ _id, ...infos }: ConversationTag) => {
+  const body = JSON.stringify(infos);
+  return customFetch(url + "conversationTags", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const editRemoteConversationTag = async ({ _id, ...infos }: ConversationTag) => {
+  const body = JSON.stringify(infos);
+  return customFetch(url + "conversationTags/" + _id, { method: "PUT", headers: authHeaders(), body }).catch(
     (err: Error) => {
       console.log(err);
     }
@@ -113,41 +129,47 @@ export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Wor
 };
 
 export const fetchWordTags = async () => {
-  return customFetch(url + "wordtags", { headers: authHeaders() }).then(res => {
-    if (res.success) {
-      return res.data;
-    } else {
-      console.log(res?.message);
-      return [];
-    }
-  }).catch((err: Error) => {
-    console.log(err);
-  });
+  return customFetch(url + "wordtags", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const fetchConversationTags = async () => {
-  return customFetch(url + "conversationtags", { headers: authHeaders() }).then(res => {
-    if (res.success) {
-      return res.data;
-    } else {
-      console.log(res?.message);
-      return [];
-    }
-  }).catch((err: Error) => {
-    console.log(err);
-  });
+  return customFetch(url + "conversationtags", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
 };
 
 export const fetchWords = async () => {
-  return customFetch(url + "words", { headers: authHeaders() }).then(res => {
-    if (res.success) {
-      return res.data;
-    } else {
-      console.log(res?.message);
+  return customFetch(url + "words", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
       return [];
-    }
-  }).catch((err: Error) => {
-    console.log(err);
-    return [];
-  });
+    });
 };
