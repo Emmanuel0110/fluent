@@ -44,16 +44,39 @@ router.post("/", auth, (req, res) => {
     });
 });
 
-router.put("/:id", auth, function (req, res) {
+router.put("/:id", auth, cache, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   LexicalItemModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
+
+  const { tags, text, language, translations } = req.body;
+  await LexicalItemModel.updateOne(filter, { text, language, tags });
+  await LexicalItemModel.updateOne(filter, {
+    $pull: {
+      translations: { language: translations[0].language },
+    },
+  });
+  const word = await LexicalItemModel.findOneAndUpdate(
+    filter,
+    { $push: { translations: { $each: translations } } },
+    { new: true }
+  );
+  const completedWord = {
+    ...word,
+    subscribed: !!req.userLearningData.words.find(({ _id }) => _id === word._id),
+  };
+  res.json({ success: true, data: completedWord });
 });
 
 // Create a reusable function to generate the aggregation pipeline
 function generateAggregationPipeline(language, translationLanguage) {
   return [
-    { $match: { language, "translations.language": translationLanguage } },
+    {
+      $match: {
+        language: new mongoose.Types.ObjectId(language),
+        "translations.language": new mongoose.Types.ObjectId(translationLanguage),
+      },
+    },
     {
       $project: {
         _id: 1,
@@ -65,10 +88,10 @@ function generateAggregationPipeline(language, translationLanguage) {
             input: "$translations", // The array to filter
             as: "translation", // Alias for each element in the array
             cond: {
-              '$eq': [
-                '$$translation.language', // correct usage of $$translation in filter
-                translationLanguage
-              ]
+              $eq: [
+                "$$translation.language", // correct usage of $$translation in filter
+                new mongoose.Types.ObjectId(translationLanguage),
+              ],
             },
           },
         },

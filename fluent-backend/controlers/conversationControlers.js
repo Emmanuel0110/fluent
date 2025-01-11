@@ -3,22 +3,30 @@ import cache from "../middleware/cache.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
+import { getConversationsForWords } from "./reviewControlers.js";
 const router = express.Router();
 
 router.get("/", auth, cache, async (req, res) => {
+  const MAX_NUMBER_OF_CONVERSATIONS = 10;
   try {
-    const { tag, wordId } = req.query;
+    const { tag, conversationId, wordId } = req.query;
     const userConversations = req.userLearningData.conversations;
     if (tag) {
       const conversations = await MultiLingualConversationModel.find({ tags: { $in: [tag] } }).lean();
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
-    } else if (wordId) {
-      const conversation = await MultiLingualConversationModel.findById(wordId);
+    } else if (conversationId) {
+      const conversation = await MultiLingualConversationModel.findById(conversationId);
       const completedConversation = {
         ...conversation,
         subscribed: !!userConversations.find(({ _id }) => _id === conversation._id),
       };
       res.json({ success: true, data: completedConversation });
+    } else if (wordId) {
+      const conversations = await getConversationsForWords([wordId], req.userLearningData);
+      res.json({
+        success: true,
+        data: completeConversations(conversations.slice(0, MAX_NUMBER_OF_CONVERSATIONS), userConversations),
+      });
     }
   } catch (err) {
     console.log(err);
@@ -28,7 +36,9 @@ router.get("/", auth, cache, async (req, res) => {
 router.post("/", auth, async (req, res) => {
   try {
     const newConversation = new MultiLingualConversationModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
-    newConversation.save().then((newConversation) => res.json({ success: true, data: {...newConversation, subscribed: false} }));
+    newConversation
+      .save()
+      .then((newConversation) => res.json({ success: true, data: { ...newConversation, subscribed: false } }));
   } catch (err) {
     console.log("save error ", err);
     if (err.name === "MongoError" && err.code === 11000) {
@@ -52,7 +62,7 @@ router.put("/:id", auth, cache, async function (req, res) {
   });
   const conversation = await MultiLingualConversationModel.findOneAndUpdate(
     filter,
-    { $push: { ids: { $each: conversations } } },
+    { $push: { conversations: { $each: conversations } } },
     { new: true }
   );
   const completedConversation = {

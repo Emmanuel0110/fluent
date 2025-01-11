@@ -35,6 +35,7 @@ function CreationForm({
   const {
     words,
     saveWord,
+    saveWordTag,
     saveConversation,
     conversationTags,
     wordTags,
@@ -49,10 +50,11 @@ function CreationForm({
     setTargetWord({ ...initialTargetWord, language: appTargetLanguage });
   }, []);
 
-  const getWordList = (words: { [key: string]: Word }, language: string) =>
-    Object.values(words)
+  const getWordList = (words: { [key: string]: Word }, language: string) => {
+    return Object.values(words)
       .filter((word) => word.language === language)
       .map(({ _id, text }) => ({ _id, label: text }));
+  };
 
   const [sourceWords, targetWords] = useMemo(
     () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
@@ -195,17 +197,62 @@ function CreationForm({
       }).then((word) => {
         if (word) {
           setSourceWord({ ...sourceWord, translations: [...sourceWord.translations, word._id] });
+          setLocalDescription("");
         }
       });
     }
   };
 
   const selectSourceWordTag = ({ _id, label, setLocalDescription }: Callback) => {
-    if (_id) {
-      setTargetWord((word) => (word ? { ...word, tags: [...word.tags, _id] } : undefined));
+    if (label) {
+      const labelId = wordTags.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id && sourceWord) {
+      if (!sourceWord.tags.includes(_id))
+      setSourceWord({ ...sourceWord, tags: [...sourceWord.tags, _id!] });
       setLocalDescription("");
+    } else if (label && sourceWord) {
+      saveWordTag({language: appSourceLanguage, label}).then((tag) => {
+        if (tag) {
+          saveWord({ ...sourceWord, tags: [...sourceWord.tags, tag._id] }).then((word) => {
+            if (word) {
+              setSourceWord(word);
+              setLocalDescription("");
+            }
+          });
+        }
+      });
     }
   };
+
+  const selectTargetWordTag = ({ _id, label, setLocalDescription }: Callback) => {
+    if (label) {
+      const labelId = wordTags.find((word) => word.label === label)?._id;
+      if (labelId) {
+        _id = labelId;
+      }
+    }
+    if (_id && targetWord) {
+      if (!targetWord.tags.includes(_id))
+      setTargetWord({ ...targetWord, tags: [...targetWord.tags, _id!] });
+      setLocalDescription("");
+    } else if (label && targetWord) {
+      saveWordTag({language: appTargetLanguage, label}).then((tag) => {
+        if (tag) {
+          saveWord({ ...targetWord, tags: [...targetWord.tags, tag._id] }).then((word) => {
+            if (word) {
+              setSourceWord(word);
+              setLocalDescription("");
+            }
+          });
+        }
+      });
+    }
+  };
+
 
   const selectTargetWord = ({ _id, label, setLocalDescription }: Callback) => {
     if (label) {
@@ -250,13 +297,6 @@ function CreationForm({
           setTargetWord({ ...targetWord, translations: [...targetWord.translations, word._id] });
         }
       });
-    }
-  };
-
-  const selectTargetWordTag = ({ _id, label, setLocalDescription }: Callback) => {
-    if (_id) {
-      setTargetWord((word) => (word ? { ...word, tags: [...word.tags, _id] } : undefined));
-      setLocalDescription("");
     }
   };
 
@@ -349,15 +389,20 @@ function CreationForm({
           <AutoComplete
             dropdownList={sourceWords}
             callback={selectSourceWord}
-            placeholder="Add word"
+            placeholder="Add source word"
             placement="bottom-start"
           />
         </div>
         {sourceWord?.text && (
           <div>
-            <div>{`${sourceWord.text}: ${sourceWord.translations.map((wordId) => (
-              <div>{words[wordId].text}</div>
-            ))}`}</div>
+            <div>
+              <span>{`${sourceWord.text}: `}</span>
+              <span>
+                {sourceWord.translations.map((wordId) => (
+                  <span>{words[wordId].text}</span>
+                ))}
+              </span>
+            </div>
             <div className="prerequisiteInput">
               <AutoComplete
                 dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
@@ -387,15 +432,20 @@ function CreationForm({
           <AutoComplete
             dropdownList={targetWords}
             callback={selectTargetWord}
-            placeholder="Add word"
+            placeholder="Add target word"
             placement="bottom-start"
           />
         </div>
         {targetWord?.text && (
           <div>
-            <div>{`${targetWord.text}: ${targetWord.translations.map((wordId) => (
-              <div>{words[wordId].text}</div>
-            ))}`}</div>
+            <div>
+              <span>{`${targetWord.text}: `}</span>
+              <span>
+                {targetWord.translations.map((wordId) => (
+                  <span>{words[wordId].text}</span>
+                ))}
+              </span>
+            </div>
             <div className="prerequisiteInput">
               <AutoComplete
                 dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}

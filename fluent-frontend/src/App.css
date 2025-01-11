@@ -691,3 +691,7 @@ a.nav-link {
 .wordLabel {
   cursor: pointer;
 }
+
+.wordLabel:hover {
+  color: #007bff;
+}

@@ -88,6 +88,7 @@ export interface Context {
   deleteWord: (_id: string) => void;
   subscribeToConversation: (_id: string) => void;
   saveWord: (infos: Word) => Promise<void | Word>;
+  saveWordTag: (args: {language: string, label: string}) => Promise<void | WordTag>;
   saveConversationTag: (infos: ConversationTag) => Promise<void>;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;

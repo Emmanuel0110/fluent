@@ -1,5 +1,6 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import mongoose from "mongoose";
 import { WordTagModel } from "../models.js";
 import express from "express";
 const router = express.Router();

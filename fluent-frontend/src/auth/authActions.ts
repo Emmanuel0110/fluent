@@ -7,12 +7,16 @@ import { customFetch, authHeaders } from "../utils/http-helpers";
 export const loadUser = (
   setUser: Dispatch<SetStateAction<User | null>>,
   setIsAuthenticated: Dispatch<React.SetStateAction<boolean | null>>,
-  setUserIsLoading: Dispatch<React.SetStateAction<boolean>>
+  setUserIsLoading: Dispatch<React.SetStateAction<boolean>>,
+  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>,
+  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>
 ) => {
   customFetch(url + "users/auth", { headers: authHeaders() })
     .then((res) => {
       setIsAuthenticated(true);
       setUser(res.user);
+      setSourceLanguage(res.sourceLanguage);
+      setTargetLanguage(res.targetLanguage);
     })
     .catch((err: Error) => {
       setIsAuthenticated(false);

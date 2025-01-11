@@ -8,12 +8,16 @@ interface ProtectedRouteProps {
   isAuthenticated: Boolean | null;
   setIsAuthenticated: Dispatch<React.SetStateAction<boolean | null>>;
   setUser: Dispatch<SetStateAction<User | null>>;
+  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>,
+  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   isAuthenticated,
   setIsAuthenticated,
   setUser,
+  setSourceLanguage,
+  setTargetLanguage,
   redirectPath,
 }) => {
   const [userIsLoading, setUserIsLoading] = useState(false);
@@ -24,7 +28,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={redirectPath} replace />;
   } else {
     if (!userIsLoading) {
-      loadUser(setUser, setIsAuthenticated, setUserIsLoading);
+      loadUser(setUser, setIsAuthenticated, setUserIsLoading, setSourceLanguage, setTargetLanguage);
       setUserIsLoading(true);
     }
     return <div>Loading...</div>;

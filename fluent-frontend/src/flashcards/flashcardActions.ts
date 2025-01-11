@@ -1,9 +1,9 @@
 import { url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, ConversationTag, Word } from "../types";
+import { Conversation, ConversationTag, Word, WordTag } from "../types";
 
-export const getRemoteConversationById = async (id: string): Promise<{ newConversation: Conversation }> => {
-  return customFetch(url + "multilingualsentences/" + id, {
+export const getRemoteConversationById = async (id: string) => {
+  return customFetch(url + "conversations?conversationId=" + id, {
     method: "GET",
     headers: authHeaders(),
   }).catch((err: Error) => {
@@ -11,31 +11,51 @@ export const getRemoteConversationById = async (id: string): Promise<{ newConver
   });
 };
 
-const formatConversation = (conversation: Conversation, appSourceLanguage: string, appTargetLanguage: string) => {
-  const { _id, multiLingualSentences, tags, subscribed } = conversation;
+const formatWord = (word: Partial<Word>, appSourceLanguage: string, appTargetLanguage: string) => {
+  const { text, language, translations, tags } = word;
   return {
-    _id,
     tags,
-    subscribed,
-    conversations: [
-      { language: appSourceLanguage, sentences: multiLingualSentences.map((sentence) => sentence.sourceLanguage) },
-      { language: appTargetLanguage, sentences: multiLingualSentences.map((sentence) => sentence.targetLanguage) },
+    language,
+    text,
+    translations: [
+      { language: language === appSourceLanguage ? appTargetLanguage : appSourceLanguage, lexicalItems: translations },
     ],
   };
 };
 
-export const saveNewWord = async ({_id, ...args}: Word) => {
-  const body = JSON.stringify(args);
+export const saveNewWord = async (word: Word, appSourceLanguage: string, appTargetLanguage: string) => {
+  const formattedWord = formatWord(word, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedWord);
   return customFetch(url + "words", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };
 
-export const editRemoteWord = async ({ _id, ...args }: Word) => {
+export const saveNewWordTag = async (args: Partial<WordTag>) => {
   const body = JSON.stringify(args);
+  return customFetch(url + "wordTags", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const editRemoteWord = async ({ _id, ...args }: Word, appSourceLanguage: string, appTargetLanguage: string) => {
+  const formattedWord = formatWord(args, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedWord);
   return customFetch(url + "words/" + _id, { method: "PUT", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
+};
+
+const formatConversation = (conversation: Conversation, appSourceLanguage: string, appTargetLanguage: string) => {
+  const { _id, multiLingualSentences, tags } = conversation;
+  return {
+    _id,
+    tags,
+    conversations: [
+      { language: appSourceLanguage, sentences: multiLingualSentences.map((sentence) => sentence.sourceLanguage) },
+      { language: appTargetLanguage, sentences: multiLingualSentences.map((sentence) => sentence.targetLanguage) },
+    ],
+  };
 };
 
 export const saveNewConversation = async (
@@ -113,11 +133,6 @@ export const editUserFlashcardInfo = async ({ _id, ...body }: any) => {
   });
 };
 
-// export const saveNewTag = async ({ label }: { label: string }) => {
-//   const body = JSON.stringify({ label });
-//   return customFetch(url + "tags", { method: "POST", headers: authHeaders(), body });
-// };
-
 export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Word[]> => {
   return customFetch(url + "search", {
     method: "POST", // we want to GET flashcards but sometimes with a complex filter (string[][])
@@ -162,14 +177,24 @@ export const fetchWords = async () => {
   return customFetch(url + "words", { headers: authHeaders() })
     .then((res) => {
       if (res.success) {
-        return res.data;
+        return groupById(formatWords(res.data));
       } else {
         console.log(res?.message);
-        return [];
+        return {};
       }
     })
     .catch((err: Error) => {
       console.log(err);
-      return [];
+      return {};
     });
+};
+
+const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: string]: T } => {
+  return ObjectArr.reduce((acc, value) => {
+    return { ...acc, [value._id]: value };
+  }, {});
+};
+
+const formatWords = (words: any[]): Word[] => {
+  return words.map((word) => ({ ...word, translations: word.translations[0].lexicalItems }));
 };

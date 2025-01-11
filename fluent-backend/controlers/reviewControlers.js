@@ -2,6 +2,7 @@ import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
 import { MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import express from "express";
+import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", auth, cache, getNextReviewItems);
@@ -89,22 +90,24 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
 }
 
 async function getEasyConversationsForWords(wordIds, userLearningData) {
-  const conversations = await getConversationsForWords(wordIds, userLearningData);
+  const multiLingualConversations = await getConversationsForWords(wordIds, userLearningData);
   const userWords = userLearningData.words;
-  const easyConversations = conversations.reduce((acc, conversation) => {
+  const easyConversations = multiLingualConversations.reduce((acc, multiLingualConversation) => {
     const maxDifficulty = 100;
     let difficulty = 0,
       key;
-    conversation.sentences.forEach((sentence) => {
-      sentence.prerequisites.forEach((prerequisite) => {
-        if (wordIds.includes(prerequisite)) {
-          key = prerequisite;
-        } else if (!userWords.find(({ _id }) => _id == prerequisite)) {
-          difficulty++;
-        }
-      });
-    });
-    if (acc[key]?.difficulty || maxDifficulty > difficulty) {
+    multiLingualConversation.conversations.forEach((conversation) =>
+      conversation.sentences.forEach((sentence) => {
+        sentence.prerequisites.forEach((prerequisite) => {
+          if (wordIds.includes(prerequisite)) {
+            key = prerequisite;
+          } else if (!userWords.find(({ _id }) => _id == prerequisite)) {
+            difficulty++;
+          }
+        });
+      })
+    );
+    if ((acc[key]?.difficulty || maxDifficulty) > difficulty) {
       acc[key] = { conversation, difficulty };
     }
     return acc;
@@ -112,13 +115,18 @@ async function getEasyConversationsForWords(wordIds, userLearningData) {
   return Object.values(easyConversations);
 }
 
-async function getConversationsForWords(wordIds, userLearningData) {
+export async function getConversationsForWords(wordIds, userLearningData) {
   return MultiLingualConversationModel.aggregate([
     // Step 1: Match conversations containing sentences with wordIds in prerequisites
     {
       $match: {
-        "conversations.sentences.prerequisites": { $in: wordIds },
-        "conversations.language": userLearningData.sourceLanguage,
+        "conversations.sentences.prerequisites": { $in: wordIds.map((id) => new mongoose.Types.ObjectId(id)) },
+        "conversations.language": {
+          $all: [
+            new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
+            new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+          ],
+        },
       },
     },
 
@@ -132,7 +140,13 @@ async function getConversationsForWords(wordIds, userLearningData) {
             input: "$conversations", // The array to filter
             as: "conversation", // Alias for each element in the array
             cond: {
-              $in: ["$$conversation.language", [userLearningData.sourceLanguage, userLearningData.targetLanguage]], // Keep only source and target languages
+              $in: [
+                "$$conversation.language",
+                [
+                  new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
+                  new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+                ],
+              ], // Keep only source and target languages
             },
           },
         },

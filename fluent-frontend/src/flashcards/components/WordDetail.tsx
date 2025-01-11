@@ -17,15 +17,15 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
           <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         </div>
         <div id="middle">
-          <div className={"lineTitle"}>
-            {word.text +
-              " : " +
-              word.translations.map((wordId) => (
-                <span className="wordLabel" onClick={(e) => openWord(wordId)}>
-                  {words[wordId].text}
-                </span>
-              ))}
-          </div>
+        <div className={"lineTitle"}>
+        <span>{word.text +
+          " : "}</span>
+          <span>{word.translations.map((wordId,index) => (
+            <span key={index} className="wordLabel" onClick={(e) => openWord(wordId)}>
+              {words[wordId].text}
+            </span>
+          ))}</span>
+      </div>
 
           <div id="tags">
             {word &&

@@ -34,6 +34,7 @@ import {
   editRemoteConversationTag,
   saveNewConversationTag,
   saveNewWord,
+  saveNewWordTag,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -42,19 +43,24 @@ import CreationForm from "./flashcards/components/CreationForm";
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
 
-export const updateCacheWithNewConversations = (
-  conversations: Conversation[],
-  newConversations: Conversation[]
-): Conversation[] => {
-  return newConversations.reduce((acc: Conversation[], value: Conversation) => {
-    var index: number = acc.findIndex((sentence) => sentence._id === value._id);
-    if (index === -1) {
-      return [...acc, value];
-    } else {
-      acc.splice(index, 1, value);
-      return [...acc];
+const formatConversations = (conversations: any[], targetLanguage: string): Conversation[] => {
+  return conversations.map((multiLingualConversation) => {
+    const { _id, tags, subscribed } = multiLingualConversation;
+    let [sourceConversation, targetConversation] = multiLingualConversation.conversations;
+    if (sourceConversation.language === targetLanguage) {
+      const tmp = sourceConversation;
+      sourceConversation = targetConversation;
+      targetConversation = tmp;
     }
-  }, conversations);
+    return {
+      _id,
+      tags,
+      subscribed,
+      multiLingualSentences: sourceConversation.sentences.map((sourceSentence: any, index: number) => {
+        return { sourceLanguage: sourceSentence, targetLanguage: targetConversation.sentences[index] };
+      }),
+    };
+  });
 };
 
 export const updateCacheWithNewWords = (words: { [id: string]: Word }, newWords: Word[]): { [id: string]: Word } => {
@@ -66,7 +72,7 @@ export const updateCacheWithNewConversationTags = (
   newConversationTags: ConversationTag[]
 ): ConversationTag[] => {
   return newConversationTags.reduce((acc: ConversationTag[], value: ConversationTag) => {
-    var index: number = acc.findIndex((sentence) => sentence._id === value._id);
+    var index: number = acc.findIndex((tag) => tag._id === value._id);
     if (index === -1) {
       return [...acc, value];
     } else {
@@ -74,6 +80,18 @@ export const updateCacheWithNewConversationTags = (
       return [...acc];
     }
   }, conversationTags);
+};
+
+export const updateCacheWithNewWordTags = (wordTags: WordTag[], newWordTags: WordTag[]): WordTag[] => {
+  return newWordTags.reduce((acc: WordTag[], value: WordTag) => {
+    var index: number = acc.findIndex((tag) => tag._id === value._id);
+    if (index === -1) {
+      return [...acc, value];
+    } else {
+      acc.splice(index, 1, value);
+      return [...acc];
+    }
+  }, wordTags);
 };
 
 export const someConversationFilter = (conversationFilter: conversationFilter) => {
@@ -114,12 +132,6 @@ const isFilteredBySearchFilter = (word: Word, searchFilter: SearchFilter) => {
 const isFiltered = (word: Word, searchFilter: SearchFilter, treeFilter: string[]) =>
   isFilteredBySearchFilter(word, searchFilter) && (treeFilter.length === 0 || treeFilter.includes(word._id));
 
-const groupById = (ObjectArr: { _id: string }[]) => {
-  return ObjectArr.reduce((acc, value) => {
-    return { ...acc, [value._id]: value };
-  }, {});
-};
-
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null as boolean | null);
   const [user, setUser] = useState(null as User | null);
@@ -142,7 +154,7 @@ export default function App() {
     if (isAuthenticated) {
       fetchWordTags().then((wordTags) => setWordTags(wordTags));
       fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords().then((words) => setWords(groupById(words)));
+      fetchWords().then((words) => setWords(words));
     }
   }, [isAuthenticated]);
 
@@ -208,6 +220,21 @@ export default function App() {
     };
   }, []);
 
+  const updateCacheWithNewConversations = (
+    conversations: Conversation[],
+    newConversations: Conversation[]
+  ): Conversation[] => {
+    return formatConversations(newConversations, targetLanguage).reduce((acc: Conversation[], value: Conversation) => {
+      var index: number = acc.findIndex((conversation) => conversation._id === value._id);
+      if (index === -1) {
+        return [...acc, value];
+      } else {
+        acc.splice(index, 1, value);
+        return [...acc];
+      }
+    }, conversations);
+  };
+
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
       case "ArrowLeft":
@@ -247,8 +274,10 @@ export default function App() {
     return customFetch(url + "conversations?wordId=" + wordId, {
       headers: authHeaders(),
     })
-      .then(({ conversations: newConversations }) => {
-        setConversations((conversations) => updateCacheWithNewConversations(conversations, newConversations));
+      .then((res) => {
+        if (res.success) {
+          setConversations((conversations) => updateCacheWithNewConversations(conversations, res.data));
+        }
       })
       .catch((err: Error) => {
         console.log(err);
@@ -290,13 +319,23 @@ export default function App() {
   };
 
   const saveWord = async (infos: Word) => {
-    const res = await (infos._id ? editRemoteWord(infos) : saveNewWord(infos));
+    const res = await (infos._id
+      ? editRemoteWord(infos, sourceLanguage, targetLanguage)
+      : saveNewWord(infos, sourceLanguage, targetLanguage));
     if (res.success) {
       const { _id } = res.data;
       if (_id) {
         setWords((words) => ({ ...words, [_id]: res.data }));
         return res.data;
       }
+    }
+  };
+
+  const saveWordTag = async (args: { language: string; label: string }) => {
+    const res = await saveNewWordTag(args);
+    if (res.success) {
+      setWordTags((wordTags) => updateCacheWithNewWordTags(wordTags, [res.data]));
+      return res.data;
     }
   };
 
@@ -387,6 +426,7 @@ export default function App() {
         openConversation,
         subscribeToConversation,
         saveWord,
+        saveWordTag,
         saveConversationTag,
         getConversationById,
         treeFilter,
@@ -426,6 +466,8 @@ export default function App() {
               isAuthenticated={isAuthenticated}
               setIsAuthenticated={setIsAuthenticated}
               setUser={setUser}
+              setSourceLanguage={setSourceLanguage}
+              setTargetLanguage={setTargetLanguage}
               redirectPath={"login"}
             />
           }

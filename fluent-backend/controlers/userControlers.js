@@ -43,7 +43,7 @@ router.post("/", async function (req, res) {
         jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
           if (err) throw err;
           delete user.password;
-          const {sourceLanguage, targetLanguage} = await cacheUserLearningData(user);
+          const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
           res.json({ token, user, sourceLanguage, targetLanguage });
         });
       });
@@ -70,15 +70,18 @@ router.post("/auth", function (req, res) {
         jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
           if (err) throw err;
           delete user.password;
-          const {sourceLanguage, targetLanguage} = await cacheUserLearningData(user);
+          const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
           res.json({ token, user, sourceLanguage, targetLanguage });
         });
       });
     });
 });
 
-router.get("/auth", auth, function (req, res) {
-  UserModel.findById(req.user._id).then((user) => res.json({ user }));
+router.get("/auth", auth, async function (req, res) {
+  UserModel.findById(req.user._id).then(async (user) => {
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
+    res.json({ user, sourceLanguage, targetLanguage });
+  });
 });
 
 export async function cacheUserLearningData(user) {
