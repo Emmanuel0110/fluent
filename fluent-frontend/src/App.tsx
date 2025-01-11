@@ -39,6 +39,8 @@ import {
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
 import CreationForm from "./flashcards/components/CreationForm";
+import ConversationForm from "./flashcards/components/ConversationForm";
+import WordForm from "./flashcards/components/WordForm";
 
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
@@ -168,14 +170,16 @@ export default function App() {
     if (isAuthenticated) {
       fetchWordTags().then((wordTags) => setWordTags(wordTags));
       fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords().then((res) => {
-        if (res.success) {
-          return groupById(formatWords(res.data));
-        } else {
-          console.log(res?.message);
-          return {};
-        }
-      }).then((words) => setWords(words));
+      fetchWords()
+        .then((res) => {
+          if (res.success) {
+            return groupById(formatWords(res.data));
+          } else {
+            console.log(res?.message);
+            return {};
+          }
+        })
+        .then((words) => setWords(words));
     }
   }, [isAuthenticated]);
 
@@ -502,6 +506,7 @@ export default function App() {
               path="words/:wordId"
               element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
             />
+             <Route path="words/:wordId/edit" element={<WordForm />} />
             <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
             <Route
               path="conversations/:conversationId"
@@ -512,6 +517,7 @@ export default function App() {
                 />
               }
             />
+            <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
             <Route path="profile" element={<Profile />} />
             <Route
               path="/"
