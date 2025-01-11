@@ -47,8 +47,6 @@ router.post("/", auth, (req, res) => {
 router.put("/:id", auth, cache, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
-  LexicalItemModel.updateOne(filter, req.body).then((data) => res.json({ success: true, data }));
-
   const { tags, text, language, translations } = req.body;
   await LexicalItemModel.updateOne(filter, { text, language, tags });
   await LexicalItemModel.updateOne(filter, {
@@ -60,7 +58,7 @@ router.put("/:id", auth, cache, async function (req, res) {
     filter,
     { $push: { translations: { $each: translations } } },
     { new: true }
-  );
+  ).lean();
   const completedWord = {
     ...word,
     subscribed: !!req.userLearningData.words.find(({ _id }) => _id === word._id),

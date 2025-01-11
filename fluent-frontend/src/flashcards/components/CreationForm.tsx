@@ -14,8 +14,8 @@ type Callback = {
 
 CreationForm.defaultProps = {
   initialConversation: { _id: "", tags: [], multiLingualSentences: [], subscribed: false },
-  initialSourceWord: { _id: "", tags: [], sourcelanguage: "", targetLanguage: [] },
-  initialTargetWord: { _id: "", tags: [], sourcelanguage: "", targetLanguage: [] },
+  initialSourceWord: { _id: "", tags: [], text: "", translations: [] },
+  initialTargetWord: { _id: "", tags: [], text: "", translations: [] },
 };
 
 function CreationForm({
@@ -398,8 +398,8 @@ function CreationForm({
             <div>
               <span>{`${sourceWord.text}: `}</span>
               <span>
-                {sourceWord.translations.map((wordId) => (
-                  <span>{words[wordId].text}</span>
+                {sourceWord.translations.map((wordId,index) => (
+                  <span key={index}>{words[wordId].text}</span>
                 ))}
               </span>
             </div>

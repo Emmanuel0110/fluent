@@ -63,6 +63,20 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
   });
 };
 
+const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: string]: T } => {
+  return ObjectArr.reduce((acc, value) => {
+    return { ...acc, [value._id]: value };
+  }, {});
+};
+
+const formatWords = (words: any[]): Word[] => {
+  return words.map(formatWord);
+};
+
+const formatWord = (word: any): Word => {
+  return { ...word, translations: word.translations[0].lexicalItems };
+};
+
 export const updateCacheWithNewWords = (words: { [id: string]: Word }, newWords: Word[]): { [id: string]: Word } => {
   return { ...words, ...newWords.reduce((acc, value) => ({ ...acc, [value._id]: value }), {}) };
 };
@@ -154,7 +168,14 @@ export default function App() {
     if (isAuthenticated) {
       fetchWordTags().then((wordTags) => setWordTags(wordTags));
       fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords().then((words) => setWords(words));
+      fetchWords().then((res) => {
+        if (res.success) {
+          return groupById(formatWords(res.data));
+        } else {
+          console.log(res?.message);
+          return {};
+        }
+      }).then((words) => setWords(words));
     }
   }, [isAuthenticated]);
 
@@ -325,8 +346,8 @@ export default function App() {
     if (res.success) {
       const { _id } = res.data;
       if (_id) {
-        setWords((words) => ({ ...words, [_id]: res.data }));
-        return res.data;
+        setWords((words) => ({ ...words, [_id]: formatWord(res.data) }));
+        return formatWord(res.data);
       }
     }
   };

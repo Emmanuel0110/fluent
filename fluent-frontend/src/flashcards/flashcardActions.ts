@@ -174,27 +174,8 @@ export const fetchConversationTags = async () => {
 };
 
 export const fetchWords = async () => {
-  return customFetch(url + "words", { headers: authHeaders() })
-    .then((res) => {
-      if (res.success) {
-        return groupById(formatWords(res.data));
-      } else {
-        console.log(res?.message);
-        return {};
-      }
-    })
-    .catch((err: Error) => {
-      console.log(err);
-      return {};
-    });
-};
-
-const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: string]: T } => {
-  return ObjectArr.reduce((acc, value) => {
-    return { ...acc, [value._id]: value };
-  }, {});
-};
-
-const formatWords = (words: any[]): Word[] => {
-  return words.map((word) => ({ ...word, translations: word.translations[0].lexicalItems }));
+  return customFetch(url + "words", { headers: authHeaders() }).catch((err: Error) => {
+    console.log(err);
+    return {};
+  });
 };

@@ -87,9 +87,10 @@ const LexicalItemSchema = new Schema({
     index: true,
   },
   tags: [{ type: Schema.Types.ObjectId, ref: "WordTag" }],
-  text: String,
+  text: { type: String, required: true },
   translations: [
     {
+      _id: false,
       language: { type: Schema.Types.ObjectId, ref: "Language", required: true },
       lexicalItems: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
     },
@@ -102,6 +103,7 @@ const MultiLingualConversationSchema = new Schema({
   tags: [{ type: Schema.Types.ObjectId, ref: "ConversationTag", index: true }],
   conversations: [
     {
+      _id: false,
       language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
       sentences: [
         {
