@@ -3,6 +3,7 @@ import "../../App.css";
 import { Context, Word } from "../../types";
 import { ConfigContext } from "../../App";
 import AutoComplete from "../../utils/Autocomplete";
+import { useParams } from "react-router-dom";
 
 type Callback = {
   _id?: string;
@@ -15,16 +16,10 @@ WordForm.defaultProps = {
   initialTargetWord: { _id: "", tags: [], text: "", translations: [] },
 };
 
-function WordForm({
-  initialSourceWord,
-  initialTargetWord,
-}: {
-  initialSourceWord: Word;
-  initialTargetWord: Word;
-}) {
+function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord: Word; initialTargetWord: Word }) {
   const [sourceWord, setSourceWord] = useState<Word | undefined>();
   const [targetWord, setTargetWord] = useState<Word | undefined>();
-
+  const { wordId } = useParams();
   const {
     words,
     saveWord,
@@ -35,7 +30,7 @@ function WordForm({
   } = useContext(ConfigContext) as Context;
 
   useEffect(() => {
-    setSourceWord({ ...initialSourceWord, language: appSourceLanguage });
+    setSourceWord(wordId ? words[wordId] : { ...initialSourceWord, language: appSourceLanguage });
     setTargetWord({ ...initialTargetWord, language: appTargetLanguage });
   }, []);
 
@@ -105,11 +100,10 @@ function WordForm({
       }
     }
     if (_id && sourceWord) {
-      if (!sourceWord.tags.includes(_id))
-      setSourceWord({ ...sourceWord, tags: [...sourceWord.tags, _id!] });
+      if (!sourceWord.tags.includes(_id)) setSourceWord({ ...sourceWord, tags: [...sourceWord.tags, _id!] });
       setLocalDescription("");
     } else if (label && sourceWord) {
-      saveWordTag({language: appSourceLanguage, label}).then((tag) => {
+      saveWordTag({ language: appSourceLanguage, label }).then((tag) => {
         if (tag) {
           saveWord({ ...sourceWord, tags: [...sourceWord.tags, tag._id] }).then((word) => {
             if (word) {
@@ -130,11 +124,10 @@ function WordForm({
       }
     }
     if (_id && targetWord) {
-      if (!targetWord.tags.includes(_id))
-      setTargetWord({ ...targetWord, tags: [...targetWord.tags, _id!] });
+      if (!targetWord.tags.includes(_id)) setTargetWord({ ...targetWord, tags: [...targetWord.tags, _id!] });
       setLocalDescription("");
     } else if (label && targetWord) {
-      saveWordTag({language: appTargetLanguage, label}).then((tag) => {
+      saveWordTag({ language: appTargetLanguage, label }).then((tag) => {
         if (tag) {
           saveWord({ ...targetWord, tags: [...targetWord.tags, tag._id] }).then((word) => {
             if (word) {
@@ -146,7 +139,6 @@ function WordForm({
       });
     }
   };
-
 
   const selectTargetWord = ({ _id, label, setLocalDescription }: Callback) => {
     if (label) {
@@ -210,7 +202,7 @@ function WordForm({
             <div>
               <span>{`${sourceWord.text}: `}</span>
               <span>
-                {sourceWord.translations.map((wordId,index) => (
+                {sourceWord.translations.map((wordId, index) => (
                   <span key={index}>{words[wordId].text}</span>
                 ))}
               </span>
