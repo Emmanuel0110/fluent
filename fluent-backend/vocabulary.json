@@ -1,316 +1,4132 @@
 [
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "face",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["visage"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["얼굴"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "hair",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["cheveux", "poil"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["머리카락"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "nose",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["nez"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["코"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "eye",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["oeil"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["눈"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "mouth",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["bouche"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["입"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "ear",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["oreille"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["귀"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "head",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["tête"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["머리"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "chest",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["poitrine"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["가슴"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "belly",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["ventre"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["배"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "hip",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["hanche"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["엉덩이"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "arm",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["bras"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["팔"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "hand",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["main"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["손"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "finger",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["doigt"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["손가락"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "nail",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["ongle"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["못"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "elbow",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["coude"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["팔꿈치"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "wrist",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["poignet"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["손목"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "leg",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["jambe"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["다리"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "knee",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["genou"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["무릎"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "foot",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["pied"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["발"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
-    "text": "",
+    "level": 1,
+    "tags": ["body"],
+    "text": "toe",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["doigt de pied"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["발가락"]
       }
     ]
   },
   {
     "language": "en",
-    "tags": [],
+    "level": 1,
+    "tags": ["body"],
+    "text": "ankle",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cheville"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["발목"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["body"],
+    "text": "body",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["corps"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["몸"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "house",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["maison"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["집"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "wall",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mur"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["벽"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "문",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["porte"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["문"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "window",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fenêtre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["창문"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "roof",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["toit"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["지붕"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "bedroom",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chambre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["침실"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "bed",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["lit"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["침대"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "desk",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bureau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["책상"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "mirror",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["miroir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["거울"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "kitchen",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cuisine"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["주방"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "plate",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["assiette"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["그릇"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "knife",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["couteau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["칼"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "fork",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fourchette"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["포크"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "spoon",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cuillère"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["숟가락"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "glas",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["verre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["유리잔"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "living-room",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["salon"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["거실"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "chair",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chaise"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["의자"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "table",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["table"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["식탁"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "ceiling",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["plafond"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["천장"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "floor",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["sol"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["바닥"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "television",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["télévision"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["텔레비전"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "phone",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["téléphone"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["전화"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["house"],
+    "text": "washing machine",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["machine à laver"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["세탁기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "nature",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["nature"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["자연"]
+      }
+    ]
+  },
+
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "sun",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["soleil"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["태양"]
+      }
+    ]
+  },
+
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "rain",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pluie"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["비"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "tree",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["arbre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["나무"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "flower",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fleur"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["꽃"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "earth",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["terre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["지구"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "star",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["étoile"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["별"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["season"],
+    "text": "spring",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["printemps"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["봄"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["season"],
+    "text": "summer",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["été"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["여름"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["season"],
+    "text": "autumn",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["automne"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["가을"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["season"],
+    "text": "winter",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["hiver"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["겨울"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["season"],
+    "text": "season",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["saison"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["계절"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "city",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["ville"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["도시"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "library",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bibliothèque"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["도서관"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "city center",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["centre-ville"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["도심"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "police station",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["commissariat"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["경찰서"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "train station",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["gare"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["기차역"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "department store",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["grand magasin"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["백화점"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "city hall",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["hôtel de ville"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["시청"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "museum",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["musée"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["박물관"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "convenience store",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["superette"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["편의점"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "travel",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["voyage"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["여행"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "street",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rue"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["거리"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "traffic light",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["feu de circulation"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["신호등"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "traffic",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["embouteillage"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["교통"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "train",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["train"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["기차"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "car",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["voiture"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["자동차"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "plane",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["avion"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["비행기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "airport",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["aéroport"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["공항"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["travel"],
+    "text": "boat",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bateau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["배"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "animal",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["animal"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["동물"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "bird",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["oiseau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["새"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "dog",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chien"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["개"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "cat",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chat"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["고양이"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "pork",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["porc"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["돼지고기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "beef",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["boeuf"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["쇠고기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "chicken",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["poulet"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["닭고기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "sheep",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mouton"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["양고기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "fish",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["poisson"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["생선"]
+      }
+    ]
+  },
+
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "kitten",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chaton"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["새끼 고양이"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["animal"],
+    "text": "puppy",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chiot"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["강아지"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "family",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["famille"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["가족"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "parents",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["parents"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["부모님"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "father",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["père"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아버지"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "mother",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mère"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어머니"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "sister",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["soeur"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["누나", "여동생", "언니"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "brother",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["frère"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["형", "남동생", "오빠"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "son",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fils"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아들"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "daughter",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fille"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["딸"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "dad",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["papa"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아빠"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["family"],
+    "text": "mom",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["maman"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["엄마"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "question word",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["adverbe interrogatif"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["질문 단어"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "what",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["quoi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["뭐"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "who",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["qui"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["누구"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "where",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["où"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어디"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "when",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["quand"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["언제"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "why",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pourquoi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["왜"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "how",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["comment"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어떻게"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "how much",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["combien"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["얼마"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "which",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["quel"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어느"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
+    "text": "what time",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Quelle heure"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["몇 시"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["question word"],
     "text": "",
     "translations": [
       {
-        "language":"fr",
-        "lexicalItems":[""]
+        "language": "fr",
+        "lexicalItems": ["Quel âge"]
       },
       {
-        "language":"kr",
-        "lexicalItems":[""]
+        "language": "kr",
+        "lexicalItems": ["몇 살"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "country",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pays"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["나라"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "China",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Chine"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["중국"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "Japan",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Japon"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["일본"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "South Korea",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Corée du Sud"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["한국"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "USA",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["USA"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["미국"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "Germany",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Allemagne"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["독일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": [""]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": [""]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "language",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["language"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["언어"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "UK",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Royaume-Uni"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["영국"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "korean",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["coréen"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["한국어"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["country"],
+    "text": "english",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["anglais"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["영어"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "job",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["métier"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["직업"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "employee",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["employé"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["직원"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "doctor",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["medecin"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["의사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "president",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["président"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["사장"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "engineer",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["ingénieur"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["엔지니어"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "manager",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["manager"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["매니저"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "nurse",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["infirmière"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["간호사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "lawyer",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["avocat"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["변호사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "student",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["étudiant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["학생"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["job"],
+    "text": "teacher",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["enseignant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["선생"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "adjective",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["adjectif"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["형용사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "kind",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["gentil"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["착하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "mean",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["méchant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["잔인하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "big",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["grand"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["크다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "small",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["petit"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["작다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "fast",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rapide"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["빠르다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "slow",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["lent"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["느리다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "pretty",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["beau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["예쁘다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "ugly",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["moche"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["못생기다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "far",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["loin"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["멀다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "near",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["proche"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["가깝다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "crazy",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fou"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["미치다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "smart",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["intelligent"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["똑똑하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "stupid",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["stupide, bête, idiot"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["바보", "멍청하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "late",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tard"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["늦다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "early",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tôt"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["일찍", "이르다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "fun",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["marrant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["재밌다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "boring",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["ennuyeux"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["지루하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "cold",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["froid"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["춥다", "차갑다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "warm",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chaud"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["덥다", "따뜻하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "different",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["différent"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["다르다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "same",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["même", "pareil"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["같다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sport"],
+    "text": "sport",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["sport"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["스포츠"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sport"],
+    "text": "football",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["football"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["축구"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sport"],
+    "text": "tennis",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tennis"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["테니스"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sport"],
+    "text": "baseball",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["baseball"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["야구"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sport"],
+    "text": "basketball",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["basket"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["농구"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "color",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["couleur"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["색깔"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "black",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["noir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["검은색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "orange",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["orange"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["오렌지"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "pink",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rose"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["핀크"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "green",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["vert"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["녹색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "red",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rouge"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["빨간색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "blue",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bleu"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["푸른"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "yellow",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jaune"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["노란색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "brown",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["marron"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["갈색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["color"],
+    "text": "white",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["blanc"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["하얀색"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": [""]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": [""]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "number",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["nombre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["숫자"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "one",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["un"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["일", "하나"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "two",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["deux"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["이", "둘"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "three",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["trois"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["삼", "셋"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "four",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["quatre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["사", "넷"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "five",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cinq"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["요", "다섯"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "six",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["six"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["육", "여섯"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "seven",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["sept"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["칠", "일곱"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "eight",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["huit"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["팔", "여덟"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "nine",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["neuf"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["구", "아홉"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "ten",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["dix"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["십", "열"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "twenty",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["vingt"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["이십", "수물"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "thirty",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["trente"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["삼십", "서른"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "hundred",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cent"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["백"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "thousend",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mille"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["천"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["number"],
+    "text": "ten thousend",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["dix mille"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["만"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sickness"],
+    "text": "sickness",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["maladie"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["병"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sickness"],
+    "text": "to have a cough",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["avoir une toux"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["기침이 나다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sickness"],
+    "text": "cold",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rhume"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["감기"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sickness"],
+    "text": "headache",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mal de tête"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["두통"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["sickness"],
+    "text": "to hurt",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["avoir mal"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아프다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "time",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["temps"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["시간"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "second",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["seconde"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["초"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "minute",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["minute"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["분"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "hour",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["heure"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["시"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "morning",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["matin"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아침"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "afternoon",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["après-midi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["오후"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "evening",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["soir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["저녁"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "day",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jour"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "yesterday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["hier"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어제"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "tomorrow",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["demain"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["내일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "week",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["semaine"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["주"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "month",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mois"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["월"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "year",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["année"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["년"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "now",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["maintenant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["지금"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "already",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["déjà"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["벌써"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "soon",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bientôt"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["곧"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "sometimes",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["parfois"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["가끔"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "often",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["souvent"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["자주"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "always",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["toujours"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["언제나", "항상"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "never",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jamais"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["절대"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "last",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["dernier"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["지난", "마지막"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "next",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["prochain"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["다음"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "first",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["premier"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["처음"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "before",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["avant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["전에"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "after",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["après"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["후에"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "during",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pendant"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["동안"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "every day",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tous les jours"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["매일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "every week",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["toutes les semaines"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["매주"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "every month",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tous les mois"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["매달"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time adverb"],
+    "text": "every year",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tous les ans"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["매년"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["quantité"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["수량"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": [""]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": [""]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "all",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["tous"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["모두"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "nothing",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rien"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아무것도"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "a lot",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["beaucoup"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["많이"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "too much",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["trop"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["너무"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "enough",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["assez"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["충분하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["quantity"],
+    "text": "only",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["seulement"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["-만"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "greeting",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["formule de politesse"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["인사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "to greet",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["saluer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["인사하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "hello",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bonjour"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["안녕하세요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "Thank you",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["merci"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["감사합니다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "sorry",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pardon", "désolé"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["죄송합니다", "고마워요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "welcome",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bienvenue"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어서 오세요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "congratulations",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["félicitations"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["축하합니다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "well done",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["bien joué", "bravo"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["잘했어요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "yes",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["oui"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["네"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "no",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["non"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["아니요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to do",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["faire"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to be",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["être"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["이다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "there is",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["il y a"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["있다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to eat",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["manger"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["먹다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to drink",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["boire"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["마시다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to see",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["voir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["보다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to hear",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["entendre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["듣다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to take",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["prendre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["갖다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to put",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mettre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["놓다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to start",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["commencer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["시작"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to finish",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["finir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["끝내다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to go",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["aller"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["가다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to play",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jouer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["놀다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to answer",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["répondre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["대답하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to help",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["aider"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["돕다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": [""]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": [""]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to meet ",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rencontrer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["만나다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": [""]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": [""]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "I don't know",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Je ne sais pas"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["모르다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to know",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["savoir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["알다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to come",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["venir"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["오다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to like",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["aimer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["좋아하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to give",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["donner"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["주다"]
       }
     ]
   }
