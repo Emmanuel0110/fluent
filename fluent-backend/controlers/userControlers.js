@@ -16,11 +16,7 @@ router.post("/", async function (req, res) {
   const user = await UserModel.findOne({ username });
   if (user) return res.status(400).json({ msg: "User already exists" });
 
-  const newUser = new UserModel({
-    _id: new mongoose.Types.ObjectId(),
-    username,
-    password,
-  });
+  const newUser = new UserModel({ username, password });
   // Create salt & hash
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -94,7 +90,6 @@ export async function cacheUserLearningData(user) {
   } else {
     const availableLanguages = await LanguageModel.find().select("-flag");
     course = new UserCourseModel({
-      _id: new mongoose.Types.ObjectId(),
       sourceLanguage: availableLanguages.find((language) => language.label === "fr")?._id,
       targetLanguage: availableLanguages.find((language) => language.label === "en")?._id,
       wishListConversations: [],

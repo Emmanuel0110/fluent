@@ -14,7 +14,7 @@ const wordTagSchema = new Schema({
   _id: Schema.Types.ObjectId,
   language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
   label: { type: String, required: true },
-});
+}, { _id: true });
 export const WordTagModel = model("WordTag", wordTagSchema);
 
 const ConversationTagSchema = new Schema({
@@ -95,6 +95,7 @@ const LexicalItemSchema = new Schema({
       lexicalItems: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
     },
   ],
+  level: Number,
 });
 export const LexicalItemModel = model("LexicalItem", LexicalItemSchema);
 

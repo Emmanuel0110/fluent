@@ -6,13 +6,13 @@ import { WordLine } from "./WordLine";
 
 export default function WordList({ filteredWords }: { filteredWords: Word[] }) {
   return (
-    <Fragment>
+    <div style={{height: "100%", overflow: "auto"}}>
       <FilterBar />
       <div id="flashcardList">
         {filteredWords.map((word, index) => (
           <WordLine key={index} word={word} />
         ))}
       </div>
-    </Fragment>
+    </div>
   );
 }

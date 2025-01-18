@@ -39,13 +39,15 @@ export const WordLine = ({ word }: { word: Word }) => {
       onClick={() => openWord(word._id)}
     >
       <div className={"lineTitle"}>
-        <span>{word.text +
-          " : "}</span>
-          <span>{word.translations.map((wordId, index) => (
-            <span key={index}>
-              {words[wordId].text}
+        <span>{word.text + " : "}</span>
+        <span>
+          {word.translations.map((wordId, index) => (
+            <span>
+              {index !== 0 && <span>{", "}</span>}
+              <span key={index}>{words[wordId]?.text}</span>
             </span>
-          ))}</span>
+          ))}
+        </span>
       </div>
       <div className="lineOptions">
         <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>

@@ -387,7 +387,7 @@
     "language": "en",
     "level": 1,
     "tags": ["house"],
-    "text": "문",
+    "text": "door",
     "translations": [
       {
         "language": "fr",
@@ -1702,7 +1702,7 @@
     "language": "en",
     "level": 1,
     "tags": ["question word"],
-    "text": "",
+    "text": "How old",
     "translations": [
       {
         "language": "fr",
@@ -1807,22 +1807,6 @@
       {
         "language": "kr",
         "lexicalItems": ["독일"]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": ["country"],
-    "text": "",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": [""]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": [""]
       }
     ]
   },
@@ -2266,7 +2250,7 @@
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["stupide, bête, idiot"]
+        "lexicalItems": ["stupide", "bête", "idiot"]
       },
       {
         "language": "kr",
@@ -2639,22 +2623,6 @@
       {
         "language": "kr",
         "lexicalItems": ["하얀색"]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": ["number"],
-    "text": "",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": [""]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": [""]
       }
     ]
   },
@@ -3478,7 +3446,7 @@
     "language": "en",
     "level": 1,
     "tags": ["quantity"],
-    "text": "",
+    "text": "quantity",
     "translations": [
       {
         "language": "fr",
@@ -3487,22 +3455,6 @@
       {
         "language": "kr",
         "lexicalItems": ["수량"]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": ["quantity"],
-    "text": "",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": [""]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": [""]
       }
     ]
   },
@@ -4006,22 +3958,6 @@
     "language": "en",
     "level": 1,
     "tags": ["verb"],
-    "text": "",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": [""]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": [""]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": ["verb"],
     "text": "to meet ",
     "translations": [
       {
@@ -4031,22 +3967,6 @@
       {
         "language": "kr",
         "lexicalItems": ["만나다"]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": ["verb"],
-    "text": "",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": [""]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": [""]
       }
     ]
   },

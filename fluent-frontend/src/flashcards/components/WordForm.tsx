@@ -203,7 +203,10 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <span>{`${sourceWord.text}: `}</span>
               <span>
                 {sourceWord.translations.map((wordId, index) => (
-                  <span key={index}>{words[wordId].text}</span>
+                  <span>
+                    {index !== 0 && <span>{", "}</span>}
+                    <span key={index}>{words[wordId]?.text}</span>
+                  </span>
                 ))}
               </span>
             </div>
@@ -245,8 +248,11 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
             <div>
               <span>{`${targetWord.text}: `}</span>
               <span>
-                {targetWord.translations.map((wordId) => (
-                  <span>{words[wordId].text}</span>
+                {targetWord.translations.map((wordId, index) => (
+                  <span>
+                    {index !== 0 && <span>{", "}</span>}
+                    <span key={index}>{words[wordId]?.text}</span>
+                  </span>
                 ))}
               </span>
             </div>
