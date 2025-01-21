@@ -12,6 +12,7 @@ import conversationTagRoutes from "./controlers/conversationTagControlers.js";
 import userRoutes from "./controlers/userControlers.js";
 import userCourseRoutes from "./controlers/userCourseControlers.js";
 import wordRoutes from "./controlers/wordControlers.js";
+import languageRoutes from "./controlers/languageControlers.js";
 import { createClient } from 'redis';
 
 export const redisClient = createClient();
@@ -63,6 +64,7 @@ app.use("/api/conversationtags", conversationTagRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/usercourses", userCourseRoutes);
 app.use("/api/words", wordRoutes);
+app.use("/api/languages", languageRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });

@@ -1,6 +1,4 @@
-import { Fragment } from "react";
 import { Word } from "../../types";
-import InfiniteScrollComponent from "../../utils/InfiniteScrollComponent"; // TODO
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
 

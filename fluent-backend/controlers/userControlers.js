@@ -1,10 +1,11 @@
 import auth from "../middleware/auth.js";
+import cache from "../middleware/cache.js";
 import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
-import mongoose from "mongoose";
 import { redisClient } from "../index.js";
+import mongoose from "mongoose";
 const router = express.Router();
 
 //register
@@ -101,6 +102,34 @@ export async function cacheUserLearningData(user) {
   }
   await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
   return course;
+}
+
+router.patch("/", auth, async function (req, res) {
+  try {
+    const { sourceLanguage, targetLanguage } = req.body;
+    const user = await UserModel.findById(req.user._id);
+    await updateLanguages(user, sourceLanguage, targetLanguage);
+    res.json({ success: true, data: { sourceLanguage, targetLanguage } });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Couldn't update language choice" });
+  }
+});
+
+export async function updateLanguages(user, sourceLanguage, targetLanguage) {
+  let course = await UserCourseModel.findOne({ _id: { $in: user.courses }, sourceLanguage, targetLanguage });
+  if (!course) {
+    course = await new UserCourseModel({
+      _id: new mongoose.Types.ObjectId(),
+      sourceLanguage,
+      targetLanguage,
+      wishListConversations: [],
+      words: [],
+      conversations: [],
+    }).save();
+  }
+  await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
+  await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
 }
 
 export default router;

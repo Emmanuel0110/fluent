@@ -11,6 +11,7 @@ import {
   Conversation,
   conversationFilter,
   ConversationTag,
+  Language,
   SearchFilter,
   User,
   View,
@@ -35,6 +36,7 @@ import {
   saveNewConversationTag,
   saveNewWord,
   saveNewWordTag,
+  fetchLanguages,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -65,17 +67,17 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
   });
 };
 
-const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: string]: T } => {
+export const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: string]: T } => {
   return ObjectArr.reduce((acc, value) => {
     return { ...acc, [value._id]: value };
   }, {});
 };
 
-const formatWords = (words: any[]): Word[] => {
+export const formatWords = (words: any[]): Word[] => {
   return words.map(formatWord);
 };
 
-const formatWord = (word: any): Word => {
+export const formatWord = (word: any): Word => {
   return { ...word, translations: word.translations[0].lexicalItems };
 };
 
@@ -156,6 +158,7 @@ export default function App() {
   const [searchFilter, setSearchFilter] = useState<SearchFilter>([]);
   const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
   const [conversations, setConversations] = useState([] as Conversation[]);
+  const [languages, setLanguages] = useState([] as Language[]);
   const [words, setWords] = useState<{ [id: string]: Word }>({});
   const [sourceLanguage, setSourceLanguage] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("");
@@ -168,20 +171,13 @@ export default function App() {
 
   useEffect(() => {
     if (isAuthenticated) {
+      fetchLanguages().then((languages) => setLanguages(languages));
       fetchWordTags().then((wordTags) => setWordTags(wordTags));
       fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords()
-        .then((res) => {
-          if (res.success) {
-            return groupById(formatWords(res.data));
-          } else {
-            console.log(res?.message);
-            return {};
-          }
-        })
-        .then((words) => setWords(words));
+      fetchWords().then((words) => setWords(words));
+      setConversations([]);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, sourceLanguage, targetLanguage]);
 
   const filteredWords = useMemo(() => {
     const searchFilterWithTagIds = searchFilter.map((filterItem) => {
@@ -418,6 +414,7 @@ export default function App() {
   return (
     <ConfigContext.Provider
       value={{
+        languages,
         filteredWords,
         words,
         setWords,
@@ -427,7 +424,9 @@ export default function App() {
         setConversations,
         saveConversation,
         sourceLanguage,
+        setSourceLanguage,
         targetLanguage,
+        setTargetLanguage,
         openedWords,
         setOpenedWords,
         openedConversations,

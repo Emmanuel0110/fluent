@@ -29,7 +29,9 @@ export const WordLine = ({ word }: { word: Word }) => {
 
   const onDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    deleteWord(word._id);
+    if (window.confirm("Are you sure you want to delete this flashcard?")) {
+      deleteWord(word._id);
+    }
   };
 
   return (

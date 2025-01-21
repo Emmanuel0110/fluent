@@ -59,14 +59,21 @@ function Navbar() {
   }, []);
 
   const handleKeyDown = (e: KeyboardEvent) => {
-    switch (e.key) {
-      case "k":
-        if (e.ctrlKey) {
+    if ((e.target as HTMLInputElement).nodeName.toLowerCase() !== "input") {
+      switch (e.key) {
+        case "Tab":
           e.preventDefault();
           inputRef.current?.focus();
-        }
-        break;
-      default:
+          break;
+        default:
+      }
+    } else {
+      switch (e.key) {
+        case "Escape":
+          (e.target as HTMLInputElement).blur();
+          break;
+        default:
+      }
     }
   };
 

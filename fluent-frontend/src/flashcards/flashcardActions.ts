@@ -1,4 +1,4 @@
-import { url } from "../App";
+import { formatWords, groupById, url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
 import { Conversation, ConversationTag, Word, WordTag } from "../types";
 
@@ -143,6 +143,21 @@ export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Wor
   });
 };
 
+export const fetchLanguages = async () => {
+  return customFetch(url + "languages", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+    });
+};
+
 export const fetchWordTags = async () => {
   return customFetch(url + "wordtags", { headers: authHeaders() })
     .then((res) => {
@@ -174,8 +189,34 @@ export const fetchConversationTags = async () => {
 };
 
 export const fetchWords = async () => {
-  return customFetch(url + "words", { headers: authHeaders() }).catch((err: Error) => {
-    console.log(err);
-    return {};
-  });
+  return customFetch(url + "words", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return groupById(formatWords(res.data));
+      } else {
+        console.log(res?.message);
+        return {};
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return {};
+    });
+};
+
+export const updateLanguages = async (args: {sourceLanguage: string, targetLanguage: string}) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "users", { method: "PATCH", headers: authHeaders(), body })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return {};
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return {};
+    });
 };

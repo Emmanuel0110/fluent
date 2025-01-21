@@ -13,6 +13,11 @@ export interface WordTag {
   label: string;
 }
 
+export interface Language {
+  _id: string;
+  label: string;
+}
+
 export interface ConversationTag {
   _id: string;
   sourceLabel: string;
@@ -55,6 +60,7 @@ export interface Conversation {
 
 export interface Context {
   filteredWords: Word[];
+  languages: Language[];
   words: { [id: string]: Word };
   setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
   conversations: Conversation[];
@@ -63,7 +69,9 @@ export interface Context {
   editConversation: (id: string) => void;
   editWord: (id: string) => void;
   sourceLanguage: string;
+  setSourceLanguage: Dispatch<SetStateAction<string>>;
   targetLanguage: string;
+  setTargetLanguage: Dispatch<SetStateAction<string>>;
   openedWords: Word[];
   setOpenedWords: Dispatch<SetStateAction<Word[]>>;
   setOpenedConversations: Dispatch<SetStateAction<Conversation[]>>;

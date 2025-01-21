@@ -140,6 +140,7 @@ const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
     const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === "Escape") {
         closeOverlay();
+        setLocalDescription("");
       } else if (e.key === "Enter") {
         if (selectedIndex !== null && filteredDropdownList[selectedIndex] !== undefined) {
           callback({ _id: filteredDropdownList[selectedIndex]._id, setLocalDescription });
@@ -190,7 +191,10 @@ const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
                   label={label}
                   index={index}
                   selectedIndex={selectedIndex}
-                  callback={callback}
+                  callback={(args: any) => {
+                    callback(args);
+                    forwardedRef.current.focus();
+                  }}
                   setLocalDescription={setLocalDescription}
                 />
               ))}
