@@ -722,6 +722,22 @@
   {
     "language": "en",
     "level": 1,
+    "tags": ["house"],
+    "text": "garden",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jardin"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["정원"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
     "tags": ["nature"],
     "text": "nature",
     "translations": [
@@ -735,7 +751,86 @@
       }
     ]
   },
-
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "forest",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["forêt"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["숲"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "water",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["eau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["물"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "fire",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["feu"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["불"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "see",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mer"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["보다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["nature"],
+    "text": "lake",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["lac"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["호수"]
+      }
+    ]
+  },
   {
     "language": "en",
     "level": 1,
@@ -752,7 +847,6 @@
       }
     ]
   },
-
   {
     "language": "en",
     "level": 1,
@@ -933,6 +1027,22 @@
     "language": "en",
     "level": 1,
     "tags": ["city"],
+    "text": "movie theater",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["cinéma"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["영화관"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
     "text": "library",
     "translations": [
       {
@@ -942,6 +1052,70 @@
       {
         "language": "kr",
         "lexicalItems": ["도서관"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "park",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["parc"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["공원"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "parking",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["parking"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["주차"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "school",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["école"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["학교"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["city"],
+    "text": "church",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["église"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["교회"]
       }
     ]
   },
@@ -2389,6 +2563,38 @@
   {
     "language": "en",
     "level": 1,
+    "tags": ["adjective"],
+    "text": "difficult",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["difficile"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["어렵다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "easy",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["facile"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["쉽다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
     "tags": ["sport"],
     "text": "sport",
     "translations": [
@@ -2982,6 +3188,22 @@
     "language": "en",
     "level": 1,
     "tags": ["time"],
+    "text": "calendar",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["calendrier"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["달력"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
     "text": "second",
     "translations": [
       {
@@ -3135,6 +3357,118 @@
       {
         "language": "kr",
         "lexicalItems": ["주"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "monday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["lundi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["월요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "tuesday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mardi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["화요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "wednesday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mercredi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["수요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "thursday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jeudi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["목요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "friday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["vendredi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["금요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "saturday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["samedi"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["토요일"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["time"],
+    "text": "sunday",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["dimanche"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["일요일"]
       }
     ]
   },
@@ -3718,6 +4052,22 @@
     "language": "en",
     "level": 1,
     "tags": ["verb"],
+    "text": "verb",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["verbe"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["동사"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
     "text": "to do",
     "translations": [
       {
@@ -4047,6 +4397,422 @@
       {
         "language": "kr",
         "lexicalItems": ["주다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to use",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["utiliser"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["사용하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to laugh",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["rire"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["웃다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["verb"],
+    "text": "to make",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["fabriquer", "faire"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["만들다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "clothes",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["habit", "vêtement"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["옷"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes", "verb"],
+    "text": "to wear",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["porter"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["입다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "shirt",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chemise"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["셔츠"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "pants",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["pantalon"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["바지"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "skirt",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["jupe"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["치마", "스커트"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "underwear",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["sous-vêtement"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["속옷"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "dress",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["robe"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["드레스", "원피스"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "shorts",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["short"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["반바지"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "glasses",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["lunettes"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["안경"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "hat",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chapeau"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["모자"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "shoes",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chaussures"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["신발"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "socks",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["chaussette"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["양말"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["clothes"],
+    "text": "watch",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["montre"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["손목시계"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "grammar",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["grammaire"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["문법"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "I can...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Je peux..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...할 수 있어요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "Should we...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["suggestion"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...을 까요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "imperative",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["imperatif"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...세요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "I heard that...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["J'ai entendu que..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...은다고 들었어요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "it seems that...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["il semble que..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...은다고 같다요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "He said that...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Il a dit que..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...은다고 했어요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "I want to...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Je veux..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...고 싶어요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "Can I...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Est-ce que je peux..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...도 되요", "...면 되요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "I must...",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["Je dois..."]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["...야 되요"]
       }
     ]
   }
