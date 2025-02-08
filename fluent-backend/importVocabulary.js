@@ -19,7 +19,7 @@ try {
   // Step 2: Parse the JSON string into an object
   const jsonData = JSON.parse(data);
 
-  mongoose.set("debug", true);
+  //mongoose.set("debug", true);
   mongoose.set("strictQuery", true);
   await mongoose.connect(
     `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`
@@ -50,11 +50,7 @@ async function importVocabulary(arr) {
       try {
         const newWord = await importWord(element);
         if (newWord?._id && Array.isArray(newWord.translations)) {
-          for (const { lexicalItems } of newWord.translations) {
-            for (const wordId of lexicalItems) {
-              await setTranslation(wordId, newWord.language, newWord._id);
-            }
-          }
+          await setTranslationsAndTagsForTranslations(newWord);
         }
       } catch (error) {
         console.error("could not import word " + JSON.stringify(element));
@@ -77,7 +73,7 @@ async function importWord(data) {
         level,
         text,
         language: languageId,
-        tags: await getTags(tags, languageId),
+        tags: await getWordTags(tags, languageId),
         translations: await getTranslations(translations),
       }).save();
     }
@@ -99,20 +95,20 @@ async function getLanguage(languageLabel) {
   }
 }
 
-async function getTags(tags, languageId) {
+async function getWordTags(tags, languageId) {
   const results = [];
   for (const tag of tags) {
     try {
-      const result = await getTag(languageId)(tag);
+      const result = await getWordTag(languageId)(tag);
       results.push(result);
     } catch (error) {
-      console.error("Error getting tag ", tag, error);
+      console.error("Error getting word tag ", tag, error);
     }
   }
   return results;
 }
 
-function getTag(languageId) {
+function getWordTag(languageId) {
   return async function (tagLabel) {
     let tag = await WordTagModel.findOne({ language: languageId, label: tagLabel });
     if (!tag) {
@@ -132,7 +128,7 @@ function getTag(languageId) {
     if (tag?._id) {
       return tag._id;
     } else {
-      throw new Error("couldn't get tag " + tagLabel);
+      throw new Error("couldn't get word tag " + tagLabel);
     }
   };
 }
@@ -155,7 +151,7 @@ async function getTranslation({ language, lexicalItems }) {
   const results = [];
   for (const lexicalItem of lexicalItems) {
     try {
-      const result = await getWord(languageId)(lexicalItem);
+      const result = await getWord(languageId, lexicalItem);
       results.push(result);
     } catch (error) {
       console.error("Error getting lexicalItem ", lexicalItem, error);
@@ -164,48 +160,95 @@ async function getTranslation({ language, lexicalItems }) {
   return { language: languageId, lexicalItems: results };
 }
 
-function getWord(languageId) {
-  return async function (text) {
-    let word = await LexicalItemModel.findOne({ language: languageId, text });
-    if (!word) {
-      word = await new LexicalItemModel({
-        _id: new mongoose.Types.ObjectId(),
-        language: languageId,
-        text,
-        level: 0,
-        translations: [],
-        tags: [],
-      }).save();
-    }
-    if (word?._id) {
-      return word._id;
-    } else {
-      throw new Error("couldn't get word " + text);
-    }
-  };
+async function getWord(languageId, text) {
+  let word = await LexicalItemModel.findOne({ language: languageId, text });
+  if (!word) {
+    word = await new LexicalItemModel({
+      _id: new mongoose.Types.ObjectId(),
+      language: languageId,
+      text,
+      level: 0,
+      translations: [],
+      tags: [],
+    }).save();
+  }
+  if (word?._id) {
+    return word._id;
+  } else {
+    throw new Error("couldn't get word " + text);
+  }
 }
 
-async function setTranslation(wordId, languageId, translationId) {
-  const result = await LexicalItemModel.updateOne(
-    { _id: wordId, "translations.language": languageId },
+async function setTranslationsAndTagsForTranslations(newWord) {
+  const translations = [
     {
-      $addToSet: { "translations.$.lexicalItems": translationId }, // Add translationId to lexicalItems if it doesn't exist
+      language: newWord.language,
+      lexicalItems: [newWord._id],
     },
-    { upsert: false } // Update only if languageId exists
-  );
+    ...newWord.translations,
+  ];
+  const tags = await WordTagModel.find({ _id: { $in: newWord.tags } });
+  const tagWords = await LexicalItemModel.find({
+    language: newWord.language,
+    text: { $in: tags.map(({ label }) => label) },
+  });
+  const languages = newWord.translations.map(({ language }) => language);
+  const tagsByLanguage = await getTagsByLanguage(tagWords, languages);
+  for (const tr of newWord.translations) {
+    for (const wordId of tr.lexicalItems) {
+      for (const translation of translations) {
+        if (translation.language !== tr.language) {
+          const result = await LexicalItemModel.updateOne(
+            { _id: wordId, "translations.language": translation.language },
+            {
+              $addToSet: { "translations.$.lexicalItems": { $each: translation.lexicalItems } }, // Add translationId to lexicalItems if it doesn't exist
+            },
+            { upsert: false } // Update only if languageId exists
+          );
 
-  // If language languageId does not exist, add it along with "d"
-  if (result.matchedCount === 0) {
-    await LexicalItemModel.updateOne(
-      { _id: wordId },
-      {
-        $push: {
-          translations: {
-            language: languageId,
-            lexicalItems: [translationId],
-          },
-        },
+          // If language languageId does not exist, add it
+          if (result.matchedCount === 0) {
+            await LexicalItemModel.updateOne(
+              { _id: wordId },
+              {
+                $push: {
+                  translations: translation,
+                },
+              }
+            );
+          }
+
+          await LexicalItemModel.updateOne(
+            { _id: wordId },
+            {
+              $addToSet: { tags: { $each: tagsByLanguage[tr.language] || [] } },
+            },
+            { upsert: false }
+          );
+        }
       }
-    );
+    }
+  }
+}
+
+async function getTagsByLanguage(tagWords, languages) {
+  const initTagsByLanguage = languages.reduce((acc, value) => ({ ...acc, [value]: [] }), {});
+  const tagsTranslations = tagWords.map(({ translations }) => translations);
+  let acc = initTagsByLanguage;
+  for (const translations of tagsTranslations) {
+    for (const { language, lexicalItems } of translations) {
+      if (languages.some((el) => el.equals(language)) && Array.isArray(lexicalItems) && lexicalItems.length !== 0) {
+        const wordTag = await getWordTagFromWordText(lexicalItems[0]);
+        if (wordTag) acc[language].push(wordTag._id);
+      }
+    }
+  }
+  return acc;
+}
+
+async function getWordTagFromWordText(wordId) {
+  const word = await LexicalItemModel.findById(wordId);
+  if (word) {
+    return getWordTag(word.language)(word.text);
   }
 }

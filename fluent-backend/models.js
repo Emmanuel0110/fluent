@@ -108,6 +108,7 @@ const MultiLingualConversationSchema = new Schema({
       language: { type: Schema.Types.ObjectId, ref: "Language", required: true, index: true },
       sentences: [
         {
+          _id: false,
           text: String,
           prerequisites: [{ type: Schema.Types.ObjectId, ref: "LexicalItem", index: true }],
         },

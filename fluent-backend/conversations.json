@@ -1,0 +1,136 @@
+[
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "John didn't come to work this morning",
+            "prerequisites": ["to come", "work", "morning"]
+          },
+          {
+            "text": "Apparently, he's sick.",
+            "prerequisites": ["apparently", "sick"]
+          },
+          {
+            "text": "Is it serious?",
+            "prerequisites": ["to be", "serious"]
+          },
+          {
+            "text": "He says he has pimples all over his body.",
+            "prerequisites": ["to say", "pimple", "all over", "body"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "John n'est pas venu au travail ce matin.",
+            "prerequisites": ["ne pas", "venir", "travail", "matin"]
+          },
+          {
+            "text": "Il paraît qu'il est malade.",
+            "prerequisites": ["Il parait que", "être", "malade"]
+          },
+          {
+            "text": "Est-ce que c'est grave ?",
+            "prerequisites": ["est-ce que", "être", "grave"]
+          },
+          {
+            "text": "Il dit qu'il a des boutons sur tout le corps.",
+            "prerequisites": ["dire", "... que", "bouton", "tout", "corps"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "존이 오늘 아침에 출근하지 않았어요.",
+            "prerequisites": ["오늘", "아침", "출근하다", "부정"]
+          },
+          {
+            "text": "그가 아프다던데요",
+            "prerequisites": ["아프다", "-던데"]
+          },
+          {
+            "text": "심각한 거예요?",
+            "prerequisites": ["심각하다"]
+          },
+          {
+            "text": "온몸에 여드름이 났다고 해요.",
+            "prerequisites": ["온-", "몸", "여드름", "나다", "-다고 해요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  }
+]

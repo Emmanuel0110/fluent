@@ -1,0 +1,34 @@
+[
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["body"],
+    "text": "body",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["corps"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["몸"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["body"],
+    "text": "face",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["visage"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["얼굴"]
+      }
+    ]
+  }
+]
