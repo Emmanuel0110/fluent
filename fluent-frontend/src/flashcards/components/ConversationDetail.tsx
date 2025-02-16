@@ -10,13 +10,19 @@ export default function ConversationDetail({ conversation }: { conversation: Con
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
   };
 
+  const getWordsFromConversation = (conversation: Conversation) => {
+    return conversation.multiLingualSentences.reduce((acc, value) => {
+      return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
+    }, [] as string[]);
+  }
+
   return (
     <div id="flashCardComponent">
       <div id="flashcard">
         <div id="previous">
           <div
             className={"subscribe" + (conversation.subscribed ? " subscribed" : "")}
-            onClick={(e) => subscribeToConversation(conversation._id)}
+            onClick={(e) => subscribeToConversation(conversation._id, getWordsFromConversation(conversation))}
           ></div>
         </div>
         <div id="middle">

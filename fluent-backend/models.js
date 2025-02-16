@@ -49,6 +49,7 @@ const UserCourseSchema = new Schema({
       _id: { type: Schema.Types.ObjectId, ref: "LexicalItem", required: true },
       nextReviewDate: { type: Date, index: true },
       reviewDelayInMs: Number,
+      numberOfSentencesUsedIn: Number
     },
   ],
   conversations: [

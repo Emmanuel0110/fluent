@@ -94,7 +94,8 @@ export interface Context {
   openConversation: (id: string) => void;
   deleteConversation: (_id: string) => void;
   deleteWord: (_id: string) => void;
-  subscribeToConversation: (_id: string) => void;
+  subscribeToConversation: (_id: string, wordIds: string[]) => void;
+  unsubscribeToConversation: (_id: string, wordIds: string[]) => void;
   saveWord: (infos: Word) => Promise<void | Word>;
   saveWordTag: (args: {language: string, label: string}) => Promise<void | WordTag>;
   saveConversationTag: (infos: ConversationTag) => Promise<void>;

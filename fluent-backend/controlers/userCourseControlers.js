@@ -6,33 +6,22 @@ const router = express.Router();
 
 router.patch("/", auth, cache, updateLearningData);
 
-export async function updateLearningData(req, res) {
+async function updateLearningData(req, res) {
   try {
-    const { reviewedConversationId, wordIds, success } = req.body;
-    const { userLearningData } = req;
-    if (userLearningData && reviewedConversationId) {
-      if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
-        UserCourseModel.updateOne(
-          { _id: userLearningData._id, "conversations._id": reviewedConversationId },
-          { $set: { "conversations.$.lastReviewDate": new Date() } },
-          { upsert: true }
-        );
+    const { userLearningData, user } = req;
+    if (userLearningData) {
+      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, wordIds, success } = req.body;
+      if (conversationToSubscribe) {
+        await subscribeToConversation(conversationToSubscribe, wordIds, userLearningData);
+        res.json({ success: true });
+      } else if (conversationToUnsubscribe) {
+        const wordsToUnsubscribe = await unsubscribeToConversation(conversationToUnsubscribe, wordIds, userLearningData);
+        res.json({ success: true, wordsToUnsubscribe });
+      } else if (reviewedConversationId) {
+        await updateReviewData(reviewedConversationId, wordIds, success);
+        res.json({ success: true });
       }
-      const [wordUpdates, newWordIds] = wordIds.reduce(
-        ([wordUpdates, newWordIds], wordId) => {
-          const word = userLearningData.words.find(({ _id }) => _id == wordId);
-          if (word) {
-            wordUpdates.push(getUpdate(word, success));
-          } else {
-            newWordIds.push(wordId);
-          }
-          return [wordUpdates, newWordIds];
-        },
-        [[], []]
-      );
-      if (wordUpdates.length > 0) updateWords(userLearningData._id, wordUpdates);
-      if (newWordIds.length > 0) addNewWords(userLearningData._id, newWordIds);
-      res.json({ status: "success" });
+      refreshLearningDataCache(userLearningData._id, user._id);
     }
   } catch (error) {
     console.error(error);
@@ -43,14 +32,139 @@ export async function updateLearningData(req, res) {
   }
 }
 
+async function subscribeToConversation(conversationToSubscribe, wordIds, userLearningData) {
+  if (!userLearningData.conversations.find(({ _id }) => _id == conversationToSubscribe)) {
+    UserCourseModel.updateOne(
+      { _id: userLearningData._id, "conversations._id": conversationToSubscribe },
+      { $set: { "conversations.$.lastReviewDate": new Date() } },
+      { upsert: true }
+    );
+    const [wordUpdates, newWordIds] = wordIds.reduce(
+      ([wordUpdates, newWordIds], wordId) => {
+        const word = userLearningData.words.find(({ _id }) => _id == wordId);
+        if (word) {
+          wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + 1 });
+        } else {
+          newWordIds.push(wordId);
+        }
+        return [wordUpdates, newWordIds];
+      },
+      [[], []]
+    );
+    if (wordUpdates.length > 0) await addWordsSubscription(userLearningData._id, wordUpdates);
+    if (newWordIds.length > 0) await addNewWords(userLearningData._id, newWordIds);
+  } else {
+    console.log("Already subscribed to conversation " + conversationToSubscribe);
+  }
+}
+
+async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, userLearningData) {
+  if (userLearningData.conversations.find(({ _id }) => _id == conversationToUnsubscribe)) {
+    UserCourseModel.updateOne(
+      { _id: userLearningData._id },
+      { $pull: { conversations: { _id: conversationToUnsubscribe } } }
+    );
+    const [wordUpdates, wordIdsToUnsubcribe] = wordIds.reduce(
+      ([wordUpdates, wordIdsToRemove], wordId) => {
+        const word = userLearningData.words.find(({ _id }) => _id == wordId);
+        if (word) {
+          if (word.numberOfSentencesUsedIn == 1) {
+            wordIdsToRemove.push(wordId);
+          } else if (word.numberOfSentencesUsedIn > 1) {
+            wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn - 1 });
+          } else {
+            console.log("word.numberOfSentencesUsedIn should be > 0 and not equal to " + word.numberOfSentencesUsedIn);
+          }
+          wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + 1 });
+        } else {
+          console.log("Not subscribed to word " + wordId);
+        }
+        return [wordUpdates, wordIdsToRemove];
+      },
+      [[], []]
+    );
+    if (wordUpdates.length > 0) await removeWordsSubscription(userLearningData._id, wordUpdates);
+    if (wordIdsToUnsubcribe.length > 0) await removeWords(userLearningData._id, wordIdsToUnsubcribe);
+    return wordIdsToUnsubcribe;
+  } else {
+    console.log("Not subscribed to conversation " + conversationToUnsubscribe);
+  }
+}
+
+async function removeWords(userLearningDataId, wordIdsToRemove) {
+  try {
+    UserCourseModel.updateOne({ _id: userLearningDataId }, { $pull: { words: { each: wordIdsToRemove } } });
+  } catch (error) {
+    console.error("Error removing multiple items:", error);
+  }
+}
+
+async function addWordsSubscription(userLearningDataId, updates) {
+  try {
+    const arrayFilters = updates.map((update, index) => ({
+      [`element${index}._id`]: update._id,
+    }));
+
+    const setOperations = updates.reduce((acc, update, index) => {
+      acc[`words.$[element${index}].numberOfSentencesUsedIn`] = update.numberOfSentencesUsedIn;
+      return acc;
+    }, {});
+
+    UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
+  } catch (error) {
+    console.error("Error updating multiple items:", error);
+  }
+}
+
+async function removeWordsSubscription(userLearningDataId, updates) {
+  try {
+    const arrayFilters = updates.map((update, index) => ({
+      [`element${index}._id`]: update._id,
+    }));
+
+    const setOperations = updates.reduce((acc, update, index) => {
+      acc[`words.$[element${index}].numberOfSentencesUsedIn`] = update.numberOfSentencesUsedIn;
+      return acc;
+    }, {});
+
+    UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
+  } catch (error) {
+    console.error("Error updating multiple items:", error);
+  }
+}
+
+async function updateReviewData(reviewedConversationId, wordIds, success, userLearningData) {
+  if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
+    await UserCourseModel.updateOne(
+      { _id: userLearningData._id, "conversations._id": reviewedConversationId },
+      { $set: { "conversations.$.lastReviewDate": new Date() } },
+      { upsert: true }
+    );
+  }
+  const [wordUpdates, newWordIds] = wordIds.reduce(
+    ([wordUpdates, newWordIds], wordId) => {
+      const word = userLearningData.words.find(({ _id }) => _id == wordId);
+      if (word) {
+        wordUpdates.push(getUpdate(word, success));
+      } else {
+        newWordIds.push(wordId);
+      }
+      return [wordUpdates, newWordIds];
+    },
+    [[], []]
+  );
+  if (wordUpdates.length > 0) await updateWords(userLearningData._id, wordUpdates);
+  if (newWordIds.length > 0) await addNewWords(userLearningData._id, newWordIds);
+}
+
 function getUpdate(word, success) {
   if (success && new Date(word.nextReviewDate) < new Date()) {
     const reviewDelayInMs = nextReviewDelay(word.reviewDelayInMs);
     const nextReviewDate = new Date(Date.now() + reviewDelayInMs);
-    return { _id: word._id, nextReviewDate, reviewDelayInMs };
+    return { ...word, nextReviewDate, reviewDelayInMs };
   } else {
     return {
-      _id: word._id,
+      ...word,
       nextReviewDate: new Date(Date.now() + word.reviewDelayInMs),
     };
   }
@@ -81,6 +195,7 @@ async function addNewWords(userLearningDataId, newWordIds) {
     _id: wordId,
     nextReviewDate: new Date(Date.now() + 60000),
     reviewDelayInMs: 60000,
+    numberOfSentencesUsedIn: 1,
   }));
   UserCourseModel.updateOne({ _id: userLearningDataId }, { $push: { words: { $each: newWords } } });
 }

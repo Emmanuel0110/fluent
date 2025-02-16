@@ -37,6 +37,7 @@ import {
   saveNewWord,
   saveNewWordTag,
   fetchLanguages,
+  unsubscribeToRemoteConversation,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
@@ -327,14 +328,38 @@ export default function App() {
     }
   };
 
-  const subscribeToConversation = (id: string) => {
-    subscribeToRemoteConversation(id).then((res) => {
+  const subscribeToConversation = (id: string, wordIds: string[]) => {
+    subscribeToRemoteConversation(id, wordIds).then((res) => {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
-            conversation._id === id ? { ...conversation, subscribed: !conversation.subscribed } : conversation
+            conversation._id === id ? { ...conversation, subscribed: true } : conversation
           )
         );
+        setWords((words) => ({
+          ...words,
+          ...wordIds.reduce((acc, value) => {
+            return {...acc, [value]: {...words[value], subscribed: true}};
+          }, {}),
+        }));
+      }
+    });
+  };
+
+  const unsubscribeToConversation = (id: string, wordIds: string[]) => {
+    unsubscribeToRemoteConversation(id, wordIds).then((res: {success: boolean, wordsToUnsubscribe: string[]}) => {
+      if (res.success) {
+        setConversations((conversations) =>
+          conversations.map((conversation) =>
+            conversation._id === id ? { ...conversation, subscribed: false } : conversation
+          )
+        );
+        setWords((words) => ({
+          ...words,
+          ...res.wordsToUnsubscribe.reduce((acc, value) => {
+            return {...acc, [value]: {...words[value], subscribed: false}};
+          }, {}),
+        }));
       }
     });
   };
@@ -449,6 +474,7 @@ export default function App() {
         deleteWord,
         openConversation,
         subscribeToConversation,
+        unsubscribeToConversation,
         saveWord,
         saveWordTag,
         saveConversationTag,
@@ -505,7 +531,7 @@ export default function App() {
               path="words/:wordId"
               element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
             />
-             <Route path="words/:wordId/edit" element={<WordForm />} />
+            <Route path="words/:wordId/edit" element={<WordForm />} />
             <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
             <Route
               path="conversations/:conversationId"

@@ -114,31 +114,22 @@ export const deleteRemoteConversation = async (conversationId: string) => {
   );
 };
 
-export const subscribeToRemoteConversation = async (id: string) => {
+export const subscribeToRemoteConversation = async (id: string, wordIds: string[]) => {
   const body = JSON.stringify({
-    conversationId: id,
+    conversationToSubscribe: id,
+    wordIds,
   });
   return customFetch(url + "usercourse", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };
 
-export const editUserFlashcardInfo = async ({ _id, ...body }: any) => {
-  return customFetch(url + "userflashcardinfo/" + _id, {
-    method: "PATCH",
-    headers: authHeaders(),
-    body: JSON.stringify(body),
-  }).catch((err: Error) => {
-    console.log(err);
+export const unsubscribeToRemoteConversation = async (id: string, wordIds: string[]) => {
+  const body = JSON.stringify({
+    conversationToUnsubscribe: id,
+    wordIds,
   });
-};
-
-export const getRemotePrerequisiteAndUsedIn = async (ids: string[]): Promise<Word[]> => {
-  return customFetch(url + "search", {
-    method: "POST", // we want to GET flashcards but sometimes with a complex filter (string[][])
-    headers: authHeaders(),
-    body: JSON.stringify({ prerequisitesAndUsedIn: ids }),
-  }).catch((err: Error) => {
+  return customFetch(url + "usercourse", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };
@@ -204,7 +195,7 @@ export const fetchWords = async () => {
     });
 };
 
-export const updateLanguages = async (args: {sourceLanguage: string, targetLanguage: string}) => {
+export const updateLanguages = async (args: { sourceLanguage: string; targetLanguage: string }) => {
   const body = JSON.stringify(args);
   return customFetch(url + "users", { method: "PATCH", headers: authHeaders(), body })
     .then((res) => {
