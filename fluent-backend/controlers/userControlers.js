@@ -1,5 +1,4 @@
 import auth from "../middleware/auth.js";
-import cache from "../middleware/cache.js";
 import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";

@@ -1,5 +1,5 @@
 import auth from "../middleware/auth.js";
-import cache from "../middleware/cache.js";
+import cache, { refreshLearningDataCache } from "../middleware/cache.js";
 import { UserCourseModel } from "../models.js";
 import express from "express";
 const router = express.Router();
@@ -15,7 +15,11 @@ async function updateLearningData(req, res) {
         await subscribeToConversation(conversationToSubscribe, wordIds, userLearningData);
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
-        const wordsToUnsubscribe = await unsubscribeToConversation(conversationToUnsubscribe, wordIds, userLearningData);
+        const wordsToUnsubscribe = await unsubscribeToConversation(
+          conversationToUnsubscribe,
+          wordIds,
+          userLearningData
+        );
         res.json({ success: true, wordsToUnsubscribe });
       } else if (reviewedConversationId) {
         await updateReviewData(reviewedConversationId, wordIds, success);
@@ -34,10 +38,9 @@ async function updateLearningData(req, res) {
 
 async function subscribeToConversation(conversationToSubscribe, wordIds, userLearningData) {
   if (!userLearningData.conversations.find(({ _id }) => _id == conversationToSubscribe)) {
-    UserCourseModel.updateOne(
-      { _id: userLearningData._id, "conversations._id": conversationToSubscribe },
-      { $set: { "conversations.$.lastReviewDate": new Date() } },
-      { upsert: true }
+    await UserCourseModel.updateOne(
+      { _id: userLearningData._id },
+      { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } }
     );
     const [wordUpdates, newWordIds] = wordIds.reduce(
       ([wordUpdates, newWordIds], wordId) => {
@@ -60,7 +63,7 @@ async function subscribeToConversation(conversationToSubscribe, wordIds, userLea
 
 async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, userLearningData) {
   if (userLearningData.conversations.find(({ _id }) => _id == conversationToUnsubscribe)) {
-    UserCourseModel.updateOne(
+    await UserCourseModel.updateOne(
       { _id: userLearningData._id },
       { $pull: { conversations: { _id: conversationToUnsubscribe } } }
     );
@@ -93,7 +96,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, use
 
 async function removeWords(userLearningDataId, wordIdsToRemove) {
   try {
-    UserCourseModel.updateOne({ _id: userLearningDataId }, { $pull: { words: { each: wordIdsToRemove } } });
+    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $pull: { words: { each: wordIdsToRemove } } });
   } catch (error) {
     console.error("Error removing multiple items:", error);
   }
@@ -110,7 +113,7 @@ async function addWordsSubscription(userLearningDataId, updates) {
       return acc;
     }, {});
 
-    UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
+    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
     console.error("Error updating multiple items:", error);
   }
@@ -127,7 +130,7 @@ async function removeWordsSubscription(userLearningDataId, updates) {
       return acc;
     }, {});
 
-    UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
+    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
     console.error("Error updating multiple items:", error);
   }
@@ -137,8 +140,7 @@ async function updateReviewData(reviewedConversationId, wordIds, success, userLe
   if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
     await UserCourseModel.updateOne(
       { _id: userLearningData._id, "conversations._id": reviewedConversationId },
-      { $set: { "conversations.$.lastReviewDate": new Date() } },
-      { upsert: true }
+      { $set: { "conversations.$.lastReviewDate": new Date() } }
     );
   }
   const [wordUpdates, newWordIds] = wordIds.reduce(
@@ -184,7 +186,7 @@ async function updateWords(userLearningDataId, updates) {
       return acc;
     }, {});
 
-    UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
+    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
     console.error("Error updating multiple items:", error);
   }
@@ -197,7 +199,7 @@ async function addNewWords(userLearningDataId, newWordIds) {
     reviewDelayInMs: 60000,
     numberOfSentencesUsedIn: 1,
   }));
-  UserCourseModel.updateOne({ _id: userLearningDataId }, { $push: { words: { $each: newWords } } });
+  await UserCourseModel.updateOne({ _id: userLearningDataId }, { $push: { words: { $each: newWords } } });
 }
 
 const nextReviewDelay = (delay) => {

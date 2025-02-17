@@ -119,7 +119,7 @@ export const subscribeToRemoteConversation = async (id: string, wordIds: string[
     conversationToSubscribe: id,
     wordIds,
   });
-  return customFetch(url + "usercourse", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
+  return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };
@@ -129,7 +129,7 @@ export const unsubscribeToRemoteConversation = async (id: string, wordIds: strin
     conversationToUnsubscribe: id,
     wordIds,
   });
-  return customFetch(url + "usercourse", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
+  return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
   });
 };

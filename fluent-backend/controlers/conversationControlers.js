@@ -75,7 +75,7 @@ router.put("/:id", auth, cache, async function (req, res) {
 function completeConversations(conversations, userConversations) {
   return conversations.map((conversation) => ({
     ...conversation,
-    subscribed: !!userConversations.find((userConversation) => userConversation._id === conversation._id),
+    subscribed: !!userConversations.find((userConversation) => new mongoose.Types.ObjectId(userConversation._id).equals(conversation._id)),
   }));
 }
 

@@ -44,9 +44,9 @@ export const WordLine = ({ word }: { word: Word }) => {
         <span>{word.text + " : "}</span>
         <span>
           {word.translations.map((wordId, index) => (
-            <span>
+            <span key={index}>
               {index !== 0 && <span>{", "}</span>}
-              <span key={index}>{words[wordId]?.text}</span>
+              <span>{words[wordId]?.text}</span>
             </span>
           ))}
         </span>

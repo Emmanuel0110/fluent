@@ -99,7 +99,14 @@ function generateAggregationPipeline(language, translationLanguage) {
 }
 
 function completeWords(words, userWords) {
-  return words.map((word) => ({ ...word, subscribed: !!userWords.find((userWord) => userWord._id === word._id) }));
+  return words.map((word) => {
+    return {
+      ...word,
+      subscribed: !!userWords.find((userWord) => {
+        return new mongoose.Types.ObjectId(userWord._id).equals(word._id);
+      }),
+    };
+  });
 }
 
 export default router;

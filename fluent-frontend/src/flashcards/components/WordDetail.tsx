@@ -21,9 +21,9 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
             <span>{word.text + " : "}</span>
             <span>
               {word.translations.map((wordId, index) => (
-                <span>
+                <span key={index}>
                   {index !== 0 && <span>{", "}</span>}
-                  <span key={index} className="wordLabel" onClick={(e) => openWord(wordId)}>
+                  <span className="wordLabel" onClick={(e) => openWord(wordId)}>
                     {words[wordId]?.text}
                   </span>
                 </span>
