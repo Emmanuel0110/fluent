@@ -24,10 +24,7 @@ router.get("/", auth, cache, (req, res) => {
 });
 
 router.post("/", auth, (req, res) => {
-  const newWord = new LexicalItemModel({
-    _id: new mongoose.Types.ObjectId(),
-    ...req.body,
-  });
+  const newWord = new LexicalItemModel(req.body);
   newWord
     .save()
     .then((newElement) => {

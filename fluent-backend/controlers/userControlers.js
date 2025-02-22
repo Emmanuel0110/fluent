@@ -119,7 +119,6 @@ export async function updateLanguages(user, sourceLanguage, targetLanguage) {
   let course = await UserCourseModel.findOne({ _id: { $in: user.courses }, sourceLanguage, targetLanguage });
   if (!course) {
     course = await new UserCourseModel({
-      _id: new mongoose.Types.ObjectId(),
       sourceLanguage,
       targetLanguage,
       wishListConversations: [],

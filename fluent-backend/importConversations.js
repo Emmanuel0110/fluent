@@ -60,7 +60,6 @@ async function importConversations(arr) {
 async function importConversation({conversations}) {
   try {
     return new MultiLingualConversationModel({
-      _id: new mongoose.Types.ObjectId(),
       tags: [],
       conversations: await getConversations(conversations),
     }).save();
@@ -99,7 +98,7 @@ async function getConversation({ language, sentences }) {
 async function getLanguage(languageLabel) {
   let language = await LanguageModel.findOne({ label: languageLabel });
   if (!language) {
-    language = await new LanguageModel({ _id: new mongoose.Types.ObjectId(), label: languageLabel }).save();
+    language = await new LanguageModel({ label: languageLabel }).save();
   }
 
   if (language?._id) {
@@ -133,7 +132,6 @@ async function getWord(languageId, text) {
   let word = await LexicalItemModel.findOne({ language: languageId, text });
   if (!word) {
     word = await new LexicalItemModel({
-      _id: new mongoose.Types.ObjectId(),
       language: languageId,
       text,
       level: 0,

@@ -33,10 +33,7 @@ router.get("/", auth, cache, (req, res) => {
 });
 
 router.post("/", auth, (req, res) => {
-  const newTag = new ConversationTagModel({
-    _id: new mongoose.Types.ObjectId(),
-    ...req.body,
-  });
+  const newTag = new ConversationTagModel(req.body);
   newTag
     .save()
     .then((newElement) => {

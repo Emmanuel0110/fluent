@@ -69,7 +69,6 @@ async function importWord(data) {
       throw new Error(`Word ${text} already exists`);
     } else {
       return new LexicalItemModel({
-        _id: new mongoose.Types.ObjectId(),
         level,
         text,
         language: languageId,
@@ -115,7 +114,6 @@ function getWordTag(languageId) {
       console.log("Creating new tag with:", { language: languageId, label: tagLabel });
       try {
         tag = await new WordTagModel({
-          _id: new mongoose.Types.ObjectId(),
           language: languageId,
           label: tagLabel,
         }).save();
@@ -164,7 +162,6 @@ async function getWord(languageId, text) {
   let word = await LexicalItemModel.findOne({ language: languageId, text });
   if (!word) {
     word = await new LexicalItemModel({
-      _id: new mongoose.Types.ObjectId(),
       language: languageId,
       text,
       level: 0,

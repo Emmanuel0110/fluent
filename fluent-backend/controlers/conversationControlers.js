@@ -35,7 +35,7 @@ router.get("/", auth, cache, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   try {
-    const newConversation = new MultiLingualConversationModel({ ...req.body, _id: new mongoose.Types.ObjectId() });
+    const newConversation = new MultiLingualConversationModel(req.body);
     newConversation
       .save()
       .then((newConversation) => res.json({ success: true, data: { ...newConversation, subscribed: false } }));
@@ -75,7 +75,9 @@ router.put("/:id", auth, cache, async function (req, res) {
 function completeConversations(conversations, userConversations) {
   return conversations.map((conversation) => ({
     ...conversation,
-    subscribed: !!userConversations.find((userConversation) => new mongoose.Types.ObjectId(userConversation._id).equals(conversation._id)),
+    subscribed: !!userConversations.find((userConversation) =>
+      new mongoose.Types.ObjectId(userConversation._id).equals(conversation._id)
+    ),
   }));
 }
 

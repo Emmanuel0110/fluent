@@ -15,10 +15,7 @@ router.get("/", auth, cache, (req, res) => {
 });
 
 router.post("/", auth, (req, res) => {
-  const newTag = new WordTagModel({
-    _id: new mongoose.Types.ObjectId(),
-    ...req.body,
-  });
+  const newTag = new WordTagModel(req.body);
   newTag
     .save()
     .then((newElement) => {
