@@ -4,7 +4,9 @@ import { Context, Conversation } from "../../types";
 import SentenceDetail from "./SentenceDetail";
 
 export default function ConversationDetail({ conversation }: { conversation: Conversation }) {
-  const { conversationTags, setSearchFilter, subscribeToConversation } = useContext(ConfigContext) as Context;
+  const { conversationTags, setSearchFilter, subscribeToConversation, unsubscribeToConversation } = useContext(
+    ConfigContext
+  ) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
@@ -14,16 +16,22 @@ export default function ConversationDetail({ conversation }: { conversation: Con
     return conversation.multiLingualSentences.reduce((acc, value) => {
       return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
     }, [] as string[]);
-  }
+  };
+
+  const handleSubscribe = () => {
+    console.log(conversation, conversation.subscribed);
+    if (conversation.subscribed) {
+      unsubscribeToConversation(conversation._id, getWordsFromConversation(conversation));
+    } else {
+      subscribeToConversation(conversation._id, getWordsFromConversation(conversation));
+    }
+  };
 
   return (
     <div id="flashCardComponent">
       <div id="flashcard">
         <div id="previous">
-          <div
-            className={"subscribe" + (conversation.subscribed ? " subscribed" : "")}
-            onClick={(e) => subscribeToConversation(conversation._id, getWordsFromConversation(conversation))}
-          ></div>
+          <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
         </div>
         <div id="middle">
           {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
@@ -32,11 +40,13 @@ export default function ConversationDetail({ conversation }: { conversation: Con
           <div id="tags">
             {conversation.tags.map((tagId, index) => {
               const tag = conversationTags.find((tag) => tag._id === tagId);
-                return tag ? (
-                  <div key={index} className="tag" onClick={(e) => searchTag(tag.sourceLabel)}>
-                    {"#" + tag.sourceLabel}
-                  </div>
-                ) : <div/>;
+              return tag ? (
+                <div key={index} className="tag" onClick={(e) => searchTag(tag.sourceLabel)}>
+                  {"#" + tag.sourceLabel}
+                </div>
+              ) : (
+                <div />
+              );
             })}
           </div>
         </div>

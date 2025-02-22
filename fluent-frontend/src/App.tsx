@@ -79,7 +79,7 @@ export const formatWords = (words: any[]): Word[] => {
 };
 
 export const formatWord = (word: any): Word => {
-  return { ...word, translations: word.translations[0].lexicalItems };
+  return { ...word, translations: word.translations[0]?.lexicalItems || [] };
 };
 
 export const updateCacheWithNewWords = (words: { [id: string]: Word }, newWords: Word[]): { [id: string]: Word } => {
@@ -339,7 +339,7 @@ export default function App() {
         setWords((words) => ({
           ...words,
           ...wordIds.reduce((acc, value) => {
-            return {...acc, [value]: {...words[value], subscribed: true}};
+            return words[value] ? { ...acc, [value]: { ...words[value], subscribed: true } } : acc;
           }, {}),
         }));
       }
@@ -347,7 +347,7 @@ export default function App() {
   };
 
   const unsubscribeToConversation = (id: string, wordIds: string[]) => {
-    unsubscribeToRemoteConversation(id, wordIds).then((res: {success: boolean, wordsToUnsubscribe: string[]}) => {
+    unsubscribeToRemoteConversation(id, wordIds).then((res: { success: boolean; wordsToUnsubscribe: string[] }) => {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
@@ -357,7 +357,7 @@ export default function App() {
         setWords((words) => ({
           ...words,
           ...res.wordsToUnsubscribe.reduce((acc, value) => {
-            return {...acc, [value]: {...words[value], subscribed: false}};
+            return { ...acc, [value]: { ...words[value], subscribed: false } };
           }, {}),
         }));
       }

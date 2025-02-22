@@ -72,7 +72,6 @@ function generateAggregationPipeline(language, translationLanguage) {
     {
       $match: {
         language: new mongoose.Types.ObjectId(language),
-        "translations.language": new mongoose.Types.ObjectId(translationLanguage),
       },
     },
     {

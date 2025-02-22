@@ -13,7 +13,6 @@ export const WordLine = ({ word }: { word: Word }) => {
     editWord,
     deleteWord,
   } = useContext(ConfigContext) as Context;
-
   const lineRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const { current } = lineRef;

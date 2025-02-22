@@ -10,7 +10,7 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Define the path to your JSON file
-const filePath = path.join(__dirname, "vocabulary.json");
+const filePath = path.join(__dirname, "reducedVocabulary.json");
 
 // Step 1: Read the JSON file
 try {
