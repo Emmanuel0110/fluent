@@ -54,7 +54,7 @@ async function subscribeToConversation(conversationToSubscribe, wordIds, userLea
       },
       [[], []]
     );
-    if (wordUpdates.length > 0) await addWordsSubscription(userLearningData._id, wordUpdates);
+    if (wordUpdates.length > 0) await updateWordsSubscription(userLearningData._id, wordUpdates);
     if (newWordIds.length > 0) await addNewWords(userLearningData._id, newWordIds);
   } else {
     console.log("Already subscribed to conversation " + conversationToSubscribe);
@@ -78,7 +78,6 @@ async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, use
           } else {
             console.log("word.numberOfSentencesUsedIn should be > 0 and not equal to " + word.numberOfSentencesUsedIn);
           }
-          wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + 1 });
         } else {
           console.log("Not subscribed to word " + wordId);
         }
@@ -86,7 +85,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, use
       },
       [[], []]
     );
-    if (wordUpdates.length > 0) await removeWordsSubscription(userLearningData._id, wordUpdates);
+    if (wordUpdates.length > 0) await updateWordsSubscription(userLearningData._id, wordUpdates);
     if (wordIdsToUnsubcribe.length > 0) await removeWords(userLearningData._id, wordIdsToUnsubcribe);
     return wordIdsToUnsubcribe;
   } else {
@@ -96,30 +95,16 @@ async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, use
 
 async function removeWords(userLearningDataId, wordIdsToRemove) {
   try {
-    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $pull: { words: { each: wordIdsToRemove } } });
+    await UserCourseModel.updateOne(
+      { _id: userLearningDataId },
+      { $pull: { words: { _id: { $in: wordIdsToRemove } } } }
+    );
   } catch (error) {
     console.error("Error removing multiple items:", error);
   }
 }
 
-async function addWordsSubscription(userLearningDataId, updates) {
-  try {
-    const arrayFilters = updates.map((update, index) => ({
-      [`element${index}._id`]: update._id,
-    }));
-
-    const setOperations = updates.reduce((acc, update, index) => {
-      acc[`words.$[element${index}].numberOfSentencesUsedIn`] = update.numberOfSentencesUsedIn;
-      return acc;
-    }, {});
-
-    await UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
-  } catch (error) {
-    console.error("Error updating multiple items:", error);
-  }
-}
-
-async function removeWordsSubscription(userLearningDataId, updates) {
+async function updateWordsSubscription(userLearningDataId, updates) {
   try {
     const arrayFilters = updates.map((update, index) => ({
       [`element${index}._id`]: update._id,
