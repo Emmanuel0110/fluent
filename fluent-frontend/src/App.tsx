@@ -210,6 +210,17 @@ export default function App() {
     });
   }, [conversations, status, conversationFilter]);
 
+  useEffect(() => {
+    if (openedConversations.length !== 0) {
+      setOpenedConversations((openedConversations) =>
+        openedConversations.map((openedConversation) => {
+          const conversation = conversations.find(({ _id }) => _id === openedConversation._id);
+          return conversation || openedConversation;
+        })
+      );
+    }
+  }, [conversations]);
+
   const viewHistory = useRef<View[]>([]);
   const viewIndex = useRef(0);
 
