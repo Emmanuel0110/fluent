@@ -12,6 +12,7 @@ import {
   conversationFilter,
   ConversationTag,
   Language,
+  ReviewItem,
   SearchFilter,
   User,
   View,
@@ -38,15 +39,33 @@ import {
   saveNewWordTag,
   fetchLanguages,
   unsubscribeToRemoteConversation,
+  updateRemoteConversationReviewStatus,
 } from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
 import CreationForm from "./flashcards/components/CreationForm";
 import ConversationForm from "./flashcards/components/ConversationForm";
 import WordForm from "./flashcards/components/WordForm";
+import Review from "./Review";
 
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
+
+export const updateCacheWithNewConversations = (
+  conversations: Conversation[],
+  newConversations: Conversation[],
+  targetLanguage: string
+): Conversation[] => {
+  return formatConversations(newConversations, targetLanguage).reduce((acc: Conversation[], value: Conversation) => {
+    var index: number = acc.findIndex((conversation) => conversation._id === value._id);
+    if (index === -1) {
+      return [...acc, value];
+    } else {
+      acc.splice(index, 1, value);
+      return [...acc];
+    }
+  }, conversations);
+};
 
 const formatConversations = (conversations: any[], targetLanguage: string): Conversation[] => {
   return conversations.map((multiLingualConversation) => {
@@ -57,7 +76,7 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
       sourceConversation = targetConversation;
       targetConversation = tmp;
     }
-    return {
+    const a = {
       _id,
       tags,
       subscribed,
@@ -65,6 +84,7 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
         return { sourceLanguage: sourceSentence, targetLanguage: targetConversation.sentences[index] };
       }),
     };
+    return a;
   });
 };
 
@@ -168,6 +188,7 @@ export default function App() {
   const [status, setStatus] = useState("words");
   const [wordTags, setWordTags] = useState<WordTag[]>([]);
   const [conversationTags, setConversationTags] = useState<ConversationTag[]>([]);
+  const [reviewList, setReviewList] = useState<Conversation[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -253,21 +274,6 @@ export default function App() {
     };
   }, []);
 
-  const updateCacheWithNewConversations = (
-    conversations: Conversation[],
-    newConversations: Conversation[]
-  ): Conversation[] => {
-    return formatConversations(newConversations, targetLanguage).reduce((acc: Conversation[], value: Conversation) => {
-      var index: number = acc.findIndex((conversation) => conversation._id === value._id);
-      if (index === -1) {
-        return [...acc, value];
-      } else {
-        acc.splice(index, 1, value);
-        return [...acc];
-      }
-    }, conversations);
-  };
-
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
       case "ArrowLeft":
@@ -309,7 +315,7 @@ export default function App() {
     })
       .then((res) => {
         if (res.success) {
-          setConversations((conversations) => updateCacheWithNewConversations(conversations, res.data));
+          setConversations((conversations) => updateCacheWithNewConversations(conversations, res.data, targetLanguage));
         }
       })
       .catch((err: Error) => {
@@ -339,12 +345,14 @@ export default function App() {
     }
   };
 
-  const subscribeToConversation = (id: string, wordIds: string[]) => {
-    subscribeToRemoteConversation(id, wordIds).then((res) => {
+  const subscribeToConversation = (conversation: Conversation) => {
+    const conversationId = conversation._id;
+    const wordIds = getWordsFromConversation(conversation);
+    subscribeToRemoteConversation(conversation._id, wordIds).then((res) => {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
-            conversation._id === id ? { ...conversation, subscribed: true } : conversation
+            conversation._id === conversationId ? { ...conversation, subscribed: true } : conversation
           )
         );
         setWords((words) => ({
@@ -357,12 +365,14 @@ export default function App() {
     });
   };
 
-  const unsubscribeToConversation = (id: string, wordIds: string[]) => {
-    unsubscribeToRemoteConversation(id, wordIds).then((res: { success: boolean; wordsToUnsubscribe: string[] }) => {
+  const unsubscribeToConversation = (conversation: Conversation) => {
+    const conversationId = conversation._id;
+    const wordIds = getWordsFromConversation(conversation);
+    unsubscribeToRemoteConversation(conversation._id, wordIds).then((res: { success: boolean; wordsToUnsubscribe: string[] }) => {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
-            conversation._id === id ? { ...conversation, subscribed: false } : conversation
+            conversation._id === conversationId ? { ...conversation, subscribed: false } : conversation
           )
         );
         setWords((words) => ({
@@ -374,6 +384,21 @@ export default function App() {
       }
     });
   };
+
+  const getWordsFromConversation = (conversation: Conversation) => {
+    return conversation.multiLingualSentences.reduce((acc, value) => {
+      return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
+    }, [] as string[]);
+  };
+
+  const updateConversationReviewStatus = async (conversation: Conversation, success: boolean) => {
+    const conversationId = conversation._id;
+    const wordIds = getWordsFromConversation(conversation);
+    const res = await updateRemoteConversationReviewStatus(conversationId, wordIds, success);
+    if (res.success) {
+      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
+    }
+  }
 
   const saveWord = async (infos: Word) => {
     const res = await (infos._id
@@ -408,7 +433,7 @@ export default function App() {
       ? editRemoteConversation(infos, sourceLanguage, targetLanguage)
       : saveNewConversation(infos, sourceLanguage, targetLanguage));
     if (res.success) {
-      setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data]));
+      setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data], targetLanguage));
       navigate("/conversations" + res.data._id);
     }
   };
@@ -419,7 +444,7 @@ export default function App() {
       ? Promise.resolve(conversation)
       : getRemoteConversationById(id).then(({ newConversation }) => {
           if (newConversation) {
-            setConversations((conversations) => updateCacheWithNewConversations(conversations, [newConversation]));
+            setConversations((conversations) => updateCacheWithNewConversations(conversations, [newConversation], targetLanguage));
           }
           return newConversation;
         });
@@ -494,6 +519,9 @@ export default function App() {
         setTreeFilter,
         searchInput,
         setSearchInput,
+        reviewList,
+        setReviewList,
+        updateConversationReviewStatus,
       }}
     >
       <Routes>
@@ -554,6 +582,7 @@ export default function App() {
               }
             />
             <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+            <Route path="review" element={<Review />} />
             <Route path="profile" element={<Profile />} />
             <Route
               path="/"

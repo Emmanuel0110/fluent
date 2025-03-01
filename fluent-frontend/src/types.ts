@@ -58,6 +58,11 @@ export interface Conversation {
   subscribed: boolean;
 }
 
+export interface ReviewItem {
+  conversation: Conversation;
+
+}
+
 export interface Context {
   filteredWords: Word[];
   languages: Language[];
@@ -94,8 +99,8 @@ export interface Context {
   openConversation: (id: string) => void;
   deleteConversation: (_id: string) => void;
   deleteWord: (_id: string) => void;
-  subscribeToConversation: (_id: string, wordIds: string[]) => void;
-  unsubscribeToConversation: (_id: string, wordIds: string[]) => void;
+  subscribeToConversation: (conversation: Conversation) => void;
+  unsubscribeToConversation: (conversation: Conversation) => void;
   saveWord: (infos: Word) => Promise<void | Word>;
   saveWordTag: (args: {language: string, label: string}) => Promise<void | WordTag>;
   saveConversationTag: (infos: ConversationTag) => Promise<void>;
@@ -103,4 +108,7 @@ export interface Context {
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
+  reviewList: Conversation[];
+  setReviewList: Dispatch<SetStateAction<Conversation[]>>;
+  updateConversationReviewStatus: (conversation: Conversation, success: boolean) => Promise<void>;
 }

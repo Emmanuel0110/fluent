@@ -10,11 +10,11 @@ router.get("/", auth, cache, getNextReviewItems);
 async function getNextReviewItems(req, res) {
   try {
     const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first choose a language
-    res.json({ status: "success", data: nextReviewItems });
+    res.json({ success: true, data: nextReviewItems });
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      status: "error",
+      success: false,
       message: "Failed to get next review items",
     });
   }
@@ -36,19 +36,20 @@ async function getReviewItems(userLearningData) {
 
 async function getLateReviewItems(userLearningData) {
   const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);
-  return lateReviewWordIds.length > 0 ? getKnownConversationsForWords(lateReviewWordIds, userLearningData) : [];
+  const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData)
+  return lateReviewWordIds.length > 0 ? knownConversations.map(conversation => ({...conversation, subscribed: true})) : [];
 }
 
 async function getWishListReviewItems(userLearningData) {
   const { wishListConversations, sourceLanguage, targetLanguage } = userLearningData;
-  const n = 10;
+  const MAX_ITEM = 10;
   if (wishListConversations.length > 0) {
-    return (await MultiLingualConversationModel.find({ _id: { $in: wishListConversations.slice(0, n) } }).lean()).map(
+    return (await MultiLingualConversationModel.find({ _id: { $in: wishListConversations.slice(0, MAX_ITEM) } }).lean()).map(
       (multiLingualConversation) => {
         const filteredConversations = multiLingualConversation.conversations.filter((conversation) =>
           [sourceLanguage, targetLanguage].includes(conversation.language)
         );
-        return { ...multiLingualConversation, conversations: filteredConversations };
+        return { ...multiLingualConversation, conversations: filteredConversations, subscribed: true };
       }
     );
   } else return [];
@@ -61,18 +62,19 @@ async function getStoryReviewItems(userLearningData) {
       (prerequisite) => !userLearningData.words.find(({ _id }) => prerequisite == _id)
     );
     if (missingPrerequisites.length > 0) {
-      return getEasyConversationsForWords(missingPrerequisites, userLearningData);
+      const easyConversations = await getEasyConversationsForWords(missingPrerequisites, userLearningData);
+      return easyConversations.map(conversation => ({...conversation, subscribed: false}))
     }
   }
   return [];
 }
 
 function getLateReviewWordIds(reviewWords) {
-  const n = 10;
+  const MAX_SIZE_OF_REVIEW_BATCH = 10; 
   return reviewWords
-    .filter((word) => word.nextReviewDate < new Date())
-    .sort((a, b) => new Date(b.nextReviewDate) - new Date(a.nextReviewDate)) // descending order
-    .slice(0, n)
+    .filter((word) => new Date (word.nextReviewDate).getTime() < new Date().getTime())
+    .sort((a, b) => new Date(b.nextReviewDate).getTime() - new Date(a.nextReviewDate).getTime()) // descending order (review the most recent ones among late, to keep motivation high)
+    .slice(0, MAX_SIZE_OF_REVIEW_BATCH)
     .map(({ _id }) => _id);
 }
 

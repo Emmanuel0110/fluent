@@ -10,6 +10,7 @@ async function updateLearningData(req, res) {
   try {
     const { userLearningData, user } = req;
     if (userLearningData) {
+      console.log(req.body);
       const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, wordIds, success } = req.body;
       if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, wordIds, userLearningData);
@@ -22,7 +23,7 @@ async function updateLearningData(req, res) {
         );
         res.json({ success: true, wordsToUnsubscribe });
       } else if (reviewedConversationId) {
-        await updateReviewData(reviewedConversationId, wordIds, success);
+        await updateReviewData(reviewedConversationId, wordIds, success, userLearningData);
         res.json({ success: true });
       }
       refreshLearningDataCache(userLearningData._id, user._id);
@@ -42,7 +43,8 @@ async function subscribeToConversation(conversationToSubscribe, wordIds, userLea
       { _id: userLearningData._id },
       { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } }
     );
-    const [wordUpdates, newWordIds] = wordIds.reduce(
+    const uniqIds = [...new Set(wordIds)];
+    const [wordUpdates, newWordIds] = uniqIds.reduce(
       ([wordUpdates, newWordIds], wordId) => {
         const word = userLearningData.words.find(({ _id }) => _id == wordId);
         if (word) {
@@ -67,7 +69,8 @@ async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, use
       { _id: userLearningData._id },
       { $pull: { conversations: { _id: conversationToUnsubscribe } } }
     );
-    const [wordUpdates, wordIdsToUnsubcribe] = wordIds.reduce(
+    const uniqIds = [...new Set(wordIds)];
+    const [wordUpdates, wordIdsToUnsubcribe] = uniqIds.reduce(
       ([wordUpdates, wordIdsToRemove], wordId) => {
         const word = userLearningData.words.find(({ _id }) => _id == wordId);
         if (word) {
@@ -128,7 +131,8 @@ async function updateReviewData(reviewedConversationId, wordIds, success, userLe
       { $set: { "conversations.$.lastReviewDate": new Date() } }
     );
   }
-  const [wordUpdates, newWordIds] = wordIds.reduce(
+  const uniqIds = [...new Set(wordIds)];
+  const [wordUpdates, newWordIds] = uniqIds.reduce(
     ([wordUpdates, newWordIds], wordId) => {
       const word = userLearningData.words.find(({ _id }) => _id == wordId);
       if (word) {
@@ -140,6 +144,8 @@ async function updateReviewData(reviewedConversationId, wordIds, success, userLe
     },
     [[], []]
   );
+  console.log("wordUpdates", wordUpdates);
+
   if (wordUpdates.length > 0) await updateWords(userLearningData._id, wordUpdates);
   if (newWordIds.length > 0) await addNewWords(userLearningData._id, newWordIds);
 }
@@ -162,6 +168,7 @@ async function updateWords(userLearningDataId, updates) {
     const arrayFilters = updates.map((update, index) => ({
       [`element${index}._id`]: update._id,
     }));
+    console.log("arrayFilters", arrayFilters);
 
     const setOperations = updates.reduce((acc, update, index) => {
       acc[`words.$[element${index}].nextReviewDate`] = update.nextReviewDate;
@@ -170,6 +177,7 @@ async function updateWords(userLearningDataId, updates) {
       }
       return acc;
     }, {});
+    console.log("setOperations", setOperations);
 
     await UserCourseModel.updateOne({ _id: userLearningDataId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
@@ -196,7 +204,7 @@ const nextReviewDelay = (delay) => {
     2592000000, //1000*60*60*24*30 (1 month)
     31536000000, //1000*60*60*24*365 (1 year)
   ];
-  const index = delays.indexof(delay);
+  const index = delays.findIndex(delay);
   return index >= 0 && index < delays.length - 1 ? delays[index + 1] : delay;
 };
 

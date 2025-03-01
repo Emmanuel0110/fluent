@@ -134,6 +134,17 @@ export const unsubscribeToRemoteConversation = async (id: string, wordIds: strin
   });
 };
 
+export const updateRemoteConversationReviewStatus = async (id: string, wordIds: string[], success: boolean) => {
+  const body = JSON.stringify({
+    reviewedConversationId: id,
+    wordIds,
+    success,
+  });
+  return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
 export const fetchLanguages = async () => {
   return customFetch(url + "languages", { headers: authHeaders() })
     .then((res) => {
@@ -209,5 +220,21 @@ export const updateLanguages = async (args: { sourceLanguage: string; targetLang
     .catch((err: Error) => {
       console.log(err);
       return {};
+    });
+};
+
+export const getReviewList = async () => {
+  return customFetch(url + "reviewItems", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return [];
     });
 };

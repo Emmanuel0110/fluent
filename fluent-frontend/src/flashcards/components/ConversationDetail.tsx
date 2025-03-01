@@ -12,18 +12,12 @@ export default function ConversationDetail({ conversation }: { conversation: Con
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
   };
 
-  const getWordsFromConversation = (conversation: Conversation) => {
-    return conversation.multiLingualSentences.reduce((acc, value) => {
-      return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
-    }, [] as string[]);
-  };
-
   const handleSubscribe = () => {
     console.log(conversation, conversation.subscribed);
     if (conversation.subscribed) {
-      unsubscribeToConversation(conversation._id, getWordsFromConversation(conversation));
+      unsubscribeToConversation(conversation);
     } else {
-      subscribeToConversation(conversation._id, getWordsFromConversation(conversation));
+      subscribeToConversation(conversation);
     }
   };
 

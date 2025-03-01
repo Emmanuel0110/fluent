@@ -5,12 +5,6 @@ import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import { SentenceLine } from "./SentenceLine";
 
-function getWordsFromConversation(conversation: Conversation) {
-  return conversation.multiLingualSentences.reduce((acc, {sourceLanguage, targetLanguage}) => {
-    return [...acc, ...sourceLanguage.prerequisites, ...targetLanguage.prerequisites];
-  }, [] as string[])
-}
-
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId } = useParams();
   const { openConversation, editConversation, deleteConversation, subscribeToConversation } = useContext(
@@ -24,7 +18,7 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
 
   const onSubscribe = (e: React.MouseEvent) => {
     e.stopPropagation();
-    subscribeToConversation(conversation._id, getWordsFromConversation(conversation));
+    subscribeToConversation(conversation);
   };
 
   const onDelete = (e: React.MouseEvent) => {

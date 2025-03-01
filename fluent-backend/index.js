@@ -58,7 +58,7 @@ app.use(cors(corsOptions));
 
 app.use("/", express.static(path.join(__dirname, "./public")));
 app.use("/api/conversations", conversationRoutes);
-app.use("/api/reviewItem", reviewItemsRoutes);
+app.use("/api/reviewItems", reviewItemsRoutes);
 app.use("/api/wordtags", wordTagRoutes);
 app.use("/api/conversationtags", conversationTagRoutes);
 app.use("/api/users", userRoutes);

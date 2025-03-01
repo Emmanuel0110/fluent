@@ -27,7 +27,7 @@ function LeftMenuBar() {
   };
 
   const startReview = () => {
-    setStatus("To be reviewed");
+    navigate("/review");
   };
 
   const openNewDraft = () => {
