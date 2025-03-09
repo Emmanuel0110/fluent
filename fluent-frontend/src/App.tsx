@@ -46,7 +46,7 @@ import ConversationListWithDetail from "./flashcards/components/ConversationList
 import CreationForm from "./flashcards/components/CreationForm";
 import ConversationForm from "./flashcards/components/ConversationForm";
 import WordForm from "./flashcards/components/WordForm";
-import Review from "./Review";
+import Review from "./flashcards/components/Review";
 
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
@@ -76,7 +76,7 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
       sourceConversation = targetConversation;
       targetConversation = tmp;
     }
-    const a = {
+    return {
       _id,
       tags,
       subscribed,
@@ -84,7 +84,6 @@ const formatConversations = (conversations: any[], targetLanguage: string): Conv
         return { sourceLanguage: sourceSentence, targetLanguage: targetConversation.sentences[index] };
       }),
     };
-    return a;
   });
 };
 
@@ -188,7 +187,7 @@ export default function App() {
   const [status, setStatus] = useState("words");
   const [wordTags, setWordTags] = useState<WordTag[]>([]);
   const [conversationTags, setConversationTags] = useState<ConversationTag[]>([]);
-  const [reviewList, setReviewList] = useState<Conversation[]>([]);
+  const [reviewList, setReviewList] = useState<ReviewItem[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -391,13 +390,11 @@ export default function App() {
     }, [] as string[]);
   };
 
-  const updateConversationReviewStatus = async (conversation: Conversation, success: boolean) => {
-    const conversationId = conversation._id;
-    const wordIds = getWordsFromConversation(conversation);
-    const res = await updateRemoteConversationReviewStatus(conversationId, wordIds, success);
-    if (res.success) {
-      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
-    }
+  const updateConversationReviewStatus = async (reviewItem: ReviewItem) => {
+    const conversationId = reviewItem._id;
+    const wordIds = getWordsFromConversation(reviewItem);
+    const successOnFirstTry = !reviewItem.alreadyFailed;
+    await updateRemoteConversationReviewStatus(conversationId, wordIds, successOnFirstTry);
   }
 
   const saveWord = async (infos: Word) => {

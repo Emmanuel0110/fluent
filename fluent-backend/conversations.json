@@ -115,6 +115,1681 @@
         "sentences": [
           {
             "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮다"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["네", "왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "What does he have on his face?",
+            "prerequisites": ["what", "on", "face"]
+          },
+          {
+            "text": "I think it's a mask.",
+            "prerequisites": ["to think", "mask"]
+          },
+          {
+            "text": "Is he sick?",
+            "prerequisites": ["sick"]
+          },
+          {
+            "text": "Probably.",
+            "prerequisites": ["probably"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Qu'est-ce qu'il a sur le visage ?",
+            "prerequisites": ["Qu'est-ce que", "sur", "visage"]
+          },
+          {
+            "text": "Je crois que c'est un masque.",
+            "prerequisites": ["croire", "masque"]
+          },
+          {
+            "text": "Il est malade ?",
+            "prerequisites": ["malade"]
+          },
+          {
+            "text": "Probablement.",
+            "prerequisites": ["probablement"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "얼굴에 뭐가 있어요?",
+            "prerequisites": ["얼굴", "뭐", "있다"]
+          },
+          {
+            "text": "마스크 같은데요.",
+            "prerequisites": ["마스크", "같다"]
+          },
+          {
+            "text": "아픈 거예요?",
+            "prerequisites": ["아프다"]
+          },
+          {
+            "text": "아마도.",
+            "prerequisites": ["아마도"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "What does she have in her hair?",
+            "prerequisites": ["what", "in", "hair"]
+          },
+          {
+            "text": "I think it's chewing gum.",
+            "prerequisites": ["to think", "chewing gum"]
+          },
+          {
+            "text": "Shouldn't we tell her?",
+            "prerequisites": ["should", "to tell"]
+          },
+          {
+            "text": "Maybe.",
+            "prerequisites": ["maybe"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Qu'est-ce qu'elle a dans les cheveux ?",
+            "prerequisites": ["Qu'est-ce que", "dans", "cheveu"]
+          },
+          {
+            "text": "Je crois que c'est un chewing-gum.",
+            "prerequisites": ["croire", "chewing-gum"]
+          },
+          {
+            "text": "On ne devrait pas lui dire ?",
+            "prerequisites": ["devoir", "pas", "dire"]
+          },
+          {
+            "text": "Peut-être.",
+            "prerequisites": ["peut-être"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "머리에 뭐가 묻었어요?",
+            "prerequisites": ["머리", "뭐", "묻다"]
+          },
+          {
+            "text": "껌인 것 같아요.",
+            "prerequisites": ["껌", "... 것 같다"]
+          },
+          {
+            "text": "알려줘야 하지 않을까요?",
+            "prerequisites": ["알려주다", "-야 하다", "하지 않다", "-을까요"]
+          },
+          {
+            "text": "그럴 수도 있어요.",
+            "prerequisites": ["그렇다", "...할 수도 있다"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "So, where's your wife?",
+            "prerequisites": ["so", "where", "your", "wife"]
+          },
+          {
+            "text": "She's the one with long hair over there.",
+            "prerequisites": ["one", "with", "long", "hair", "over there"]
+          },
+          {
+            "text": "The blonde?",
+            "prerequisites": ["blonde"]
+          },
+          {
+            "text": "No, the short brunette in front of the window.",
+            "prerequisites": ["no", "short", "brunette", "in front of", "window"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Alors, où est ta femme ?",
+            "prerequisites": ["Alors", "où", "ta", "femme"]
+          },
+          {
+            "text": "C'est celle avec les cheveux longs là-bas.",
+            "prerequisites": ["celle", "avec", "cheveu", "long", "là-bas"]
+          },
+          {
+            "text": "La blonde ?",
+            "prerequisites": ["blonde"]
+          },
+          {
+            "text": "Non, la petite brune devant la fenêtre.",
+            "prerequisites": ["Non", "petite", "brune", "devant", "fenêtre"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "그래서, 네 아내는 어디 있어요?",
+            "prerequisites": ["그래서", "네", "아내", "어디", "있다"]
+          },
+          {
+            "text": "저기 긴 머리 여자예요.",
+            "prerequisites": ["저기", "길다" , "머리", "여자"]
+          },
+          {
+            "text": "금발?",
+            "prerequisites": ["금발"]
+          },
+          {
+            "text": "아니요, 창 앞에 있는 작은 갈색 머리 여자.",
+            "prerequisites": ["아니", "창", "앞에", "있다", "작다", "갈색", "머리", "여자"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "And you, where's your husband?",
+            "prerequisites": ["you", "where", "your", "husband"]
+          },
+          {
+            "text": "He's the tall, slim guy next to the door.",
+            "prerequisites": ["tall", "slim", "guy", "next to", "door"]
+          },
+          {
+            "text": "He looks nice!",
+            "prerequisites": ["to look", "nice"]
+          },
+          {
+            "text": "Wait, I'll introduce you.",
+            "prerequisites": ["to wait", "imperative (grammar)", "to introduce someone", "futur (grammar)"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Et toi, où est ton mari ?",
+            "prerequisites": ["toi", "où", "ton", "mari"]
+          },
+          {
+            "text": "C'est le grand mince à côté de la porte.",
+            "prerequisites": ["grand", "mince", "à côté de", "porte"]
+          },
+          {
+            "text": "Il a l'air sympa!",
+            "prerequisites": ["avoir l'air ...", "sympa"]
+          },
+          {
+            "text": "Attends, je vais te le présenter.",
+            "prerequisites": ["attendre", "impératif (grammaire)", "présenter quelqu'un", "futur proche (grammaire)"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "너는, 남편 어디 있어?",
+            "prerequisites": ["너", "남편", "어디", "있다"]
+          },
+          {
+            "text": "문 옆에 있는 키 크고 마른 사람이예요.",
+            "prerequisites": ["문", "옆에", "있다", "키 크다", "그리고", "마르다", "사람"]
+          },
+          {
+            "text": "친절해 보이네요.",
+            "prerequisites": ["친절하다", "보이다", "-네"]
+          },
+          {
+            "text": "기다리세요, 소개해 줄게요.",
+            "prerequisites": ["기다리다", "-세요", "소개하다", "주다", "-을 것이다"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "In winter, my nose is always runny.",
+            "prerequisites": ["winter", "nose", "always", "runny"]
+          },
+          {
+            "text": "And my hands are always cold.",
+            "prerequisites": ["and", "my", "hand", "always", "cold"]
+          },
+          {
+            "text": "Put them in your pockets.",
+            "prerequisites": ["to put", "in", "your", "pocket"]
+          },
+          {
+            "text": "No, I'd rather scroll on my phone.",
+            "prerequisites": ["no", "would rather", "scroll", "on", "phone"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "En hiver, j'ai toujours le nez qui coule.",
+            "prerequisites": ["hiver", "toujours", "nez", "couler"]
+          },
+          {
+            "text": "Et moi, j'ai les mains froides.",
+            "prerequisites": ["et", "moi", "main", "froid"]
+          },
+          {
+            "text": "Mets-les dans tes poches.",
+            "prerequisites": ["mettre", "dans", "poche"]
+          },
+          {
+            "text": "Non, je préfère scroller sur mon portable.",
+            "prerequisites": ["non", "préférer", "scroller", "sur", "portable"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "겨울에는 항상 코가 나와요.",
+            "prerequisites": ["겨울", "항상", "코", "나오다"]
+          },
+          {
+            "text": "난 손이 차가워요.",
+            "prerequisites": ["나", "손", "차갑다"]
+          },
+          {
+            "text": "주머니에 넣세요.",
+            "prerequisites": ["주머니", "넣다", "-세요"]
+          },
+          {
+            "text": "아니요, 그냥 폰 스크롤 할래요.",
+            "prerequisites": ["아니", "그냥", "폰", "스크롤하다", "-을래"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Your eyes are red. Did you sleep badly?",
+            "prerequisites": ["your", "eye", "red", "to sleep", "badly"]
+          },
+          {
+            "text": "No, it's because I cried.",
+            "prerequisites": ["no", "because", "to cry"]
+          },
+          {
+            "text": "Oh, what's wrong?",
+            "prerequisites": ["what", "wrong"]
+          },
+          {
+            "text": "I don't want to talk about it.",
+            "prerequisites": ["not", "to talk", "about"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu as les yeux rouges. Tu as mal dormi ?",
+            "prerequisites": ["oeil", "rouge", "mal", "dormir"]
+          },
+          {
+            "text": "Non, c'est parce que j'ai pleuré.",
+            "prerequisites": ["non", "parce que", "pleurer"]
+          },
+          {
+            "text": "Ah bon, qu'est-ce qui ne va pas ?",
+            "prerequisites": ["Ah bon", "qu'est-ce que", "pas", "aller"]
+          },
+          {
+            "text": "Je n'ai pas envie d'en parler.",
+            "prerequisites": ["pas", "envie", "parler"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "눈이 빨개요. 잠을 못 잤어요?",
+            "prerequisites": ["눈", "빨갛다", "잠을 자다", "못"]
+          },
+          {
+            "text": "아니요, 그냥 울어서 그래요.",
+            "prerequisites": ["아니", "그냥", "울다", "-서", "그렇다"]
+          },
+          {
+            "text": "어, 무슨 일 있어요?",
+            "prerequisites": ["무슨", "일", "있다"]
+          },
+          {
+            "text": "말하고 싶지 않아요.",
+            "prerequisites": ["말하다", "-고 싶어요", "-지 않다"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "I can't hear anything, can you speak louder?",
+            "prerequisites": ["can", "not", "to hear", "anything", "to speak", "loud"]
+          },
+          {
+            "text": "Like this?",
+            "prerequisites": ["like"]
+          },
+          {
+            "text": "A bit louder, please.",
+            "prerequisites": ["bit", "loud", "comparative (grammar)", "please"]
+          },
+          {
+            "text": "Are you deaf or what?",
+            "prerequisites": ["deaf", "or", "what"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Je n'entends rien, tu peux parler plus fort ?",
+            "prerequisites": ["entendre", "rien", "pouvoir", "parler", "plus", "comparatif (grammaire)", "fort"]
+          },
+          {
+            "text": "Comme ça ?",
+            "prerequisites": ["comme", "ça"]
+          },
+          {
+            "text": "Encore un peu plus fort s'il te plaît.",
+            "prerequisites": ["encore", "peu", "plus", "fort", "s'il vous plaît"]
+          },
+          {
+            "text": "Tu as les oreilles bouchées ou quoi ?",
+            "prerequisites": ["oreille", "boucher", "ou", "quoi"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "아무 소리도 안 들려요, 좀 더 크게 말해줄래요?",
+            "prerequisites": ["아무", "소리", "-도", "안", "들리다", "좀", "더", "크다", "-게", "말하다", "해줄래"]
+          },
+          {
+            "text": "이렇게?",
+            "prerequisites": ["이렇게"]
+          },
+          {
+            "text": "좀 더 크게, 부탁해요.",
+            "prerequisites": ["좀", "더", "크다", "-게", "부탁하다"]
+          },
+          {
+            "text": "귀 막혔어요?",
+            "prerequisites": ["귀", "막히다"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Shoot him in the head.",
+            "prerequisites": ["to shoot", "in", "head"]
+          },
+          {
+            "text": "Wait, I'm trying to aim.",
+            "prerequisites": ["to wait", "to try", "to aim"]
+          },
+          {
+            "text": "Oh, you missed him.",
+            "prerequisites": ["to miss"]
+          },
+          {
+            "text": "Take the controller if you think you're so good.",
+            "prerequisites": ["to take", "controller", "if", "to think", "so", "good"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Mets-lui une balle dans la tête.",
+            "prerequisites": ["mettre", "balle", "tête"]
+          },
+          {
+            "text": "Attends, j'essaye de viser.",
+            "prerequisites": ["Attendre", "essayer", "viser"]
+          },
+          {
+            "text": "Oh, tu l'as raté.",
+            "prerequisites": ["rater"]
+          },
+          {
+            "text": "Tu n'as qu'à prendre la manette si tu es si bon.",
+            "prerequisites": ["ne...que", "prendre", "manette", "si", "bon"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "머리에 한 방 쏘세요.",
+            "prerequisites": ["머리", "한", "방", "쏘다"]
+          },
+          {
+            "text": "기다려요, 조준하는 중이예요.",
+            "prerequisites": ["기다리다", "조준하다", "-는 중이예요"]
+          },
+          {
+            "text": "아, 놓쳤네요.",
+            "prerequisites": ["놓치다", "-네"]
+          },
+          {
+            "text": "그렇게 잘하면 네가 직접 해보세요.",
+            "prerequisites": ["그렇게", "잘하다", "-면", "네가", "직접", "해보다"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
+            "prerequisites": ["기분", "괜찮아요?"]
+          },
+          {
+            "text": "네, 왜요?",
+            "prerequisites": ["왜"]
+          },
+          {
+            "text": "얼굴이 부어 보이는데요.",
+            "prerequisites": ["얼굴", "부다", "보이다", "-는데"]
+          },
+          {
+            "text": "아니요, 원래 이래요.",
+            "prerequisites": ["원래", "이래요"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "conversations": [
+      {
+        "language": "en",
+        "sentences": [
+          {
+            "text": "Do you feel okay?",
+            "prerequisites": ["to feel", "okay"]
+          },
+          {
+            "text": "Yes, why?",
+            "prerequisites": ["why"]
+          },
+          {
+            "text": "Your face looks swollen.",
+            "prerequisites": ["face", "to look", "to swell"]
+          },
+          {
+            "text": "No, that's just how I look.",
+            "prerequisites": ["just", "how", "to look"]
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "sentences": [
+          {
+            "text": "Tu te sens bien ?",
+            "prerequisites": ["se sentir", "bien"]
+          },
+          {
+            "text": "Oui, pourquoi ?",
+            "prerequisites": ["pourquoi"]
+          },
+          {
+            "text": "Tu as le visage gonflé.",
+            "prerequisites": ["visage", "gonfler"]
+          },
+          {
+            "text": "Non, je suis comme ça d'habitude.",
+            "prerequisites": ["comme", "d'habitude"]
+          }
+        ]
+      },
+      {
+        "language": "kr",
+        "sentences": [
+          {
+            "text": "기분 괜찮아요?",
             "prerequisites": ["기분", "괜찮아요?"]
           },
           {

@@ -1,6 +1,6 @@
 import { formatWords, groupById, url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, ConversationTag, Word, WordTag } from "../types";
+import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 
 export const getRemoteConversationById = async (id: string) => {
   return customFetch(url + "conversations?conversationId=" + id, {

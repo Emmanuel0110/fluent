@@ -2228,6 +2228,22 @@
     "language": "en",
     "level": 2,
     "tags": ["adjective"],
+    "text": "nice",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["gentil"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["친절하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 2,
+    "tags": ["adjective"],
     "text": "mean",
     "translations": [
       {
@@ -2365,6 +2381,38 @@
       {
         "language": "kr",
         "lexicalItems": ["가깝다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "slim",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["mince"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["날씬하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["adjective"],
+    "text": "fat",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["gros"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["뚱뚱하다"]
       }
     ]
   },
@@ -3956,7 +4004,7 @@
     "language": "en",
     "level": 1,
     "tags": ["greeting"],
-    "text": "Thank you",
+    "text": "thank you",
     "translations": [
       {
         "language": "fr",
@@ -3964,7 +4012,23 @@
       },
       {
         "language": "kr",
-        "lexicalItems": ["감사합니다"]
+        "lexicalItems": ["감사합니다", "고마워요"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["greeting"],
+    "text": "Please",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["s'il vous plaît"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["주세요"]
       }
     ]
   },
@@ -4724,15 +4788,31 @@
     "language": "en",
     "level": 1,
     "tags": ["grammar"],
-    "text": "I can...",
+    "text": "to can",
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["Je peux..."]
+        "lexicalItems": ["pouvoir"]
       },
       {
         "language": "kr",
-        "lexicalItems": ["...할 수 있어요"]
+        "lexicalItems": ["-할 수 있다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "surprise (grammar)",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["surprise (grammaire)"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["-네"]
       }
     ]
   },
@@ -4756,15 +4836,15 @@
     "language": "en",
     "level": 1,
     "tags": ["grammar"],
-    "text": "imperative",
+    "text": "imperative (grammar)",
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["imperatif"]
+        "lexicalItems": ["impératif (grammaire)"]
       },
       {
         "language": "kr",
-        "lexicalItems": ["...세요"]
+        "lexicalItems": ["-세요"]
       }
     ]
   },
@@ -4828,7 +4908,7 @@
       },
       {
         "language": "kr",
-        "lexicalItems": ["...고 싶어요"]
+        "lexicalItems": ["-고 싶어요"]
       }
     ]
   },
@@ -4852,15 +4932,31 @@
     "language": "en",
     "level": 1,
     "tags": ["grammar"],
-    "text": "I must...",
+    "text": "to must",
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["Je dois..."]
+        "lexicalItems": ["devoir"]
       },
       {
         "language": "kr",
-        "lexicalItems": ["...야 되요"]
+        "lexicalItems": ["-야 되다", "-야 하다"]
+      }
+    ]
+  },
+  {
+    "language": "en",
+    "level": 1,
+    "tags": ["grammar"],
+    "text": "futur (grammar)",
+    "translations": [
+      {
+        "language": "fr",
+        "lexicalItems": ["future (grammaire)"]
+      },
+      {
+        "language": "kr",
+        "lexicalItems": ["-을 것이다"]
       }
     ]
   },
@@ -5148,7 +5244,7 @@
       },
       {
         "language": "kr",
-        "lexicalItems": ["-을 것 같아요"]
+        "lexicalItems": ["... 것 같다"]
       }
     ]
   },
@@ -5539,7 +5635,7 @@
   {
     "language": "en",
     "level": 1,
-    "tags": [],
+    "tags": ["grammar"],
     "text": "not",
     "translations": [
       {

@@ -151,7 +151,7 @@ async function updateReviewData(reviewedConversationId, wordIds, success, userLe
 }
 
 function getUpdate(word, success) {
-  if (success && new Date(word.nextReviewDate) < new Date()) {
+  if (success && new Date(word.nextReviewDate).getTime() < new Date().getTime()) {
     const reviewDelayInMs = nextReviewDelay(word.reviewDelayInMs);
     const nextReviewDate = new Date(Date.now() + reviewDelayInMs);
     return { ...word, nextReviewDate, reviewDelayInMs };
@@ -204,7 +204,7 @@ const nextReviewDelay = (delay) => {
     2592000000, //1000*60*60*24*30 (1 month)
     31536000000, //1000*60*60*24*365 (1 year)
   ];
-  const index = delays.findIndex(delay);
+  const index = delays.indexOf(delay);
   return index >= 0 && index < delays.length - 1 ? delays[index + 1] : delay;
 };
 

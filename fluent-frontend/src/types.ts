@@ -58,9 +58,8 @@ export interface Conversation {
   subscribed: boolean;
 }
 
-export interface ReviewItem {
-  conversation: Conversation;
-
+export interface ReviewItem extends Conversation{
+  alreadyFailed: boolean;
 }
 
 export interface Context {
@@ -108,7 +107,7 @@ export interface Context {
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
-  reviewList: Conversation[];
-  setReviewList: Dispatch<SetStateAction<Conversation[]>>;
-  updateConversationReviewStatus: (conversation: Conversation, success: boolean) => Promise<void>;
+  reviewList: ReviewItem[];
+  setReviewList: Dispatch<SetStateAction<ReviewItem[]>>;
+  updateConversationReviewStatus: (conversation: ReviewItem) => Promise<void>;
 }
