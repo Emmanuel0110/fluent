@@ -35,7 +35,7 @@ app.use(
 );
 app.use(express.json());
 
-const whitelist = ['https://www.fluent.study'];
+const whitelist = ['https://www.fluent.study', 'https://emmanuelpaatz.com'];
 
 if (process.env.NODE_ENV === 'development') {
   whitelist.push('http://localhost:3000');
