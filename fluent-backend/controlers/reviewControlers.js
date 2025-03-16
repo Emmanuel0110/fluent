@@ -21,6 +21,7 @@ async function getNextReviewItems(req, res) {
 }
 
 async function getReviewItems(userLearningData) {
+  const MAX_REVIEW_ITEMS = 10;
   const reviewStrategies = [
     { type: "lateReviewWords", handler: getLateReviewItems },
     { type: "wishList", handler: getWishListReviewItems },
@@ -29,29 +30,31 @@ async function getReviewItems(userLearningData) {
 
   for (const strategy of reviewStrategies) {
     const reviewItems = await strategy.handler(userLearningData);
-    if (reviewItems.length > 0) return reviewItems;
+    if (reviewItems.length > 0) return reviewItems.slice(0, MAX_REVIEW_ITEMS);
   }
   return [];
 }
 
 async function getLateReviewItems(userLearningData) {
   const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);
-  const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData)
-  return lateReviewWordIds.length > 0 ? knownConversations.map(conversation => ({...conversation, subscribed: true})) : [];
+  if (lateReviewWordIds.length === 0) return [];
+
+  const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData);
+  return knownConversations.map((conversation) => ({ ...conversation, subscribed: true }));
 }
 
 async function getWishListReviewItems(userLearningData) {
   const { wishListConversations, sourceLanguage, targetLanguage } = userLearningData;
   const MAX_ITEM = 10;
   if (wishListConversations.length > 0) {
-    return (await MultiLingualConversationModel.find({ _id: { $in: wishListConversations.slice(0, MAX_ITEM) } }).lean()).map(
-      (multiLingualConversation) => {
-        const filteredConversations = multiLingualConversation.conversations.filter((conversation) =>
-          [sourceLanguage, targetLanguage].includes(conversation.language)
-        );
-        return { ...multiLingualConversation, conversations: filteredConversations, subscribed: true };
-      }
-    );
+    return (
+      await MultiLingualConversationModel.find({ _id: { $in: wishListConversations.slice(0, MAX_ITEM) } }).lean()
+    ).map((multiLingualConversation) => {
+      const filteredConversations = multiLingualConversation.conversations.filter((conversation) =>
+        [sourceLanguage, targetLanguage].includes(conversation.language)
+      );
+      return { ...multiLingualConversation, conversations: filteredConversations, subscribed: true };
+    });
   } else return [];
 }
 
@@ -63,16 +66,16 @@ async function getStoryReviewItems(userLearningData) {
     );
     if (missingPrerequisites.length > 0) {
       const easyConversations = await getEasyConversationsForWords(missingPrerequisites, userLearningData);
-      return easyConversations.map(conversation => ({...conversation, subscribed: false}))
+      return easyConversations.map((conversation) => ({ ...conversation, subscribed: false }));
     }
   }
   return [];
 }
 
 function getLateReviewWordIds(reviewWords) {
-  const MAX_SIZE_OF_REVIEW_BATCH = 10; 
+  const MAX_SIZE_OF_REVIEW_BATCH = 10;
   return reviewWords
-    .filter((word) => new Date (word.nextReviewDate).getTime() < new Date().getTime())
+    .filter((word) => new Date(word.nextReviewDate).getTime() < new Date().getTime())
     .sort((a, b) => new Date(b.nextReviewDate).getTime() - new Date(a.nextReviewDate).getTime()) // descending order (review the most recent ones among late, to keep motivation high)
     .slice(0, MAX_SIZE_OF_REVIEW_BATCH)
     .map(({ _id }) => _id);
@@ -88,7 +91,43 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
     }
     return acc;
   }, []);
-  return knownConversations;
+  const sortedConversations = knownConversations.sort(
+    (a, b) => new Date(a.lastReviewDate).getTime() - new Date(b.lastReviewDate).getTime() // ascending order (review the oldest ones to avoid reviewing always the same conversations)
+  );
+  const selectedConversations = selectUsefulConversations(sortedConversations, [...wordIds]);
+  return selectedConversations;
+}
+
+function selectUsefulConversations(conversations, wordIdsLeftToFind) {
+  //select enough conversations to cover wordIds
+  const selectedConversations = [];
+  let i = 0;
+  while (wordIdsLeftToFind.length && i < conversations.length) {
+    const conversation = conversations[i];
+    const wordIdsFound = getWordsFromConversation(conversation).filter((value) => wordIds.includes(value));
+    if (wordIdsFound.length > 0) {
+      selectedConversations.push(conversation);
+      wordIdsFound.forEach((id) => {
+        const index = wordIdsLeftToFind.indexOf(id);
+        if (index > -1) {
+          wordIdsLeftToFind.splice(index, 1);
+        }
+      });
+    }
+    i++;
+  }
+  return selectedConversations;
+}
+
+function getWordsFromConversation(conversation) {
+  return conversation.conversations.reduce((acc, value) => {
+    return [
+      ...acc,
+      ...value.sentences.reduce((acc2, value2) => {
+        return [...acc2, ...value2.prerequisites];
+      }, []),
+    ];
+  }, []);
 }
 
 async function getEasyConversationsForWords(wordIds, userLearningData) {
