@@ -4,13 +4,19 @@ import path from "path";
 import mongoose from "mongoose";
 import { LanguageModel, LexicalItemModel, WordTagModel } from "./models.js";
 import dotenv from "dotenv";
+import { arraysEqual, mergeArraysWithoutDuplicates } from "./utils.js";
 
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Define the path to your JSON file
-const filePath = path.join(__dirname, "reducedVocabulary.json");
+const args = process.argv.slice(2);
+if (!(args.length && typeof args[0] === "string")) {
+  throw new Error("no path specified for the file to parse");
+}
+const pathArg = args[0];
+const filePath = path.join(__dirname, pathArg);
 
 // Step 1: Read the JSON file
 try {
@@ -44,6 +50,19 @@ try {
   });
 }
 
+/*
+if word does not exist
+  create word
+  create all translations that doesn't exist or exist but with their missing tags
+  create links and back links when it doesn't exist
+else if all translations are same 
+  exit
+
+  create all translations that doesn't exist or exist but with their missing tags
+  create links and back links when it doesn't exist
+
+*/
+
 async function importVocabulary(arr) {
   if (Array.isArray(arr)) {
     for (const element of arr) {
@@ -64,27 +83,73 @@ async function importWord(data) {
   try {
     const { language, level, tags, text, translations } = data;
     const languageId = await getLanguage(language);
-    const wordAlreadyExists = await LexicalItemModel.findOne({ language: languageId, text });
-    if (wordAlreadyExists) {
-      throw new Error(`Word ${text} already exists`);
+    const tagIds = await getWordTags(tags, languageId);
+    const translationsWithIds = await getTranslations(translations);
+    const wordFound = await LexicalItemModel.findOne({ language: languageId, text }).lean();
+    if (wordFound) {
+      if (sameTagsAndTranslations(wordFound, tagIds, translationsWithIds)) {
+        // create sameTagsAndTranslations and mergeTagsAndTranslation and check the rest of the code if still valid;
+        throw new Error(`Word ${text} already exists`);
+      } else {
+        await mergeTagsAndTranslation(wordFound, tagIds, translationsWithIds);
+        return { ...wordFound, tags: tagIds, translations: translationsWithIds };
+      }
     } else {
-      return new LexicalItemModel({
+      const word = await new LexicalItemModel({
         level,
         text,
         language: languageId,
-        tags: await getWordTags(tags, languageId),
-        translations: await getTranslations(translations),
+        tags: tagIds,
+        translations: translationsWithIds,
       }).save();
+      return word.toObject();
     }
   } catch (error) {
     console.error(error);
   }
 }
 
+function sameTagsAndTranslations(wordFound, tagIds, translationsWithIds) {
+  //tags
+  if (!arraysEqual(wordFound.tags, tagIds)) return false;
+
+  //translations
+  return (
+    wordFound.translations.length === translationsWithIds.length &&
+    wordFound.translations.every(({ language, lexicalItems }) => {
+      return translationsWithIds.some(
+        (el) => el.language.equals(language) && arraysEqual(el.lexicalItems, lexicalItems)
+      );
+    })
+  );
+}
+
+async function mergeTagsAndTranslation(wordFound, tagIds, translationsWithIds) {
+  const tags = mergeArraysWithoutDuplicates(wordFound.tags, tagIds);
+  const translations = [
+    ...wordFound.translations.map(({ language, lexicalItems: currentLexicalItems }) => {
+      console.log(translationsWithIds, language);
+      const lexicalItems =
+        translationsWithIds.find((translation) => translation.language.equals(language))?.lexicalItems || [];
+      const newLexicalItems = mergeArraysWithoutDuplicates(currentLexicalItems, lexicalItems); // fix lexicalItems = []
+      return { language, lexicalItems: newLexicalItems };
+    }),
+    ...translationsWithIds.filter(
+      ({ language }) => !wordFound.translations.find((translation) => translation.language.equals(language))
+    ),
+  ];
+  console.log({ translations, tags });
+  await LexicalItemModel.findByIdAndUpdate(
+    wordFound._id,
+    { $set: { translations, tags } },
+    { new: true, strict: false }
+  );
+}
+
 async function getLanguage(languageLabel) {
   let language = await LanguageModel.findOne({ label: languageLabel });
   if (!language) {
-    language = await new LanguageModel({ _id: new mongoose.Types.ObjectId(), label: languageLabel }).save();
+    language = await new LanguageModel({ label: languageLabel }).save();
   }
 
   if (language?._id) {
@@ -120,7 +185,7 @@ function getWordTag(languageId) {
         console.log("Successfully saved tag:", tag);
       } catch (error) {
         console.error("Error saving tag:", error);
-        throw error; // Re-throw for upstream handling
+        throw error;
       }
     }
     if (tag?._id) {
@@ -194,7 +259,7 @@ async function setTranslationsAndTagsForTranslations(newWord) {
   for (const tr of newWord.translations) {
     for (const wordId of tr.lexicalItems) {
       for (const translation of translations) {
-        if (translation.language !== tr.language) {
+        if (!translation.language.equals(tr.language)) {
           const result = await LexicalItemModel.updateOne(
             { _id: wordId, "translations.language": translation.language },
             {

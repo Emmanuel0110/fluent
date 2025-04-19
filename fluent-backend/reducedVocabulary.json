@@ -2,64 +2,32 @@
   {
     "language": "en",
     "level": 1,
-    "tags": ["body"],
-    "text": "body",
+    "tags": ["adjective"],
+    "text": "good",
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["corps"]
+        "lexicalItems": ["bon"]
       },
       {
         "language": "kr",
-        "lexicalItems": ["몸"]
+        "lexicalItems": ["좋다"]
       }
     ]
   },
   {
     "language": "en",
     "level": 1,
-    "tags": ["body"],
-    "text": "face",
+    "tags": ["adverbe"],
+    "text": "good",
     "translations": [
       {
         "language": "fr",
-        "lexicalItems": ["visage"]
+        "lexicalItems": ["bien"]
       },
       {
         "language": "kr",
-        "lexicalItems": ["얼굴"]
-      }
-    ]
-  },
-  {
-    "language": "kr",
-    "level": 2,
-    "tags": [],
-    "text": "출근하다",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": ["Aller au travail"]
-      },
-      {
-        "language": "en",
-        "lexicalItems": ["To go to work"]
-      }
-    ]
-  },
-  {
-    "language": "en",
-    "level": 1,
-    "tags": [],
-    "text": "not",
-    "translations": [
-      {
-        "language": "fr",
-        "lexicalItems": ["pas"]
-      },
-      {
-        "language": "kr",
-        "lexicalItems": ["않", "-지 않다"]
+        "lexicalItems": ["잘"]
       }
     ]
   }
