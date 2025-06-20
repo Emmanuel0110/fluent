@@ -27,6 +27,9 @@ router.get("/", auth, cache, async (req, res) => {
         success: true,
         data: completeConversations(conversations.slice(0, MAX_NUMBER_OF_CONVERSATIONS), userConversations),
       });
+    } else {
+      const conversations = await MultiLingualConversationModel.find().lean();
+      res.json({ success: true, data: completeConversations(conversations, userConversations) });
     }
   } catch (err) {
     console.log(err);
