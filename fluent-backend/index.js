@@ -13,12 +13,11 @@ import userRoutes from "./controlers/userControlers.js";
 import userCourseRoutes from "./controlers/userCourseControlers.js";
 import wordRoutes from "./controlers/wordControlers.js";
 import languageRoutes from "./controlers/languageControlers.js";
-import { createClient } from 'redis';
+import { createClient } from "redis";
 
 export const redisClient = createClient();
-redisClient.on('error', err => console.log('Redis Client Error', err));
-await redisClient.connect();
-
+redisClient.on("error", (err) => console.log("Redis Client Error", err));
+redisClient.connect().catch(console.error);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -35,23 +34,23 @@ app.use(
 );
 app.use(express.json());
 
-const whitelist = ['https://www.fluent.study', 'https://emmanuelpaatz.com'];
+const whitelist = ["https://www.fluent.study", "https://emmanuelpaatz.com"];
 
-if (process.env.NODE_ENV === 'development') {
-  whitelist.push('http://localhost:3000');
+if (process.env.NODE_ENV === "development") {
+  whitelist.push("http://localhost:3000");
 }
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1  || !origin) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error("Not allowed by CORS"));
     }
   },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
-  allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Cookie', 'Accept' , 'x-auth-token'], // Customize allowed headers here
+  allowedHeaders: ["Content-Type", "Origin", "X-Requested-With", "Cookie", "Accept", "x-auth-token"], // Customize allowed headers here
 };
 
 app.use(cors(corsOptions));

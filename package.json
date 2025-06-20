@@ -1,0 +1,13 @@
+{
+  "name": "fluent-app",
+  "version": "1.0.0",
+  "description": "Fluent language learning application",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd fluent-backend && npm run dev",
+    "dev:frontend": "cd fluent-frontend && npm start"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
