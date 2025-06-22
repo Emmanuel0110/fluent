@@ -1,11 +1,10 @@
-import { useContext, useState } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateLanguages } from "../flashcardActions";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function LanguageForm() {
-  const { languages, setSourceLanguage, setTargetLanguage } = useContext(ConfigContext) as Context;
+  const { languages, setSourceLanguage, setTargetLanguage } = useLanguage();
   const [localSourceLanguage, setLocalSourceLanguage] = useState<string | null>(null);
   const [localTargetLanguage, setLocalTargetLanguage] = useState<string | null>(null);
   const navigate = useNavigate();

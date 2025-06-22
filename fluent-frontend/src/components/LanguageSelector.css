@@ -1,0 +1,74 @@
+.language-selector-button {
+  min-width: 3ch;
+  min-height: 3ch;
+  cursor: pointer;
+  background-color: white;
+  mask: url(translate_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*https://fonts.google.com/icons*/
+  mask-repeat: no-repeat;
+  margin: auto 5px;
+}
+
+.language-selector-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.language-selector-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 400px;
+}
+
+.language-field {
+  margin-bottom: 20px;
+}
+
+.language-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.language-field select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.language-selector-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.language-selector-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.language-selector-actions button:first-child {
+  background: #6c757d;
+  color: white;
+}
+
+.language-selector-actions button:last-child {
+  background: #28a745;
+  color: white;
+}
+
+.language-selector-actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}

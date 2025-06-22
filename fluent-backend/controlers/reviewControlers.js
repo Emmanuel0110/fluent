@@ -9,7 +9,9 @@ router.get("/", auth, cache, getNextReviewItems);
 
 async function getNextReviewItems(req, res) {
   try {
+    console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
     const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first choose a language
+    console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
     res.json({ success: true, data: nextReviewItems });
   } catch (error) {
     console.error(error);
@@ -29,7 +31,9 @@ async function getReviewItems(userLearningData) {
   ];
 
   for (const strategy of reviewStrategies) {
+    console.log(`🔍 Debug - Trying strategy: ${strategy.type}`); // Add this
     const reviewItems = await strategy.handler(userLearningData);
+    console.log(`🔍 Debug - ${strategy.type} returned:`, reviewItems.length, "items"); // Add this
     if (reviewItems.length > 0) return reviewItems.slice(0, MAX_REVIEW_ITEMS);
   }
   return [];
@@ -104,7 +108,7 @@ function selectUsefulConversations(conversations, wordIdsLeftToFind) {
   let i = 0;
   while (wordIdsLeftToFind.length && i < conversations.length) {
     const conversation = conversations[i];
-    const wordIdsFound = getWordsFromConversation(conversation).filter((value) => wordIds.includes(value));
+    const wordIdsFound = getWordsFromConversation(conversation).filter((value) => wordIdsLeftToFind.includes(value));
     if (wordIdsFound.length > 0) {
       selectedConversations.push(conversation);
       wordIdsFound.forEach((id) => {

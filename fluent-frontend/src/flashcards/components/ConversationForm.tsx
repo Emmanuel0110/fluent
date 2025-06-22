@@ -5,6 +5,7 @@ import { ConfigContext } from "../../App";
 import AutoComplete from "../../utils/Autocomplete";
 import { WordLine } from "./WordLine";
 import { useParams } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type SourceOrTarget = "sourceLanguage" | "targetLanguage";
 type Callback = {
@@ -21,18 +22,13 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const { conversationId } = useParams();
-  const {
-    words,
-    conversations,
-    saveConversation,
-    conversationTags,
-    saveConversationTag,
-    sourceLanguage: appSourceLanguage,
-    targetLanguage: appTargetLanguage,
-  } = useContext(ConfigContext) as Context;
+  const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
+  const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useContext(
+    ConfigContext
+  ) as Context;
 
   useEffect(() => {
-    setConversation(conversationId ? conversations.find(({_id}) => _id === conversationId) : initialConversation);
+    setConversation(conversationId ? conversations.find(({ _id }) => _id === conversationId) : initialConversation);
   }, []);
 
   const getWordList = (words: { [key: string]: Word }, language: string) => {

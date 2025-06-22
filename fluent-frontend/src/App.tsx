@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import "./App.css";
 import Register from "./auth/components/Register";
 import Layout from "./Layout/Layout";
@@ -479,133 +480,138 @@ export default function App() {
   };
 
   return (
-    <ConfigContext.Provider
-      value={{
-        languages,
-        filteredWords,
-        words,
-        setWords,
-        editConversation,
-        editWord,
-        conversations,
-        setConversations,
-        saveConversation,
-        sourceLanguage,
-        setSourceLanguage,
-        targetLanguage,
-        setTargetLanguage,
-        openedWords,
-        setOpenedWords,
-        openedConversations,
-        setOpenedConversations,
-        isAuthenticated,
-        setIsAuthenticated,
-        searchFilter,
-        setSearchFilter,
-        user,
-        setUser,
-        status,
-        setStatus,
-        wordTags,
-        setWordTags,
-        conversationTags,
-        setConversationTags,
-        fetchMoreUsedInConversations,
-        openWord,
-        deleteConversation,
-        deleteWord,
-        openConversation,
-        subscribeToConversation,
-        unsubscribeToConversation,
-        saveWord,
-        saveWordTag,
-        saveConversationTag,
-        getConversationById,
-        treeFilter,
-        setTreeFilter,
-        searchInput,
-        setSearchInput,
-        reviewList,
-        setReviewList,
-        updateConversationReviewStatus,
-      }}
-    >
-      <Routes>
-        <Route
-          path="register/*"
-          element={
-            <Register
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-              setUser={setUser}
-              setSourceLanguage={setSourceLanguage}
-              setTargetLanguage={setTargetLanguage}
-            />
-          }
-        />
-        <Route
-          path="login/*"
-          element={
-            <Login
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-              setUser={setUser}
-              setSourceLanguage={setSourceLanguage}
-              setTargetLanguage={setTargetLanguage}
-            />
-          }
-        />
-        <Route
-          element={
-            <ProtectedRoute
-              isAuthenticated={isAuthenticated}
-              setIsAuthenticated={setIsAuthenticated}
-              setUser={setUser}
-              setSourceLanguage={setSourceLanguage}
-              setTargetLanguage={setTargetLanguage}
-              redirectPath={"login"}
-            />
-          }
-        >
-          <Route element={<Layout />}>
-            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />{" "}
-            {/*TODO: remove if unused ? */}
-            <Route path="new" element={<CreationForm />} />
-            <Route path="words" element={<WordList filteredWords={filteredWords} />} />
-            <Route
-              path="words/:wordId"
-              element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
-            />
-            <Route path="words/:wordId/edit" element={<WordForm />} />
-            <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
-            <Route
-              path="conversations/:conversationId"
-              element={
-                <ConversationListWithDetail
-                  filteredConversations={filteredConversations}
-                  openedConversations={openedConversations}
-                />
-              }
-            />
-            <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
-            <Route path="review" element={<Review />} />
-            <Route path="profile" element={<Profile />} />
-            <Route
-              path="/"
-              element={
-                <Login
-                  isAuthenticated={isAuthenticated}
-                  setIsAuthenticated={setIsAuthenticated}
-                  setUser={setUser}
-                  setSourceLanguage={setSourceLanguage}
-                  setTargetLanguage={setTargetLanguage}
-                />
-              }
-            />
+    <LanguageProvider>
+      <ConfigContext.Provider
+        value={{
+          languages,
+          filteredWords,
+          words,
+          setWords,
+          editConversation,
+          editWord,
+          conversations,
+          setConversations,
+          saveConversation,
+          sourceLanguage,
+          setSourceLanguage,
+          targetLanguage,
+          setTargetLanguage,
+          openedWords,
+          setOpenedWords,
+          openedConversations,
+          setOpenedConversations,
+          isAuthenticated,
+          setIsAuthenticated,
+          searchFilter,
+          setSearchFilter,
+          user,
+          setUser,
+          status,
+          setStatus,
+          wordTags,
+          setWordTags,
+          conversationTags,
+          setConversationTags,
+          fetchMoreUsedInConversations,
+          openWord,
+          deleteConversation,
+          deleteWord,
+          openConversation,
+          subscribeToConversation,
+          unsubscribeToConversation,
+          saveWord,
+          saveWordTag,
+          saveConversationTag,
+          getConversationById,
+          treeFilter,
+          setTreeFilter,
+          searchInput,
+          setSearchInput,
+          reviewList,
+          setReviewList,
+          updateConversationReviewStatus,
+        }}
+      >
+        <Routes>
+          <Route
+            path="register/*"
+            element={
+              <Register
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+                setUser={setUser}
+                setSourceLanguage={setSourceLanguage}
+                setTargetLanguage={setTargetLanguage}
+              />
+            }
+          />
+          <Route
+            path="login/*"
+            element={
+              <Login
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+                setUser={setUser}
+                setSourceLanguage={setSourceLanguage}
+                setTargetLanguage={setTargetLanguage}
+              />
+            }
+          />
+          <Route
+            element={
+              <ProtectedRoute
+                isAuthenticated={isAuthenticated}
+                setIsAuthenticated={setIsAuthenticated}
+                setUser={setUser}
+                setSourceLanguage={setSourceLanguage}
+                setTargetLanguage={setTargetLanguage}
+                redirectPath={"login"}
+              />
+            }
+          >
+            <Route element={<Layout />}>
+              <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />{" "}
+              {/*TODO: remove if unused ? */}
+              <Route path="new" element={<CreationForm />} />
+              <Route path="words" element={<WordList filteredWords={filteredWords} />} />
+              <Route
+                path="words/:wordId"
+                element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
+              />
+              <Route path="words/:wordId/edit" element={<WordForm />} />
+              <Route
+                path="conversations"
+                element={<ConversationList filteredConversations={filteredConversations} />}
+              />
+              <Route
+                path="conversations/:conversationId"
+                element={
+                  <ConversationListWithDetail
+                    filteredConversations={filteredConversations}
+                    openedConversations={openedConversations}
+                  />
+                }
+              />
+              <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+              <Route path="review" element={<Review />} />
+              <Route path="profile" element={<Profile />} />
+              <Route
+                path="/"
+                element={
+                  <Login
+                    isAuthenticated={isAuthenticated}
+                    setIsAuthenticated={setIsAuthenticated}
+                    setUser={setUser}
+                    setSourceLanguage={setSourceLanguage}
+                    setTargetLanguage={setTargetLanguage}
+                  />
+                }
+              />
+            </Route>
           </Route>
-        </Route>
-        <Route path="*" element={<p>There's nothing here: 404!</p>} />
-      </Routes>
-    </ConfigContext.Provider>
+          <Route path="*" element={<p>There's nothing here: 404!</p>} />
+        </Routes>
+      </ConfigContext.Provider>
+    </LanguageProvider>
   );
 }

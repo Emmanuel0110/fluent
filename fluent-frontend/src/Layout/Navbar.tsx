@@ -4,6 +4,7 @@ import { ConfigContext, someFilter } from "../App";
 import { Context } from "../types";
 import { logout } from "../auth/authActions";
 import AutoComplete from "../utils/Autocomplete";
+import LanguageSelector from "../components/LanguageSelector";
 
 const parseLabel = (label: string) => {
   let result: string[] = [];
@@ -117,6 +118,12 @@ function Navbar() {
           {someFilter(searchFilter, treeFilter) && <div id="cancelFilterForSearch" onClick={cancelFilter}></div>}
         </div>
       </div>
+      <LanguageSelector
+        onLanguagesUpdated={() => {
+          // Refresh user data or reload review items
+          console.log("Languages updated!");
+        }}
+      />
       <div id="nameLabel">{user?.username}</div>
       <Link to="/profile">
         <div id="avatar-icon"></div>

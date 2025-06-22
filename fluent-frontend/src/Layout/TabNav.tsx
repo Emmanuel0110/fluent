@@ -1,7 +1,5 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { Nav } from "react-bootstrap";
-import { ConfigContext } from "../App";
-import { Context } from "../types";
 
 function TabNav({
   tabsData,
@@ -18,8 +16,6 @@ function TabNav({
   closeAllTabs: () => void;
   selectTab: (index: string | null) => void;
 }) {
-  const { sourceLanguage } = useContext(ConfigContext) as Context;
-
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
     return () => {

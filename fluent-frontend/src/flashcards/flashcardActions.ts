@@ -206,6 +206,22 @@ export const fetchWords = async () => {
     });
 };
 
+export const fetchConversations = async () => {
+  return customFetch(url + "conversations", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data as Conversation[];
+      } else {
+        console.log(res?.message);
+        return [] as Conversation[];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return [] as Conversation[];
+    });
+};
+
 export const updateLanguages = async (args: { sourceLanguage: string; targetLanguage: string }) => {
   const body = JSON.stringify(args);
   return customFetch(url + "users", { method: "PATCH", headers: authHeaders(), body })

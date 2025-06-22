@@ -4,6 +4,7 @@ import { Context, Word } from "../../types";
 import { ConfigContext } from "../../App";
 import AutoComplete from "../../utils/Autocomplete";
 import { useParams } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 type Callback = {
   _id?: string;
@@ -20,14 +21,9 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
   const [sourceWord, setSourceWord] = useState<Word | undefined>();
   const [targetWord, setTargetWord] = useState<Word | undefined>();
   const { wordId } = useParams();
-  const {
-    words,
-    saveWord,
-    saveWordTag,
-    wordTags,
-    sourceLanguage: appSourceLanguage,
-    targetLanguage: appTargetLanguage,
-  } = useContext(ConfigContext) as Context;
+  const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
+
+  const { words, saveWord, saveWordTag, wordTags } = useContext(ConfigContext) as Context;
 
   useEffect(() => {
     setSourceWord(wordId ? words[wordId] : { ...initialSourceWord, language: appSourceLanguage });
