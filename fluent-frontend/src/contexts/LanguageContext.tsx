@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { fetchLanguages, updateLanguages } from "../flashcards/flashcardActions";
+import { useAuth } from "./AuthContext";
 
 interface Language {
   _id: string;
@@ -10,8 +11,8 @@ interface LanguageContextType {
   languages: Language[];
   sourceLanguage: string;
   targetLanguage: string;
-  setSourceLanguage: (id: string) => void;
-  setTargetLanguage: (id: string) => void;
+  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>;
+  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>;
   updateUserLanguages: (source: string, target: string) => Promise<boolean>;
   loadLanguages: () => Promise<void>;
 }
@@ -31,6 +32,7 @@ interface LanguageProviderProps {
 }
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
+  const { user } = useAuth();
   const [languages, setLanguages] = useState<Language[]>([]);
   const [sourceLanguage, setSourceLanguage] = useState<string>("");
   const [targetLanguage, setTargetLanguage] = useState<string>("");
@@ -59,6 +61,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   useEffect(() => {
     loadLanguages();
   }, []);
+
+  useEffect(() => {
+    if (user?.sourceLanguage && user?.targetLanguage) {
+      setSourceLanguage(user.sourceLanguage);
+      setTargetLanguage(user.targetLanguage);
+    }
+  }, [user]);
 
   return (
     <LanguageContext.Provider

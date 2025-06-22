@@ -3,26 +3,16 @@ import { login } from "../authActions";
 import { Link, Navigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { useAuth } from "../../contexts/AuthContext";
 
-function Login({
-  isAuthenticated,
-  setIsAuthenticated,
-  setUser,
-  setSourceLanguage,
-  setTargetLanguage,
-}: {
-  isAuthenticated: boolean | null;
-  setIsAuthenticated: (b: boolean) => void;
-  setUser: (user: any) => void;
-  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>;
-  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>;
-}) {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
 
   const onSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    login({ username, password }, setIsAuthenticated, setUser, setSourceLanguage, setTargetLanguage);
+    login({ username, password }, setIsAuthenticated, setUser);
   };
 
   if (isAuthenticated) {

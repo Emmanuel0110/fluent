@@ -2,9 +2,11 @@ import { useContext } from "react";
 import { ConfigContext } from "../../App";
 import { Context, Conversation, Word } from "../../types";
 import { ConversationLine } from "./ConversationLine";
+import { useData } from "../../contexts/DataContext";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
-  const { openWord, words, wordTags, setSearchFilter } = useContext(ConfigContext) as Context;
+  const { words, wordTags } = useData();
+  const { openWord, setSearchFilter } = useContext(ConfigContext) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);

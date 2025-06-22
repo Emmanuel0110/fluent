@@ -1,11 +1,11 @@
-import React, { Dispatch, Fragment, useContext, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, Fragment, useEffect, useMemo, useState } from "react";
 import "../../App.css";
-import { Context, Conversation, ConversationTag, Word } from "../../types";
-import { ConfigContext } from "../../App";
+import { Conversation, ConversationTag, Word } from "../../types";
 import AutoComplete from "../../utils/Autocomplete";
 import { WordLine } from "./WordLine";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useData } from "../../contexts/DataContext";
 
 type SourceOrTarget = "sourceLanguage" | "targetLanguage";
 type Callback = {
@@ -23,9 +23,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const { conversationId } = useParams();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
-  const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useContext(
-    ConfigContext
-  ) as Context;
+  const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useData();
 
   useEffect(() => {
     setConversation(conversationId ? conversations.find(({ _id }) => _id === conversationId) : initialConversation);

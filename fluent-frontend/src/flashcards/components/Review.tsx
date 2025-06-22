@@ -3,11 +3,13 @@ import { ConfigContext, updateCacheWithNewConversations } from "../../App";
 import { Context, Conversation } from "../../types";
 import { getReviewList } from "../flashcardActions";
 import ReviewItemComponent from "./ReviewItemComponent";
+import { useLanguage } from "../../contexts/LanguageContext";
+import { useData } from "../../contexts/DataContext";
 
 function Review() {
-  const { reviewList, setReviewList, targetLanguage, updateConversationReviewStatus } = useContext(
-    ConfigContext
-  ) as Context;
+  const { targetLanguage } = useLanguage();
+  const { updateConversationReviewStatus } = useData();
+  const { reviewList, setReviewList } = useContext(ConfigContext) as Context;
 
   useEffect(() => fetchNewReviewItems(), []);
 
@@ -32,7 +34,7 @@ function Review() {
         }))
       )
     );
-  }
+  };
 
   return reviewList.length === 0 ? (
     <div>Nothing to review</div>

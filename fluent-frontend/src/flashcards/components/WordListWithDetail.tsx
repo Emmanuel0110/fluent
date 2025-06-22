@@ -7,6 +7,7 @@ import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import TabNav from "../../Layout/TabNav";
 import WordDetail from "./WordDetail";
+import { useData } from "../../contexts/DataContext";
 
 const MIN_USEDIN_LENGTH = 10;
 
@@ -17,12 +18,8 @@ export default function WordListWithDetail({
   filteredWords: Word[];
   openedWords: Word[];
 }) {
-  const {
-    words,
-    setOpenedWords,
-    conversations,
-    fetchMoreUsedInConversations,
-  } = useContext(ConfigContext) as Context;
+  const { words, conversations, fetchMoreUsedInConversations } = useData();
+  const { setOpenedWords } = useContext(ConfigContext) as Context;
   const wordId = useParams().wordId!;
   const [currentOpenedWord, setCurrentOpenedWord] = useState<Word | null>(null);
   const [usedIn, setdUsedIn] = useState<Conversation[]>([]);

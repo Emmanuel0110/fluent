@@ -3,16 +3,14 @@ import { Word } from "../../types";
 import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
+import { useAuth } from "../../contexts/AuthContext";
+import { useData } from "../../contexts/DataContext";
 
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
-  const {
-    user, // TODO: add condition on user.admin to edit/delete
-    words,
-    openWord,
-    editWord,
-    deleteWord,
-  } = useContext(ConfigContext) as Context;
+  const { user } = useAuth(); // TODO: add condition on user.admin to edit/delete
+  const { words, deleteWord } = useData();
+  const { openWord, editWord } = useContext(ConfigContext) as Context;
   const lineRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const { current } = lineRef;

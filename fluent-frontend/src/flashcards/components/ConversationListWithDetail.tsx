@@ -7,6 +7,7 @@ import { Context } from "../../types";
 import TabNav from "../../Layout/TabNav";
 import ConversationList from "./ConversationList";
 import ConversationDetail from "./ConversationDetail";
+import { useData } from "../../contexts/DataContext";
 
 export default function ConversationListWithDetail({
   filteredConversations,
@@ -15,7 +16,8 @@ export default function ConversationListWithDetail({
   filteredConversations: Conversation[];
   openedConversations: Conversation[];
 }) {
-  const { conversations, setOpenedConversations, getConversationById } = useContext(ConfigContext) as Context;
+  const { conversations, getConversationById } = useData();
+  const { setOpenedConversations } = useContext(ConfigContext) as Context;
   const conversationId = useParams().conversationId!;
   const [currentOpenedConversation, setCurrentOpenedConversation] = useState<Conversation | null>(null);
   const loading = useRef(false);

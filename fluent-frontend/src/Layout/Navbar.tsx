@@ -5,6 +5,8 @@ import { Context } from "../types";
 import { logout } from "../auth/authActions";
 import AutoComplete from "../utils/Autocomplete";
 import LanguageSelector from "../components/LanguageSelector";
+import { useData } from "../contexts/DataContext";
+import { useAuth } from "../contexts/AuthContext";
 
 const parseLabel = (label: string) => {
   let result: string[] = [];
@@ -48,8 +50,11 @@ const insertTag = (tagLabel: string, inputRef: RefObject<HTMLInputElement>) => {
 };
 
 function Navbar() {
-  const { user, searchFilter, setSearchFilter, setIsAuthenticated, wordTags, treeFilter, setTreeFilter, searchInput } =
-    useContext(ConfigContext) as Context;
+  const { user, setIsAuthenticated } = useAuth();
+  const { wordTags } = useData();
+  const { searchFilter, setSearchFilter, treeFilter, setTreeFilter, searchInput } = useContext(
+    ConfigContext
+  ) as Context;
 
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -118,12 +123,7 @@ function Navbar() {
           {someFilter(searchFilter, treeFilter) && <div id="cancelFilterForSearch" onClick={cancelFilter}></div>}
         </div>
       </div>
-      <LanguageSelector
-        onLanguagesUpdated={() => {
-          // Refresh user data or reload review items
-          console.log("Languages updated!");
-        }}
-      />
+      <LanguageSelector />
       <div id="nameLabel">{user?.username}</div>
       <Link to="/profile">
         <div id="avatar-icon"></div>

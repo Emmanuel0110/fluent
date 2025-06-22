@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import { ConfigContext } from "../../App";
-import { Context, Sentence } from "../../types";
+import { useState } from "react";
+import { Sentence } from "../../types";
 import { WordLine } from "./WordLine";
+import { useData } from "../../contexts/DataContext";
 
 export default function SentenceDetail({
   multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },
@@ -11,7 +11,7 @@ export default function SentenceDetail({
     targetLanguage: Sentence;
   };
 }) {
-  const { words } = useContext(ConfigContext) as Context;
+  const { words } = useData();
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
   return (
     <div id="flashCardComponent">

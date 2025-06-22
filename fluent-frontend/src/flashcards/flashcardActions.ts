@@ -1,8 +1,17 @@
 import { formatWords, groupById, url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
+import { Conversation, ConversationTag, Word, WordTag } from "../types";
 
 export const getRemoteConversationById = async (id: string) => {
+  return customFetch(url + "conversations?wordId=" + id, {
+    method: "GET",
+    headers: authHeaders(),
+  }).catch((err: Error) => {
+    console.log(err);
+  });
+};
+
+export const getRemoteConversationByWordId = async (id: string) => {
   return customFetch(url + "conversations?conversationId=" + id, {
     method: "GET",
     headers: authHeaders(),

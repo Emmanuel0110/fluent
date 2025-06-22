@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useMemo, useRef, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { LanguageProvider } from "./contexts/LanguageContext";
 import "./App.css";
 import Register from "./auth/components/Register";
 import Layout from "./Layout/Layout";
@@ -12,46 +11,30 @@ import {
   Conversation,
   conversationFilter,
   ConversationTag,
-  Language,
   ReviewItem,
   SearchFilter,
-  User,
   View,
   Word,
   WordTag,
 } from "./types";
 import WordList from "./flashcards/components/WordList";
-import { authHeaders, customFetch } from "./utils/http-helpers";
 import WordListWithDetail from "./flashcards/components/WordListWithDetail";
-import {
-  deleteRemoteWord,
-  deleteRemoteConversation,
-  editRemoteWord,
-  fetchWordTags,
-  fetchConversationTags,
-  fetchWords,
-  getRemoteConversationById,
-  saveNewConversation,
-  subscribeToRemoteConversation,
-  editRemoteConversation,
-  editRemoteConversationTag,
-  saveNewConversationTag,
-  saveNewWord,
-  saveNewWordTag,
-  fetchLanguages,
-  unsubscribeToRemoteConversation,
-  updateRemoteConversationReviewStatus,
-  fetchConversations,
-} from "./flashcards/flashcardActions";
 import ConversationList from "./flashcards/components/ConversationList";
 import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
 import CreationForm from "./flashcards/components/CreationForm";
 import ConversationForm from "./flashcards/components/ConversationForm";
 import WordForm from "./flashcards/components/WordForm";
 import Review from "./flashcards/components/Review";
+import { useData } from "./contexts/DataContext";
 
 export const url = process.env.REACT_APP_API_URL;
 export const ConfigContext = createContext<Context | null>(null);
+
+export const getWordsFromConversation = (conversation: Conversation) => {
+  return conversation.multiLingualSentences.reduce((acc, value) => {
+    return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
+  }, [] as string[]);
+};
 
 export const updateCacheWithNewConversations = (
   conversations: Conversation[],
@@ -69,7 +52,7 @@ export const updateCacheWithNewConversations = (
   }, conversations);
 };
 
-const formatConversations = (conversations: any[], targetLanguage: string): Conversation[] => {
+export const formatConversations = (conversations: any[], targetLanguage: string): Conversation[] => {
   return conversations.map((multiLingualConversation) => {
     const { _id, tags, subscribed } = multiLingualConversation;
     let [sourceConversation, targetConversation] = multiLingualConversation.conversations;
@@ -173,38 +156,16 @@ const isFiltered = (word: Word, searchFilter: SearchFilter, treeFilter: string[]
   isFilteredBySearchFilter(word, searchFilter) && (treeFilter.length === 0 || treeFilter.includes(word._id));
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(null as boolean | null);
-  const [user, setUser] = useState(null as User | null);
   const [searchInput, setSearchInput] = useState("");
   const [treeFilter, setTreeFilter] = useState<string[]>([]);
   const [searchFilter, setSearchFilter] = useState<SearchFilter>([]);
   const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
-  const [conversations, setConversations] = useState([] as Conversation[]);
-  const [languages, setLanguages] = useState([] as Language[]);
-  const [words, setWords] = useState<{ [id: string]: Word }>({});
-  const [sourceLanguage, setSourceLanguage] = useState("");
-  const [targetLanguage, setTargetLanguage] = useState("");
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [status, setStatus] = useState("words");
-  const [wordTags, setWordTags] = useState<WordTag[]>([]);
-  const [conversationTags, setConversationTags] = useState<ConversationTag[]>([]);
   const [reviewList, setReviewList] = useState<ReviewItem[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      fetchLanguages().then((languages) => setLanguages(languages));
-      fetchWordTags().then((wordTags) => setWordTags(wordTags));
-      fetchConversationTags().then((conversationTags) => setConversationTags(conversationTags));
-      fetchWords().then((words) => setWords(words));
-      fetchConversations().then((newConversations) =>
-        setConversations((conversations) =>
-          updateCacheWithNewConversations(conversations, newConversations, targetLanguage)
-        )
-      ); // TODO : only for testing. Remove later
-    }
-  }, [isAuthenticated, sourceLanguage, targetLanguage]);
+  const { words, conversations, wordTags } = useData();
 
   const filteredWords = useMemo(() => {
     const searchFilterWithTagIds = searchFilter.map((filterItem) => {
@@ -314,20 +275,6 @@ export default function App() {
     navigate(location);
   };
 
-  const fetchMoreUsedInConversations = async (wordId: string) => {
-    return customFetch(url + "conversations?wordId=" + wordId, {
-      headers: authHeaders(),
-    })
-      .then((res) => {
-        if (res.success) {
-          setConversations((conversations) => updateCacheWithNewConversations(conversations, res.data, targetLanguage));
-        }
-      })
-      .catch((err: Error) => {
-        console.log(err);
-      });
-  };
-
   const openWord = (wordId: string) => {
     const word = words[wordId];
     if (word) {
@@ -350,127 +297,6 @@ export default function App() {
     }
   };
 
-  const subscribeToConversation = (conversation: Conversation) => {
-    const conversationId = conversation._id;
-    const wordIds = getWordsFromConversation(conversation);
-    subscribeToRemoteConversation(conversation._id, wordIds).then((res) => {
-      if (res.success) {
-        setConversations((conversations) =>
-          conversations.map((conversation) =>
-            conversation._id === conversationId ? { ...conversation, subscribed: true } : conversation
-          )
-        );
-        setWords((words) => ({
-          ...words,
-          ...wordIds.reduce((acc, value) => {
-            return words[value] ? { ...acc, [value]: { ...words[value], subscribed: true } } : acc;
-          }, {}),
-        }));
-      }
-    });
-  };
-
-  const unsubscribeToConversation = (conversation: Conversation) => {
-    const conversationId = conversation._id;
-    const wordIds = getWordsFromConversation(conversation);
-    unsubscribeToRemoteConversation(conversation._id, wordIds).then(
-      (res: { success: boolean; wordsToUnsubscribe: string[] }) => {
-        if (res.success) {
-          setConversations((conversations) =>
-            conversations.map((conversation) =>
-              conversation._id === conversationId ? { ...conversation, subscribed: false } : conversation
-            )
-          );
-          setWords((words) => ({
-            ...words,
-            ...res.wordsToUnsubscribe.reduce((acc, value) => {
-              return { ...acc, [value]: { ...words[value], subscribed: false } };
-            }, {}),
-          }));
-        }
-      }
-    );
-  };
-
-  const getWordsFromConversation = (conversation: Conversation) => {
-    return conversation.multiLingualSentences.reduce((acc, value) => {
-      return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
-    }, [] as string[]);
-  };
-
-  const updateConversationReviewStatus = async (reviewItem: ReviewItem) => {
-    const conversationId = reviewItem._id;
-    const wordIds = getWordsFromConversation(reviewItem);
-    const successOnFirstTry = !reviewItem.alreadyFailed;
-    await updateRemoteConversationReviewStatus(conversationId, wordIds, successOnFirstTry);
-  };
-
-  const saveWord = async (infos: Word) => {
-    const res = await (infos._id
-      ? editRemoteWord(infos, sourceLanguage, targetLanguage)
-      : saveNewWord(infos, sourceLanguage, targetLanguage));
-    if (res.success) {
-      const { _id } = res.data;
-      if (_id) {
-        setWords((words) => ({ ...words, [_id]: formatWord(res.data) }));
-        return formatWord(res.data);
-      }
-    }
-  };
-
-  const saveWordTag = async (args: { language: string; label: string }) => {
-    const res = await saveNewWordTag(args);
-    if (res.success) {
-      setWordTags((wordTags) => updateCacheWithNewWordTags(wordTags, [res.data]));
-      return res.data;
-    }
-  };
-
-  const saveConversationTag = async (infos: ConversationTag) => {
-    const res = await (infos._id ? editRemoteConversationTag(infos) : saveNewConversationTag(infos));
-    if (res.success) {
-      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
-    }
-  };
-
-  const saveConversation = async (infos: Conversation) => {
-    const res = await (infos._id
-      ? editRemoteConversation(infos, sourceLanguage, targetLanguage)
-      : saveNewConversation(infos, sourceLanguage, targetLanguage));
-    if (res.success) {
-      setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data], targetLanguage));
-      navigate("/conversations" + res.data._id);
-    }
-  };
-
-  const getConversationById = (id: string): Promise<Conversation> => {
-    const conversation = conversations.find(({ _id }) => _id === id);
-    return conversation
-      ? Promise.resolve(conversation)
-      : getRemoteConversationById(id).then(({ newConversation }) => {
-          if (newConversation) {
-            setConversations((conversations) =>
-              updateCacheWithNewConversations(conversations, [newConversation], targetLanguage)
-            );
-          }
-          return newConversation;
-        });
-  };
-
-  const deleteConversation = async (_id: string) => {
-    await deleteRemoteConversation(_id);
-    setConversations((conversations) => conversations.filter((conversation) => conversation._id === _id));
-  };
-
-  const deleteWord = async (_id: string) => {
-    await deleteRemoteWord(_id);
-    setWords((words) => {
-      const newState = { ...words };
-      delete newState[_id];
-      return newState;
-    });
-  };
-
   const editWord = (id: string) => {
     navigate(`/words/${id}/edit`);
   };
@@ -480,138 +306,61 @@ export default function App() {
   };
 
   return (
-    <LanguageProvider>
-      <ConfigContext.Provider
-        value={{
-          languages,
-          filteredWords,
-          words,
-          setWords,
-          editConversation,
-          editWord,
-          conversations,
-          setConversations,
-          saveConversation,
-          sourceLanguage,
-          setSourceLanguage,
-          targetLanguage,
-          setTargetLanguage,
-          openedWords,
-          setOpenedWords,
-          openedConversations,
-          setOpenedConversations,
-          isAuthenticated,
-          setIsAuthenticated,
-          searchFilter,
-          setSearchFilter,
-          user,
-          setUser,
-          status,
-          setStatus,
-          wordTags,
-          setWordTags,
-          conversationTags,
-          setConversationTags,
-          fetchMoreUsedInConversations,
-          openWord,
-          deleteConversation,
-          deleteWord,
-          openConversation,
-          subscribeToConversation,
-          unsubscribeToConversation,
-          saveWord,
-          saveWordTag,
-          saveConversationTag,
-          getConversationById,
-          treeFilter,
-          setTreeFilter,
-          searchInput,
-          setSearchInput,
-          reviewList,
-          setReviewList,
-          updateConversationReviewStatus,
-        }}
-      >
-        <Routes>
-          <Route
-            path="register/*"
-            element={
-              <Register
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                setUser={setUser}
-                setSourceLanguage={setSourceLanguage}
-                setTargetLanguage={setTargetLanguage}
-              />
-            }
-          />
-          <Route
-            path="login/*"
-            element={
-              <Login
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                setUser={setUser}
-                setSourceLanguage={setSourceLanguage}
-                setTargetLanguage={setTargetLanguage}
-              />
-            }
-          />
-          <Route
-            element={
-              <ProtectedRoute
-                isAuthenticated={isAuthenticated}
-                setIsAuthenticated={setIsAuthenticated}
-                setUser={setUser}
-                setSourceLanguage={setSourceLanguage}
-                setTargetLanguage={setTargetLanguage}
-                redirectPath={"login"}
-              />
-            }
-          >
-            <Route element={<Layout />}>
-              <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />{" "}
-              {/*TODO: remove if unused ? */}
-              <Route path="new" element={<CreationForm />} />
-              <Route path="words" element={<WordList filteredWords={filteredWords} />} />
-              <Route
-                path="words/:wordId"
-                element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
-              />
-              <Route path="words/:wordId/edit" element={<WordForm />} />
-              <Route
-                path="conversations"
-                element={<ConversationList filteredConversations={filteredConversations} />}
-              />
-              <Route
-                path="conversations/:conversationId"
-                element={
-                  <ConversationListWithDetail
-                    filteredConversations={filteredConversations}
-                    openedConversations={openedConversations}
-                  />
-                }
-              />
-              <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
-              <Route path="review" element={<Review />} />
-              <Route path="profile" element={<Profile />} />
-              <Route
-                path="/"
-                element={
-                  <Login
-                    isAuthenticated={isAuthenticated}
-                    setIsAuthenticated={setIsAuthenticated}
-                    setUser={setUser}
-                    setSourceLanguage={setSourceLanguage}
-                    setTargetLanguage={setTargetLanguage}
-                  />
-                }
-              />
-            </Route>
+    <ConfigContext.Provider
+      value={{
+        filteredWords,
+        editConversation,
+        editWord,
+        openedWords,
+        setOpenedWords,
+        openedConversations,
+        setOpenedConversations,
+        searchFilter,
+        setSearchFilter,
+        status,
+        setStatus,
+        openWord,
+        openConversation,
+        treeFilter,
+        setTreeFilter,
+        searchInput,
+        setSearchInput,
+        reviewList,
+        setReviewList,
+      }}
+    >
+      <Routes>
+        <Route path="register/*" element={<Register />} />
+        <Route path="login/*" element={<Login />} />
+        <Route element={<ProtectedRoute redirectPath="login" />}>
+          <Route element={<Layout />}>
+            <Route path="home" element={<ConversationList filteredConversations={filteredConversations} />} />{" "}
+            {/*TODO: remove if unused ? */}
+            <Route path="new" element={<CreationForm />} />
+            <Route path="words" element={<WordList filteredWords={filteredWords} />} />
+            <Route
+              path="words/:wordId"
+              element={<WordListWithDetail filteredWords={filteredWords} openedWords={openedWords} />}
+            />
+            <Route path="words/:wordId/edit" element={<WordForm />} />
+            <Route path="conversations" element={<ConversationList filteredConversations={filteredConversations} />} />
+            <Route
+              path="conversations/:conversationId"
+              element={
+                <ConversationListWithDetail
+                  filteredConversations={filteredConversations}
+                  openedConversations={openedConversations}
+                />
+              }
+            />
+            <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+            <Route path="review" element={<Review />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="/" element={<Login />} />
           </Route>
-          <Route path="*" element={<p>There's nothing here: 404!</p>} />
-        </Routes>
-      </ConfigContext.Provider>
-    </LanguageProvider>
+        </Route>
+        <Route path="*" element={<p>There's nothing here: 404!</p>} />
+      </Routes>
+    </ConfigContext.Provider>
   );
 }

@@ -30,9 +30,7 @@ export const loadUser = (
 export const register = (
   { username, password }: { username: string; password: string },
   setIsAuthenticated: (b: boolean) => void,
-  setUser: (user: any) => void,
-  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>,
-  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>
+  setUser: (user: any) => void
 ) => {
   const headers = {
     "Content-Type": "application/json",
@@ -43,10 +41,9 @@ export const register = (
       if (!res.token) {
         throw Error(res.msg);
       }
+      const { user, sourceLanguage, targetLanguage } = res;
+      setUser({ ...user, sourceLanguage, targetLanguage });
       setIsAuthenticated(true);
-      setUser(res.user);
-      setSourceLanguage(res.sourceLanguage);
-      setTargetLanguage(res.targetLanguage);
       localStorage.setItem("token", res.token);
     })
     .catch((err: Error) => {
@@ -57,9 +54,7 @@ export const register = (
 export const login = (
   { username, password }: { username: string; password: string },
   setIsAuthenticated: (b: boolean) => void,
-  setUser: (user: any) => void,
-  setSourceLanguage: React.Dispatch<React.SetStateAction<string>>,
-  setTargetLanguage: React.Dispatch<React.SetStateAction<string>>
+  setUser: (user: any) => void
 ) => {
   const headers = {
     "Content-Type": "application/json",
@@ -70,10 +65,9 @@ export const login = (
       if (!res.token) {
         throw Error(res.msg);
       }
+      const { user, sourceLanguage, targetLanguage } = res;
+      setUser({ ...user, sourceLanguage, targetLanguage });
       setIsAuthenticated(true);
-      setUser(res.user);
-      setSourceLanguage(res.sourceLanguage);
-      setTargetLanguage(res.targetLanguage);
       localStorage.setItem("token", res.token);
     })
     .catch((err: Error) => {

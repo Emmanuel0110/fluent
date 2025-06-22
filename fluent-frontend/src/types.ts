@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 export interface User {
   _id: string;
   username: string;
+  sourceLanguage: string;
+  targetLanguage: string;
 }
 
 export type Status = "word" | "conversation";
@@ -21,7 +23,7 @@ export interface Language {
 export interface ConversationTag {
   _id: string;
   sourceLabel: string;
-  targetLabel: string; 
+  targetLabel: string;
 }
 
 export type SearchFilter = { isActive: boolean; data: string[] }[];
@@ -58,56 +60,28 @@ export interface Conversation {
   subscribed: boolean;
 }
 
-export interface ReviewItem extends Conversation{
+export interface ReviewItem extends Conversation {
   alreadyFailed: boolean;
 }
 
 export interface Context {
   filteredWords: Word[];
-  languages: Language[];
-  words: { [id: string]: Word };
-  setWords: Dispatch<SetStateAction<{ [id: string]: Word }>>;
-  conversations: Conversation[];
-  setConversations: Dispatch<SetStateAction<Conversation[]>>;
-  saveConversation: (infos: Conversation) => Promise<void>;
   editConversation: (id: string) => void;
   editWord: (id: string) => void;
-  sourceLanguage: string;
-  setSourceLanguage: Dispatch<SetStateAction<string>>;
-  targetLanguage: string;
-  setTargetLanguage: Dispatch<SetStateAction<string>>;
   openedWords: Word[];
   setOpenedWords: Dispatch<SetStateAction<Word[]>>;
   setOpenedConversations: Dispatch<SetStateAction<Conversation[]>>;
-  getConversationById: (id: string) => Promise<Conversation>;
   openedConversations: Conversation[];
-  isAuthenticated: boolean | null;
-  setIsAuthenticated: Dispatch<SetStateAction<boolean | null>>;
   searchFilter: SearchFilter;
   setSearchFilter: Dispatch<SetStateAction<SearchFilter>>;
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
-  wordTags: WordTag[];
-  setWordTags: Dispatch<SetStateAction<WordTag[]>>;
-  conversationTags: ConversationTag[];
-  setConversationTags: Dispatch<SetStateAction<ConversationTag[]>>;
-  fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   openWord: (id: string) => void;
   openConversation: (id: string) => void;
-  deleteConversation: (_id: string) => void;
-  deleteWord: (_id: string) => void;
-  subscribeToConversation: (conversation: Conversation) => void;
-  unsubscribeToConversation: (conversation: Conversation) => void;
-  saveWord: (infos: Word) => Promise<void | Word>;
-  saveWordTag: (args: {language: string, label: string}) => Promise<void | WordTag>;
-  saveConversationTag: (infos: ConversationTag) => Promise<void>;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
   reviewList: ReviewItem[];
   setReviewList: Dispatch<SetStateAction<ReviewItem[]>>;
-  updateConversationReviewStatus: (conversation: ReviewItem) => Promise<void>;
 }

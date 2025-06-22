@@ -2,11 +2,11 @@ import { useContext } from "react";
 import { ConfigContext } from "../../App";
 import { Context, Conversation } from "../../types";
 import SentenceDetail from "./SentenceDetail";
+import { useData } from "../../contexts/DataContext";
 
 export default function ConversationDetail({ conversation }: { conversation: Conversation }) {
-  const { conversationTags, setSearchFilter, subscribeToConversation, unsubscribeToConversation } = useContext(
-    ConfigContext
-  ) as Context;
+  const { conversationTags, subscribeToConversation, unsubscribeToConversation } = useData();
+  const { setSearchFilter } = useContext(ConfigContext) as Context;
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);

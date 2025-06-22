@@ -4,12 +4,12 @@ import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import { SentenceLine } from "./SentenceLine";
+import { useData } from "../../contexts/DataContext";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId } = useParams();
-  const { openConversation, editConversation, deleteConversation, subscribeToConversation } = useContext(
-    ConfigContext
-  ) as Context;
+  const { deleteConversation, subscribeToConversation } = useData();
+  const { openConversation, editConversation } = useContext(ConfigContext) as Context;
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();

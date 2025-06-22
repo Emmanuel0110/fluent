@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import "./LanguageSelector.css";
 import { useLanguage } from "../contexts/LanguageContext";
 
-interface LanguageSelectorProps {
-  onLanguagesUpdated?: () => void;
-}
-
-const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onLanguagesUpdated }) => {
+const LanguageSelector: React.FC = () => {
   const { languages, sourceLanguage, targetLanguage, updateUserLanguages } = useLanguage();
   const [tempSourceLanguage, setTempSourceLanguage] = useState<string>(sourceLanguage);
   const [tempTargetLanguage, setTempTargetLanguage] = useState<string>(targetLanguage);
@@ -15,11 +11,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ onLanguagesUpdated 
   const handleSave = async () => {
     if (tempSourceLanguage && tempTargetLanguage && tempSourceLanguage !== tempTargetLanguage) {
       const success = await updateUserLanguages(tempSourceLanguage, tempTargetLanguage);
-
-      if (success) {
-        setIsOpen(false);
-        onLanguagesUpdated?.();
-      }
+      if (success) setIsOpen(false);
     }
   };
 
