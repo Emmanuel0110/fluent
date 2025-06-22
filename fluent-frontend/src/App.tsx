@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useRef, useState } from "reac
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 import Register from "./auth/components/Register";
-import Layout from "./Layout/Layout";
+import Layout from "./layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";
@@ -17,14 +17,14 @@ import {
   Word,
   WordTag,
 } from "./types";
-import WordList from "./flashcards/components/WordList";
-import WordListWithDetail from "./flashcards/components/WordListWithDetail";
-import ConversationList from "./flashcards/components/ConversationList";
-import ConversationListWithDetail from "./flashcards/components/ConversationListWithDetail";
-import CreationForm from "./flashcards/components/CreationForm";
-import ConversationForm from "./flashcards/components/ConversationForm";
-import WordForm from "./flashcards/components/WordForm";
-import Review from "./flashcards/components/Review";
+import WordList from "./conversations/components/WordList";
+import WordListWithDetail from "./conversations/components/WordListWithDetail";
+import ConversationList from "./conversations/components/ConversationList";
+import ConversationListWithDetail from "./conversations/components/ConversationListWithDetail";
+import CreationForm from "./conversations/components/CreationForm";
+import ConversationForm from "./conversations/components/ConversationForm";
+import WordForm from "./conversations/components/WordForm";
+import Review from "./conversations/components/Review";
 import { useData } from "./contexts/DataContext";
 
 export const url = process.env.REACT_APP_API_URL;

@@ -20,7 +20,7 @@ import {
   updateRemoteConversationReviewStatus,
   getRemoteConversationById,
   getRemoteConversationByWordId,
-} from "../flashcards/flashcardActions";
+} from "../conversations/APICalls";
 import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 import {
   updateCacheWithNewConversations,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { updateLanguages } from "../flashcardActions";
+import { updateLanguages } from "../APICalls";
 import { useLanguage } from "../../contexts/LanguageContext";
 
 export default function LanguageForm() {

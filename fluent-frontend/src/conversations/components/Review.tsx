@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { ConfigContext, updateCacheWithNewConversations } from "../../App";
 import { Context, Conversation } from "../../types";
-import { getReviewList } from "../flashcardActions";
+import { getReviewList } from "../APICalls";
 import ReviewItemComponent from "./ReviewItemComponent";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useData } from "../../contexts/DataContext";

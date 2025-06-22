@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { fetchLanguages, updateLanguages } from "../flashcards/flashcardActions";
+import { fetchLanguages, updateLanguages } from "../conversations/APICalls";
 import { useAuth } from "./AuthContext";
 
 interface Language {

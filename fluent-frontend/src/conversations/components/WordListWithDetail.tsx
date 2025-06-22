@@ -5,7 +5,7 @@ import WordList from "./WordList";
 import { useContext, useEffect, useState } from "react";
 import { ConfigContext } from "../../App";
 import { Context } from "../../types";
-import TabNav from "../../Layout/TabNav";
+import TabNav from "../../layout/TabNav";
 import WordDetail from "./WordDetail";
 import { useData } from "../../contexts/DataContext";
 
