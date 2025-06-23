@@ -25,7 +25,6 @@ import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../typ
 import {
   updateCacheWithNewConversations,
   formatWord,
-  updateCacheWithNewWords,
   updateCacheWithNewConversationTags,
   updateCacheWithNewWordTags,
   getWordsFromConversation,
