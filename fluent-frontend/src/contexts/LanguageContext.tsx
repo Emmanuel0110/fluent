@@ -15,6 +15,7 @@ interface LanguageContextType {
   setTargetLanguage: React.Dispatch<React.SetStateAction<string>>;
   updateUserLanguages: (source: string, target: string) => Promise<boolean>;
   loadLanguages: () => Promise<void>;
+  getLanguageLabel: (languageId: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -58,6 +59,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     return false;
   };
 
+  const getLanguageLabel = (languageId: string) => {
+    const language = languages.find((lang) => lang._id === languageId);
+    return language ? language.label : "";
+  };
+
   useEffect(() => {
     loadLanguages();
   }, []);
@@ -79,6 +85,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         setTargetLanguage,
         updateUserLanguages,
         loadLanguages,
+        getLanguageLabel,
       }}
     >
       {children}
