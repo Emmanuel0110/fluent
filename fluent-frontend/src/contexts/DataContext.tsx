@@ -22,14 +22,13 @@ import {
   getRemoteConversationByWordId,
 } from "../conversations/APICalls";
 import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
-import {
-  updateCacheWithNewConversations,
-  formatWord,
-  updateCacheWithNewConversationTags,
-  updateCacheWithNewWordTags,
-  getWordsFromConversation,
-} from "../App";
 import { useNavigate } from "react-router-dom";
+import {
+  getWordsFromConversation,
+  updateCacheWithNewConversations,
+  updateCacheWithNewConversationTags,
+} from "../utils/conversationUtils";
+import { formatWord, updateCacheWithNewWordTags } from "../utils/wordUtils";
 
 interface DataContextType {
   // Remote data state
