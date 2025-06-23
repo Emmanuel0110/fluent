@@ -1,9 +1,9 @@
 import { formatWords, groupById, url } from "../App";
 import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, ConversationTag, Word, WordTag } from "../types";
+import { Conversation, ConversationTag, RowConversation, Word, WordTag } from "../types";
 
 export const getRemoteConversationById = async (id: string) => {
-  return customFetch(url + "conversations?wordId=" + id, {
+  return customFetch(url + "conversations?conversationId=" + id, {
     method: "GET",
     headers: authHeaders(),
   }).catch((err: Error) => {
@@ -12,7 +12,7 @@ export const getRemoteConversationById = async (id: string) => {
 };
 
 export const getRemoteConversationByWordId = async (id: string) => {
-  return customFetch(url + "conversations?conversationId=" + id, {
+  return customFetch(url + "conversations?wordId=" + id, {
     method: "GET",
     headers: authHeaders(),
   }).catch((err: Error) => {
@@ -219,15 +219,15 @@ export const fetchConversations = async () => {
   return customFetch(url + "conversations", { headers: authHeaders() })
     .then((res) => {
       if (res.success) {
-        return res.data as Conversation[];
+        return res.data as RowConversation[];
       } else {
         console.log(res?.message);
-        return [] as Conversation[];
+        return [] as RowConversation[];
       }
     })
     .catch((err: Error) => {
       console.log(err);
-      return [] as Conversation[];
+      return [] as RowConversation[];
     });
 };
 

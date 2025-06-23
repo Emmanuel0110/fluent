@@ -16,6 +16,10 @@ router.get("/", auth, cache, async (req, res) => {
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
     } else if (conversationId) {
       const conversation = await MultiLingualConversationModel.findById(conversationId);
+      if (!conversation) {
+        res.json({ success: false, message: "Conversation not found" });
+        return;
+      }
       const completedConversation = {
         ...conversation,
         subscribed: !!userConversations.find(({ _id }) => _id === conversation._id),
