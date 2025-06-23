@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuth } from "./contexts/AuthContext";
+import { useLanguage } from "./contexts/LanguageContext";
 
 interface ProtectedRouteProps {
   redirectPath: string;
@@ -7,8 +8,9 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ redirectPath }) => {
   const { isAuthenticated, loading } = useAuth();
+  const { sourceLanguage, targetLanguage } = useLanguage();
 
-  if (loading || isAuthenticated === null) {
+  if (loading || isAuthenticated === null || !sourceLanguage || !targetLanguage) {
     return <div>Loading...</div>;
   }
 

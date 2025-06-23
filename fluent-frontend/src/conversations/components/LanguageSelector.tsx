@@ -16,8 +16,6 @@ const LanguageSelector: React.FC = () => {
   };
 
   const handleOpen = () => {
-    setTempSourceLanguage(sourceLanguage);
-    setTempTargetLanguage(targetLanguage);
     setIsOpen(true);
   };
 

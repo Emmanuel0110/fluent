@@ -34,13 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated === null && !loading) {
       setLoading(true);
-      loadUser(
-        setUser,
-        setIsAuthenticated,
-        setLoading,
-        () => {},
-        () => {}
-      );
+      loadUser(setUser, setIsAuthenticated, setLoading);
     }
   }, [isAuthenticated, loading]);
 
