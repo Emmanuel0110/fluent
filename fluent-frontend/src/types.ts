@@ -39,6 +39,17 @@ export interface View {
   location: string;
 }
 
+export interface RowWord {
+  _id: string;
+  language: string;
+  text: string;
+  translations: {
+    language: string;
+    lexicalItems: string[];
+  }[];
+  tags: string[];
+  subscribed: boolean;
+}
 export interface Word {
   _id: string;
   language: string;
@@ -51,6 +62,21 @@ export interface Word {
 export interface Sentence {
   text: string;
   prerequisites: string[];
+}
+
+export interface RowConversation {
+  _id: string;
+  tags: string[];
+  conversations: {
+    language: string;
+    sentences: [
+      {
+        text: string;
+        prerequisites: string[];
+      }
+    ];
+  }[];
+  subscribed: boolean;
 }
 
 export interface Conversation {

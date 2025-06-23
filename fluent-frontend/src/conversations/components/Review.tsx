@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { ConfigContext, updateCacheWithNewConversations } from "../../App";
-import { Context, Conversation } from "../../types";
+import { Context, RowConversation } from "../../types";
 import { getReviewList } from "../APICalls";
 import ReviewItemComponent from "./ReviewItemComponent";
 import { useLanguage } from "../../contexts/LanguageContext";
@@ -26,7 +26,7 @@ function Review() {
   };
 
   const fetchNewReviewItems = () => {
-    getReviewList().then((newReviewList: Conversation[]) =>
+    getReviewList().then((newReviewList: RowConversation[]) =>
       setReviewList((reviewList) =>
         updateCacheWithNewConversations(reviewList, newReviewList, targetLanguage).map((reviewItem) => ({
           ...reviewItem,

@@ -12,6 +12,8 @@ import {
   conversationFilter,
   ConversationTag,
   ReviewItem,
+  RowConversation,
+  RowWord,
   SearchFilter,
   View,
   Word,
@@ -38,7 +40,7 @@ export const getWordsFromConversation = (conversation: Conversation) => {
 
 export const updateCacheWithNewConversations = (
   conversations: Conversation[],
-  newConversations: Conversation[],
+  newConversations: RowConversation[],
   targetLanguage: string
 ): Conversation[] => {
   return formatConversations(newConversations, targetLanguage).reduce((acc: Conversation[], value: Conversation) => {
@@ -52,7 +54,7 @@ export const updateCacheWithNewConversations = (
   }, conversations);
 };
 
-export const formatConversations = (conversations: any[], targetLanguage: string): Conversation[] => {
+export const formatConversations = (conversations: RowConversation[], targetLanguage: string): Conversation[] => {
   return conversations.map((multiLingualConversation) => {
     const { _id, tags, subscribed } = multiLingualConversation;
     let [sourceConversation, targetConversation] = multiLingualConversation.conversations;
@@ -78,11 +80,11 @@ export const groupById = <T extends { _id: string }>(ObjectArr: T[]): { [key: st
   }, {});
 };
 
-export const formatWords = (words: any[]): Word[] => {
+export const formatWords = (words: RowWord[]): Word[] => {
   return words.map(formatWord);
 };
 
-export const formatWord = (word: any): Word => {
+export const formatWord = (word: RowWord): Word => {
   return { ...word, translations: word.translations[0]?.lexicalItems || [] };
 };
 
