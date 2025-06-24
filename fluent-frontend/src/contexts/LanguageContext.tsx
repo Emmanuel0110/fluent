@@ -65,11 +65,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   };
 
   useEffect(() => {
-    loadLanguages();
-  }, []);
-
-  useEffect(() => {
     if (user?.sourceLanguage && user?.targetLanguage) {
+      loadLanguages();
       setSourceLanguage(user.sourceLanguage);
       setTargetLanguage(user.targetLanguage);
     }
