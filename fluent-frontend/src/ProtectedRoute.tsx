@@ -10,12 +10,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ redirectPath }) => {
   const { isAuthenticated, loading } = useAuth();
   const { sourceLanguage, targetLanguage } = useLanguage();
 
-  if (loading || isAuthenticated === null || !sourceLanguage || !targetLanguage) {
-    return <div>Loading...</div>;
+  if (loading || isAuthenticated === null) {
+    return <div>Loading auth...</div>;
   }
 
   if (isAuthenticated === false) {
     return <Navigate to={redirectPath} replace />;
+  }
+
+  if (isAuthenticated === true && (!sourceLanguage || !targetLanguage)) {
+    return <div>Loading language...</div>;
   }
 
   return <Outlet />;
