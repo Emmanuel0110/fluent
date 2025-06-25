@@ -10,7 +10,7 @@ router.get("/", auth, cache, async (req, res) => {
   const MAX_NUMBER_OF_CONVERSATIONS = 10;
   try {
     const { tag, conversationId, wordId } = req.query;
-    const userConversations = req.userLearningData.conversations;
+    const { conversations: userConversations, sourceLanguage, targetLanguage } = req.userLearningData;
     if (tag) {
       const conversations = await MultiLingualConversationModel.find({ tags: { $in: [tag] } }).lean();
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
@@ -32,13 +32,28 @@ router.get("/", auth, cache, async (req, res) => {
         data: completeConversations(conversations.slice(0, MAX_NUMBER_OF_CONVERSATIONS), userConversations),
       });
     } else {
-      const conversations = await MultiLingualConversationModel.find().lean();
+      const allConversations = await MultiLingualConversationModel.find().lean();
+      const conversations = allConversations
+        .map(onlyKeepLanguages(sourceLanguage, targetLanguage))
+        .filter((doc) => doc.conversations.length > 0);
+
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
     }
   } catch (err) {
     console.log(err);
   }
 });
+
+function onlyKeepLanguages(sourceLanguage, targetLanguage) {
+  return function (conversation) {
+    return {
+      ...conversation,
+      conversations: conversation.conversations.filter(({ language }) =>
+        [sourceLanguage, targetLanguage].includes(language.toString())
+      ),
+    };
+  };
+}
 
 router.post("/", auth, async (req, res) => {
   try {
@@ -64,7 +79,7 @@ router.put("/:id", auth, cache, async function (req, res) {
   await MultiLingualConversationModel.updateOne(filter, { tags });
   await MultiLingualConversationModel.updateOne(filter, {
     $pull: {
-      conversations: { language: { $in: [req.userLearningData.sourceLanguage, req.userLearningData.sourceLanguage] } },
+      conversations: { language: { $in: [req.userLearningData.sourceLanguage, req.userLearningData.targetLanguage] } },
     },
   });
   const conversation = await MultiLingualConversationModel.findOneAndUpdate(

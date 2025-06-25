@@ -106,15 +106,25 @@ function selectUsefulConversations(conversations, wordIdsLeftToFind) {
   //select enough conversations to cover wordIds
   const selectedConversations = [];
   let i = 0;
-  while (wordIdsLeftToFind.length && i < conversations.length) {
+
+  // Convert wordIdsLeftToFind to strings for comparison
+  const wordIdsLeftToFindStrings = wordIdsLeftToFind.map((id) => id.toString());
+
+  while (wordIdsLeftToFindStrings.length && i < conversations.length) {
     const conversation = conversations[i];
-    const wordIdsFound = getWordsFromConversation(conversation).filter((value) => wordIdsLeftToFind.includes(value));
+    const wordsFromConversation = getWordsFromConversation(conversation);
+
+    // Convert conversation word IDs to strings and filter
+    const wordIdsFound = wordsFromConversation
+      .map((id) => id.toString())
+      .filter((value) => wordIdsLeftToFindStrings.includes(value));
+
     if (wordIdsFound.length > 0) {
       selectedConversations.push(conversation);
       wordIdsFound.forEach((id) => {
-        const index = wordIdsLeftToFind.indexOf(id);
+        const index = wordIdsLeftToFindStrings.indexOf(id);
         if (index > -1) {
-          wordIdsLeftToFind.splice(index, 1);
+          wordIdsLeftToFindStrings.splice(index, 1);
         }
       });
     }
