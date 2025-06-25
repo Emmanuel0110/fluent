@@ -11,6 +11,21 @@
       "args": ["reducedVocabulary.json"],
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\fluent-backend\\importVocabulary.js"
+    },
+    {
+      "name": "Debug Fluent Backend (with nodemon)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/fluent-backend/node_modules/nodemon/bin/nodemon.js",
+      "args": ["server.js"],
+      "cwd": "${workspaceFolder}/fluent-backend",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "restart": false,
+      "runtimeExecutable": "node",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }
