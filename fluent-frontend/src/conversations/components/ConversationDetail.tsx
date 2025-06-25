@@ -13,7 +13,6 @@ export default function ConversationDetail({ conversation }: { conversation: Con
   };
 
   const handleSubscribe = () => {
-    console.log(conversation, conversation.subscribed);
     if (conversation.subscribed) {
       unsubscribeToConversation(conversation);
     } else {

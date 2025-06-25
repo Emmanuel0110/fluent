@@ -8,7 +8,7 @@ import { useData } from "../../contexts/DataContext";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId } = useParams();
-  const { deleteConversation, subscribeToConversation } = useData();
+  const { deleteConversation, subscribeToConversation, unsubscribeToConversation } = useData();
   const { openConversation, editConversation } = useContext(ConfigContext) as Context;
 
   const onEdit = (e: React.MouseEvent) => {
@@ -16,9 +16,13 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
     editConversation(conversation._id);
   };
 
-  const onSubscribe = (e: React.MouseEvent) => {
+  const handleSubscribe = (e: React.MouseEvent) => {
     e.stopPropagation();
-    subscribeToConversation(conversation);
+    if (conversation.subscribed) {
+      unsubscribeToConversation(conversation);
+    } else {
+      subscribeToConversation(conversation);
+    }
   };
 
   const onDelete = (e: React.MouseEvent) => {
@@ -44,7 +48,7 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
         <SentenceLine key={index} multiLingualSentence={multiLingualSentence} />
       ))}
       <div className="lineOptions">
-        <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={onSubscribe}></div>
+        <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
         <div className="edit" onClick={onEdit}></div>
         <div className="delete" onClick={onDelete}></div>
       </div>
