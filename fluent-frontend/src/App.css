@@ -177,14 +177,20 @@ button:focus {
 
 .line {
   display: flex;
+  gap: 10px;
   justify-content: space-between;
-  height: 40px;
   background-color: white;
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
   align-items: center;
   box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  cursor: pointer;
+}
+
+.sentenceLines {
+  min-width: 0;
+  flex: 1;
 }
 
 .line:hover {
@@ -205,12 +211,16 @@ button:focus {
   font-weight: 400;
 }
 
-#flashcardList {
-  padding: 10px;
+.alignLeft {
+  text-align: left;
 }
 
-.line {
-  cursor: pointer;
+.alignRight {
+  text-align: right;
+}
+
+#flashcardList {
+  padding: 10px;
 }
 
 #flashcard {
@@ -647,7 +657,7 @@ a.nav-link {
   color: #636b74;
 }
 
-#nameLabel{
+#nameLabel {
   padding: 5px 10px 10px 5px;
   color: #fafafa;
 }
