@@ -13,8 +13,8 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
   };
 
   return (
-    <div id="flashCardComponent">
-      <div id="flashcard">
+    <div id="detail-container">
+      <div id="detail-card">
         <div id="previous">
           <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         </div>
@@ -48,7 +48,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
 
           {usedIn.length > 0 && (
             <div id="usedIn">
-              <div className="flashcardSection">Used in</div>
+              <div className="usedInSection">Used in</div>
               {usedIn.map((conversation, index) => (
                 <ConversationLine key={index} conversation={conversation} />
               ))}

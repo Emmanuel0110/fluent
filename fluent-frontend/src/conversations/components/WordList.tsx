@@ -4,9 +4,9 @@ import { WordLine } from "./WordLine";
 
 export default function WordList({ filteredWords }: { filteredWords: Word[] }) {
   return (
-    <div style={{height: "100%", overflow: "auto"}}>
+    <div style={{ height: "100%", overflow: "auto" }}>
       <FilterBar />
-      <div id="flashcardList">
+      <div id="wordList">
         {filteredWords.map((word, index) => (
           <WordLine key={index} word={word} />
         ))}

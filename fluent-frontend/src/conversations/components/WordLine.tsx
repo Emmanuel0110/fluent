@@ -26,7 +26,7 @@ export const WordLine = ({ word }: { word: Word }) => {
 
   const onDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm("Are you sure you want to delete this flashcard?")) {
+    if (window.confirm("Are you sure you want to delete this word?")) {
       deleteWord(word._id);
     }
   };
@@ -34,11 +34,11 @@ export const WordLine = ({ word }: { word: Word }) => {
   return (
     <div
       ref={lineRef}
-      className={"line" + (word._id === wordId ? " selectedFlashcard" : "")}
+      className={"line" + (word._id === wordId ? " selectedLine" : "")}
       onClick={() => openWord(word._id)}
     >
       <div className={"lineTitle"}>
-        <span>{word.text + " : "}</span>
+        <span className="sourceLanguage">{word.text + " : "}</span>
         <span>
           {word.translations.map((wordId, index) => (
             <span key={index}>

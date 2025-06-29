@@ -197,7 +197,7 @@ button:focus {
   box-shadow: rgba(0, 0, 0, 0.3) 1.95px 1.95px 2.6px;
 }
 
-.selectedFlashcard {
+.selectedLine {
   background-color: #ededed;
 }
 
@@ -205,7 +205,6 @@ button:focus {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 600;
 }
 .lineTitle.hasBeenRead {
   font-weight: 400;
@@ -219,11 +218,24 @@ button:focus {
   text-align: right;
 }
 
-#flashcardList {
+#wordList {
   padding: 10px;
 }
 
-#flashcard {
+#conversationList {
+  padding: 10px;
+}
+
+#detail-container {
+  position: relative;
+  margin-left: 20px;
+  padding-right: 10px;
+  height: 100%;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+#detail-card {
   padding: 10px;
   display: flex;
   flex-flow: row;
@@ -247,24 +259,6 @@ button:focus {
   position: relative;
   margin-left: 10px;
   padding-top: 20px;
-}
-
-#flashcard #question {
-  padding: 10px;
-  height: 25vh;
-  border: 2px solid #eee;
-  border-radius: 10px;
-  background-color: #fff;
-  overflow: auto;
-}
-
-#flashcard #answer {
-  padding: 10px;
-  height: 40vh;
-  border: 2px solid #eee;
-  border-radius: 10px;
-  background-color: #fff;
-  overflow: auto;
 }
 
 #previousArrow {
@@ -357,22 +351,6 @@ button:focus {
 #answerButtons {
   display: flex;
   justify-content: space-around;
-}
-
-#flashcardForm {
-  margin-left: 20px;
-  padding-right: 10px;
-  flex: 1 1 auto;
-  overflow: auto;
-}
-
-#flashCardComponent {
-  position: relative;
-  margin-left: 20px;
-  padding-right: 10px;
-  height: 100%;
-  flex: 1 1 auto;
-  overflow: auto;
 }
 
 .infiniteScrollComponent {
@@ -480,7 +458,7 @@ button:focus {
   width: 100%;
 }
 
-.flashcardSection {
+.usedInSection {
   color: rgb(119, 119, 119);
   font-weight: 600;
   margin-bottom: 7px;
@@ -628,7 +606,13 @@ button:focus {
   height: 100%;
 }
 
-#openedFlashcards {
+#openedWords {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+#openedConversations {
   display: flex;
   flex-flow: column;
   height: 100%;

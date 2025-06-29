@@ -51,7 +51,7 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
   return (
     <div
       ref={lineRef}
-      className={"line" + (conversation._id === conversationId ? " selectedFlashcard" : "")}
+      className={"line" + (conversation._id === conversationId ? " selectedLine" : "")}
       onClick={() => openConversation(conversation._id)}
     >
       <div className="sentenceLines">

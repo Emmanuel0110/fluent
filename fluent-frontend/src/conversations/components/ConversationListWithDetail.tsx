@@ -74,7 +74,7 @@ export default function ConversationListWithDetail({
       </div>
       <div id="right">
         {currentOpenedConversation && (
-          <div id="openedFlashcards">
+          <div id="openedConversations">
             <TabNav
               tabsData={openedConversations.map(({ _id, multiLingualSentences }) => {
                 return {

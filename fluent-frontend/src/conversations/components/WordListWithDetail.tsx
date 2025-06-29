@@ -92,7 +92,7 @@ export default function WordListWithDetail({
       </div>
       <div id="right">
         {currentOpenedWord && (
-          <div id="openedFlashcards">
+          <div id="openedWords">
             <TabNav
               tabsData={openedWords.map(({ _id, text }) => ({
                 id: _id,
