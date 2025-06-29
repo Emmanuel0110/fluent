@@ -708,5 +708,13 @@ a.nav-link {
 }
 
 .wordLabel:hover {
-  color: #007bff;
+  background-color: #e0e0e0;
+}
+
+.sourceLanguage {
+  font-weight: 600;
+}
+
+.targetLanguage {
+  font-weight: normal;
 }
