@@ -13,28 +13,47 @@ export default function SentenceDetail({
 }) {
   const { words } = useData();
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
+  const [isSourceSentenceSelected, setIsSourceSentenceSelected] = useState(false);
   return (
-    <div id="flashCardComponent">
-      <div id="flashcard">
-        <div id="middle">
-          <div onClick={() => setIsTargetSentenceSelected(false)}>{sourceSentence.text}</div>
-          <div onClick={() => setIsTargetSentenceSelected(true)}>{targetSentence.text}</div>
-          {sourceSentence.prerequisites.length > 0 && !isTargetSentenceSelected && (
-            <div id="sourcePrerequisites">
-              {sourceSentence.prerequisites.map((wordId, index) =>
-                words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
-              )}
-            </div>
-          )}
-          {targetSentence.prerequisites.length > 0 && isTargetSentenceSelected && (
-            <div id="targetPrerequisites">
-              {targetSentence.prerequisites.map((wordId, index) =>
-                words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
-              )}
-            </div>
+    <div>
+      <div
+        onClick={() => {
+          if (isSourceSentenceSelected) {
+            setIsSourceSentenceSelected(false);
+          } else {
+            setIsSourceSentenceSelected(true);
+            setIsTargetSentenceSelected(false);
+          }
+        }}
+      >
+        {sourceSentence.text}
+      </div>
+      <div
+        onClick={() => {
+          if (isTargetSentenceSelected) {
+            setIsTargetSentenceSelected(false);
+          } else {
+            setIsTargetSentenceSelected(true);
+            setIsSourceSentenceSelected(false);
+          }
+        }}
+      >
+        {targetSentence.text}
+      </div>
+      {sourceSentence.prerequisites.length > 0 && isSourceSentenceSelected && (
+        <div id="sourcePrerequisites">
+          {sourceSentence.prerequisites.map((wordId, index) =>
+            words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
           )}
         </div>
-      </div>
+      )}
+      {targetSentence.prerequisites.length > 0 && isTargetSentenceSelected && (
+        <div id="targetPrerequisites">
+          {targetSentence.prerequisites.map((wordId, index) =>
+            words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
+          )}
+        </div>
+      )}
     </div>
   );
 }
