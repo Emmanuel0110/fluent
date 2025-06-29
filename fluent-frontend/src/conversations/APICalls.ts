@@ -39,6 +39,7 @@ export const saveNewWord = async (word: Word, appSourceLanguage: string, appTarg
   const body = JSON.stringify(formattedWord);
   return customFetch(url + "words", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -46,6 +47,7 @@ export const saveNewWordTag = async (args: Partial<WordTag>) => {
   const body = JSON.stringify(args);
   return customFetch(url + "wordTags", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -54,6 +56,7 @@ export const editRemoteWord = async ({ _id, ...args }: Word, appSourceLanguage: 
   const body = JSON.stringify(formattedWord);
   return customFetch(url + "words/" + _id, { method: "PUT", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -78,6 +81,7 @@ export const saveNewConversation = async (
   const body = JSON.stringify(formattedConversation);
   return customFetch(url + "conversations", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -91,6 +95,7 @@ export const editRemoteConversation = async (
   return customFetch(url + "conversations/" + conversation._id, { method: "PUT", headers: authHeaders(), body }).catch(
     (err: Error) => {
       console.log(err);
+      return { success: false, message: err.message };
     }
   );
 };
@@ -99,6 +104,7 @@ export const saveNewConversationTag = async ({ _id, ...infos }: ConversationTag)
   const body = JSON.stringify(infos);
   return customFetch(url + "conversationTags", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -107,6 +113,7 @@ export const editRemoteConversationTag = async ({ _id, ...infos }: ConversationT
   return customFetch(url + "conversationTags/" + _id, { method: "PUT", headers: authHeaders(), body }).catch(
     (err: Error) => {
       console.log(err);
+      return { success: false, message: err.message };
     }
   );
 };
@@ -114,6 +121,7 @@ export const editRemoteConversationTag = async ({ _id, ...infos }: ConversationT
 export const deleteRemoteWord = async (wordId: string) => {
   return customFetch(url + "words/" + wordId, { method: "DELETE", headers: authHeaders() }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -121,6 +129,7 @@ export const deleteRemoteConversation = async (conversationId: string) => {
   return customFetch(url + "conversations/" + conversationId, { method: "DELETE", headers: authHeaders() }).catch(
     (err: Error) => {
       console.log(err);
+      return { success: false, message: err.message };
     }
   );
 };
@@ -132,6 +141,7 @@ export const subscribeToRemoteConversation = async (id: string, wordIds: string[
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -142,6 +152,7 @@ export const unsubscribeToRemoteConversation = async (id: string, wordIds: strin
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
@@ -153,6 +164,7 @@ export const updateRemoteConversationReviewStatus = async (id: string, wordIds: 
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 
