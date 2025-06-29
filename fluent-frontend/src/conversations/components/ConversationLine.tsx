@@ -7,9 +7,19 @@ import { SentenceLine } from "./SentenceLine";
 import { useData } from "../../contexts/DataContext";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
-  const { conversationId } = useParams();
+  const { conversationId, wordId } = useParams();
   const { deleteConversation, subscribeToConversation, unsubscribeToConversation } = useData();
   const { openConversation, editConversation } = useContext(ConfigContext) as Context;
+
+  //When inside a WordDetail page, we want to filter the conversations to only show the one that contains the word
+  if (wordId) {
+    conversation = {
+      ...conversation,
+      multiLingualSentences: conversation.multiLingualSentences.filter((multiLingualSentence) =>
+        multiLingualSentence.sourceLanguage.prerequisites.includes(wordId)
+      ),
+    };
+  }
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,9 +54,11 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
       className={"line" + (conversation._id === conversationId ? " selectedFlashcard" : "")}
       onClick={() => openConversation(conversation._id)}
     >
-      {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
-        <SentenceLine key={index} multiLingualSentence={multiLingualSentence} />
-      ))}
+      <div className="sentenceLines">
+        {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
+          <SentenceLine key={index} sentenceIndex={index} multiLingualSentence={multiLingualSentence} />
+        ))}
+      </div>
       <div className="lineOptions">
         <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
         <div className="edit" onClick={onEdit}></div>
