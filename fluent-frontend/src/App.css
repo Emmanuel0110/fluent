@@ -201,13 +201,10 @@ button:focus {
   background-color: #ededed;
 }
 
-.lineTitle {
+.wordDefinition {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-.lineTitle.hasBeenRead {
-  font-weight: 400;
 }
 
 .alignLeft {
@@ -246,7 +243,7 @@ button:focus {
   flex: 0 0 40px;
   position: relative;
   margin-right: 10px;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 #middle {
@@ -692,7 +689,7 @@ a.nav-link {
 }
 
 .wordLabel:hover {
-  background-color: #e0e0e0;
+  color: #00a6ed;
 }
 
 .sourceLanguage {

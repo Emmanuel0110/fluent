@@ -21,8 +21,8 @@ export default function ConversationDetail({ conversation }: { conversation: Con
   };
 
   return (
-    <div id="flashCardComponent">
-      <div id="flashcard">
+    <div id="detail-container">
+      <div id="detail-card">
         <div id="previous">
           <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
         </div>

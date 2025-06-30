@@ -3,6 +3,7 @@ import { ConfigContext } from "../../App";
 import { Context, Conversation, Word } from "../../types";
 import { ConversationLine } from "./ConversationLine";
 import { useData } from "../../contexts/DataContext";
+import { WordDefinition } from "./WordDefinition";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const { words, wordTags } = useData();
@@ -19,19 +20,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
           <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         </div>
         <div id="middle">
-          <div className={"lineTitle"}>
-            <span>{word.text + " : "}</span>
-            <span>
-              {word.translations.map((wordId, index) => (
-                <span key={index}>
-                  {index !== 0 && <span>{", "}</span>}
-                  <span className="wordLabel" onClick={(e) => openWord(wordId)}>
-                    {words[wordId]?.text}
-                  </span>
-                </span>
-              ))}
-            </span>
-          </div>
+          <WordDefinition word={word} />
 
           <div id="tags">
             {word &&

@@ -5,6 +5,7 @@ import { ConfigContext } from "../../App";
 import { Context } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 import { useData } from "../../contexts/DataContext";
+import { WordDefinition } from "./WordDefinition";
 
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
@@ -37,17 +38,7 @@ export const WordLine = ({ word }: { word: Word }) => {
       className={"line" + (word._id === wordId ? " selectedLine" : "")}
       onClick={() => openWord(word._id)}
     >
-      <div className={"lineTitle"}>
-        <span className="sourceLanguage">{word.text + " : "}</span>
-        <span>
-          {word.translations.map((wordId, index) => (
-            <span key={index}>
-              {index !== 0 && <span>{", "}</span>}
-              <span>{words[wordId]?.text}</span>
-            </span>
-          ))}
-        </span>
-      </div>
+      <WordDefinition word={word} />
       <div className="lineOptions">
         <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         <div className="edit" onClick={onEdit}></div>

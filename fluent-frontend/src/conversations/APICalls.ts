@@ -19,6 +19,7 @@ export const getRemoteConversationByWordId = async (id: string) => {
     headers: authHeaders(),
   }).catch((err: Error) => {
     console.log(err);
+    return { success: false, message: err.message };
   });
 };
 

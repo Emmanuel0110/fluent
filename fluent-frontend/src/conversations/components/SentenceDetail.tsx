@@ -14,30 +14,31 @@ export default function SentenceDetail({
   const { words } = useData();
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
   const [isSourceSentenceSelected, setIsSourceSentenceSelected] = useState(false);
+
+  const handleSourceSentenceClick = () => {
+    if (isSourceSentenceSelected) {
+      setIsSourceSentenceSelected(false);
+    } else {
+      setIsSourceSentenceSelected(true);
+      setIsTargetSentenceSelected(false);
+    }
+  };
+
+  const handleTargetSentenceClick = () => {
+    if (isTargetSentenceSelected) {
+      setIsTargetSentenceSelected(false);
+    } else {
+      setIsTargetSentenceSelected(true);
+      setIsSourceSentenceSelected(false);
+    }
+  };
+
   return (
     <div>
-      <div
-        onClick={() => {
-          if (isSourceSentenceSelected) {
-            setIsSourceSentenceSelected(false);
-          } else {
-            setIsSourceSentenceSelected(true);
-            setIsTargetSentenceSelected(false);
-          }
-        }}
-      >
+      <div className="sourceLanguage" onClick={handleSourceSentenceClick}>
         {sourceSentence.text}
       </div>
-      <div
-        onClick={() => {
-          if (isTargetSentenceSelected) {
-            setIsTargetSentenceSelected(false);
-          } else {
-            setIsTargetSentenceSelected(true);
-            setIsSourceSentenceSelected(false);
-          }
-        }}
-      >
+      <div className="targetLanguage" onClick={handleTargetSentenceClick}>
         {targetSentence.text}
       </div>
       {sourceSentence.prerequisites.length > 0 && isSourceSentenceSelected && (
