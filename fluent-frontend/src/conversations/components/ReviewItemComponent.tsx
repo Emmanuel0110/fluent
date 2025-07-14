@@ -50,13 +50,13 @@ function ReviewItemComponent({
     setCurrentSentenceNumber((n) => n + 1);
   };
   return (
-    <div>
+    <div id="reviewItem">
       {conversation.multiLingualSentences
         .slice(0, currentSentenceNumber + 1)
         .map(({ sourceLanguage, targetLanguage }, index) => (
           <div key={index}>
             <div>{sourceLanguage.text}</div>
-            {timeIsUp && <div>{targetLanguage.text}</div>}
+            <div className="translationSpaceholder">{timeIsUp && <div>{targetLanguage.text}</div>}</div>
             <br />
           </div>
         ))}

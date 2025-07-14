@@ -692,6 +692,22 @@ a.nav-link {
   color: #00a6ed;
 }
 
+.translationSpaceholder {
+  height: 1.5em;
+}
+
+#reviewItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 1em;
+}
+
+#reviewItem > div {
+  text-align: center;
+}
+
 .sourceLanguage {
   font-weight: 600;
 }
