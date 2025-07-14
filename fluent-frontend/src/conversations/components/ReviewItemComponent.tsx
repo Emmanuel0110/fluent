@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Conversation } from "../../types";
+import { REVIEW_ITEM_DELAY } from "../../constants";
 
 function ReviewItemComponent({
   conversation,
@@ -18,7 +19,7 @@ function ReviewItemComponent({
     if (!timeIsUp) {
       timer.current = setTimeout(function () {
         setTimeIsUp(true);
-      }, 5000);
+      }, REVIEW_ITEM_DELAY);
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
