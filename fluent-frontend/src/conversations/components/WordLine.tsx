@@ -40,7 +40,6 @@ export const WordLine = ({ word }: { word: Word }) => {
     >
       <WordDefinition word={word} />
       <div className="lineOptions">
-        <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
         <div className="edit" onClick={onEdit}></div>
         <div className="delete" onClick={onDelete}></div>
       </div>

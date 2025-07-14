@@ -1,11 +1,5 @@
 import { Conversation, RowConversation, ConversationTag, conversationFilter } from "../types";
 
-export const getWordsFromConversation = (conversation: Conversation): string[] => {
-  return conversation.multiLingualSentences.reduce((acc, value) => {
-    return [...acc, ...value.sourceLanguage.prerequisites, ...value.targetLanguage.prerequisites];
-  }, [] as string[]);
-};
-
 export const formatConversations = (conversations: RowConversation[], targetLanguage: string): Conversation[] => {
   return conversations.map((multiLingualConversation) => {
     const { _id, tags, subscribed } = multiLingualConversation;

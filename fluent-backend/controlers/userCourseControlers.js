@@ -2,6 +2,7 @@ import auth from "../middleware/auth.js";
 import cache, { refreshLearningDataCache } from "../middleware/cache.js";
 import { redisClient } from "../index.js";
 import { UserCourseModel } from "../models.js";
+import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
@@ -11,19 +12,15 @@ async function updateLearningData(req, res) {
   try {
     const { userLearningData, user } = req;
     if (userLearningData) {
-      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, wordIds, success } = req.body;
+      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, success } = req.body;
       if (conversationToSubscribe) {
-        await subscribeToConversation(conversationToSubscribe, wordIds, userLearningData);
+        await subscribeToConversation(conversationToSubscribe, userLearningData);
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
-        const wordsToUnsubscribe = await unsubscribeToConversation(
-          conversationToUnsubscribe,
-          wordIds,
-          userLearningData
-        );
+        const wordsToUnsubscribe = await unsubscribeToConversation(conversationToUnsubscribe, userLearningData);
         res.json({ success: true, wordsToUnsubscribe });
       } else if (reviewedConversationId) {
-        await updateReviewData(reviewedConversationId, wordIds, success, userLearningData);
+        await updateReviewData(reviewedConversationId, success, userLearningData);
         res.json({ success: true });
       }
       if (redisClient) {
@@ -39,12 +36,27 @@ async function updateLearningData(req, res) {
   }
 }
 
-async function subscribeToConversation(conversationToSubscribe, wordIds, userLearningData) {
+async function getWordIdsForConversation(conversationId) {
+  const convo = await MultiLingualConversationModel.findById(conversationId).lean();
+  if (!convo) return [];
+  const wordIdSet = new Set();
+  for (const conv of convo.conversations) {
+    for (const sentence of conv.sentences) {
+      if (sentence.prerequisites) {
+        sentence.prerequisites.forEach((id) => wordIdSet.add(id.toString()));
+      }
+    }
+  }
+  return Array.from(wordIdSet);
+}
+
+async function subscribeToConversation(conversationToSubscribe, userLearningData) {
   if (!userLearningData.conversations.find(({ _id }) => _id == conversationToSubscribe)) {
     await UserCourseModel.updateOne(
       { _id: userLearningData._id },
       { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } }
     );
+    const wordIds = await getWordIdsForConversation(conversationToSubscribe);
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, newWordIds] = uniqIds.reduce(
       ([wordUpdates, newWordIds], wordId) => {
@@ -65,12 +77,13 @@ async function subscribeToConversation(conversationToSubscribe, wordIds, userLea
   }
 }
 
-async function unsubscribeToConversation(conversationToUnsubscribe, wordIds, userLearningData) {
+async function unsubscribeToConversation(conversationToUnsubscribe, userLearningData) {
   if (userLearningData.conversations.find(({ _id }) => _id == conversationToUnsubscribe)) {
     await UserCourseModel.updateOne(
       { _id: userLearningData._id },
       { $pull: { conversations: { _id: conversationToUnsubscribe } } }
     );
+    const wordIds = await getWordIdsForConversation(conversationToUnsubscribe);
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, wordIdsToUnsubcribe] = uniqIds.reduce(
       ([wordUpdates, wordIdsToRemove], wordId) => {
@@ -126,13 +139,14 @@ async function updateWordsSubscription(userLearningDataId, updates) {
   }
 }
 
-async function updateReviewData(reviewedConversationId, wordIds, success, userLearningData) {
+async function updateReviewData(reviewedConversationId, success, userLearningData) {
   if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
     await UserCourseModel.updateOne(
       { _id: userLearningData._id, "conversations._id": reviewedConversationId },
       { $set: { "conversations.$.lastReviewDate": new Date() } }
     );
   }
+  const wordIds = await getWordIdsForConversation(reviewedConversationId);
   const uniqIds = [...new Set(wordIds)];
   const [wordUpdates, newWordIds] = uniqIds.reduce(
     ([wordUpdates, newWordIds], wordId) => {

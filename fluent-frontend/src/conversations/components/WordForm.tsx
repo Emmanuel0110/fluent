@@ -78,7 +78,6 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
         text: label,
         translations: [sourceWord._id],
         tags: [],
-        subscribed: false,
       }).then((word) => {
         if (word) {
           setSourceWord({ ...sourceWord, translations: [...sourceWord.translations, word._id] });
@@ -173,7 +172,6 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
         text: label,
         translations: [targetWord._id],
         tags: [],
-        subscribed: false,
       }).then((word) => {
         if (word) {
           setTargetWord({ ...targetWord, translations: [...targetWord.translations, word._id] });

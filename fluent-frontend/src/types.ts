@@ -48,7 +48,6 @@ export interface RowWord {
     lexicalItems: string[];
   }[];
   tags: string[];
-  subscribed: boolean;
 }
 export interface Word {
   _id: string;
@@ -56,7 +55,6 @@ export interface Word {
   text: string;
   translations: string[];
   tags: string[];
-  subscribed: boolean;
 }
 
 export interface Sentence {

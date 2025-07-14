@@ -135,10 +135,9 @@ export const deleteRemoteConversation = async (conversationId: string) => {
   );
 };
 
-export const subscribeToRemoteConversation = async (id: string, wordIds: string[]) => {
+export const subscribeToRemoteConversation = async (id: string) => {
   const body = JSON.stringify({
     conversationToSubscribe: id,
-    wordIds,
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
@@ -146,10 +145,9 @@ export const subscribeToRemoteConversation = async (id: string, wordIds: string[
   });
 };
 
-export const unsubscribeToRemoteConversation = async (id: string, wordIds: string[]) => {
+export const unsubscribeToRemoteConversation = async (id: string) => {
   const body = JSON.stringify({
     conversationToUnsubscribe: id,
-    wordIds,
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
@@ -157,10 +155,9 @@ export const unsubscribeToRemoteConversation = async (id: string, wordIds: strin
   });
 };
 
-export const updateRemoteConversationReviewStatus = async (id: string, wordIds: string[], success: boolean) => {
+export const updateRemoteConversationReviewStatus = async (id: string, success: boolean) => {
   const body = JSON.stringify({
     reviewedConversationId: id,
-    wordIds,
     success,
   });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {

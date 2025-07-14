@@ -23,11 +23,7 @@ import {
 } from "../conversations/APICalls";
 import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 import { useNavigate } from "react-router-dom";
-import {
-  getWordsFromConversation,
-  updateCacheWithNewConversations,
-  updateCacheWithNewConversationTags,
-} from "../utils/conversationUtils";
+import { updateCacheWithNewConversations, updateCacheWithNewConversationTags } from "../utils/conversationUtils";
 import { formatWord, updateCacheWithNewWordTags } from "../utils/wordUtils";
 
 interface DataContextType {
@@ -186,51 +182,34 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const subscribeToConversation = (conversation: Conversation) => {
     const conversationId = conversation._id;
-    const wordIds = getWordsFromConversation(conversation);
-    subscribeToRemoteConversation(conversation._id, wordIds).then((res) => {
+    subscribeToRemoteConversation(conversationId).then((res) => {
       if (res.success) {
         setConversations((conversations) =>
           conversations.map((conversation) =>
             conversation._id === conversationId ? { ...conversation, subscribed: true } : conversation
           )
         );
-        setWords((words) => ({
-          ...words,
-          ...wordIds.reduce((acc, value) => {
-            return words[value] ? { ...acc, [value]: { ...words[value], subscribed: true } } : acc;
-          }, {}),
-        }));
       }
     });
   };
 
   const unsubscribeToConversation = (conversation: Conversation) => {
     const conversationId = conversation._id;
-    const wordIds = getWordsFromConversation(conversation);
-    unsubscribeToRemoteConversation(conversation._id, wordIds).then(
-      (res: { success: boolean; wordsToUnsubscribe: string[] }) => {
-        if (res.success) {
-          setConversations((conversations) =>
-            conversations.map((conversation) =>
-              conversation._id === conversationId ? { ...conversation, subscribed: false } : conversation
-            )
-          );
-          setWords((words) => ({
-            ...words,
-            ...res.wordsToUnsubscribe.reduce((acc, value) => {
-              return { ...acc, [value]: { ...words[value], subscribed: false } };
-            }, {}),
-          }));
-        }
+    unsubscribeToRemoteConversation(conversationId).then((res: { success: boolean }) => {
+      if (res.success) {
+        setConversations((conversations) =>
+          conversations.map((conversation) =>
+            conversation._id === conversationId ? { ...conversation, subscribed: false } : conversation
+          )
+        );
       }
-    );
+    });
   };
 
   const updateConversationReviewStatus = async (reviewItem: ReviewItem) => {
     const conversationId = reviewItem._id;
-    const wordIds = getWordsFromConversation(reviewItem);
     const successOnFirstTry = !reviewItem.alreadyFailed;
-    await updateRemoteConversationReviewStatus(conversationId, wordIds, successOnFirstTry);
+    await updateRemoteConversationReviewStatus(conversationId, successOnFirstTry);
   };
 
   const getConversationById = (id: string): Promise<Conversation> => {

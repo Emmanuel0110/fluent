@@ -16,9 +16,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
   return (
     <div id="detail-container">
       <div id="detail-card">
-        <div id="previous">
-          <div className={"subscribe" + (word.subscribed ? " subscribed" : "")}></div>
-        </div>
+        <div id="previous">{/* Removed subscribe button for words */}</div>
         <div id="middle">
           <WordDefinition word={word} />
 
