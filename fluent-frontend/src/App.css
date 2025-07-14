@@ -684,11 +684,11 @@ a.nav-link {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.wordLabel {
+.translationLabel {
   cursor: pointer;
 }
 
-.wordLabel:hover {
+.translationLabel:hover {
   color: #00a6ed;
 }
 

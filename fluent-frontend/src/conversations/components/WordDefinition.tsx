@@ -10,6 +10,12 @@ interface WordDefinitionProps {
 export const WordDefinition = ({ word }: WordDefinitionProps) => {
   const { words } = useData();
   const { openWord } = useContext(ConfigContext) as Context;
+
+  const onTranslationClick = (e: React.MouseEvent, wordId: string) => {
+    e.stopPropagation();
+    openWord(wordId);
+  };
+
   return (
     <div className="wordDefinition">
       <span className="sourceLanguage">{word.text + " : "}</span>
@@ -17,7 +23,7 @@ export const WordDefinition = ({ word }: WordDefinitionProps) => {
         {word.translations.map((wordId, index) => (
           <span key={index}>
             {index !== 0 && <span>{", "}</span>}
-            <span className="wordLabel" onClick={(e) => openWord(wordId)}>
+            <span className="translationLabel" onClick={(e) => onTranslationClick(e, wordId)}>
               {words[wordId]?.text}
             </span>
           </span>
