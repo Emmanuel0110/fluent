@@ -18,7 +18,7 @@ function ReviewItemComponent({
     if (!timeIsUp) {
       timer.current = setTimeout(function () {
         setTimeIsUp(true);
-      }, 2000);
+      }, 5000);
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
