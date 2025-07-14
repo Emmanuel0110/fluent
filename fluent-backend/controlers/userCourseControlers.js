@@ -1,5 +1,6 @@
 import auth from "../middleware/auth.js";
 import cache, { refreshLearningDataCache } from "../middleware/cache.js";
+import { redisClient } from "../index.js";
 import { UserCourseModel } from "../models.js";
 import express from "express";
 const router = express.Router();
@@ -10,7 +11,6 @@ async function updateLearningData(req, res) {
   try {
     const { userLearningData, user } = req;
     if (userLearningData) {
-      console.log(req.body);
       const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, wordIds, success } = req.body;
       if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, wordIds, userLearningData);
@@ -26,7 +26,9 @@ async function updateLearningData(req, res) {
         await updateReviewData(reviewedConversationId, wordIds, success, userLearningData);
         res.json({ success: true });
       }
-      refreshLearningDataCache(userLearningData._id, user._id);
+      if (redisClient) {
+        refreshLearningDataCache(userLearningData._id, user._id);
+      }
     }
   } catch (error) {
     console.error(error);

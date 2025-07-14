@@ -15,9 +15,20 @@ import wordRoutes from "./controlers/wordControlers.js";
 import languageRoutes from "./controlers/languageControlers.js";
 import { createClient } from "redis";
 
-export const redisClient = createClient();
-redisClient.on("error", (err) => console.log("Redis Client Error", err));
-redisClient.connect().catch(console.error);
+// Parse command-line arguments for --no-redis flag
+const useRedis = !process.argv.includes("--no-redis");
+
+let redisClient = null;
+if (useRedis) {
+  const { createClient } = await import("redis");
+  redisClient = createClient();
+  redisClient.on("error", (err) => console.log("Redis Client Error", err));
+  redisClient.connect().catch(console.error);
+  console.log("Redis enabled");
+} else {
+  console.log("Redis disabled by --no-redis flag");
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -85,3 +96,5 @@ db.once("open", function (callback) {
     console.log(`Example app listening on port ${process.env.PORT || port}!`);
   });
 });
+
+export { redisClient };

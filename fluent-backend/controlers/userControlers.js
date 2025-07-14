@@ -99,7 +99,9 @@ export async function cacheUserLearningData(user) {
     await course.save();
     await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
   }
-  await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+  if (redisClient) {
+    await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+  }
   return course;
 }
 
@@ -127,7 +129,9 @@ export async function updateLanguages(user, sourceLanguage, targetLanguage) {
     }).save();
   }
   await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
-  await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+  if (redisClient) {
+    await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+  }
 }
 
 export default router;
