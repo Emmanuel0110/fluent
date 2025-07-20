@@ -18,7 +18,7 @@ export const WordDefinition = ({ word }: WordDefinitionProps) => {
 
   return (
     <div className="wordDefinition">
-      <span className="sourceLanguage">{word.text + " : "}</span>
+      <span className="wordLabel">{word.text + " : "}</span>
       <span>
         {word.translations.map((wordId, index) => (
           <span key={index}>

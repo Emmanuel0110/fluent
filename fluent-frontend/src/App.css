@@ -681,10 +681,16 @@ a.nav-link {
   text-align: center;
 }
 
+.wordLabel {
+  font-weight: 600;
+}
+
 .sourceLanguage {
   font-weight: 600;
+  cursor: pointer;
 }
 
 .targetLanguage {
   font-weight: normal;
+  cursor: pointer;
 }
