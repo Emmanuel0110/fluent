@@ -23,7 +23,11 @@ import {
 } from "../conversations/APICalls";
 import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 import { useNavigate } from "react-router-dom";
-import { updateCacheWithNewConversations, updateCacheWithNewConversationTags } from "../utils/conversationUtils";
+import {
+  formatConversations,
+  updateCacheWithNewConversations,
+  updateCacheWithNewConversationTags,
+} from "../utils/conversationUtils";
 import { formatWord, updateCacheWithNewWordTags } from "../utils/wordUtils";
 
 interface DataContextType {
@@ -105,9 +109,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
       setWordTags(wordTagsData || []);
       setConversationTags(conversationTagsData || []);
       setWords(wordsData || {});
-      setConversations((conversations) =>
-        updateCacheWithNewConversations(conversations, conversationsData || [], targetLanguage)
-      );
+      setConversations(formatConversations(conversationsData, targetLanguage) || []);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {

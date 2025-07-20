@@ -17,7 +17,7 @@
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/fluent-backend/node_modules/nodemon/bin/nodemon.js",
-      "args": ["server.js"],
+      "args": ["index.js", "--no-redis"],
       "cwd": "${workspaceFolder}/fluent-backend",
       "env": {
         "NODE_ENV": "development"

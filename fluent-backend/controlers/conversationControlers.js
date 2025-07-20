@@ -49,7 +49,7 @@ function onlyKeepLanguages(sourceLanguage, targetLanguage) {
     return {
       ...conversation,
       conversations: conversation.conversations.filter(({ language }) =>
-        [sourceLanguage, targetLanguage].includes(language.toString())
+        [sourceLanguage.toString(), targetLanguage.toString()].includes(language.toString())
       ),
     };
   };
