@@ -15,8 +15,10 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
   if (wordId) {
     conversation = {
       ...conversation,
-      multiLingualSentences: conversation.multiLingualSentences.filter((multiLingualSentence) =>
-        multiLingualSentence.sourceLanguage.prerequisites.includes(wordId)
+      multiLingualSentences: conversation.multiLingualSentences.filter(
+        (multiLingualSentence) =>
+          multiLingualSentence.sourceLanguage.prerequisites.includes(wordId) ||
+          multiLingualSentence.targetLanguage.prerequisites.includes(wordId)
       ),
     };
   }
