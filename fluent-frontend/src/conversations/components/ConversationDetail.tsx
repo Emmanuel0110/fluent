@@ -23,10 +23,10 @@ export default function ConversationDetail({ conversation }: { conversation: Con
   return (
     <div id="detail-container">
       <div id="detail-card">
-        <div id="previous">
+        <div id="detail-card-left">
           <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
         </div>
-        <div id="middle">
+        <div id="detail-card-main">
           {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
             <SentenceDetail key={index} multiLingualSentence={multiLingualSentence} />
           ))}

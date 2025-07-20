@@ -16,10 +16,8 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
   return (
     <div id="detail-container">
       <div id="detail-card">
-        <div id="previous">{/* Removed subscribe button for words */}</div>
-        <div id="middle">
+        <div id="detail-card-main">
           <WordDefinition word={word} />
-
           <div id="tags">
             {word &&
               word.tags.map((tagId, index) => {
@@ -32,7 +30,6 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
                   );
               })}
           </div>
-
           {usedIn.length > 0 && (
             <div id="usedIn">
               <div className="usedInSection">Used in</div>
