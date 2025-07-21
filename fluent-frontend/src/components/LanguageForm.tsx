@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateLanguages } from "../APICalls";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 export default function LanguageForm() {
   const { languages, setSourceLanguage, setTargetLanguage } = useLanguage();

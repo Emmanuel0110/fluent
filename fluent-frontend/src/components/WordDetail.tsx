@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { ConfigContext } from "../../App";
-import { Context, Conversation, Word } from "../../types";
+import { ConfigContext } from "../App";
+import { Context, Conversation, Word } from "../types";
 import { ConversationLine } from "./ConversationLine";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {

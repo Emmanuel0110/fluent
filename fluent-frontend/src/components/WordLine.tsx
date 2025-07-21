@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import { Word } from "../../types";
+import { Word } from "../types";
 import { useContext, useEffect, useRef } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
-import { useAuth } from "../../contexts/AuthContext";
-import { useData } from "../../contexts/DataContext";
+import { ConfigContext } from "../App";
+import { Context } from "../types";
+import { useAuth } from "../contexts/AuthContext";
+import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 
 export const WordLine = ({ word }: { word: Word }) => {

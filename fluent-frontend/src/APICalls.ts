@@ -1,8 +1,8 @@
-import { url } from "../App";
-import { authHeaders, customFetch } from "../utils/http-helpers";
-import { Conversation, ConversationTag, RowConversation, Word, WordTag } from "../types";
-import { groupById } from "../utils/generalUtils";
-import { formatWords } from "../utils/wordUtils";
+import { url } from "./App";
+import { authHeaders, customFetch } from "./utils/http-helpers";
+import { Conversation, ConversationTag, RowConversation, Word, WordTag } from "./types";
+import { groupById } from "./utils/generalUtils";
+import { formatWords } from "./utils/wordUtils";
 
 export const getRemoteConversationById = async (id: string) => {
   return customFetch(url + "conversations?conversationId=" + id, {

@@ -1,4 +1,4 @@
-import { Word } from "../../types";
+import { Word } from "../types";
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
 

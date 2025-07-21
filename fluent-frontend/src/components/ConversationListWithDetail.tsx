@@ -1,13 +1,13 @@
-import { Conversation } from "../../types";
+import { Conversation } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
-import useSplitPane from "../../utils/useSplitPane";
+import useSplitPane from "../utils/useSplitPane";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
-import TabNav from "../../layout/TabNav";
+import { ConfigContext } from "../App";
+import { Context } from "../types";
+import TabNav from "../layout/TabNav";
 import ConversationList from "./ConversationList";
 import ConversationDetail from "./ConversationDetail";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 
 export default function ConversationListWithDetail({
   filteredConversations,

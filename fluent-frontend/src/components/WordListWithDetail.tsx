@@ -1,13 +1,13 @@
-import { Conversation, Word } from "../../types";
+import { Conversation, Word } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
-import useSplitPane from "../../utils/useSplitPane";
+import useSplitPane from "../utils/useSplitPane";
 import WordList from "./WordList";
 import { useContext, useEffect, useState } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
-import TabNav from "../../layout/TabNav";
+import { ConfigContext } from "../App";
+import { Context } from "../types";
+import TabNav from "../layout/TabNav";
 import WordDetail from "./WordDetail";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 
 const MIN_USEDIN_LENGTH = 10;
 

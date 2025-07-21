@@ -1,11 +1,11 @@
 import React, { Dispatch, Fragment, useEffect, useMemo, useState } from "react";
-import "../../App.css";
-import { Conversation, ConversationTag, Word } from "../../types";
-import AutoComplete from "../../utils/Autocomplete";
+import "../App.css";
+import { Conversation, ConversationTag, Word } from "../types";
+import AutoComplete from "../utils/Autocomplete";
 import { WordLine } from "./WordLine";
 import { useParams } from "react-router-dom";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { useData } from "../../contexts/DataContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useData } from "../contexts/DataContext";
 
 type SourceOrTarget = "sourceLanguage" | "targetLanguage";
 type Callback = {

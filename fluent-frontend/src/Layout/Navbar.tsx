@@ -4,7 +4,7 @@ import { ConfigContext } from "../App";
 import { Context } from "../types";
 import { logout } from "../auth/authActions";
 import AutoComplete from "../utils/Autocomplete";
-import LanguageSelector from "../conversations/components/LanguageSelector";
+import LanguageSelector from "../components/LanguageSelector";
 import { useData } from "../contexts/DataContext";
 import { useAuth } from "../contexts/AuthContext";
 import { someFilter } from "../utils/filterUtils";

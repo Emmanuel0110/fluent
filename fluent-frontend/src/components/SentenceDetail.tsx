@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Sentence } from "../../types";
+import { Sentence } from "../types";
 import { WordLine } from "./WordLine";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 
 export default function SentenceDetail({
   multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },

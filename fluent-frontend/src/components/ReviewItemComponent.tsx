@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Conversation } from "../../types";
-import { REVIEW_ITEM_DELAY } from "../../constants";
+import { Conversation } from "../types";
+import { REVIEW_ITEM_DELAY } from "../constants";
 
 function ReviewItemComponent({
   conversation,

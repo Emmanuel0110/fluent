@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
-import { Conversation } from "../../types";
+import { Conversation } from "../types";
 import { useContext, useEffect, useRef } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
+import { ConfigContext } from "../App";
+import { Context } from "../types";
 import { SentenceLine } from "./SentenceLine";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
   const { conversationId, wordId } = useParams();

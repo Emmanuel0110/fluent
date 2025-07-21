@@ -20,7 +20,7 @@ import {
   updateRemoteConversationReviewStatus,
   getRemoteConversationById,
   getRemoteConversationByWordId,
-} from "../conversations/APICalls";
+} from "../APICalls";
 import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 import { useNavigate } from "react-router-dom";
 import {

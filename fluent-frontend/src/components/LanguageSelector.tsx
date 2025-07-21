@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./LanguageSelector.css";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useLanguage } from "../contexts/LanguageContext";
 
 const LanguageSelector: React.FC = () => {
   const { languages, sourceLanguage, targetLanguage, updateUserLanguages } = useLanguage();

@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import { ConfigContext } from "../../App";
-import { Context, Conversation } from "../../types";
+import { ConfigContext } from "../App";
+import { Context, Conversation } from "../types";
 import SentenceDetail from "./SentenceDetail";
-import { useData } from "../../contexts/DataContext";
+import { useData } from "../contexts/DataContext";
 
 export default function ConversationDetail({ conversation }: { conversation: Conversation }) {
   const { conversationTags, subscribeToConversation, unsubscribeToConversation } = useData();

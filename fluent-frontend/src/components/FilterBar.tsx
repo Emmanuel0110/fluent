@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { ConfigContext } from "../../App";
-import { Context } from "../../types";
+import { ConfigContext } from "../App";
+import { Context } from "../types";
 
 export default function FilterBar() {
   const { searchFilter, setSearchFilter, setSearchInput } = useContext(ConfigContext) as Context;

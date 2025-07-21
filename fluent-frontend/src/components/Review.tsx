@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from "react";
-import { ConfigContext } from "../../App";
-import { Context, RowConversation } from "../../types";
+import { ConfigContext } from "../App";
+import { Context, RowConversation } from "../types";
 import { getReviewList } from "../APICalls";
 import ReviewItemComponent from "./ReviewItemComponent";
-import { useLanguage } from "../../contexts/LanguageContext";
-import { useData } from "../../contexts/DataContext";
-import { updateCacheWithNewConversations } from "../../utils/conversationUtils";
+import { useLanguage } from "../contexts/LanguageContext";
+import { useData } from "../contexts/DataContext";
+import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 
 function Review() {
   const { targetLanguage } = useLanguage();

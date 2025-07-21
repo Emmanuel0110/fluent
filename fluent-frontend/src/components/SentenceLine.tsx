@@ -1,4 +1,4 @@
-import { Sentence } from "../../types";
+import { Sentence } from "../types";
 
 export const SentenceLine = ({
   multiLingualSentence,

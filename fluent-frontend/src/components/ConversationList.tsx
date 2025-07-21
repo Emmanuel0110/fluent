@@ -1,4 +1,4 @@
-import { Conversation } from "../../types";
+import { Conversation } from "../types";
 import FilterBar from "./FilterBar";
 import { ConversationLine } from "./ConversationLine";
 
