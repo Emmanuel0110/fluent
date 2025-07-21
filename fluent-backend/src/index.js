@@ -15,7 +15,6 @@ import wordRoutes from "./controlers/wordControlers.js";
 import languageRoutes from "./controlers/languageControlers.js";
 import { createClient } from "redis";
 
-// Parse command-line arguments for --no-redis flag
 const useRedis = !process.argv.includes("--no-redis");
 
 let redisClient = null;
