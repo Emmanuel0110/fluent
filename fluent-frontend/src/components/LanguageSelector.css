@@ -3,7 +3,7 @@
   min-height: 3ch;
   cursor: pointer;
   background-color: white;
-  mask: url(translate_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*https://fonts.google.com/icons*/
+  mask: url(../images/translate_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*https://fonts.google.com/icons*/
   mask-repeat: no-repeat;
   margin: auto 5px;
 }
