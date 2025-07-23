@@ -524,6 +524,10 @@ button:focus {
   background-color: rgb(227, 227, 227);
 }
 
+#newConversationButton {
+  margin: 10px;
+}
+
 #startAReviewButton {
   font-weight: 600;
   border: 2px solid;

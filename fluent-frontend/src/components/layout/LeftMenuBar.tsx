@@ -40,7 +40,7 @@ function LeftMenuBar() {
     <div id="leftSideMenu">
       <div id="leftSideMenuItems">
         <div>
-          <Button style={{ margin: "0px 10px 6px" }} onClick={openNewDraft}>
+          <Button id="newConversationButton" onClick={openNewDraft}>
             New conversation
           </Button>
         </div>
