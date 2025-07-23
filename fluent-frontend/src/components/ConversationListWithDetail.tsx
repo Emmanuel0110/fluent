@@ -4,7 +4,7 @@ import useSplitPane from "../utils/useSplitPane";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ConfigContext } from "../App";
 import { Context } from "../types";
-import TabNav from "../layout/TabNav";
+import TabNav from "./layout/TabNav";
 import ConversationList from "./ConversationList";
 import ConversationDetail from "./ConversationDetail";
 import { useData } from "../contexts/DataContext";

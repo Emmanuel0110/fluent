@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useMemo, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "./App.css";
 import Register from "./auth/components/Register";
-import Layout from "./layout/Layout";
+import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";

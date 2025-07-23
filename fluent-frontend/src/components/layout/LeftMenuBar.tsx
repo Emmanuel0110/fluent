@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { ConfigContext } from "../App";
-import { Context } from "../types";
+import { ConfigContext } from "../../App";
+import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
 
 function LeftMenuBar() {
@@ -43,11 +43,21 @@ function LeftMenuBar() {
           </Button>
         </div>
         <div id="statusSection">
-          <div onClick={() => {setStatus("words");navigate("/words")}}>
+          <div
+            onClick={() => {
+              setStatus("words");
+              navigate("/words");
+            }}
+          >
             <div className={status === "words" ? "selected" : "unselected"}></div>
             <div>Words</div>
           </div>
-          <div onClick={() => {setStatus("conversations");navigate("/conversations")}}>
+          <div
+            onClick={() => {
+              setStatus("conversations");
+              navigate("/conversations");
+            }}
+          >
             <div className={status === "conversations" ? "selected" : "unselected"}></div>
             <div>Conversations</div>
           </div>

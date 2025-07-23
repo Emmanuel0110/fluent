@@ -1,13 +1,13 @@
 import { Dispatch, RefObject, useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ConfigContext } from "../App";
-import { Context } from "../types";
-import { logout } from "../auth/authActions";
-import AutoComplete from "../utils/Autocomplete";
-import LanguageSelector from "../components/LanguageSelector";
-import { useData } from "../contexts/DataContext";
-import { useAuth } from "../contexts/AuthContext";
-import { someFilter } from "../utils/filterUtils";
+import { ConfigContext } from "../../App";
+import { Context } from "../../types";
+import { logout } from "../../auth/authActions";
+import AutoComplete from "../../utils/Autocomplete";
+import LanguageSelector from "../LanguageSelector";
+import { useData } from "../../contexts/DataContext";
+import { useAuth } from "../../contexts/AuthContext";
+import { someFilter } from "../../utils/filterUtils";
 
 const parseLabel = (label: string) => {
   let result: string[] = [];
