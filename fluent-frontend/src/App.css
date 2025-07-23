@@ -681,6 +681,14 @@ a.nav-link {
   text-align: center;
 }
 
+#nothingToReview {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #666;
+  margin-top: 2em;
+}
+
 .wordLabel {
   font-weight: 600;
 }

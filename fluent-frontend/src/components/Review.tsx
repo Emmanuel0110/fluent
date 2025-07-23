@@ -38,7 +38,7 @@ function Review() {
   };
 
   return reviewList.length === 0 ? (
-    <div>Nothing to review</div>
+    <div id="nothingToReview">Nothing to review</div>
   ) : (
     <div>
       <ReviewItemComponent conversation={reviewList[0]} nextConversation={nextConversation} />
