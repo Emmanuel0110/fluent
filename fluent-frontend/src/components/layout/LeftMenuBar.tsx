@@ -27,10 +27,12 @@ function LeftMenuBar() {
   };
 
   const startReview = () => {
+    setStatus("review");
     navigate("/review");
   };
 
   const openNewDraft = () => {
+    setStatus("new");
     navigate("/new");
   };
 
