@@ -83,10 +83,10 @@ router.get("/auth", auth, async function (req, res) {
 export async function cacheUserLearningData(user) {
   let course;
   if (user.lastCourseId) {
-    course = await UserCourseModel.findById(user.lastCourseId);
+    course = await UserCourseModel.findById(user.lastCourseId).lean();
   } else if (user.courses.length > 0) {
     await UserModel.findByIdAndUpdate(user._id, { lastCourseId: user.courses[0] });
-    course = await UserCourseModel.findById(user.courses[0]);
+    course = await UserCourseModel.findById(user.courses[0]).lean();
   } else {
     const availableLanguages = await LanguageModel.find().select("-flag");
     course = new UserCourseModel({
