@@ -15,14 +15,14 @@ function Review() {
   useEffect(() => fetchNewReviewItems(), []);
 
   const nextConversation = (success: boolean): void => {
-    const currenConversation = reviewList[0];
+    const currentConversation = reviewList[0];
     if (success) {
       setReviewList((reviewList) => reviewList.slice(1));
-      updateConversationReviewStatus(currenConversation);
+      updateConversationReviewStatus(currentConversation);
       if (reviewList.length <= 1) fetchNewReviewItems();
     } else {
-      currenConversation.alreadyFailed = true;
-      setReviewList((reviewList) => [...reviewList.slice(1), currenConversation]);
+      currentConversation.alreadyFailed = true;
+      setReviewList((reviewList) => [...reviewList.slice(1), currentConversation]);
     }
   };
 

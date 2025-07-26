@@ -10,7 +10,7 @@ router.get("/", auth, cache, getNextReviewItems);
 async function getNextReviewItems(req, res) {
   try {
     console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
-    const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first choose a language
+    const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first chooses a language
     console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
     res.json({ success: true, data: nextReviewItems });
   } catch (error) {
@@ -117,7 +117,7 @@ function selectUsefulConversations(conversations, wordIdsLeftToFind) {
     // Convert conversation word IDs to strings and filter
     const wordIdsFound = wordsFromConversation
       .map((id) => id.toString())
-      .filter((value) => wordIdsLeftToFindStrings.includes(value));
+      .filter((value) => wordIdsLeftToFindStrings.includes(value)); //TODO: use set intersection and difference
 
     if (wordIdsFound.length > 0) {
       selectedConversations.push(conversation);

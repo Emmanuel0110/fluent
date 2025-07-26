@@ -235,6 +235,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         conversations,
         wordTags,
         conversationTags,
+        isLoading,
         fetchMoreUsedInConversations,
         subscribeToConversation,
         unsubscribeToConversation,
@@ -247,7 +248,6 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         deleteConversation,
         saveConversationTag,
         loadAllData,
-        isLoading,
       }}
     >
       {children}
