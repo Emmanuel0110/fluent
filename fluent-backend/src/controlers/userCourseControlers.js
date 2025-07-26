@@ -36,14 +36,16 @@ async function updateLearningData(req, res) {
   }
 }
 
-async function getWordIdsForConversation(conversationId) {
+async function getWordIdsForConversation(conversationId, language) {
   const convo = await MultiLingualConversationModel.findById(conversationId).lean();
   if (!convo) return [];
   const wordIdSet = new Set();
   for (const conv of convo.conversations) {
-    for (const sentence of conv.sentences) {
-      if (sentence.prerequisites) {
-        sentence.prerequisites.forEach((id) => wordIdSet.add(id.toString()));
+    if (conv.language.toString() == language.toString()) {
+      for (const sentence of conv.sentences) {
+        if (sentence.prerequisites) {
+          sentence.prerequisites.forEach((id) => wordIdSet.add(id.toString()));
+        }
       }
     }
   }
@@ -56,7 +58,7 @@ async function subscribeToConversation(conversationToSubscribe, userLearningData
       { _id: userLearningData._id },
       { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } }
     );
-    const wordIds = await getWordIdsForConversation(conversationToSubscribe);
+    const wordIds = await getWordIdsForConversation(conversationToSubscribe, userLearningData.sourceLanguage);
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, newWordIds] = uniqIds.reduce(
       ([wordUpdates, newWordIds], wordId) => {
@@ -83,7 +85,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userLearning
       { _id: userLearningData._id },
       { $pull: { conversations: { _id: conversationToUnsubscribe } } }
     );
-    const wordIds = await getWordIdsForConversation(conversationToUnsubscribe);
+    const wordIds = await getWordIdsForConversation(conversationToUnsubscribe, userLearningData.sourceLanguage);
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, wordIdsToUnsubcribe] = uniqIds.reduce(
       ([wordUpdates, wordIdsToRemove], wordId) => {
@@ -146,7 +148,7 @@ async function updateReviewData(reviewedConversationId, success, userLearningDat
       { $set: { "conversations.$.lastReviewDate": new Date() } }
     );
   }
-  const wordIds = await getWordIdsForConversation(reviewedConversationId);
+  const wordIds = await getWordIdsForConversation(reviewedConversationId, userLearningData.sourceLanguage);
   const uniqIds = [...new Set(wordIds)];
   const [wordUpdates, newWordIds] = uniqIds.reduce(
     ([wordUpdates, newWordIds], wordId) => {
