@@ -1,6 +1,6 @@
 import { Dispatch, RefObject, useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { ConfigContext } from "../../App";
+import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { logout } from "../../auth/authActions";
 import AutoComplete from "../../utils/Autocomplete";

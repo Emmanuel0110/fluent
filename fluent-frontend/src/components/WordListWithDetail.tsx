@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../utils/useSplitPane";
 import WordList from "./WordList";
 import { useContext, useEffect, useState } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import TabNav from "./layout/TabNav";
 import WordDetail from "./WordDetail";
@@ -11,15 +11,9 @@ import { useData } from "../contexts/DataContext";
 
 const MIN_USEDIN_LENGTH = 10;
 
-export default function WordListWithDetail({
-  filteredWords,
-  openedWords,
-}: {
-  filteredWords: Word[];
-  openedWords: Word[];
-}) {
+export default function WordListWithDetail() {
   const { words, conversations, fetchMoreUsedInConversations } = useData();
-  const { setOpenedWords } = useContext(ConfigContext) as Context;
+  const { setOpenedWords, filteredWords, openedWords } = useContext(ConfigContext) as Context;
   const wordId = useParams().wordId!;
   const [currentOpenedWord, setCurrentOpenedWord] = useState<Word | null>(null);
   const [usedIn, setdUsedIn] = useState<Conversation[]>([]);
@@ -88,7 +82,7 @@ export default function WordListWithDetail({
   return (
     <div id="splitContainer">
       <div id="left">
-        <WordList filteredWords={filteredWords} />
+        <WordList />
       </div>
       <div id="right">
         {currentOpenedWord && (

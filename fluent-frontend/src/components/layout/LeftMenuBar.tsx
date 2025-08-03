@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { ConfigContext } from "../../App";
+import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
 

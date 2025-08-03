@@ -1,8 +1,11 @@
-import { Word } from "../types";
+import { useContext } from "react";
+import { Context, Word } from "../types";
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
+import { ConfigContext } from "../contexts/ConfigContext";
 
-export default function WordList({ filteredWords }: { filteredWords: Word[] }) {
+export default function WordList() {
+  const { filteredWords } = useContext(ConfigContext) as Context;
   return (
     <div style={{ height: "100%", overflow: "auto" }}>
       <FilterBar />

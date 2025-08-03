@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, Conversation } from "../types";
 import SentenceDetail from "./SentenceDetail";
 import { useData } from "../contexts/DataContext";

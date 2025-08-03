@@ -3,8 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 export interface User {
   _id: string;
   username: string;
-  sourceLanguage: string;
-  targetLanguage: string;
+  sourceLanguage: string; //source language of the last course
+  targetLanguage: string; //target language of the last course
 }
 
 export type Status = "word" | "conversation";
@@ -90,6 +90,7 @@ export interface ReviewItem extends Conversation {
 
 export interface Context {
   filteredWords: Word[];
+  filteredConversations: Conversation[];
   editConversation: (id: string) => void;
   editWord: (id: string) => void;
   openedWords: Word[];

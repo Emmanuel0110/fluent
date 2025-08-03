@@ -1,7 +1,7 @@
 import { Context, Word } from "../types";
 import { useData } from "../contexts/DataContext";
 import { useContext } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 
 interface WordDefinitionProps {
   word: Word;

@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 
 export default function FilterBar() {

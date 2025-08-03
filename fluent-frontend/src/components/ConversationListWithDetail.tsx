@@ -2,22 +2,16 @@ import { Conversation } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useSplitPane from "../utils/useSplitPane";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import TabNav from "./layout/TabNav";
 import ConversationList from "./ConversationList";
 import ConversationDetail from "./ConversationDetail";
 import { useData } from "../contexts/DataContext";
 
-export default function ConversationListWithDetail({
-  filteredConversations,
-  openedConversations,
-}: {
-  filteredConversations: Conversation[];
-  openedConversations: Conversation[];
-}) {
+export default function ConversationListWithDetail() {
   const { conversations, getConversationById } = useData();
-  const { setOpenedConversations } = useContext(ConfigContext) as Context;
+  const { setOpenedConversations, filteredConversations, openedConversations } = useContext(ConfigContext) as Context;
   const conversationId = useParams().conversationId!;
   const [currentOpenedConversation, setCurrentOpenedConversation] = useState<Conversation | null>(null);
   const loading = useRef(false);
@@ -70,7 +64,7 @@ export default function ConversationListWithDetail({
   return (
     <div id="splitContainer">
       <div id="left">
-        <ConversationList filteredConversations={filteredConversations} />
+        <ConversationList />
       </div>
       <div id="right">
         {currentOpenedConversation && (

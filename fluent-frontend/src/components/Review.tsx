@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, RowConversation } from "../types";
 import { getReviewList } from "../APICalls";
 import ReviewItemComponent from "./ReviewItemComponent";

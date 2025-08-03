@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Conversation } from "../types";
 import { useContext, useEffect, useRef } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import { SentenceLine } from "./SentenceLine";
 import { useData } from "../contexts/DataContext";

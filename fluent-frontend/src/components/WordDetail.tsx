@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ConfigContext } from "../App";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, Conversation, Word } from "../types";
 import { ConversationLine } from "./ConversationLine";
 import { useData } from "../contexts/DataContext";
