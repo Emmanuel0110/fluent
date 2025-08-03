@@ -72,24 +72,27 @@ const StoryNodeSchema = new Schema({
 });
 export const StoryNodeModel = model("StoryNode", StoryNodeSchema);
 
-const LexicalItemSchema = new Schema({
-  language: {
-    required: true,
-    type: Schema.Types.ObjectId,
-    ref: "Language",
-    index: true,
-  },
-  tags: [{ type: Schema.Types.ObjectId, ref: "WordTag" }],
-  text: { type: String, required: true },
-  translations: [
-    {
-      _id: false,
-      language: { type: Schema.Types.ObjectId, ref: "Language", required: true },
-      lexicalItems: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
+const LexicalItemSchema = new Schema(
+  {
+    language: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Language",
+      index: true,
     },
-  ],
-  level: Number,
-});
+    tags: [{ type: Schema.Types.ObjectId, ref: "WordTag" }],
+    text: { type: String, required: true },
+    translations: [
+      {
+        _id: false,
+        language: { type: Schema.Types.ObjectId, ref: "Language", required: true },
+        lexicalItems: [{ type: Schema.Types.ObjectId, ref: "LexicalItem" }],
+      },
+    ],
+    level: Number,
+  },
+  { timestamps: true }
+);
 export const LexicalItemModel = model("LexicalItem", LexicalItemSchema);
 
 const MultiLingualConversationSchema = new Schema({

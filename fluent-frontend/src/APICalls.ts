@@ -211,8 +211,10 @@ export const fetchConversationTags = async () => {
     });
 };
 
-export const fetchWords = async () => {
-  return customFetch(url + "words", { headers: authHeaders() })
+export const fetchWords = async (lastUpdateDate: string | undefined) => {
+  return customFetch(url + "words" + (lastUpdateDate ? "?lastUpdateDate=" + lastUpdateDate : ""), {
+    headers: authHeaders(),
+  })
     .then((res) => {
       if (res.success) {
         return groupById(formatWords(res.data));

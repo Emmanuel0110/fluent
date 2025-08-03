@@ -3,14 +3,16 @@ import cache from "../middleware/cache.js";
 import express from "express";
 import mongoose from "mongoose";
 import { LexicalItemModel } from "../models.js";
+import { validateAndParseDate } from "../utils.js";
 const router = express.Router();
 
 router.get("/", auth, cache, (req, res) => {
   const { sourceLanguage, targetLanguage } = req.userLearningData;
+  const lastUpdateDate = validateAndParseDate(req.query.lastUpdateDate);
 
   // Define the two aggregation pipelines
-  const sourceWordsPipeline = generateAggregationPipeline(sourceLanguage, targetLanguage);
-  const targetWordsPipeline = generateAggregationPipeline(targetLanguage, sourceLanguage);
+  const sourceWordsPipeline = generateAggregationPipeline(sourceLanguage, targetLanguage, lastUpdateDate);
+  const targetWordsPipeline = generateAggregationPipeline(targetLanguage, sourceLanguage, lastUpdateDate);
 
   // Run both queries
   Promise.all([LexicalItemModel.aggregate(sourceWordsPipeline), LexicalItemModel.aggregate(targetWordsPipeline)])
@@ -63,13 +65,17 @@ router.put("/:id", auth, cache, async function (req, res) {
   res.json({ success: true, data: completedWord });
 });
 
-// Create a reusable function to generate the aggregation pipeline
-function generateAggregationPipeline(language, translationLanguage) {
+function generateAggregationPipeline(language, translationLanguage, lastUpdateDate) {
+  const matchStage = {
+    language: new mongoose.Types.ObjectId(language),
+  };
+  if (lastUpdateDate) {
+    matchStage.updatedAt = { $gte: lastUpdateDate };
+  }
+
   return [
     {
-      $match: {
-        language: new mongoose.Types.ObjectId(language),
-      },
+      $match: matchStage,
     },
     {
       $project: {

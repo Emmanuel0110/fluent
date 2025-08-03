@@ -29,15 +29,14 @@ import {
   updateCacheWithNewConversationTags,
 } from "../utils/conversationUtils";
 import { formatWord, updateCacheWithNewWordTags } from "../utils/wordUtils";
+import { LocalStorageService } from "../services/localStorageService";
 
 interface DataContextType {
-  // Remote data state
   words: { [id: string]: Word };
   conversations: Conversation[];
   wordTags: WordTag[];
   conversationTags: ConversationTag[];
-
-  // Data manipulation functions
+  isLoading: boolean;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   subscribeToConversation: (conversation: Conversation) => void;
   unsubscribeToConversation: (conversation: Conversation) => void;
@@ -49,10 +48,7 @@ interface DataContextType {
   saveConversation: (infos: Conversation) => Promise<void>;
   deleteConversation: (id: string) => Promise<void>;
   saveConversationTag: (infos: ConversationTag) => Promise<void>;
-
-  // Data loading
   loadAllData: () => Promise<void>;
-  isLoading: boolean;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -99,16 +95,20 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
     setIsLoading(true);
     try {
-      const [wordTagsData, conversationTagsData, wordsData, conversationsData] = await Promise.all([
+      const localStorageService = new LocalStorageService(sourceLanguage, targetLanguage);
+      if (localStorageService.localStorageWords) setWords(localStorageService.localStorageWords);
+
+      const [wordTagsData, conversationTagsData, newWords, conversationsData] = await Promise.all([
         fetchWordTags(),
         fetchConversationTags(),
-        fetchWords(),
+        fetchWords(localStorageService.lastUpdateDate),
         fetchConversations(), // TODO : only for testing. Remove later
       ]);
 
       setWordTags(wordTagsData || []);
       setConversationTags(conversationTagsData || []);
-      setWords(wordsData || {});
+      localStorageService.updateLocalStorageWords(newWords);
+      setWords((words) => ({ ...words, ...newWords })); // TODO : profile when words is {} and wordsData is big
       setConversations(formatConversations(conversationsData, targetLanguage) || []);
     } catch (error) {
       console.error("Error loading data:", error);
