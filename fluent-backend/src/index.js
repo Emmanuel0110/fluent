@@ -34,7 +34,7 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = 4001;
 
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 // app.use(logger);
 app.use(
