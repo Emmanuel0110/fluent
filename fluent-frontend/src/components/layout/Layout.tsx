@@ -1,6 +1,7 @@
 import { Outlet } from "react-router";
 import LeftMenuBar from "./LeftMenuBar";
 import Navbar from "./Navbar";
+import "./layout.css";
 
 function Layout() {
   return (

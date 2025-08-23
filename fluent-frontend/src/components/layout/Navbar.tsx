@@ -126,10 +126,6 @@ function Navbar() {
       </div>
       <LanguageSelector />
       <div id="nameLabel">{user?.username}</div>
-      <Link to="/profile">
-        <div id="avatar-icon"></div>
-      </Link>
-
       <div className="navButton" onClick={() => logout(setIsAuthenticated)}>
         Logout
       </div>

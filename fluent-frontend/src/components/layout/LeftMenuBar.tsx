@@ -38,7 +38,7 @@ function LeftMenuBar() {
 
   return (
     <div id="leftSideMenu">
-      <div id="leftSideMenuItems">
+      <div>
         <div>
           <Button id="newConversationButton" onClick={openNewDraft}>
             New conversation
