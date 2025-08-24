@@ -29,6 +29,7 @@ jobs:
           git pull origin main
           git status
           cd fluent-frontend
+          npm install
           npm run build
           cp -a build/. ../fluent-backend/public/
           npm install --only=prod
