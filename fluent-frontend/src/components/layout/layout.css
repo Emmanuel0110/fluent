@@ -152,9 +152,24 @@
 }
 
 #nameLabel {
-  padding: 5px 10px 10px 5px;
-  color: #fafafa;
-  text-wrap: nowrap;
+  justify-content: center;
+  min-width: 3ch;
+  min-height: 3ch;
+  cursor: pointer;
+  background-color: white;
+  mask: url(../../images/profile-icon.svg);
+  mask-repeat: no-repeat;
+  margin: auto 5px;
+}
+
+#nameLabel svg {
+  width: 24px;
+  height: 24px;
+}
+
+#nameLabel:hover {
+  color: #ffffff;
+  opacity: 0.8;
 }
 
 .navButton {

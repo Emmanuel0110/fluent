@@ -1,5 +1,4 @@
 import { Dispatch, RefObject, useContext, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { logout } from "../../auth/authActions";
@@ -125,7 +124,7 @@ function Navbar() {
         </div>
       </div>
       <LanguageSelector />
-      <div id="nameLabel">{user?.username}</div>
+      <div id="nameLabel" title={user?.username}></div>
       <div className="navButton" onClick={() => logout(setIsAuthenticated)}>
         Logout
       </div>
