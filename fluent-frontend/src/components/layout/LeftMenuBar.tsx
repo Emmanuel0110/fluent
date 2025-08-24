@@ -4,7 +4,11 @@ import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
 
-function LeftMenuBar() {
+interface LeftMenuBarProps {
+  isOpen: boolean;
+}
+
+function LeftMenuBar({ isOpen }: LeftMenuBarProps) {
   const navigate = useNavigate();
   const { status, setStatus } = useContext(ConfigContext) as Context;
 
@@ -38,7 +42,7 @@ function LeftMenuBar() {
 
   return (
     <div id="leftSideMenuContainer">
-      <div id="leftSideMenu">
+      <div id="leftSideMenu" className={isOpen ? "open" : "closed"}>
         <div>
           <div>
             <Button id="newConversationButton" onClick={openNewDraft}>

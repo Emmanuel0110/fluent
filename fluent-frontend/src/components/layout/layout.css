@@ -152,7 +152,6 @@
 }
 
 #nameLabel {
-  justify-content: center;
   min-width: 3ch;
   min-height: 3ch;
   cursor: pointer;
@@ -200,7 +199,22 @@
   background-color: #e7f4ff;
 }
 
+#burgerMenuButton {
+  min-width: 3ch;
+  min-height: 3ch;
+  cursor: pointer;
+  background-color: white;
+  mask: url(../../images/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
+  mask-repeat: no-repeat;
+  margin: auto 5px;
+  display: none;
+}
+
 @media (max-width: 600px) {
+  #burgerMenuButton {
+    display: block;
+  }
+
   #container {
     display: grid;
     grid:
@@ -214,8 +228,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 200px;
-    height: 100vh;
+    width: 100vh;
     z-index: 1000;
     transform: translateX(-100%);
     transition: transform 0.3s ease;

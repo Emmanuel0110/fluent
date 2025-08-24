@@ -49,7 +49,12 @@ const insertTag = (tagLabel: string, inputRef: RefObject<HTMLInputElement>) => {
   return "";
 };
 
-function Navbar() {
+interface NavbarProps {
+  isMenuOpen: boolean;
+  onMenuToggle: () => void;
+}
+
+function Navbar({ isMenuOpen, onMenuToggle }: NavbarProps) {
   const { user, setIsAuthenticated } = useAuth();
   const { wordTags } = useData();
   const { searchFilter, setSearchFilter, treeFilter, setTreeFilter, searchInput } = useContext(
@@ -108,6 +113,7 @@ function Navbar() {
 
   return (
     <div id="navbar" className="navb">
+      <div id="burgerMenuButton" onClick={onMenuToggle} />
       <div id="searchArea">
         <div id="searchAreaContainer">
           <div id="searchAreaInput">
