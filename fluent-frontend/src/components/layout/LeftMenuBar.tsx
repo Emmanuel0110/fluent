@@ -37,38 +37,40 @@ function LeftMenuBar() {
   };
 
   return (
-    <div id="leftSideMenu">
-      <div>
+    <div id="leftSideMenuContainer">
+      <div id="leftSideMenu">
         <div>
-          <Button id="newConversationButton" onClick={openNewDraft}>
-            New conversation
+          <div>
+            <Button id="newConversationButton" onClick={openNewDraft}>
+              New conversation
+            </Button>
+          </div>
+          <div id="statusSection">
+            <div
+              onClick={() => {
+                setStatus("words");
+                navigate("/words");
+              }}
+            >
+              <div className={status === "words" ? "selected" : "unselected"}></div>
+              <div>Words</div>
+            </div>
+            <div
+              onClick={() => {
+                setStatus("conversations");
+                navigate("/conversations");
+              }}
+            >
+              <div className={status === "conversations" ? "selected" : "unselected"}></div>
+              <div>Conversations</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <Button id="startAReviewButton" variant="outline-primary" onClick={startReview}>
+            Start a review
           </Button>
         </div>
-        <div id="statusSection">
-          <div
-            onClick={() => {
-              setStatus("words");
-              navigate("/words");
-            }}
-          >
-            <div className={status === "words" ? "selected" : "unselected"}></div>
-            <div>Words</div>
-          </div>
-          <div
-            onClick={() => {
-              setStatus("conversations");
-              navigate("/conversations");
-            }}
-          >
-            <div className={status === "conversations" ? "selected" : "unselected"}></div>
-            <div>Conversations</div>
-          </div>
-        </div>
-      </div>
-      <div>
-        <Button id="startAReviewButton" variant="outline-primary" onClick={startReview}>
-          Start a review
-        </Button>
       </div>
     </div>
   );
