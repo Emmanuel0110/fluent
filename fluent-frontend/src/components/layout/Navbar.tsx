@@ -131,9 +131,7 @@ function Navbar({ isMenuOpen, onMenuToggle }: NavbarProps) {
       </div>
       <LanguageSelector />
       <div id="nameLabel" title={user?.username}></div>
-      <div className="navButton" onClick={() => logout(setIsAuthenticated)}>
-        Logout
-      </div>
+      <div id="logoutButton" className="navButton" title="Logout" onClick={() => logout(setIsAuthenticated)} />
     </div>
   );
 }

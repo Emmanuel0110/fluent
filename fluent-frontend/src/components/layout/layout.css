@@ -199,6 +199,16 @@
   background-color: #e7f4ff;
 }
 
+#logoutButton {
+  min-width: 3ch;
+  min-height: 3ch;
+  cursor: pointer;
+  background-color: white;
+  mask: url(../../images/logout_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
+  mask-repeat: no-repeat;
+  margin: auto 5px;
+}
+
 #burgerMenuButton {
   min-width: 3ch;
   min-height: 3ch;
