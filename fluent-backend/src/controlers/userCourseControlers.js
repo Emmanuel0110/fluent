@@ -1,6 +1,6 @@
 import auth from "../middleware/auth.js";
 import cache, { refreshLearningDataCache } from "../middleware/cache.js";
-import { redisClient } from "../index.js";
+import { redisClient } from "../../index.js";
 import { UserCourseModel } from "../models.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";

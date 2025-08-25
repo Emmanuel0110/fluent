@@ -1,5 +1,5 @@
 import { cacheUserLearningData } from "../controlers/userControlers.js";
-import { redisClient } from "../index.js";
+import { redisClient } from "../../index.js";
 import { UserModel, UserCourseModel } from "../models.js";
 
 async function cache(req, res, next) {

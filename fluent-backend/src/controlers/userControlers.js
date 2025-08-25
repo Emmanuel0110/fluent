@@ -3,7 +3,7 @@ import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
-import { redisClient } from "../index.js";
+import { redisClient } from "../../index.js";
 import mongoose from "mongoose";
 const router = express.Router();
 
