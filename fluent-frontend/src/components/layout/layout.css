@@ -232,7 +232,7 @@
       "navbar navbar"
       "leftSideMenuContainer mainPannel" 1fr
       /0px;
-    height: 100vh;
+    height: 100dvh;
   }
 
   #leftSideMenu {
