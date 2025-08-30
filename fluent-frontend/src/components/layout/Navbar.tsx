@@ -50,11 +50,10 @@ const insertTag = (tagLabel: string, inputRef: RefObject<HTMLInputElement>) => {
 };
 
 interface NavbarProps {
-  isMenuOpen: boolean;
   onMenuToggle: () => void;
 }
 
-function Navbar({ isMenuOpen, onMenuToggle }: NavbarProps) {
+function Navbar({ onMenuToggle }: NavbarProps) {
   const { user, setIsAuthenticated } = useAuth();
   const { wordTags } = useData();
   const { searchFilter, setSearchFilter, treeFilter, setTreeFilter, searchInput } = useContext(

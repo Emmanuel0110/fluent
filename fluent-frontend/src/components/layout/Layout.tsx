@@ -9,8 +9,8 @@ function Layout() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div id="container">
-      <Navbar isMenuOpen={isMenuOpen} onMenuToggle={toggleMenu} />
-      <LeftMenuBar isOpen={isMenuOpen} />
+      <Navbar onMenuToggle={toggleMenu} />
+      <LeftMenuBar isOpen={isMenuOpen} setOpen={setIsMenuOpen} />
       <div id="mainPannel">
         <div id="mainArea">
           <Outlet />

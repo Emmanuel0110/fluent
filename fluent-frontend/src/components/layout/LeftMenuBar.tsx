@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { Dispatch, SetStateAction, useContext, useEffect } from "react";
 import { Button } from "react-bootstrap";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 interface LeftMenuBarProps {
   isOpen: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-function LeftMenuBar({ isOpen }: LeftMenuBarProps) {
+function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
   const navigate = useNavigate();
   const { status, setStatus } = useContext(ConfigContext) as Context;
 
@@ -33,11 +34,13 @@ function LeftMenuBar({ isOpen }: LeftMenuBarProps) {
   const startReview = () => {
     setStatus("review");
     navigate("/review");
+    setOpen(false);
   };
 
   const openNewDraft = () => {
     setStatus("new");
     navigate("/new");
+    setOpen(false);
   };
 
   return (
@@ -54,6 +57,7 @@ function LeftMenuBar({ isOpen }: LeftMenuBarProps) {
               onClick={() => {
                 setStatus("words");
                 navigate("/words");
+                setOpen(false);
               }}
             >
               <div className={status === "words" ? "selected" : "unselected"}></div>
@@ -63,6 +67,7 @@ function LeftMenuBar({ isOpen }: LeftMenuBarProps) {
               onClick={() => {
                 setStatus("conversations");
                 navigate("/conversations");
+                setOpen(false);
               }}
             >
               <div className={status === "conversations" ? "selected" : "unselected"}></div>
