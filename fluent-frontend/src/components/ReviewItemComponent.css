@@ -27,3 +27,21 @@
   background-color: #004085;
   transform: translateY(1px);
 }
+
+.clickable-sentence {
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.clickable-sentence:hover {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.clickable-sentence:active {
+  background-color: #e9ecef;
+  transform: translateY(1px);
+}

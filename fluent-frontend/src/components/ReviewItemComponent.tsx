@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { Conversation } from "../types";
 import { useReviewSettings } from "../contexts/ReviewSettingsContext";
+import { ConfigContext } from "../contexts/ConfigContext";
+import { Context } from "../types";
 import "./ReviewItemComponent.css";
 
 function ReviewItemComponent({
@@ -11,6 +13,7 @@ function ReviewItemComponent({
   nextConversation: (success: boolean) => void;
 }) {
   const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
+  const { openConversation } = useContext(ConfigContext) as Context;
   const [timeIsUp, setTimeIsUp] = useState(false);
   const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
   const timer = useRef<NodeJS.Timeout | null>(null);
@@ -88,6 +91,13 @@ function ReviewItemComponent({
       setTimeIsUp(true);
     }
   };
+
+  const handleSentenceClick = (sentenceIndex: number) => {
+    // Navigate to the conversation and open the specific sentence
+    openConversation(conversation._id);
+    // The sentence will be visible in the conversation detail view
+  };
+
   const conversationIsCompleted = () => {
     const numberOfSentences = conversation.multiLingualSentences.length;
     return currentSentenceNumber >= numberOfSentences - 1;
@@ -101,8 +111,24 @@ function ReviewItemComponent({
         .slice(0, currentSentenceNumber + 1)
         .map(({ sourceLanguage, targetLanguage }, index) => (
           <div key={index}>
-            <div>{sourceLanguage.text}</div>
-            <div className="translationSpaceholder">{timeIsUp && <div>{targetLanguage.text}</div>}</div>
+            <div
+              className="clickable-sentence"
+              onClick={() => handleSentenceClick(index)}
+              style={{ cursor: "pointer" }}
+            >
+              {sourceLanguage.text}
+            </div>
+            <div className="translationSpaceholder">
+              {timeIsUp && (
+                <div
+                  className="clickable-sentence"
+                  onClick={() => handleSentenceClick(index)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {targetLanguage.text}
+                </div>
+              )}
+            </div>
             <br />
           </div>
         ))}
