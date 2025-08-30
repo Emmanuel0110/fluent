@@ -1,5 +1,6 @@
 body {
   overflow: hidden; /* To avoid random flickering on opening of bootstrap overlay (https://github.com/react-bootstrap/react-bootstrap/issues/3393) */
+  font-size: 1rem;
 }
 
 .buttonHeader {
@@ -19,41 +20,6 @@ body {
   flex-direction: column;
   gap: 20px;
   padding: 10px 0;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 #container2 {
@@ -176,10 +142,11 @@ button:focus {
   mask: url(./images/star-regular.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   mask-repeat: no-repeat;
   background-position: center;
+  mask-size: contain;
 }
 
 .subscribed {
@@ -191,42 +158,22 @@ button:focus {
   mask: url(./images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   mask-repeat: no-repeat;
   background-position: center;
+  mask-size: contain;
 }
 .delete {
   cursor: pointer;
   mask: url(./images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 24px;
-  height: 24px;
+  width: 2rem;
+  height: 2rem;
   mask-repeat: no-repeat;
   background-position: center;
-}
-
-.review {
-  cursor: pointer;
-  mask: url(./images/alarm_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
-  background: #00a7e8;
-  margin: auto;
-  width: 24px;
-  height: 24px;
-  mask-repeat: no-repeat;
-  background-position: center;
-}
-
-.learnt {
-  cursor: pointer;
-  mask: url(./images/done_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
-  background: #6bc901;
-  margin: auto;
-  width: 24px;
-  height: 24px;
-  mask-repeat: no-repeat;
-  background-position: center;
+  mask-size: contain;
 }
 
 #answerButtons {

@@ -106,25 +106,6 @@
   border: none;
 }
 
-#githubIconArea {
-  position: absolute;
-  padding: 5px 5px;
-  height: 40px;
-  top: 0;
-  left: 0;
-}
-
-.githubIcon {
-  cursor: pointer;
-  mask: url("../../images/github-mark-white.svg");
-  background: rgb(255, 255, 255);
-  width: 39px;
-  height: 100%;
-  mask-repeat: no-repeat;
-  background-position: center;
-  float: right;
-}
-
 .dropdownList {
   z-index: 1;
   padding: 5px 0px;
@@ -153,13 +134,14 @@
 }
 
 #nameLabel {
-  min-width: 3ch;
-  min-height: 3ch;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
   background-color: white;
   mask: url(../../images/profile-icon.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
+  mask-size: contain;
 }
 
 #nameLabel svg {
@@ -201,29 +183,61 @@
 }
 
 #logoutButton {
-  min-width: 3ch;
-  min-height: 3ch;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
   background-color: white;
   mask: url(../../images/logout_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
+  mask-size: contain;
 }
 
 #burgerMenuButton {
-  min-width: 3ch;
-  min-height: 3ch;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
   background-color: white;
   mask: url(../../images/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
   display: none;
+  mask-size: contain;
 }
 
 @media (max-width: 600px) {
+  body {
+    font-size: 1.2rem;
+  }
+
+  .btn {
+    font-size: 1.2rem; /*to overwrite bootstrap 1rem button*/
+  }
+
+  #logoutButton {
+    width: 2.5rem;
+    height: 2rem;
+  }
+
   #burgerMenuButton {
     display: block;
+    width: 2.5rem;
+    height: 2rem;
+  }
+
+  #nameLabel {
+    width: 2.5rem;
+    height: 2rem;
+  }
+
+  #language-selector-button {
+    width: 2.5rem;
+    height: 2rem;
+  }
+
+  #logoutButton {
+    width: 2.5rem;
+    height: 2rem;
   }
 
   #container {

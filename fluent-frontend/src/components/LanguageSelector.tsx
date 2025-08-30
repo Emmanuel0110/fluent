@@ -21,10 +21,10 @@ const LanguageSelector: React.FC = () => {
 
   return (
     <>
-      <div className="language-selector-button" onClick={handleOpen} />
+      <div id="language-selector-button" onClick={handleOpen} />
       {isOpen && (
-        <div className="language-selector-modal">
-          <div className="language-selector-content">
+        <div id="language-selector-modal">
+          <div id="language-selector-content">
             <h3>Choose Your Languages</h3>
 
             <div className="language-field">
