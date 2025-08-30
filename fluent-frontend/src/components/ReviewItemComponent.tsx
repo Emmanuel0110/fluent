@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Conversation } from "../types";
-import { REVIEW_ITEM_DELAY } from "../constants";
+import { useReviewSettings } from "../contexts/ReviewSettingsContext";
+import "./ReviewItemComponent.css";
 
 function ReviewItemComponent({
   conversation,
@@ -9,6 +10,7 @@ function ReviewItemComponent({
   conversation: Conversation;
   nextConversation: (success: boolean) => void;
 }) {
+  const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
   const [timeIsUp, setTimeIsUp] = useState(false);
   const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
   const timer = useRef<NodeJS.Timeout | null>(null);
@@ -21,10 +23,13 @@ function ReviewItemComponent({
     document.addEventListener("touchend", handleTouchEnd);
 
     if (timer.current) clearTimeout(timer.current);
-    if (!timeIsUp) {
-      timer.current = setTimeout(function () {
-        setTimeIsUp(true);
-      }, REVIEW_ITEM_DELAY);
+    if (!timeIsUp && shouldShowAnswerAutomatically()) {
+      const delay = getReviewDelay();
+      if (delay > 0) {
+        timer.current = setTimeout(function () {
+          setTimeIsUp(true);
+        }, delay);
+      }
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -77,6 +82,12 @@ function ReviewItemComponent({
       nextSentence();
     }
   };
+
+  const handleRevealAnswer = () => {
+    if (!timeIsUp) {
+      setTimeIsUp(true);
+    }
+  };
   const conversationIsCompleted = () => {
     const numberOfSentences = conversation.multiLingualSentences.length;
     return currentSentenceNumber >= numberOfSentences - 1;
@@ -95,6 +106,13 @@ function ReviewItemComponent({
             <br />
           </div>
         ))}
+      {!timeIsUp && !shouldShowAnswerAutomatically() && (
+        <div className="reveal-answer-container">
+          <button onClick={handleRevealAnswer} className="reveal-answer-btn">
+            Reveal Answer
+          </button>
+        </div>
+      )}
     </div>
   );
 }

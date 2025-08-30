@@ -18,6 +18,7 @@ import { ConfigProvider } from "./contexts/ConfigContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { DataProvider } from "./contexts/DataContext";
+import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
 
 export const url = process.env.REACT_APP_API_URL;
 
@@ -38,7 +39,9 @@ export default function App() {
             element={
               <DataProvider>
                 <ConfigProvider>
-                  <Layout />
+                  <ReviewSettingsProvider>
+                    <Layout />
+                  </ReviewSettingsProvider>
                 </ConfigProvider>
               </DataProvider>
             }

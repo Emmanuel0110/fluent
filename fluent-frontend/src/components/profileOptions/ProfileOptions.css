@@ -1,0 +1,85 @@
+#profile-options-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#profile-options-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  min-width: 400px;
+}
+
+.profile-field {
+  margin-bottom: 20px;
+}
+
+.profile-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-group input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.delay-input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.profile-options-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.profile-options-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.profile-options-actions button:first-child {
+  background: #6c757d;
+  color: white;
+}
+
+.profile-options-actions button:last-child {
+  background: #28a745;
+  color: white;
+}
+
+.profile-options-actions button:hover {
+  opacity: 0.9;
+}

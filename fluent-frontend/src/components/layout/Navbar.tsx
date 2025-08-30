@@ -3,7 +3,8 @@ import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { logout } from "../../auth/authActions";
 import AutoComplete from "../../utils/Autocomplete";
-import LanguageSelector from "../LanguageSelector";
+import LanguageSelector from "../languageSelector/LanguageSelector";
+import ProfileOptions from "../profileOptions/ProfileOptions";
 import { useData } from "../../contexts/DataContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { someFilter } from "../../utils/filterUtils";
@@ -129,7 +130,7 @@ function Navbar({ onMenuToggle }: NavbarProps) {
         </div>
       </div>
       <LanguageSelector />
-      <div id="nameLabel" title={user?.username}></div>
+      <ProfileOptions />
       <div id="logoutButton" className="navButton" title="Logout" onClick={() => logout(setIsAuthenticated)} />
     </div>
   );
