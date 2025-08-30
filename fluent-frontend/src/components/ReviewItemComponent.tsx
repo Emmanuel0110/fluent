@@ -93,9 +93,7 @@ function ReviewItemComponent({
   };
 
   const handleSentenceClick = (sentenceIndex: number) => {
-    // Navigate to the conversation and open the specific sentence
     openConversation(conversation._id);
-    // The sentence will be visible in the conversation detail view
   };
 
   const conversationIsCompleted = () => {
