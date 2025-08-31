@@ -16,7 +16,14 @@ router.post("/", async function (req, res) {
   const user = await UserModel.findOne({ username });
   if (user) return res.status(400).json({ msg: "User already exists" });
 
-  const newUser = new UserModel({ username, password });
+  const newUser = new UserModel({
+    username,
+    password,
+    userSettings: {
+      reviewMode: "manual",
+      autoReviewDelay: 10,
+    },
+  });
   // Create salt & hash
   bcrypt.genSalt(10, (err, salt) => {
     bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -114,6 +121,33 @@ router.patch("/", auth, async function (req, res) {
   } catch (error) {
     console.error(error);
     res.json({ success: false, message: "Couldn't update language choice" });
+  }
+});
+
+router.patch("/settings", auth, async function (req, res) {
+  try {
+    const { reviewMode, autoReviewDelay } = req.body;
+    const updateData = {};
+
+    if (reviewMode !== undefined) {
+      updateData["userSettings.reviewMode"] = reviewMode;
+    }
+    if (autoReviewDelay !== undefined) {
+      updateData["userSettings.autoReviewDelay"] = autoReviewDelay;
+    }
+
+    const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, { $set: updateData }, { new: true });
+
+    res.json({
+      success: true,
+      data: {
+        reviewMode: updatedUser.userSettings.reviewMode,
+        autoReviewDelay: updatedUser.userSettings.autoReviewDelay,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: "Couldn't update user settings" });
   }
 });
 

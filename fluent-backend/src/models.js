@@ -30,6 +30,10 @@ const userSchema = new Schema({
   password: { type: String, required: true, select: false },
   lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },
   courses: [{ type: Schema.Types.ObjectId, ref: "UserCourse" }],
+  userSettings: {
+    reviewMode: { type: String, enum: ["auto", "manual"], default: "manual" },
+    autoReviewDelay: { type: Number, default: 10 },
+  },
 });
 export const UserModel = model("User", userSchema);
 

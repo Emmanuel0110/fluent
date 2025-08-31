@@ -5,6 +5,10 @@ export interface User {
   username: string;
   sourceLanguage: string; //source language of the last course
   targetLanguage: string; //target language of the last course
+  userSettings: {
+    reviewMode: "auto" | "manual";
+    autoReviewDelay: number;
+  };
 }
 
 export type Status = "word" | "conversation";

@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useAuth } from "./AuthContext";
+import { updateRemoteUserSettings } from "../APICalls";
 
 interface ReviewSettings {
-  mode: "auto" | "manual";
-  autoDelay: number;
+  reviewMode: "auto" | "manual";
+  autoReviewDelay: number;
 }
 
 interface ReviewSettingsContextType {
@@ -13,8 +15,8 @@ interface ReviewSettingsContextType {
 }
 
 const defaultSettings: ReviewSettings = {
-  mode: "manual",
-  autoDelay: 10,
+  reviewMode: "manual",
+  autoReviewDelay: 10,
 };
 
 const ReviewSettingsContext = createContext<ReviewSettingsContextType | undefined>(undefined);
@@ -32,40 +34,37 @@ interface ReviewSettingsProviderProps {
 }
 
 export const ReviewSettingsProvider: React.FC<ReviewSettingsProviderProps> = ({ children }) => {
+  const { user } = useAuth();
   const [settings, setSettings] = useState<ReviewSettings>(defaultSettings);
 
   useEffect(() => {
-    // Load settings from localStorage on mount
-    const savedMode = localStorage.getItem("reviewMode") as "auto" | "manual" | null;
-    const savedDelay = localStorage.getItem("autoReviewDelay");
-
-    if (savedMode || savedDelay) {
+    // Load settings from user data on mount or when user changes
+    if (user?.userSettings) {
       setSettings({
-        mode: savedMode || defaultSettings.mode,
-        autoDelay: savedDelay ? parseInt(savedDelay) : defaultSettings.autoDelay,
+        reviewMode: user.userSettings.reviewMode,
+        autoReviewDelay: user.userSettings.autoReviewDelay,
       });
     }
-  }, []);
+  }, [user]);
 
-  const updateSettings = (newSettings: Partial<ReviewSettings>) => {
+  const updateSettings = async (newSettings: Partial<ReviewSettings>) => {
     const updatedSettings = { ...settings, ...newSettings };
     setSettings(updatedSettings);
 
-    // Save to localStorage
-    if (newSettings.mode !== undefined) {
-      localStorage.setItem("reviewMode", newSettings.mode);
-    }
-    if (newSettings.autoDelay !== undefined) {
-      localStorage.setItem("autoReviewDelay", newSettings.autoDelay.toString());
+    try {
+      await updateRemoteUserSettings(updatedSettings);
+    } catch (error) {
+      console.error("Failed to update user settings:", error);
+      setSettings(settings);
     }
   };
 
   const getReviewDelay = () => {
-    return settings.mode === "auto" ? settings.autoDelay * 1000 : 0; // Convert to milliseconds
+    return settings.reviewMode === "auto" ? settings.autoReviewDelay * 1000 : 0; // Convert to milliseconds
   };
 
   const shouldShowAnswerAutomatically = () => {
-    return settings.mode === "auto";
+    return settings.reviewMode === "auto";
   };
 
   const value: ReviewSettingsContextType = {

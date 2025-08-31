@@ -262,6 +262,14 @@ export const updateLanguages = async (args: { sourceLanguage: string; targetLang
     });
 };
 
+export const updateRemoteUserSettings = async (args: { reviewMode?: "auto" | "manual"; autoReviewDelay?: number }) => {
+  const body = JSON.stringify(args);
+  return customFetch(url + "users/settings", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
+    console.log(err);
+    return { success: false, message: err.message };
+  });
+};
+
 export const getReviewList = async () => {
   return customFetch(url + "reviewItems", { headers: authHeaders() })
     .then((res) => {

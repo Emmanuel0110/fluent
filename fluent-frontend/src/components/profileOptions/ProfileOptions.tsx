@@ -6,20 +6,18 @@ import { useAuth } from "../../contexts/AuthContext";
 const ProfileOptions: React.FC = () => {
   const { settings, updateSettings } = useReviewSettings();
   const { user } = useAuth();
-  const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.mode);
-  const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoDelay);
+  const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.reviewMode);
+  const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    setReviewMode(settings.mode);
-    setAutoReviewDelay(settings.autoDelay);
+    setReviewMode(settings.reviewMode);
+    setAutoReviewDelay(settings.autoReviewDelay);
   }, [settings]);
 
-  const handleSave = () => {
-    updateSettings({
-      mode: reviewMode,
-      autoDelay: autoReviewDelay,
-    });
+  const handleSave = async () => {
+    updateSettings({ reviewMode, autoReviewDelay });
     setIsOpen(false);
   };
 
