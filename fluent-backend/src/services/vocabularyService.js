@@ -29,8 +29,13 @@ export const dbService = {
     return item.toObject();
   },
 
-  async updateLexicalItem(id, data) {
-    return await LexicalItemModel.findByIdAndUpdate(id, data, { new: true, strict: false, lean: true });
+  async updateLexicalItem(filter, data, options = {}) {
+    return await LexicalItemModel.findOneAndUpdate(filter, data, {
+      new: true,
+      strict: false,
+      lean: true,
+      ...options,
+    });
   },
 
   async findWordTags(criteria) {

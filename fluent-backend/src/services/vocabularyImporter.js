@@ -11,7 +11,7 @@ export async function importVocabulary(arr) {
         }
       } catch (error) {
         console.error("could not import word " + JSON.stringify(element));
-        throw new Error(error);
+        throw error;
       }
     }
   } else throw new Error("argument of importVocabulary should be an array");
@@ -27,17 +27,20 @@ export async function importWord(data) {
 
     if (wordFound) {
       if (vocabularyProcessor.sameTagsAndTranslations(wordFound, tagIds, translationsWithIds)) {
-        throw new Error(`Word ${text} already exists`);
+        console.log(`Word ${text} already exists`);
+        return null;
       } else {
         const { translations: mergedTranslations, tags: mergedTags } = vocabularyProcessor.prepareTranslationsAndTags(
           wordFound,
           tagIds,
           translationsWithIds
         );
-
-        await dbService.updateLexicalItem(wordFound._id, {
-          $set: { translations: mergedTranslations, tags: mergedTags },
-        });
+        await dbService.updateLexicalItem(
+          { _id: wordFound._id },
+          {
+            $set: { translations: mergedTranslations, tags: mergedTags },
+          }
+        );
 
         return { ...wordFound, tags: mergedTags, translations: mergedTranslations };
       }
@@ -62,10 +65,10 @@ async function getWordTags(tags, languageId) {
   const results = [];
   for (const tag of tags) {
     try {
-      const result = await dbService.getWordTag(languageId, tag.label);
+      const result = await dbService.getWordTag(languageId, tag);
       results.push(result._id);
     } catch (error) {
-      console.error("Error getting word tag ", tag, error);
+      console.error("Error getting word tag", tag, error);
     }
   }
   return results;
@@ -78,7 +81,7 @@ async function getTranslations(translations) {
       const result = await getTranslation(translation);
       results.push(result);
     } catch (error) {
-      console.error("Error getting translation ", translation, error);
+      console.error("Error getting translation", translation, error);
     }
   }
   return results;
@@ -94,7 +97,7 @@ async function getTranslation({ language, lexicalItems }) {
       const result = await getWord(languageId, lexicalItem);
       results.push(result);
     } catch (error) {
-      console.error("Error getting lexicalItem ", lexicalItem, error);
+      console.error("Error getting lexicalItem", lexicalItem, error);
     }
   }
 
@@ -138,22 +141,31 @@ export async function setTranslationsAndTagsForTranslations(newWord) {
     for (const wordId of tr.lexicalItems) {
       for (const translation of translations) {
         if (!translation.language.equals(tr.language)) {
-          const result = await dbService.updateLexicalItem(wordId, {
-            $addToSet: { "translations.$.lexicalItems": { $each: translation.lexicalItems } },
-          });
+          const result = await dbService.updateLexicalItem(
+            { _id: wordId, "translations.language": translation.language },
+            {
+              $addToSet: { "translations.$.lexicalItems": { $each: translation.lexicalItems } },
+            }
+          );
 
           // If language languageId does not exist, add it
           if (!result) {
-            await dbService.updateLexicalItem(wordId, {
-              $push: {
-                translations: translation,
-              },
-            });
+            await dbService.updateLexicalItem(
+              { _id: wordId },
+              {
+                $push: {
+                  translations: translation,
+                },
+              }
+            );
           }
 
-          await dbService.updateLexicalItem(wordId, {
-            $addToSet: { tags: { $each: tagsByLanguage[tr.language] || [] } },
-          });
+          await dbService.updateLexicalItem(
+            { _id: wordId },
+            {
+              $addToSet: { tags: { $each: tagsByLanguage[tr.language] || [] } },
+            }
+          );
         }
       }
     }
