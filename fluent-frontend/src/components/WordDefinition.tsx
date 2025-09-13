@@ -2,6 +2,8 @@ import { Context, Word } from "../types";
 import { useData } from "../contexts/DataContext";
 import { useContext } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import textToSpeech from "../services/textToSpeechService";
 
 interface WordDefinitionProps {
   word: Word;
@@ -10,6 +12,7 @@ interface WordDefinitionProps {
 export const WordDefinition = ({ word }: WordDefinitionProps) => {
   const { words } = useData();
   const { openWord } = useContext(ConfigContext) as Context;
+  const { getLanguageLabel } = useLanguage();
 
   const onTranslationClick = (e: React.MouseEvent, wordId: string) => {
     e.stopPropagation();
@@ -29,6 +32,13 @@ export const WordDefinition = ({ word }: WordDefinitionProps) => {
           </span>
         ))}
       </span>
+      <span
+        className="textToSpeechIcon"
+        onClick={(e) => {
+          e.stopPropagation();
+          textToSpeech(word.text, getLanguageLabel(word.language));
+        }}
+      ></span>
     </div>
   );
 };

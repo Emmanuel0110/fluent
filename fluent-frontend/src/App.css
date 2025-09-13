@@ -470,3 +470,16 @@ a.nav-link {
   font-weight: normal;
   cursor: pointer;
 }
+
+.textToSpeechIcon {
+  display: inline-block;
+  vertical-align: middle;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  background-color: rgb(151, 151, 151);
+  mask: url(./images/volume_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  mask-repeat: no-repeat;
+  margin: 0px 5px 5px 5px;
+  mask-size: contain;
+}

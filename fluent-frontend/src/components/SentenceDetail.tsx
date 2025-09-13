@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Sentence } from "../types";
 import { WordLine } from "./WordLine";
 import { useData } from "../contexts/DataContext";
+import { useLanguage } from "../contexts/LanguageContext";
+import textToSpeech from "../services/textToSpeechService";
 
 export default function SentenceDetail({
   multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },
@@ -14,6 +16,7 @@ export default function SentenceDetail({
   const { words } = useData();
   const [isTargetSentenceSelected, setIsTargetSentenceSelected] = useState(false);
   const [isSourceSentenceSelected, setIsSourceSentenceSelected] = useState(false);
+  const { targetLanguage, getLanguageLabel } = useLanguage();
 
   const handleSourceSentenceClick = () => {
     if (isSourceSentenceSelected) {
@@ -40,6 +43,10 @@ export default function SentenceDetail({
       </div>
       <div className="targetLanguage" onClick={handleTargetSentenceClick}>
         {targetSentence.text}
+        <span
+          className="textToSpeechIcon"
+          onClick={(e) => textToSpeech(targetSentence.text, getLanguageLabel(targetLanguage))}
+        ></span>
       </div>
       {sourceSentence.prerequisites.length > 0 && isSourceSentenceSelected && (
         <div id="sourcePrerequisites">
