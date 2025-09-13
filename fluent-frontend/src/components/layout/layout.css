@@ -230,11 +230,6 @@
     height: 2rem;
   }
 
-  #logoutButton {
-    width: 2.5rem;
-    height: 2rem;
-  }
-
   #container {
     display: grid;
     grid:
