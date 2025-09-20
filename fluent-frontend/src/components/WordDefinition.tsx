@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import textToSpeech from "../services/textToSpeechService";
+import { TextToSpeech } from "./textToSpeech/TextToSpeech";
 
 interface WordDefinitionProps {
   word: Word;
@@ -32,13 +33,7 @@ export const WordDefinition = ({ word }: WordDefinitionProps) => {
           </span>
         ))}
       </span>
-      <span
-        className="textToSpeechIcon"
-        onClick={(e) => {
-          e.stopPropagation();
-          textToSpeech(word.text, getLanguageLabel(word.language));
-        }}
-      ></span>
+      <TextToSpeech text={word.text} language={getLanguageLabel(word.language)} />
     </div>
   );
 };
