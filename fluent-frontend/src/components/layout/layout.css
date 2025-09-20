@@ -260,4 +260,24 @@
   #searchAreaInput {
     width: 100%;
   }
+
+  .subscribe {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .edit {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .delete {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .textToSpeechIcon {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
 }

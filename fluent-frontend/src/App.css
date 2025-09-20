@@ -142,8 +142,8 @@ button:focus {
   mask: url(./images/star-regular.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   mask-repeat: no-repeat;
   background-position: center;
   mask-size: contain;
@@ -158,8 +158,8 @@ button:focus {
   mask: url(./images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   mask-repeat: no-repeat;
   background-position: center;
   mask-size: contain;
@@ -169,8 +169,8 @@ button:focus {
   mask: url(./images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   mask-repeat: no-repeat;
   background-position: center;
   mask-size: contain;
@@ -469,17 +469,4 @@ a.nav-link {
 .targetLanguage {
   font-weight: normal;
   cursor: pointer;
-}
-
-.textToSpeechIcon {
-  display: inline-block;
-  vertical-align: middle;
-  width: 1.5rem;
-  height: 1.5rem;
-  cursor: pointer;
-  background-color: rgb(151, 151, 151);
-  mask: url(./images/volume_up_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
-  mask-repeat: no-repeat;
-  margin: 0px 5px 5px 5px;
-  mask-size: contain;
 }
