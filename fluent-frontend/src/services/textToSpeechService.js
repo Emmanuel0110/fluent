@@ -1,7 +1,7 @@
-export default function textToSpeech(text, language) {
+export default async function textToSpeech(text, language) {
   // exemple of language format: "en-US"
   if (typeof window?.puter?.ai?.txt2speech === "function") {
-    window.puter.ai
+    return window.puter.ai
       .txt2speech(text, {
         voice: "Joanna",
         engine: "generative",

@@ -3,7 +3,7 @@ import { Sentence } from "../types";
 import { WordLine } from "./WordLine";
 import { useData } from "../contexts/DataContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import textToSpeech from "../services/textToSpeechService";
+import { TextToSpeech } from "./textToSpeech/TextToSpeech";
 
 export default function SentenceDetail({
   multiLingualSentence: { sourceLanguage: sourceSentence, targetLanguage: targetSentence },
@@ -43,10 +43,7 @@ export default function SentenceDetail({
       </div>
       <div className="targetLanguage" onClick={handleTargetSentenceClick}>
         {targetSentence.text}
-        <span
-          className="textToSpeechIcon"
-          onClick={(e) => textToSpeech(targetSentence.text, getLanguageLabel(targetLanguage))}
-        ></span>
+        <TextToSpeech text={targetSentence.text} language={getLanguageLabel(targetLanguage)} />
       </div>
       {sourceSentence.prerequisites.length > 0 && isSourceSentenceSelected && (
         <div id="sourcePrerequisites">
