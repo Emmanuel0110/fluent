@@ -49,10 +49,10 @@ export default function App() {
             <Route path="home" element={<ConversationList />} />
             {/*TODO: remove if unused ? */}
             <Route path="new" element={<CreationForm />} />
-            <Route path="words" element={<WordList />} />
+            <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
             <Route path="words/:wordId/edit" element={<WordForm />} />
-            <Route path="conversations" element={<ConversationList />} />
+            <Route path="conversations" element={<ConversationListWithDetail />} />
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
             <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
             <Route path="review" element={<Review />} />

@@ -1,6 +1,5 @@
 import { Conversation } from "../types";
 import { useNavigate, useParams } from "react-router-dom";
-import useSplitPane from "../utils/useSplitPane";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
@@ -17,22 +16,24 @@ export default function ConversationListWithDetail() {
   const loading = useRef(false);
   const navigate = useNavigate();
 
-  useSplitPane(["#left", "#right"], "horizontal", [50, 50]);
-
   useEffect(() => {
     if (!loading.current) {
-      const openedConversation = openedConversations.find(({ _id }) => _id === conversationId);
-      if (openedConversation) {
-        setCurrentOpenedConversation(openedConversation);
-      } else {
-        const conversation = conversations.find(({ _id }) => _id === conversationId);
-        if (conversation) {
-          setOpenedConversations([...openedConversations, conversation]);
-          setCurrentOpenedConversation(conversation);
+      if (conversationId) {
+        const openedConversation = openedConversations.find(({ _id }) => _id === conversationId);
+        if (openedConversation) {
+          setCurrentOpenedConversation(openedConversation);
         } else {
-          loading.current = true;
-          getConversationById(conversationId).then(() => (loading.current = false));
+          const conversation = conversations.find(({ _id }) => _id === conversationId);
+          if (conversation) {
+            setOpenedConversations([...openedConversations, conversation]);
+            setCurrentOpenedConversation(conversation);
+          } else {
+            loading.current = true;
+            getConversationById(conversationId).then(() => (loading.current = false));
+          }
         }
+      } else {
+        setCurrentOpenedConversation(null);
       }
     }
   }, [conversations, conversationId, openedConversations]);
@@ -62,29 +63,29 @@ export default function ConversationListWithDetail() {
   const selectTab = (id: string | null) => navigate("/conversations/" + id!);
 
   return (
-    <div id="splitContainer">
+    <div id="splitContainer" className={currentOpenedConversation ? "openRightPannel" : "closeRightPannel"}>
       <div id="left">
         <ConversationList />
       </div>
       <div id="right">
-        {currentOpenedConversation && (
-          <div id="openedConversations">
-            <TabNav
-              tabsData={openedConversations.map(({ _id, multiLingualSentences }) => {
-                return {
+        <div id="detailRightPanel" className={currentOpenedConversation ? "open" : "close"}>
+          {currentOpenedConversation && (
+            <div id="openedConversations">
+              <TabNav
+                tabsData={openedConversations.map(({ _id, multiLingualSentences }) => ({
                   id: _id,
                   text: multiLingualSentences[0]?.sourceLanguage?.text || "",
-                };
-              })}
-              selectedId={conversationId}
-              closeTab={closeTab}
-              closeOtherTabs={closeOtherTabs}
-              closeAllTabs={closeAllTabs}
-              selectTab={selectTab}
-            />
-            <ConversationDetail conversation={currentOpenedConversation} />
-          </div>
-        )}
+                }))}
+                selectedId={conversationId}
+                closeTab={closeTab}
+                closeOtherTabs={closeOtherTabs}
+                closeAllTabs={closeAllTabs}
+                selectTab={selectTab}
+              />
+              <ConversationDetail conversation={currentOpenedConversation} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

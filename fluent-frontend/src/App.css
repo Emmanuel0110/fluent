@@ -79,12 +79,6 @@ button:focus {
   background-color: #ededed;
 }
 
-.wordDefinition {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .alignLeft {
   text-align: left;
 }
@@ -334,19 +328,35 @@ button:focus {
   overflow-x: hidden;
 }
 
-#splitContainer {
-  display: flex;
-  flex-direction: row;
+#splitContainer.closeRightPannel {
+  display: grid;
   height: 100%;
+  grid-template-areas: "left right";
+  grid-template-columns: 100% 0%;
+  transition: grid-template-columns 0.2s ease;
+}
+
+#splitContainer.openRightPannel {
+  display: grid;
+  height: 100%;
+  grid-template-areas: "left right";
+  grid-template-columns: 50% 50%;
+  transition: grid-template-columns 0.2s ease;
 }
 
 #left {
   height: 100%;
+  overflow: auto;
 }
 
 #right {
   height: 100%;
+  position: relative;
+}
+
+#detailRightPanel {
   background-color: white;
+  height: 100%;
 }
 
 #openedWords {
