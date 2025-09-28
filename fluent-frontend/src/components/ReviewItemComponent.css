@@ -1,8 +1,37 @@
+#reviewItem {
+  height: 100%;
+}
+
+#reviewSentences {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding-top: 1em;
+  height: 100%;
+}
+
+#reviewSentences > div {
+  text-align: center;
+}
+
+#nothingToReview {
+  text-align: center;
+  font-size: 1.5em;
+  font-weight: 600;
+  color: #666;
+  margin-top: 2em;
+}
+
 .reveal-answer-container {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 20px;
   padding: 10px;
+  background: white; /* so it doesn't overlap content invisibly */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .reveal-answer-btn {

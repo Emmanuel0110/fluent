@@ -105,31 +105,33 @@ function ReviewItemComponent({
   };
   return (
     <div id="reviewItem">
-      {conversation.multiLingualSentences
-        .slice(0, currentSentenceNumber + 1)
-        .map(({ sourceLanguage, targetLanguage }, index) => (
-          <div key={index}>
-            <div
-              className="clickable-sentence"
-              onClick={() => handleSentenceClick(index)}
-              style={{ cursor: "pointer" }}
-            >
-              {sourceLanguage.text}
+      <div id="reviewSentences">
+        {conversation.multiLingualSentences
+          .slice(0, currentSentenceNumber + 1)
+          .map(({ sourceLanguage, targetLanguage }, index) => (
+            <div key={index}>
+              <div
+                className="clickable-sentence"
+                onClick={() => handleSentenceClick(index)}
+                style={{ cursor: "pointer" }}
+              >
+                {sourceLanguage.text}
+              </div>
+              <div className="translationSpaceholder">
+                {timeIsUp && (
+                  <div
+                    className="clickable-sentence"
+                    onClick={() => handleSentenceClick(index)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {targetLanguage.text}
+                  </div>
+                )}
+              </div>
+              <br />
             </div>
-            <div className="translationSpaceholder">
-              {timeIsUp && (
-                <div
-                  className="clickable-sentence"
-                  onClick={() => handleSentenceClick(index)}
-                  style={{ cursor: "pointer" }}
-                >
-                  {targetLanguage.text}
-                </div>
-              )}
-            </div>
-            <br />
-          </div>
-        ))}
+          ))}
+      </div>
       {!timeIsUp && !shouldShowAnswerAutomatically() && (
         <div className="reveal-answer-container">
           <button onClick={handleRevealAnswer} className="reveal-answer-btn">
