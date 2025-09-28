@@ -14,11 +14,11 @@ function Review() {
 
   useEffect(() => fetchNewReviewItems(), []);
 
-  const nextConversation = (success: boolean): void => {
+  const nextConversation = async (success: boolean): Promise<void> => {
     const currentConversation = reviewList[0];
     if (success) {
       setReviewList((reviewList) => reviewList.slice(1));
-      updateConversationReviewStatus(currentConversation);
+      await updateConversationReviewStatus(currentConversation);
       if (reviewList.length <= 1) fetchNewReviewItems();
     } else {
       currentConversation.alreadyFailed = true;
