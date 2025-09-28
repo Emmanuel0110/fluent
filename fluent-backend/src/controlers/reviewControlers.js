@@ -41,6 +41,7 @@ async function getReviewItems(userLearningData) {
 
 async function getLateReviewItems(userLearningData) {
   const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);
+  console.log(`🔍 Debug - lateReviewWordIds: ${lateReviewWordIds}`);
   if (lateReviewWordIds.length === 0) return [];
 
   const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData);
@@ -87,6 +88,7 @@ function getLateReviewWordIds(reviewWords) {
 
 async function getKnownConversationsForWords(wordIds, userLearningData) {
   const conversations = await getConversationsForWords(wordIds, userLearningData);
+  console.log(`🔍 Debug - conversations: ${conversations}`);
   const userConversations = userLearningData.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
     const lastReviewDate = userConversations.find(({ _id }) => (_id = conversation._id))?.lastReviewDate;
@@ -95,10 +97,12 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
     }
     return acc;
   }, []);
+  console.log(`🔍 Debug - knownConversations: ${knownConversations}`);
   const sortedConversations = knownConversations.sort(
     (a, b) => new Date(a.lastReviewDate).getTime() - new Date(b.lastReviewDate).getTime() // ascending order (review the oldest ones to avoid reviewing always the same conversations)
   );
   const selectedConversations = selectUsefulConversations(sortedConversations, [...wordIds]);
+  console.log(`🔍 Debug - selectedConversations: ${selectedConversations}`);
   return selectedConversations;
 }
 
