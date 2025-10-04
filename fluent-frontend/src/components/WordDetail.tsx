@@ -4,13 +4,16 @@ import { Context, Conversation, Word } from "../types";
 import { ConversationLine } from "./ConversationLine";
 import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
+import { useNavigate } from "react-router-dom";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const { wordTags } = useData();
   const { setSearchFilter } = useContext(ConfigContext) as Context;
+  const navigate = useNavigate();
 
   const searchTag = (tagLabel: string) => {
     setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
+    navigate("/words");
   };
 
   return (
