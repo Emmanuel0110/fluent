@@ -215,6 +215,7 @@ async function addNewWords(userLearningDataId, newWordIds) {
 
 const nextReviewDelay = (delay) => {
   const delays = [
+    0,
     60000, //1000*60 (1 min)
     3600000, //1000*60*60 (1 hour)
     86400000, //1000*60*60*24 (1 day)
