@@ -16,7 +16,7 @@ export const WordLine = ({ word }: { word: Word }) => {
   useEffect(() => {
     const { current } = lineRef;
     if (current !== null && word._id === wordId) {
-      current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      current.scrollIntoView({ block: "nearest" });
     }
   }, [wordId]);
 

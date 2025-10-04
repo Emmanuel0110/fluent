@@ -46,7 +46,7 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
   useEffect(() => {
     const { current } = lineRef;
     if (current !== null && conversation._id === conversationId) {
-      current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      current.scrollIntoView({ block: "nearest" });
     }
   }, [conversationId]);
 
