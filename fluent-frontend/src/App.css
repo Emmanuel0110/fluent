@@ -304,61 +304,6 @@ button:focus {
   background-color: rgb(227, 227, 227);
 }
 
-.gutter {
-  background-color: #eee;
-  background-repeat: no-repeat;
-  background-position: 50%;
-}
-
-.gutter.gutter-horizontal {
-  /* background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg=='); */
-  cursor: col-resize;
-}
-
-.gutter.gutter-vertical {
-  /* background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII='); */
-  cursor: row-resize;
-}
-
-.split {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-#splitContainer.closeRightPannel {
-  display: grid;
-  height: 100%;
-  grid-template-areas: "left right";
-  grid-template-columns: 100% 0%;
-  transition: grid-template-columns 0.2s ease;
-}
-
-#splitContainer.openRightPannel {
-  display: grid;
-  height: 100%;
-  grid-template-areas: "left right";
-  grid-template-columns: 50% 50%;
-  transition: grid-template-columns 0.2s ease;
-}
-
-#left {
-  height: 100%;
-  overflow: auto;
-}
-
-#right {
-  height: 100%;
-  position: relative;
-}
-
-#detailRightPanel {
-  background-color: white;
-  height: 100%;
-}
-
 #openedWords {
   display: flex;
   flex-flow: column;
