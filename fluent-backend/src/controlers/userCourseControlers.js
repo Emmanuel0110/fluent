@@ -17,8 +17,8 @@ async function updateLearningData(req, res) {
         await subscribeToConversation(conversationToSubscribe, userLearningData);
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
-        const wordsToUnsubscribe = await unsubscribeToConversation(conversationToUnsubscribe, userLearningData);
-        res.json({ success: true, wordsToUnsubscribe });
+        await unsubscribeToConversation(conversationToUnsubscribe, userLearningData);
+        res.json({ success: true });
       } else if (reviewedConversationId) {
         await updateReviewData(reviewedConversationId, success, userLearningData);
         res.json({ success: true });
