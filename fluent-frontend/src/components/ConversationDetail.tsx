@@ -28,7 +28,7 @@ export default function ConversationDetail({ conversation }: { conversation: Con
         </div>
         <div id="detail-card-main">
           {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
-            <SentenceDetail key={index} multiLingualSentence={multiLingualSentence} />
+            <SentenceDetail key={index} index={index} multiLingualSentence={multiLingualSentence} />
           ))}
           <div id="tags">
             {conversation.tags.map((tagId, index) => {

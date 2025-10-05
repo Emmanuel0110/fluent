@@ -89,7 +89,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const openConversation = (conversationId: string) => {
+  const openConversation = (conversationId: string, index?: number, sourceOrTarget?: "source" | "target") => {
     const conversation = conversations.find(({ _id }) => _id === conversationId);
     if (conversation) {
       setOpenedConversations((openedConversations) =>
@@ -97,7 +97,11 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
           ? openedConversations
           : [...openedConversations, conversation]
       );
-      navigate("conversations/" + conversationId);
+      navigate(
+        "conversations/" +
+          conversationId +
+          (index != undefined && sourceOrTarget ? "?index=" + index + "&language=" + sourceOrTarget : "")
+      );
     }
   };
 

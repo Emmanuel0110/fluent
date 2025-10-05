@@ -106,7 +106,7 @@ export interface Context {
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
   openWord: (id: string) => void;
-  openConversation: (id: string) => void;
+  openConversation: (id: string, index?: number, sourceOrTarget?: "source" | "target") => void;
   treeFilter: string[];
   setTreeFilter: Dispatch<SetStateAction<string[]>>;
   searchInput: string;

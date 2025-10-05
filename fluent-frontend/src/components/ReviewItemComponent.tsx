@@ -92,8 +92,8 @@ function ReviewItemComponent({
     }
   };
 
-  const handleSentenceClick = (sentenceIndex: number) => {
-    openConversation(conversation._id);
+  const handleSentenceClick = (sentenceIndex: number, sourceOrTarget: "source" | "target") => {
+    openConversation(conversation._id, sentenceIndex, sourceOrTarget);
   };
 
   const conversationIsCompleted = () => {
@@ -112,7 +112,7 @@ function ReviewItemComponent({
             <div key={index}>
               <div
                 className="clickable-sentence"
-                onClick={() => handleSentenceClick(index)}
+                onClick={() => handleSentenceClick(index, "source")}
                 style={{ cursor: "pointer" }}
               >
                 {sourceLanguage.text}
@@ -121,7 +121,7 @@ function ReviewItemComponent({
                 {timeIsUp && (
                   <div
                     className="clickable-sentence"
-                    onClick={() => handleSentenceClick(index)}
+                    onClick={() => handleSentenceClick(index, "target")}
                     style={{ cursor: "pointer" }}
                   >
                     {targetLanguage.text}
