@@ -207,7 +207,7 @@ async function addNewWords(userLearningDataId, newWordIds) {
   const newWords = newWordIds.map((wordId) => ({
     _id: wordId,
     nextReviewDate: new Date(Date.now() + 60000),
-    reviewDelayInMs: 60000,
+    reviewDelayInMs: 0,
     numberOfSentencesUsedIn: 1,
   }));
   await UserCourseModel.updateOne({ _id: userLearningDataId }, { $push: { words: { $each: newWords } } });
