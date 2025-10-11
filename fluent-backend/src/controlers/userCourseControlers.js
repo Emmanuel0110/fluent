@@ -206,7 +206,7 @@ async function updateWords(userLearningDataId, updates) {
 async function addNewWords(userLearningDataId, newWordIds) {
   const newWords = newWordIds.map((wordId) => ({
     _id: wordId,
-    nextReviewDate: new Date(Date.now() + 60000),
+    nextReviewDate: new Date(Date.now()),
     reviewDelayInMs: 0,
     numberOfSentencesUsedIn: 1,
   }));
