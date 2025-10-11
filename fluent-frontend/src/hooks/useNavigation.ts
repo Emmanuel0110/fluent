@@ -1,19 +1,18 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { NavigationService } from "../services/navigationService";
-import { View } from "../types";
+import { View, WordTag } from "../types";
 
 export const useNavigation = (
   openedWords: any[],
   openedConversations: any[],
   status: string,
-  searchFilter: any[],
-  treeFilter: string[],
+  searchFilter: string,
+  tagFilter: WordTag | null,
   setOpenedWords: (words: any[]) => void,
   setOpenedConversations: (conversations: any[]) => void,
   setStatus: (status: string) => void,
-  setSearchFilter: (filter: any[]) => void,
-  setTreeFilter: (filter: string[]) => void
+  setSearchFilter: (filter: string) => void
 ) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,7 +24,7 @@ export const useNavigation = (
       openedConversations,
       status,
       searchFilter,
-      treeFilter,
+      tagFilter,
       location: location.pathname,
     };
     navigationService.current.addToHistory(view);
@@ -67,7 +66,6 @@ export const useNavigation = (
     setOpenedConversations(view.openedConversations);
     setStatus(view.status);
     setSearchFilter(view.searchFilter);
-    setTreeFilter(view.treeFilter);
     navigate(view.location);
   };
 };

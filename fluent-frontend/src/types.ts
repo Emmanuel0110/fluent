@@ -30,16 +30,14 @@ export interface ConversationTag {
   targetLabel: string;
 }
 
-export type SearchFilter = { isActive: boolean; data: string[] }[];
-
 export type conversationFilter = { tag?: string };
 
 export interface View {
   openedConversations: Conversation[];
   openedWords: Word[];
   status: string;
-  searchFilter: SearchFilter;
-  treeFilter: string[];
+  searchFilter: string;
+  tagFilter: WordTag | null;
   location: string;
 }
 
@@ -101,14 +99,14 @@ export interface Context {
   setOpenedWords: Dispatch<SetStateAction<Word[]>>;
   setOpenedConversations: Dispatch<SetStateAction<Conversation[]>>;
   openedConversations: Conversation[];
-  searchFilter: SearchFilter;
-  setSearchFilter: Dispatch<SetStateAction<SearchFilter>>;
+  searchFilter: string;
+  setSearchFilter: Dispatch<SetStateAction<string>>;
   status: string;
   setStatus: Dispatch<SetStateAction<string>>;
   openWord: (id: string) => void;
   openConversation: (id: string, index?: number, sourceOrTarget?: "source" | "target") => void;
-  treeFilter: string[];
-  setTreeFilter: Dispatch<SetStateAction<string[]>>;
+  tagFilter: WordTag | null;
+  setTagFilter: Dispatch<SetStateAction<WordTag | null>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
   reviewList: ReviewItem[];

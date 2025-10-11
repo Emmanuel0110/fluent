@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode, useMemo } from "react";
-import { Context, Conversation, conversationFilter, ReviewItem, SearchFilter, Word } from "../types";
+import { Context, Conversation, conversationFilter, ReviewItem, Word, WordTag } from "../types";
 import { useData } from "./DataContext";
-import { someFilter, isFiltered } from "../utils/filterUtils";
 import { someConversationFilter, isConversationFiltered } from "../utils/conversationUtils";
 import { useNavigation } from "../hooks/useNavigation";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +13,8 @@ interface AuthProviderProps {
 
 export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [searchInput, setSearchInput] = useState("");
-  const [treeFilter, setTreeFilter] = useState<string[]>([]);
-  const [searchFilter, setSearchFilter] = useState<SearchFilter>([]);
+  const [searchFilter, setSearchFilter] = useState<string>("");
+  const [tagFilter, setTagFilter] = useState<WordTag | null>(null);
   const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
@@ -30,34 +29,18 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
     openedConversations,
     status,
     searchFilter,
-    treeFilter,
+    tagFilter,
     setOpenedWords,
     setOpenedConversations,
     setStatus,
-    setSearchFilter,
-    setTreeFilter
+    setSearchFilter
   );
 
   const filteredWords = useMemo(() => {
-    const searchFilterWithTagIds = searchFilter.map((filterItem) => {
-      return {
-        ...filterItem,
-        data: filterItem.data.map((dataItem) => {
-          const split = dataItem.split("#");
-          if (split.length === 2) {
-            const tagId = wordTags.find((tag) => tag.label === split[1])?._id;
-            if (tagId) {
-              return split[0] + "#" + tagId;
-            }
-          }
-          return dataItem;
-        }),
-      };
-    });
     return Object.values(words).filter((word) => {
-      return !someFilter(searchFilter, treeFilter) || isFiltered(word, searchFilterWithTagIds, treeFilter);
+      return (!searchFilter || word.text.includes(searchFilter)) && (!tagFilter || word.tags.includes(tagFilter._id));
     });
-  }, [words, status, searchFilter, treeFilter, wordTags]);
+  }, [words, status, searchFilter, tagFilter, wordTags]);
 
   const filteredConversations = useMemo(() => {
     return conversations.filter((conversation) => {
@@ -130,8 +113,8 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setStatus,
         openWord,
         openConversation,
-        treeFilter,
-        setTreeFilter,
+        tagFilter,
+        setTagFilter,
         searchInput,
         setSearchInput,
         reviewList,

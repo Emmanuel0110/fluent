@@ -223,8 +223,9 @@ button:focus {
 }
 
 .filterItem {
+  display: inline-block;
   cursor: pointer;
-  padding: 0.2em 2em 0.3em 1em;
+  padding: 0.2em 1em 0.3em 1em;
   margin: 5px;
   border-radius: 1em;
   color: rgb(34, 34, 34);
@@ -232,10 +233,6 @@ button:focus {
   position: relative;
   color: #424242;
   background-color: rgb(252, 252, 252);
-}
-
-.filterItem.inactive {
-  color: rgb(175, 175, 175);
 }
 
 .filterClose {

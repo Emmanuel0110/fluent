@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const { wordTags } = useData();
-  const { setSearchFilter } = useContext(ConfigContext) as Context;
+  const { setTagFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
 
-  const searchTag = (tagLabel: string) => {
-    setSearchFilter([{ isActive: true, data: ["#" + tagLabel] }]);
+  const searchTag = (tagId: string) => {
+    setTagFilter(wordTags.find(({ _id }) => _id === tagId) || null);
     navigate("/words");
   };
 
@@ -27,7 +27,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
                 const tag = wordTags.find((tag) => tag._id === tagId);
                 if (tag)
                   return (
-                    <div key={index} className="tag" onClick={(e) => searchTag(tag.label)}>
+                    <div key={index} className="tag" onClick={(e) => searchTag(tag._id)}>
                       {"#" + tag.label}
                     </div>
                   );
