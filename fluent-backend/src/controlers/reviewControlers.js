@@ -78,7 +78,7 @@ async function getStoryReviewItems(userLearningData) {
 }
 
 function getLateReviewWordIds(reviewWords) {
-  const MAX_SIZE_OF_REVIEW_BATCH = 10;
+  const MAX_SIZE_OF_REVIEW_BATCH = 20;
   return reviewWords
     .filter((word) => new Date(word.nextReviewDate).getTime() < new Date().getTime())
     .sort((a, b) => new Date(b.nextReviewDate).getTime() - new Date(a.nextReviewDate).getTime()) // descending order (review the most recent ones among late, to keep motivation high)
