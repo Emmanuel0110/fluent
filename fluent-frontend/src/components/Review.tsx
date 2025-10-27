@@ -1,16 +1,17 @@
 import React, { useContext, useEffect } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, RowConversation } from "../types";
-import { getReviewList } from "../APICalls";
+import { getReviewList, getSuggestions } from "../APICalls";
 import ReviewItemComponent from "./ReviewItemComponent";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
-import { updateCacheWithNewConversations } from "../utils/conversationUtils";
+import { formatConversations, updateCacheWithNewConversations } from "../utils/conversationUtils";
+import { ConversationLine } from "./ConversationLine";
 
 function Review() {
   const { targetLanguage } = useLanguage();
   const { updateConversationReviewStatus } = useData();
-  const { reviewList, setReviewList } = useContext(ConfigContext) as Context;
+  const { reviewList, setReviewList, suggestions, setSuggestions } = useContext(ConfigContext) as Context;
 
   useEffect(() => fetchNewReviewItems(), []);
 
@@ -19,7 +20,11 @@ function Review() {
     if (success) {
       setReviewList((reviewList) => reviewList.slice(1));
       await updateConversationReviewStatus(currentConversation);
-      if (reviewList.length <= 1) fetchNewReviewItems();
+      if (reviewList.length <= 1) {
+        fetchNewReviewItems();
+        if (!suggestions.length)
+          getSuggestions().then((suggestions) => setSuggestions(formatConversations(suggestions, targetLanguage)));
+      }
     } else {
       currentConversation.alreadyFailed = true;
       setReviewList((reviewList) => [...reviewList.slice(1), currentConversation]);
@@ -38,7 +43,15 @@ function Review() {
   };
 
   return reviewList.length === 0 ? (
-    <div id="nothingToReview">Nothing to review</div>
+    suggestions.length === 0 ? (
+      <div id="nothingToReview">Nothing to review</div>
+    ) : (
+      <div id="conversationList">
+        {suggestions.map((conversation, index) => (
+          <ConversationLine key={index} conversation={conversation} />
+        ))}
+      </div>
+    )
   ) : (
     <ReviewItemComponent conversation={reviewList[0]} nextConversation={nextConversation} />
   );

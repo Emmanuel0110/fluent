@@ -3,7 +3,6 @@ import { useData } from "../contexts/DataContext";
 import { useContext } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import textToSpeech from "../services/textToSpeechService";
 import { TextToSpeech } from "./textToSpeech/TextToSpeech";
 
 interface WordDefinitionProps {

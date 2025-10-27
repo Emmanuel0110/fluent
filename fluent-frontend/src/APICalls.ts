@@ -285,3 +285,19 @@ export const getReviewList = async () => {
       return [];
     });
 };
+
+export const getSuggestions = async () => {
+  return customFetch(url + "reviewItems/suggestions", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return [];
+    });
+};

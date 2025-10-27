@@ -20,6 +20,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [status, setStatus] = useState("words");
   const [reviewList, setReviewList] = useState<ReviewItem[]>([]);
+  const [suggestions, setSuggestions] = useState<Conversation[]>([]);
   const navigate = useNavigate();
   const { words, conversations, wordTags } = useData();
 
@@ -119,6 +120,8 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setSearchInput,
         reviewList,
         setReviewList,
+        suggestions,
+        setSuggestions,
       }}
     >
       {children}

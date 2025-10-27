@@ -111,4 +111,6 @@ export interface Context {
   setSearchInput: Dispatch<SetStateAction<string>>;
   reviewList: ReviewItem[];
   setReviewList: Dispatch<SetStateAction<ReviewItem[]>>;
+  suggestions: Conversation[];
+  setSuggestions: Dispatch<SetStateAction<Conversation[]>>;
 }

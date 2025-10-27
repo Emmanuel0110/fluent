@@ -6,10 +6,33 @@ import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", auth, cache, getNextReviewItems);
+router.get("/suggestions", auth, cache, getSuggestionsEasyConversations);
+
+async function getSuggestionsEasyConversations(req, res) {
+  try {
+    const suggestedConversations = req.userLearningData ? await getUnsubscribedConversations(req.userLearningData) : [];
+    console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
+    res.json({
+      success: true,
+      data: suggestedConversations.map((conversation) => ({ ...conversation, subscribed: false })),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get suggestions",
+    });
+  }
+  //get 10 unsubscribed conversations
+  //const NUMBER_OF_UNSUBSCRIBED_CONVERSATIONS = 100;
+
+  //return 10 easiest one
+  //const NUMBER_OF_EASY_CONVERSATIONS = 10;
+}
 
 async function getNextReviewItems(req, res) {
   try {
-    console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
+    // console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
     const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first chooses a language
     console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
     res.json({ success: true, data: nextReviewItems });
@@ -172,6 +195,50 @@ async function getEasyConversationsForWords(wordIds, userLearningData) {
     return acc;
   }, {});
   return Object.values(easyConversations);
+}
+
+async function getUnsubscribedConversations(userLearningData) {
+  console.log(
+    "ids",
+    userLearningData.conversations.map(({ _id }) => _id)
+  );
+  return MultiLingualConversationModel.aggregate([
+    // Step 1: Match conversations containing sentences with wordIds in prerequisites
+    {
+      $match: {
+        _id: { $nin: userLearningData.conversations.map(({ _id }) => _id) },
+        "conversations.language": {
+          $all: [
+            new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
+            new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+          ],
+        },
+      },
+    },
+
+    // Step 2: Project and filter the conversations array to include only "fr" and "en"
+    {
+      $project: {
+        _id: 1,
+        tags: 1,
+        conversations: {
+          $filter: {
+            input: "$conversations",
+            as: "conversation",
+            cond: {
+              $in: [
+                "$$conversation.language",
+                [
+                  new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
+                  new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+                ],
+              ],
+            },
+          },
+        },
+      },
+    },
+  ]);
 }
 
 export async function getConversationsForWords(wordIds, userLearningData) {
