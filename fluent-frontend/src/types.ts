@@ -11,7 +11,7 @@ export interface User {
   };
 }
 
-export type Status = "word" | "conversation";
+export type Status = "word" | "conversation" | "dashboard" | "review" | "new";
 
 export interface WordTag {
   _id: string;
@@ -88,6 +88,18 @@ export interface Conversation {
 
 export interface ReviewItem extends Conversation {
   alreadyFailed: boolean;
+}
+
+export interface DashboardData {
+  progress: number;
+  rank: {
+    icon: string;
+    label: string;
+  };
+  chartData: {
+    date: string;
+    wordsLearned: number;
+  }[];
 }
 
 export interface Context {

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="begTitle" style="--main:#5cb85c; --accent:#ffffff;">
+  <title id="begTitle">Beginner</title>
+  <rect width="64" height="64" rx="12" fill="none"/>
+  <!-- background rounded tile -->
+  <rect x="4" y="4" width="56" height="56" rx="10" fill="var(--main)" opacity="0.12"/>
+  <!-- pot -->
+  <path d="M18 46h28l-4 8H22z" fill="var(--main)" stroke="var(--main)" stroke-width="0"/>
+  <!-- stem -->
+  <path d="M32 44 v-16" stroke="var(--main)" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <!-- leaves -->
+  <path d="M32 30 C22 26, 18 20, 22 18 C26 16, 30 20, 32 24" fill="var(--main)" opacity="0.0"/>
+  <path d="M32 30 C42 26, 46 20, 42 18 C38 16, 34 20, 32 24" fill="var(--main)" opacity="0.0"/>
+  <g stroke="var(--main)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M32 44 v-16"/>
+    <path d="M32 28 C26 26, 22 20, 26 18"/>
+    <path d="M32 28 C38 26, 42 20, 38 18"/>
+  </g>
+</svg>
+

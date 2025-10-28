@@ -55,6 +55,16 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
           <div id="statusSection">
             <div
               onClick={() => {
+                setStatus("dashboard");
+                navigate("/dashboard");
+                setOpen(false);
+              }}
+            >
+              <div className={status === "dashboard" ? "selected" : "unselected"}></div>
+              <div>Dashboard</div>
+            </div>
+            <div
+              onClick={() => {
                 setStatus("words");
                 navigate("/words");
                 setOpen(false);

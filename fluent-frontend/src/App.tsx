@@ -14,6 +14,7 @@ import CreationForm from "./components/CreationForm";
 import ConversationForm from "./components/ConversationForm";
 import WordForm from "./components/WordForm";
 import Review from "./components/Review";
+import Dashboard from "./components/Dashboard";
 import { ConfigProvider } from "./contexts/ConfigContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
@@ -49,6 +50,7 @@ export default function App() {
             <Route path="home" element={<ConversationList />} />
             {/*TODO: remove if unused ? */}
             <Route path="new" element={<CreationForm />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
             <Route path="words/:wordId/edit" element={<WordForm />} />

@@ -301,3 +301,19 @@ export const getSuggestions = async () => {
       return [];
     });
 };
+
+export const getDashboardData = async () => {
+  return customFetch(url + "users/dashboard", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return null;
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return null;
+    });
+};

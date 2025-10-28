@@ -1,0 +1,265 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  height: 100%;
+  overflow-y: auto;
+  gap: 1.5rem;
+}
+
+.dashboard-loading,
+.dashboard-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.dashboard-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-section h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Rank and Progress Container */
+.rank-progress-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Rank Styles - Left Side */
+.rank-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.rank-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rank-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rank-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* Progress Bar Styles - Right Side */
+.progress-display {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.progress-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Chart Styles */
+.chart-section {
+  padding-bottom: 2rem;
+}
+
+.chart-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  height: 200px;
+  padding: 0 0.5rem;
+  margin-top: 1rem;
+}
+
+.chart-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.chart-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  gap: 0.25rem;
+}
+
+.chart-bar {
+  width: 100%;
+  max-width: 40px;
+  background: linear-gradient(180deg, #28a745 0%, #20c997 100%);
+  border-radius: 4px 4px 0 0;
+  min-height: 4px;
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.chart-bar-label {
+  display: flex;
+  align-items: flex-start;
+  height: auto;
+  min-height: 40px;
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+  word-break: break-word;
+  max-width: 50px;
+  justify-content: center;
+}
+
+.chart-bar-label span {
+  writing-mode: horizontal-tb;
+  text-orientation: mixed;
+  display: block;
+}
+
+/* Mobile adjustments for very small screens */
+@media (max-width: 480px) {
+  .rank-progress-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .progress-display {
+    width: 100%;
+  }
+}
+
+/* Responsive adjustments for larger mobile screens */
+@media (min-width: 768px) {
+  .dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2.2rem;
+  }
+
+  .dashboard-section {
+    padding: 2rem;
+  }
+
+  .chart-container {
+    height: 250px;
+    gap: 1rem;
+  }
+
+  .chart-bar {
+    max-width: 60px;
+  }
+
+  .chart-bar-label {
+    min-height: 50px;
+    font-size: 0.8rem;
+  }
+
+  .rank-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .rank-label {
+    font-size: 1.1rem;
+  }
+
+  .progress-value {
+    font-size: 1.5rem;
+  }
+
+  .rank-progress-container {
+    gap: 2rem;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  .chart-container {
+    height: 150px;
+  }
+
+  .dashboard-section {
+    padding: 1rem;
+  }
+
+  .progress-bar-container {
+    height: 20px;
+  }
+
+  .rank-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .rank-label {
+    font-size: 0.8rem;
+  }
+
+  .rank-progress-container {
+    gap: 1rem;
+  }
+}
