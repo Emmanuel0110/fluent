@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.patch("/", auth, cache, updateLearningData);
 
+router.get("/dashboard", auth, cache, getDashboardData);
+
 async function updateLearningData(req, res) {
   try {
     const { userLearningData, user } = req;
@@ -213,18 +215,151 @@ async function addNewWords(userLearningDataId, newWordIds) {
   await UserCourseModel.updateOne({ _id: userLearningDataId }, { $push: { words: { $each: newWords } } });
 }
 
+const DELAYS = [
+  0,
+  60000, //1000*60 (1 min)
+  3600000, //1000*60*60 (1 hour)
+  86400000, //1000*60*60*24 (1 day)
+  604800000, //1000*60*60*24*7 (1 week)
+  2592000000, //1000*60*60*24*30 (1 month)
+  31536000000, //1000*60*60*24*365 (1 year)
+];
+
 const nextReviewDelay = (delay) => {
-  const delays = [
-    0,
-    60000, //1000*60 (1 min)
-    3600000, //1000*60*60 (1 hour)
-    86400000, //1000*60*60*24 (1 day)
-    604800000, //1000*60*60*24*7 (1 week)
-    2592000000, //1000*60*60*24*30 (1 month)
-    31536000000, //1000*60*60*24*365 (1 year)
-  ];
-  const index = delays.indexOf(delay);
-  return index >= 0 && index < delays.length - 1 ? delays[index + 1] : delay;
+  const index = DELAYS.indexOf(delay);
+  return index >= 0 && index < DELAYS.length - 1 ? DELAYS[index + 1] : delay;
 };
+
+async function getDashboardData(req, res) {
+  try {
+    const { userLearningData } = req;
+    if (!userLearningData) {
+      return res.status(404).json({
+        success: false,
+        message: "Learning data not found",
+      });
+    }
+
+    const score = (await calculateUserScore(userLearningData)) || 0;
+    const currentRank = getRank(score);
+    const nextRankScore = getNextRankScore(score);
+    const previousRankScore = getPreviousRankScore(score);
+
+    // Calculate progress percentage
+    const progress = calculateProgress(score, previousRankScore, nextRankScore);
+
+    // Get last 7 days of scores
+    const last7DaysScores = getLast7DaysScores(userLearningData.dailyScores || []);
+
+    res.json({
+      success: true,
+      data: {
+        progress: progress,
+        rank: currentRank,
+        chartData: last7DaysScores,
+      },
+    });
+  } catch (error) {
+    console.error("Dashboard error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to get dashboard data",
+    });
+  }
+}
+
+/**
+ * Calculate the user's score based on learned words
+ * Score = sum of all words multiplied by their review progress (how many time they have been reviewed with success)
+ */
+
+export async function calculateUserScore(userCourse) {
+  try {
+    if (!userCourse || !userCourse.words) {
+      return 0;
+    }
+
+    const now = new Date();
+    let score = 0;
+
+    for (const word of userCourse.words) {
+      // A word is considered "learned" if it's not overdue (nextReviewDate is in the future)
+      if (word.nextReviewDate && new Date(word.nextReviewDate) > now) {
+        // Score is weighted by reviewDelayInMs
+        const weight = DELAYS.indexOf(word.reviewDelayInMs);
+        score += weight;
+      }
+    }
+
+    return score;
+  } catch (error) {
+    console.error("Error calculating user score:", error);
+    return 0;
+  }
+}
+
+function getRank(score) {
+  if (score >= 10000) return "Expert";
+  if (score >= 3000) return "Advanced";
+  if (score >= 1000) return "Amateur";
+  return "Beginner";
+}
+
+function getNextRankScore(currentScore) {
+  if (currentScore < 1000) return 1000;
+  if (currentScore < 3000) return 3000;
+  if (currentScore < 10000) return 10000;
+  return 100000; // Beyond expert
+}
+
+function getPreviousRankScore(currentScore) {
+  if (currentScore >= 800) return 300;
+  if (currentScore >= 300) return 100;
+  if (currentScore >= 100) return 0;
+  return 0;
+}
+
+function calculateProgress(currentScore, previousScore, nextScore) {
+  console.log("currentScore, previousScore, nextScore", currentScore, previousScore, nextScore);
+  const range = nextScore - previousScore;
+  const position = currentScore - previousScore;
+  const percentage = Math.round((position / range) * 100);
+  return Math.max(0, Math.min(100, percentage));
+}
+
+function getLast7DaysScores(dailyScores) {
+  // Sort by date descending
+  const sorted = dailyScores.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Get last 7 days
+  const last7Days = sorted.slice(0, 7);
+
+  // Fill in missing days with 0 score
+  const result = [];
+  const today = new Date();
+
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - (6 - i));
+
+    // Format date as MM/DD
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const formattedDate = `${month}/${day}`;
+
+    // Find score for this date
+    const scoreEntry = last7Days.find((entry) => {
+      const entryDate = new Date(entry.date);
+      return entryDate.toDateString() === date.toDateString();
+    });
+
+    result.push({
+      date: formattedDate,
+      wordsLearned: scoreEntry ? scoreEntry.score : 0,
+    });
+  }
+
+  return result;
+}
 
 export default router;

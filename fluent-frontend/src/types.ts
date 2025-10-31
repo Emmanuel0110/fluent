@@ -92,10 +92,7 @@ export interface ReviewItem extends Conversation {
 
 export interface DashboardData {
   progress: number;
-  rank: {
-    icon: string;
-    label: string;
-  };
+  rank: string;
   chartData: {
     date: string;
     wordsLearned: number;

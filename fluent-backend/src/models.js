@@ -57,6 +57,13 @@ const UserCourseSchema = new Schema({
       lastReviewDate: { type: Date, index: true },
     },
   ],
+  score: { type: Number, default: 0 },
+  dailyScores: [
+    {
+      date: { type: Date, default: Date.now },
+      score: Number,
+    },
+  ],
 });
 
 export const UserCourseModel = model("UserCourse", UserCourseSchema);

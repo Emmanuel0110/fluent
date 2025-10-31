@@ -303,7 +303,7 @@ export const getSuggestions = async () => {
 };
 
 export const getDashboardData = async () => {
-  return customFetch(url + "users/dashboard", { headers: authHeaders() })
+  return customFetch(url + "usercourses/dashboard", { headers: authHeaders() })
     .then((res) => {
       if (res.success) {
         return res.data;
