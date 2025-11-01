@@ -116,13 +116,14 @@
 /* Chart Styles */
 .chart-section {
   padding-bottom: 2rem;
+  height: 100%;
 }
 
 .chart-container {
   display: flex;
   align-items: flex-end;
   gap: 0.5rem;
-  height: 200px;
+  height: 100%;
   padding: 0 0.5rem;
   margin-top: 1rem;
 }
