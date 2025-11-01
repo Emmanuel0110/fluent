@@ -286,7 +286,7 @@ export const getReviewList = async () => {
     });
 };
 
-export const getSuggestions = async () => {
+export const getSuggestions = async (): Promise<RowConversation[]> => {
   return customFetch(url + "reviewItems/suggestions", { headers: authHeaders() })
     .then((res) => {
       if (res.success) {

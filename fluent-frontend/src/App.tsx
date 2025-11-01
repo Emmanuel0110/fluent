@@ -6,7 +6,6 @@ import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
 import Login from "./auth/components/Login";
-import WordList from "./components/WordList";
 import WordListWithDetail from "./components/WordListWithDetail";
 import ConversationList from "./components/ConversationList";
 import ConversationListWithDetail from "./components/ConversationListWithDetail";
@@ -20,6 +19,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { DataProvider } from "./contexts/DataContext";
 import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
+import SuggestionList from "./components/SuggestionList";
 
 export const url = process.env.REACT_APP_API_URL;
 
@@ -54,7 +54,7 @@ export default function App() {
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
             <Route path="words/:wordId/edit" element={<WordForm />} />
-            <Route path="conversations" element={<ConversationListWithDetail />} />
+            <Route path="suggestions" element={<SuggestionList />} />
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
             <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
             <Route path="review" element={<Review />} />

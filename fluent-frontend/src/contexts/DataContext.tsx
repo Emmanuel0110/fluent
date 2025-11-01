@@ -20,8 +20,9 @@ import {
   updateRemoteConversationReviewStatus,
   getRemoteConversationById,
   getRemoteConversationByWordId,
+  getSuggestions,
 } from "../APICalls";
-import { Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
+import { Conversation, ConversationTag, ReviewItem, RowConversation, Word, WordTag } from "../types";
 import { useNavigate } from "react-router-dom";
 import {
   formatConversations,
@@ -40,6 +41,7 @@ interface DataContextType {
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   subscribeToConversation: (conversation: Conversation) => void;
   unsubscribeToConversation: (conversation: Conversation) => void;
+  fetchSuggestions: () => Promise<string[]>;
   getConversationById: (id: string) => Promise<Conversation>;
   updateConversationReviewStatus: (conversation: ReviewItem) => Promise<void>;
   saveWord: (infos: Word) => Promise<Word | undefined>;
@@ -182,6 +184,13 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     });
   };
 
+  const fetchSuggestions = async () => {
+    return getSuggestions().then((suggestions) => {
+      setConversations((conversations) => updateCacheWithNewConversations(conversations, suggestions, targetLanguage));
+      return suggestions.map(({ _id }) => _id);
+    });
+  };
+
   const subscribeToConversation = (conversation: Conversation) => {
     const conversationId = conversation._id;
     subscribeToRemoteConversation(conversationId).then((res) => {
@@ -239,6 +248,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         fetchMoreUsedInConversations,
         subscribeToConversation,
         unsubscribeToConversation,
+        fetchSuggestions,
         getConversationById,
         updateConversationReviewStatus,
         saveWord,

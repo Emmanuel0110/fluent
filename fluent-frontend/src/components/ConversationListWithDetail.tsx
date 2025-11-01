@@ -45,7 +45,7 @@ export default function ConversationListWithDetail() {
     navigate(
       openedConversations.length > 1
         ? "/conversations/" + (openedConversations[tabIndex + 1]?._id || openedConversations[tabIndex - 1]?._id)
-        : "/conversations"
+        : "/suggestions"
     );
   };
 
@@ -56,7 +56,7 @@ export default function ConversationListWithDetail() {
   };
 
   const closeAllTabs = () => {
-    navigate("/conversations");
+    navigate("/suggestions");
     setOpenedConversations([]);
   };
 

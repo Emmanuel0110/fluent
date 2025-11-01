@@ -46,7 +46,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const filteredConversations = useMemo(() => {
     return conversations.filter((conversation) => {
       return (
-        status === "conversations" &&
+        status === "suggestions" &&
         (!someConversationFilter(conversationFilter) || isConversationFiltered(conversation, conversationFilter))
       );
     });
