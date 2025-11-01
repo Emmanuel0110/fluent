@@ -11,8 +11,17 @@
   height: 100%;
 }
 
-#reviewSentences > div {
+#reviewSentences .green {
+  width: 100%;
   text-align: center;
+  border-left: 3px solid #54cf54;
+}
+
+#reviewSentences .gray {
+  width: 100%;
+  text-align: center;
+  border-left: 3px solid #c1c1c1;
+  color: transparent;
 }
 
 #nothingToReview {

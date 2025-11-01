@@ -106,31 +106,29 @@ function ReviewItemComponent({
   return (
     <div id="reviewItem">
       <div id="reviewSentences">
-        {conversation.multiLingualSentences
-          .slice(0, currentSentenceNumber + 1)
-          .map(({ sourceLanguage, targetLanguage }, index) => (
-            <div key={index}>
-              <div
-                className="clickable-sentence"
-                onClick={() => handleSentenceClick(index, "source")}
-                style={{ cursor: "pointer" }}
-              >
-                {sourceLanguage.text}
-              </div>
-              <div className="translationSpaceholder">
-                {timeIsUp && (
-                  <div
-                    className="clickable-sentence"
-                    onClick={() => handleSentenceClick(index, "target")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    {targetLanguage.text}
-                  </div>
-                )}
-              </div>
-              <br />
+        {conversation.multiLingualSentences.map(({ sourceLanguage, targetLanguage }, index) => (
+          <div key={index} className={index <= currentSentenceNumber ? "green" : "gray"}>
+            <div
+              className="clickable-sentence"
+              onClick={() => handleSentenceClick(index, "source")}
+              style={{ cursor: "pointer" }}
+            >
+              {sourceLanguage.text}
             </div>
-          ))}
+            <div className="translationSpaceholder">
+              {timeIsUp && (
+                <div
+                  className="clickable-sentence"
+                  onClick={() => handleSentenceClick(index, "target")}
+                  style={{ cursor: "pointer" }}
+                >
+                  {targetLanguage.text}
+                </div>
+              )}
+            </div>
+            <br />
+          </div>
+        ))}
       </div>
       {!timeIsUp && !shouldShowAnswerAutomatically() && (
         <div className="reveal-answer-container">
