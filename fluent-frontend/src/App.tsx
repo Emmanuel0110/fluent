@@ -20,6 +20,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import { DataProvider } from "./contexts/DataContext";
 import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
 import SuggestionList from "./components/SuggestionList";
+import AdminRoute from "./AdminRoute";
 
 export const url = process.env.REACT_APP_API_URL;
 
@@ -49,7 +50,9 @@ export default function App() {
           >
             <Route path="home" element={<ConversationList />} />
             {/*TODO: remove if unused ? */}
-            <Route path="new" element={<CreationForm />} />
+            <Route element={<AdminRoute redirectPath="home" />}>
+              <Route path="new" element={<CreationForm />} />
+            </Route>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />

@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface LeftMenuBarProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface LeftMenuBarProps {
 }
 
 function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { status, setStatus } = useContext(ConfigContext) as Context;
 
@@ -47,11 +49,11 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
     <div id="leftSideMenuContainer">
       <div id="leftSideMenu" className={isOpen ? "open" : "closed"}>
         <div>
-          <div>
+          {user?.isAdmin && (
             <Button id="newConversationButton" onClick={openNewDraft}>
               New conversation
             </Button>
-          </div>
+          )}
           <div id="statusSection">
             <div
               onClick={() => {

@@ -26,6 +26,7 @@ const ConversationTagSchema = new Schema({
 export const ConversationTagModel = model("ConversationTag", ConversationTagSchema);
 
 const userSchema = new Schema({
+  isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true, trim: true },
   password: { type: String, required: true, select: false },
   lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },

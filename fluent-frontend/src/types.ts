@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
 export interface User {
+  isAdmin: boolean;
   _id: string;
   username: string;
   sourceLanguage: string; //source language of the last course
