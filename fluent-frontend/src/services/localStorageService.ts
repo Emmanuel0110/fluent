@@ -33,7 +33,6 @@ export class LocalStorageService {
   public updateLocalStorageWords = (wordsData: Record<string, any>) => {
     try {
       if (Object.keys(wordsData).length === 0) return;
-      console.log(this.languageKey, this.sourceLanguage);
       localStorage.setItem(
         this.languageKey || this.generateLanguageKey(this.sourceLanguage, this.targetLanguage),
         JSON.stringify({

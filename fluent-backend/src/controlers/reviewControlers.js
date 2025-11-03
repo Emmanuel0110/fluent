@@ -34,7 +34,7 @@ async function getNextReviewItems(req, res) {
   try {
     // console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
     const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first chooses a language
-    console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
+    // console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
     res.json({ success: true, data: nextReviewItems });
   } catch (error) {
     console.error(error);
@@ -54,9 +54,9 @@ async function getReviewItems(userLearningData) {
   ];
 
   for (const strategy of reviewStrategies) {
-    console.log(`🔍 Debug - Trying strategy: ${strategy.type}`); // Add this
+    //console.log(`🔍 Debug - Trying strategy: ${strategy.type}`); // Add this
     const reviewItems = await strategy.handler(userLearningData);
-    console.log(`🔍 Debug - ${strategy.type} returned:`, reviewItems.length, "items"); // Add this
+    //console.log(`🔍 Debug - ${strategy.type} returned:`, reviewItems.length, "items"); // Add this
     if (reviewItems.length > 0) return reviewItems.slice(0, MAX_REVIEW_ITEMS);
   }
   return [];
@@ -64,7 +64,7 @@ async function getReviewItems(userLearningData) {
 
 async function getLateReviewItems(userLearningData) {
   const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);
-  console.log(`🔍 Debug - lateReviewWordIds: ${lateReviewWordIds}`);
+  //console.log(`🔍 Debug - lateReviewWordIds: ${lateReviewWordIds}`);
   if (lateReviewWordIds.length === 0) return [];
 
   const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData);
@@ -111,7 +111,7 @@ function getLateReviewWordIds(reviewWords) {
 
 async function getKnownConversationsForWords(wordIds, userLearningData) {
   const conversations = await getConversationsForWords(wordIds, userLearningData);
-  console.log(`🔍 Debug - conversations: ${conversations}`);
+  //console.log(`🔍 Debug - conversations: ${conversations}`);
   const userConversations = userLearningData.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
     const lastReviewDate = userConversations.find(({ _id }) => _id.equals(conversation._id))?.lastReviewDate;
@@ -120,12 +120,12 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
     }
     return acc;
   }, []);
-  console.log(`🔍 Debug - knownConversations: ${knownConversations}`);
+  //console.log(`🔍 Debug - knownConversations: ${knownConversations}`);
   const sortedConversations = knownConversations.sort(
     (a, b) => new Date(a.lastReviewDate).getTime() - new Date(b.lastReviewDate).getTime() // ascending order (review the oldest ones to avoid reviewing always the same conversations)
   );
   const selectedConversations = selectUsefulConversations(sortedConversations, [...wordIds]);
-  console.log(`🔍 Debug - selectedConversations: ${selectedConversations}`);
+  //console.log(`🔍 Debug - selectedConversations: ${selectedConversations}`);
   return selectedConversations;
 }
 
