@@ -1,10 +1,9 @@
-
 .dotsOptions {
   width: 2ch;
   height: 3ch;
   margin: auto;
 }
-  
+
 .dots {
   width: 2ch;
   height: 3ch;
@@ -24,13 +23,13 @@
   right: 17px;
   top: 0px;
   text-align: left;
-  -moz-box-shadow:    -1px 0 5px 0 rgb(165, 165, 165);
+  -moz-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
   -webkit-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
-  box-shadow:         1px 0 5px 0 rgb(165, 165, 165);
+  box-shadow: 1px 0 5px 0 rgb(165, 165, 165);
   border-radius: 9px;
   padding: 3px;
   background-color: white;
-  z-index: 1000;
+  z-index: 998;
 }
 
 .optionLabel {
