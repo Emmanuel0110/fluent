@@ -24,12 +24,14 @@ export default function SuggestionList() {
   useEffect(() => {}, []);
 
   return suggestionIds ? (
-    <div id="conversationList">
-      {conversations
-        .filter(({ _id }) => suggestionIds.includes(_id))
-        .map((conversation, index) => (
-          <ConversationLine key={index} conversation={conversation} />
-        ))}
+    <div style={{ height: "100%", overflow: "auto" }}>
+      <div id="conversationList">
+        {conversations
+          .filter(({ _id }) => suggestionIds.includes(_id))
+          .map((conversation, index) => (
+            <ConversationLine key={index} conversation={conversation} />
+          ))}
+      </div>
     </div>
   ) : (
     <div id="nothingToReview">No suggestion available</div>
