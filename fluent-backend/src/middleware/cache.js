@@ -1,6 +1,7 @@
 import { cacheUserLearningData } from "../controlers/userControlers.js";
 import { redisClient } from "../../index.js";
 import { UserModel, UserCourseModel } from "../models.js";
+import mongoose from "mongoose";
 
 async function cache(req, res, next) {
   const userId = req.user._id;
