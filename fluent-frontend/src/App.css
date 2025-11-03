@@ -402,3 +402,9 @@ a.nav-link {
   font-weight: normal;
   cursor: pointer;
 }
+
+.hcenter {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}

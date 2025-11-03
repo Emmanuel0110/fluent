@@ -7,6 +7,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
 import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 function Review() {
   const { targetLanguage } = useLanguage();
@@ -39,14 +40,17 @@ function Review() {
             alreadyFailed: false,
           }))
         );
-      } else {
-        navigate("/suggestions");
       }
     });
   };
 
   return reviewList.length === 0 ? (
-    <div id="nothingToReview">Nothing to review</div>
+    <div>
+      <div id="nothingToReview">Nothing to review</div>
+      <div className="hcenter">
+        <Button onClick={() => navigate("/suggestions")}>See suggestions</Button>
+      </div>
+    </div>
   ) : (
     <ReviewItemComponent conversation={reviewList[0]} nextConversation={nextConversation} />
   );
