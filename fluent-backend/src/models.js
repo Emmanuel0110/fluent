@@ -61,6 +61,7 @@ const UserCourseSchema = new Schema({
   score: { type: Number, default: 0 },
   dailyScores: [
     {
+      _id: false,
       date: { type: Date, default: Date.now },
       score: Number,
     },
