@@ -67,16 +67,6 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
             </div>
             <div
               onClick={() => {
-                setStatus("words");
-                navigate("/words");
-                setOpen(false);
-              }}
-            >
-              <div className={status === "words" ? "selected" : "unselected"}></div>
-              <div>Words</div>
-            </div>
-            <div
-              onClick={() => {
                 setStatus("suggestions");
                 navigate("/suggestions");
                 setOpen(false);
