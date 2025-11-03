@@ -39,7 +39,10 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const filteredWords = useMemo(() => {
     return Object.values(words).filter((word) => {
-      return (!searchFilter || word.text.includes(searchFilter)) && (!tagFilter || word.tags.includes(tagFilter._id));
+      return (
+        (!searchFilter || word.text.toLowerCase().includes(searchFilter.toLowerCase())) &&
+        (!tagFilter || word.tags.includes(tagFilter._id))
+      );
     });
   }, [words, status, searchFilter, tagFilter, wordTags]);
 
