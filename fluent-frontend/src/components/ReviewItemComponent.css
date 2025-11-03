@@ -73,6 +73,10 @@
   border: 1px solid transparent;
 }
 
+.bold {
+  font-weight: 500;
+}
+
 .clickable-sentence:hover {
   background-color: #f8f9fa;
   border-color: #dee2e6;

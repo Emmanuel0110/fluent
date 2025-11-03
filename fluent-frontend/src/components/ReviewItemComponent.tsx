@@ -118,7 +118,7 @@ function ReviewItemComponent({
             <div className="translationSpaceholder">
               {timeIsUp && (
                 <div
-                  className="clickable-sentence"
+                  className="clickable-sentence bold"
                   onClick={() => handleSentenceClick(index, "target")}
                   style={{ cursor: "pointer" }}
                 >
