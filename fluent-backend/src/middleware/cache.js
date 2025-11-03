@@ -8,9 +8,28 @@ async function cache(req, res, next) {
   if (redisClient) {
     cachedData = await redisClient.get(`userLearningData:${userId}`);
   }
-  req.userLearningData = cachedData
-    ? JSON.parse(cachedData)
-    : await UserModel.findById(userId).then((user) => cacheUserLearningData(user));
+
+  let userLearningData;
+
+  if (cachedData) {
+    userLearningData = JSON.parse(cachedData);
+
+    // ✅ Recast all _id fields that you’ll use in Mongo queries
+    if (Array.isArray(userLearningData.conversations)) {
+      userLearningData.conversations = userLearningData.conversations.map((conv) => ({
+        ...conv,
+        _id: new mongoose.Types.ObjectId(conv._id),
+      }));
+    }
+
+    // Also cast sourceLanguage/targetLanguage:
+    userLearningData.sourceLanguage = new mongoose.Types.ObjectId(userLearningData.sourceLanguage);
+    userLearningData.targetLanguage = new mongoose.Types.ObjectId(userLearningData.targetLanguage);
+  } else {
+    userLearningData = await UserModel.findById(userId).then((user) => cacheUserLearningData(user));
+  }
+
+  req.userLearningData = userLearningData;
   next();
 }
 

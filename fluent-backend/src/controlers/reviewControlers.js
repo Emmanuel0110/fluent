@@ -114,7 +114,7 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
   console.log(`🔍 Debug - conversations: ${conversations}`);
   const userConversations = userLearningData.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
-    const lastReviewDate = userConversations.find(({ _id }) => _id.equals(conversation._id))?.lastReviewDate;
+    const lastReviewDate = userConversations.find(({ _id }) => _id === conversation._id)?.lastReviewDate;
     if (lastReviewDate) {
       acc.push({ ...conversation, lastReviewDate });
     }
