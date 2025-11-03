@@ -164,7 +164,6 @@ async function updateReviewData(reviewedConversationId, success, userLearningDat
     },
     [[], []]
   );
-  console.log("wordUpdates", wordUpdates);
 
   if (wordUpdates.length > 0) await updateWords(userLearningData._id, wordUpdates);
   if (newWordIds.length > 0) await addNewWords(userLearningData._id, newWordIds);
