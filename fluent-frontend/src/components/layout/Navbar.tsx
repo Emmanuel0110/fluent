@@ -58,6 +58,7 @@ function Navbar({ onMenuToggle }: NavbarProps) {
           <div id="searchAreaInput">
             <input
               type="text"
+              value={searchFilter}
               onChange={(e) => {
                 if (location.pathname !== "/words") navigate("/words");
                 setSearchFilter(e.target.value);
