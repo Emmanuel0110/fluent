@@ -38,12 +38,13 @@ crontab -e
 
 1. **Fetches all user courses** from the database
 2. **Calculates the score** for each course based on:
-   - Words that are not overdue for review (`nextReviewDate` is in the future)
-   - Weighted by their `reviewDelayInMs` (longer delays = higher score)
-   - Formula: Score = sum of (reviewDelayInMs / 1000) for all non-overdue words
-3. **Updates or adds today's score** to the `dailyScores` array
+   - Counts words that are not overdue for review (`nextReviewDate` is in the future)
+   - Only includes words with `reviewDelayInMs >= 60000` (at least 1 minute)
+3. **Updates or adds yesterday's score** to the `dailyScores` array
 4. **Keeps only the last 7 days** of history
 5. **Updates the course** with the new score and daily scores
+
+**Note:** When run at midnight via cron, this captures the end-of-day score for the previous day.
 
 ## Score to Rank Conversion
 
@@ -54,6 +55,8 @@ crontab -e
 
 ## Notes
 
-- The script is idempotent - safe to run multiple times per day
-- If run multiple times on the same day, it will update today's score
+- The script calculates and records the score for **yesterday** (previous day)
+- When run at midnight via cron, it captures the end-of-day state from the previous day
+- The script is idempotent - safe to run multiple times
+- If run multiple times, it will update yesterday's score entry
 - Duplicate daily score entries for the same day are automatically handled

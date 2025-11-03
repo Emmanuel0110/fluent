@@ -59,33 +59,38 @@ async function updateAllUserScores() {
     const userCourses = await UserCourseModel.find().lean();
     console.log(`Found ${userCourses.length} user courses to process`);
 
+    // Get yesterday's date (set to beginning of day for consistency)
     const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setHours(0, 0, 0, 0);
+
     let updatedCount = 0;
 
     for (const userCourse of userCourses) {
       try {
-        // Calculate current score
+        // Calculate score as it was at the end of yesterday
         const newScore = await computeNumberOfKnownWords(userCourse);
 
         // Get existing dailyScores
         const dailyScores = userCourse.dailyScores || [];
 
-        // Find today's entry
-        const todayEntryIndex = dailyScores.findIndex((entry) => {
+        // Find yesterday's entry
+        const yesterdayEntryIndex = dailyScores.findIndex((entry) => {
           const entryDate = new Date(entry.date);
           return (
-            entryDate.getFullYear() === today.getFullYear() &&
-            entryDate.getMonth() === today.getMonth() &&
-            entryDate.getDate() === today.getDate()
+            entryDate.getFullYear() === yesterday.getFullYear() &&
+            entryDate.getMonth() === yesterday.getMonth() &&
+            entryDate.getDate() === yesterday.getDate()
           );
         });
 
-        // Update or add today's score
-        if (todayEntryIndex >= 0) {
-          dailyScores[todayEntryIndex].score = newScore;
+        // Update or add yesterday's score
+        if (yesterdayEntryIndex >= 0) {
+          dailyScores[yesterdayEntryIndex].score = newScore;
         } else {
           dailyScores.push({
-            date: today,
+            date: yesterday,
             score: newScore,
           });
         }
