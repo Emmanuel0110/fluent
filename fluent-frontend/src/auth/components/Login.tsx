@@ -16,7 +16,7 @@ function Login() {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/words" />;
+    return <Navigate to="/review" />;
   }
   return (
     <>
