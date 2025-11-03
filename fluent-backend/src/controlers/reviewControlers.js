@@ -11,7 +11,7 @@ router.get("/suggestions", auth, cache, getSuggestionsEasyConversations);
 async function getSuggestionsEasyConversations(req, res) {
   try {
     const suggestedConversations = req.userLearningData ? await getUnsubscribedConversations(req.userLearningData) : [];
-    console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
+    //console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
     res.json({
       success: true,
       data: suggestedConversations.map((conversation) => ({ ...conversation, subscribed: false })),
@@ -114,7 +114,7 @@ async function getKnownConversationsForWords(wordIds, userLearningData) {
   console.log(`🔍 Debug - conversations: ${conversations}`);
   const userConversations = userLearningData.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
-    const lastReviewDate = userConversations.find(({ _id }) => _id === conversation._id)?.lastReviewDate;
+    const lastReviewDate = userConversations.find(({ _id }) => _id.equals(conversation._id))?.lastReviewDate;
     if (lastReviewDate) {
       acc.push({ ...conversation, lastReviewDate });
     }
@@ -198,10 +198,6 @@ async function getEasyConversationsForWords(wordIds, userLearningData) {
 }
 
 async function getUnsubscribedConversations(userLearningData) {
-  console.log(
-    "ids",
-    userLearningData.conversations.map(({ _id }) => _id)
-  );
   return MultiLingualConversationModel.aggregate([
     // Step 1: Match conversations containing sentences with wordIds in prerequisites
     {
