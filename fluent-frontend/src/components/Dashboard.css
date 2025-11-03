@@ -43,8 +43,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1.5rem;
-  margin-top: 0.5rem;
 }
 
 /* Rank Styles - Left Side */
@@ -147,6 +145,23 @@
   gap: 0.25rem;
 }
 
+.chart-bar-score {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: auto;
+  min-height: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.chart-bar-score span {
+  display: block;
+}
+
 .chart-bar {
   width: 100%;
   max-width: 40px;
@@ -181,7 +196,6 @@
   .rank-progress-container {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
   }
 
   .progress-display {
@@ -231,10 +245,6 @@
   .progress-value {
     font-size: 1.5rem;
   }
-
-  .rank-progress-container {
-    gap: 2rem;
-  }
 }
 
 /* Landscape mode adjustments */
@@ -258,10 +268,6 @@
 
   .rank-label {
     font-size: 0.8rem;
-  }
-
-  .rank-progress-container {
-    gap: 1rem;
   }
 }
 

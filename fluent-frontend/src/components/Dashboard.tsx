@@ -74,6 +74,9 @@ function Dashboard() {
             return (
               <div key={index} className="chart-bar-wrapper">
                 <div className="chart-bar-container">
+                  <div className="chart-bar-score">
+                    <span>{data.wordsLearned}</span>
+                  </div>
                   <div
                     className="chart-bar"
                     style={{ height: `${height}%` }}
