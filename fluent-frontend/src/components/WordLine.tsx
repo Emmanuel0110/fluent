@@ -9,8 +9,8 @@ import { WordDefinition } from "./WordDefinition";
 
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
-  const { user } = useAuth(); // TODO: add condition on user.admin to edit/delete
-  const { words, deleteWord } = useData();
+  const { user } = useAuth();
+  const { deleteWord } = useData();
   const { openWord, editWord } = useContext(ConfigContext) as Context;
   const lineRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -39,10 +39,12 @@ export const WordLine = ({ word }: { word: Word }) => {
       onClick={() => openWord(word._id)}
     >
       <WordDefinition word={word} />
-      <div className="lineOptions">
-        <div className="edit" onClick={onEdit}></div>
-        <div className="delete" onClick={onDelete}></div>
-      </div>
+      {user?.isAdmin && (
+        <div className="lineOptions">
+          <div className="edit" onClick={onEdit}></div>
+          <div className="delete" onClick={onDelete}></div>
+        </div>
+      )}
     </div>
   );
 };

@@ -50,16 +50,16 @@ export default function App() {
           >
             <Route path="home" element={<ConversationList />} />
             {/*TODO: remove if unused ? */}
-            <Route element={<AdminRoute redirectPath="home" />}>
-              <Route path="new" element={<CreationForm />} />
-            </Route>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
-            <Route path="words/:wordId/edit" element={<WordForm />} />
             <Route path="suggestions" element={<SuggestionList />} />
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
-            <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+            <Route element={<AdminRoute redirectPath="home" />}>
+              <Route path="new" element={<CreationForm />} />
+              <Route path="words/:wordId/edit" element={<WordForm />} />
+              <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+            </Route>
             <Route path="review" element={<Review />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/" element={<Login />} />

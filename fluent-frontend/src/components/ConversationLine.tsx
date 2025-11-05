@@ -5,8 +5,10 @@ import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import { SentenceLine } from "./SentenceLine";
 import { useData } from "../contexts/DataContext";
+import { useAuth } from "../contexts/AuthContext";
 
 export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
+  const { user } = useAuth();
   const { conversationId, wordId } = useParams();
   const { deleteConversation, subscribeToConversation, unsubscribeToConversation } = useData();
   const { openConversation, editConversation } = useContext(ConfigContext) as Context;
@@ -63,8 +65,12 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
       </div>
       <div className="lineOptions">
         <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
-        <div className="edit" onClick={onEdit}></div>
-        <div className="delete" onClick={onDelete}></div>
+        {user?.isAdmin && (
+          <>
+            <div className="edit" onClick={onEdit}></div>
+            <div className="delete" onClick={onDelete}></div>
+          </>
+        )}
       </div>
     </div>
   );
