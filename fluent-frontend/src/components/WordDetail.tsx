@@ -8,11 +8,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const { wordTags } = useData();
-  const { setTagFilter } = useContext(ConfigContext) as Context;
+  const { setTagFilter, setSearchFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
 
   const searchTag = (tagId: string) => {
     setTagFilter(wordTags.find(({ _id }) => _id === tagId) || null);
+    setSearchFilter("");
     navigate("/words");
   };
 
