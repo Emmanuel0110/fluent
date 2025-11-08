@@ -1,0 +1,82 @@
+.social-auth-container {
+  width: 18em;
+  margin: 20px auto;
+}
+
+.social-auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.social-auth-divider::before,
+.social-auth-divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.social-auth-divider span {
+  padding: 0 10px;
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.social-auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-auth-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.social-auth-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.social-icon {
+  flex-shrink: 0;
+}
+
+.google-button {
+  border-color: #4285f4;
+  color: #4285f4;
+}
+
+.google-button:hover {
+  background-color: #f8f9fa;
+  border-color: #4285f4;
+}
+
+.linkedin-button {
+  border-color: #0077b5;
+  color: #0077b5;
+}
+
+.linkedin-button:hover {
+  background-color: #f8f9fa;
+  border-color: #0077b5;
+}
+
+.facebook-button {
+  border-color: #1877f2;
+  color: #1877f2;
+}
+
+.facebook-button:hover {
+  background-color: #f8f9fa;
+  border-color: #1877f2;
+}

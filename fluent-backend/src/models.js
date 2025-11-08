@@ -28,13 +28,26 @@ export const ConversationTagModel = model("ConversationTag", ConversationTagSche
 const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true, trim: true },
-  password: { type: String, required: true, select: false },
+  password: { type: String, select: false }, // Made optional for OAuth users
+  email: { type: String, trim: true }, // For OAuth users
+  oauthProvider: { type: String, enum: ["google", "linkedin", "facebook"] }, // Track OAuth provider
+  oauthId: { type: String }, // OAuth provider user ID
   lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },
   courses: [{ type: Schema.Types.ObjectId, ref: "UserCourse" }],
   userSettings: {
     reviewMode: { type: String, enum: ["auto", "manual"], default: "manual" },
     autoReviewDelay: { type: Number, default: 10 },
   },
+});
+// Compound index for OAuth lookup
+userSchema.index({ oauthProvider: 1, oauthId: 1 }, { unique: true, sparse: true });
+
+// Validate password is required for non-OAuth users
+userSchema.pre("validate", function (next) {
+  if (!this.oauthProvider && !this.password) {
+    this.invalidate("password", "Password is required for non-OAuth users");
+  }
+  next();
 });
 export const UserModel = model("User", userSchema);
 

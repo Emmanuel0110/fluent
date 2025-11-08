@@ -1,18 +1,50 @@
-import React, { useState } from "react";
-import { register } from "../authActions";
-import { Link, Navigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { register, initiateSocialAuth, handleOAuthCallback } from "../authActions";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth } from "../../contexts/AuthContext";
+import SocialAuthButtons from "./SocialAuthButtons";
 
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [searchParams] = useSearchParams();
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
+
+  // Handle OAuth callback
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const error = searchParams.get("error");
+    const provider = searchParams.get("provider") as "google" | "linkedin" | "facebook" | null;
+
+    if (error) {
+      console.error("OAuth error:", error);
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+      return;
+    }
+
+    if (code && provider && (provider === "google" || provider === "linkedin" || provider === "facebook")) {
+      handleOAuthCallback(provider, code, setIsAuthenticated, setUser);
+    }
+  }, [searchParams, setIsAuthenticated, setUser]);
 
   const onSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
     register({ username, password }, setIsAuthenticated, setUser);
+  };
+
+  const handleGoogleAuth = () => {
+    initiateSocialAuth("google");
+  };
+
+  const handleLinkedInAuth = () => {
+    initiateSocialAuth("linkedin");
+  };
+
+  const handleFacebookAuth = () => {
+    initiateSocialAuth("facebook");
   };
 
   if (isAuthenticated) {
@@ -46,6 +78,11 @@ function Register() {
         </Form.Group>
         <Button onClick={onSubmit}>Register</Button>
       </Form>
+      <SocialAuthButtons
+        onGoogleClick={handleGoogleAuth}
+        onLinkedInClick={handleLinkedInAuth}
+        onFacebookClick={handleFacebookAuth}
+      />
     </>
   );
 }

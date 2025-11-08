@@ -72,6 +72,45 @@ export const login = (
     });
 };
 
+//Social Authentication
+export const initiateSocialAuth = (provider: "google" | "linkedin" | "facebook") => {
+  // Redirect to backend OAuth endpoint
+  const backendUrl = url?.replace(/\/$/, ""); // Remove trailing slash if present
+  window.location.href = `${backendUrl}/users/auth/${provider}`;
+};
+
+// Handle OAuth callback
+export const handleOAuthCallback = (
+  provider: "google" | "linkedin" | "facebook",
+  code: string,
+  setIsAuthenticated: (b: boolean) => void,
+  setUser: (user: any) => void
+) => {
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  const body = JSON.stringify({ code });
+  const backendUrl = url?.replace(/\/$/, ""); // Remove trailing slash if present
+  customFetch(`${backendUrl}/users/auth/${provider}/callback`, { method: "POST", headers, body })
+    .then((res) => {
+      if (!res.token) {
+        throw Error(res.msg || "Authentication failed");
+      }
+      const { user, sourceLanguage, targetLanguage } = res;
+      setUser({ ...user, sourceLanguage, targetLanguage });
+      setIsAuthenticated(true);
+      localStorage.setItem("token", res.token);
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+    })
+    .catch((err: Error) => {
+      setIsAuthenticated(false);
+      console.error("OAuth authentication error:", err);
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, window.location.pathname);
+    });
+};
+
 //Logout User
 export const logout = (setIsAuthenticated: (arg: boolean) => void) => {
   window.localStorage.clear(); //Clear out the cache

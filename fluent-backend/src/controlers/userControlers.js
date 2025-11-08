@@ -168,4 +168,369 @@ export async function updateLanguages(user, sourceLanguage, targetLanguage) {
   }
 }
 
+// OAuth Authentication Routes
+
+// Helper function to get OAuth configuration
+function getOAuthConfig(provider) {
+  const configs = {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      redirectUri:
+        process.env.GOOGLE_REDIRECT_URI ||
+        `${process.env.FRONTEND_URL || "http://localhost:3000"}/login?provider=google`,
+      authUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+      tokenUrl: "https://oauth2.googleapis.com/token",
+      userInfoUrl: "https://www.googleapis.com/oauth2/v2/userinfo",
+      scope: "openid email profile",
+    },
+    linkedin: {
+      clientId: process.env.LINKEDIN_CLIENT_ID,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET,
+      redirectUri:
+        process.env.LINKEDIN_REDIRECT_URI ||
+        `${process.env.FRONTEND_URL || "http://localhost:3000"}/login?provider=linkedin`,
+      authUrl: "https://www.linkedin.com/oauth/v2/authorization",
+      tokenUrl: "https://www.linkedin.com/oauth/v2/accessToken",
+      userInfoUrl: "https://api.linkedin.com/v2/userinfo",
+      scope: "openid profile email",
+    },
+    facebook: {
+      clientId: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      redirectUri:
+        process.env.FACEBOOK_REDIRECT_URI ||
+        `${process.env.FRONTEND_URL || "http://localhost:3000"}/login?provider=facebook`,
+      authUrl: "https://www.facebook.com/v18.0/dialog/oauth",
+      tokenUrl: "https://graph.facebook.com/v18.0/oauth/access_token",
+      userInfoUrl: "https://graph.facebook.com/v18.0/me?fields=id,name,email",
+      scope: "email",
+    },
+  };
+  return configs[provider];
+}
+
+// OAuth initiation endpoints - redirect to provider
+router.get("/auth/google", (req, res) => {
+  const config = getOAuthConfig("google");
+  if (!config.clientId) {
+    return res.status(500).json({ msg: "Google OAuth not configured" });
+  }
+  const params = new URLSearchParams({
+    client_id: config.clientId,
+    redirect_uri: config.redirectUri,
+    response_type: "code",
+    scope: config.scope,
+    access_type: "offline",
+    prompt: "consent",
+  });
+  res.redirect(`${config.authUrl}?${params.toString()}`);
+});
+
+router.get("/auth/linkedin", (req, res) => {
+  const config = getOAuthConfig("linkedin");
+  if (!config.clientId) {
+    return res.status(500).json({ msg: "LinkedIn OAuth not configured" });
+  }
+  const state = Buffer.from(Date.now().toString()).toString("base64"); // Simple state for CSRF protection
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: config.clientId,
+    redirect_uri: config.redirectUri,
+    state: state,
+    scope: config.scope,
+  });
+  res.redirect(`${config.authUrl}?${params.toString()}`);
+});
+
+router.get("/auth/facebook", (req, res) => {
+  const config = getOAuthConfig("facebook");
+  if (!config.clientId) {
+    return res.status(500).json({ msg: "Facebook OAuth not configured" });
+  }
+  const state = Buffer.from(Date.now().toString()).toString("base64");
+  const params = new URLSearchParams({
+    client_id: config.clientId,
+    redirect_uri: config.redirectUri,
+    state: state,
+    scope: config.scope,
+  });
+  res.redirect(`${config.authUrl}?${params.toString()}`);
+});
+
+// Helper function to exchange code for to²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²
+async function exchangeCodeForUser(provider, code) {
+  const config = getOAuthConfig(provider);
+
+  // Exchange authorization code for access token
+  const tokenParams = new URLSearchParams({
+    client_id: config.clientId,
+    client_secret: config.clientSecret,
+    redirect_uri: config.redirectUri,
+    code: code,
+    grant_type: "authorization_code",
+  });
+
+  const tokenResponse = await fetch(config.tokenUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+    },
+    body: tokenParams.toString(),
+  });
+
+  if (!tokenResponse.ok) {
+    const error = await tokenResponse.text();
+    throw new Error(`Token exchange failed: ${error}`);
+  }
+
+  const tokenData = await tokenResponse.json();
+  const accessToken = tokenData.access_token || tokenData.accessToken;
+
+  // Get user info from provider
+  let userInfoResponse;
+  if (provider === "linkedin") {
+    // LinkedIn requires the access token in the Authorization header
+    userInfoResponse = await fetch(config.userInfoUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/json",
+      },
+    });
+  } else {
+    userInfoResponse = await fetch(config.userInfoUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+
+  if (!userInfoResponse.ok) {
+    const errorText = await userInfoResponse.text();
+    throw new Error(`Failed to fetch user info: ${errorText}`);
+  }
+
+  const userInfo = await userInfoResponse.json();
+
+  // Normalize user info across providers
+  let normalizedUser = {
+    oauthId: userInfo.id || userInfo.sub,
+    email: userInfo.email,
+    name: userInfo.name || `${userInfo.given_name || ""} ${userInfo.family_name || ""}`.trim(),
+    provider: provider,
+  };
+
+  return normalizedUser;
+}
+
+// OAuth callback endpoints
+router.post("/auth/google/callback", async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) {
+      return res.status(400).json({ msg: "Authorization code required" });
+    }
+
+    const oauthUser = await exchangeCodeForUser("google", code);
+
+    // Find or create user
+    let user = await UserModel.findOne({
+      oauthProvider: "google",
+      oauthId: oauthUser.oauthId,
+    });
+
+    if (!user) {
+      // Check if user with this email exists
+      if (oauthUser.email) {
+        user = await UserModel.findOne({ email: oauthUser.email });
+      }
+
+      // Create new user if doesn't exist
+      if (!user) {
+        // Generate username from email or name
+        const baseUsername =
+          oauthUser.email?.split("@")[0] ||
+          oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
+          `user_${oauthUser.oauthId}`;
+        let username = baseUsername;
+        let counter = 1;
+
+        // Ensure unique username
+        while (await UserModel.findOne({ username })) {
+          username = `${baseUsername}${counter}`;
+          counter++;
+        }
+
+        user = new UserModel({
+          username,
+          email: oauthUser.email,
+          oauthProvider: "google",
+          oauthId: oauthUser.oauthId,
+          userSettings: {
+            reviewMode: "manual",
+            autoReviewDelay: 10,
+          },
+        });
+        await user.save();
+      } else {
+        // Link OAuth to existing account
+        user.oauthProvider = "google";
+        user.oauthId = oauthUser.oauthId;
+        if (!user.email && oauthUser.email) {
+          user.email = oauthUser.email;
+        }
+        await user.save();
+      }
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
+    const userObj = user.toObject();
+    delete userObj.password;
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+
+    res.json({ token, user: userObj, sourceLanguage, targetLanguage });
+  } catch (error) {
+    console.error("Google OAuth error:", error);
+    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
+  }
+});
+
+router.post("/auth/linkedin/callback", async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) {
+      return res.status(400).json({ msg: "Authorization code required" });
+    }
+
+    const oauthUser = await exchangeCodeForUser("linkedin", code);
+
+    // Find or create user
+    let user = await UserModel.findOne({
+      oauthProvider: "linkedin",
+      oauthId: oauthUser.oauthId,
+    });
+
+    if (!user) {
+      // Check if user with this email exists
+      if (oauthUser.email) {
+        user = await UserModel.findOne({ email: oauthUser.email });
+      }
+
+      // Create new user if doesn't exist
+      if (!user) {
+        const baseUsername =
+          oauthUser.email?.split("@")[0] ||
+          oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
+          `user_${oauthUser.oauthId}`;
+        let username = baseUsername;
+        let counter = 1;
+
+        while (await UserModel.findOne({ username })) {
+          username = `${baseUsername}${counter}`;
+          counter++;
+        }
+
+        user = new UserModel({
+          username,
+          email: oauthUser.email,
+          oauthProvider: "linkedin",
+          oauthId: oauthUser.oauthId,
+          userSettings: {
+            reviewMode: "manual",
+            autoReviewDelay: 10,
+          },
+        });
+        await user.save();
+      } else {
+        user.oauthProvider = "linkedin";
+        user.oauthId = oauthUser.oauthId;
+        if (!user.email && oauthUser.email) {
+          user.email = oauthUser.email;
+        }
+        await user.save();
+      }
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
+    const userObj = user.toObject();
+    delete userObj.password;
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+
+    res.json({ token, user: userObj, sourceLanguage, targetLanguage });
+  } catch (error) {
+    console.error("LinkedIn OAuth error:", error);
+    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
+  }
+});
+
+router.post("/auth/facebook/callback", async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) {
+      return res.status(400).json({ msg: "Authorization code required" });
+    }
+
+    const oauthUser = await exchangeCodeForUser("facebook", code);
+
+    // Find or create user
+    let user = await UserModel.findOne({
+      oauthProvider: "facebook",
+      oauthId: oauthUser.oauthId,
+    });
+
+    if (!user) {
+      // Check if user with this email exists
+      if (oauthUser.email) {
+        user = await UserModel.findOne({ email: oauthUser.email });
+      }
+
+      // Create new user if doesn't exist
+      if (!user) {
+        const baseUsername =
+          oauthUser.email?.split("@")[0] ||
+          oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
+          `user_${oauthUser.oauthId}`;
+        let username = baseUsername;
+        let counter = 1;
+
+        while (await UserModel.findOne({ username })) {
+          username = `${baseUsername}${counter}`;
+          counter++;
+        }
+
+        user = new UserModel({
+          username,
+          email: oauthUser.email,
+          oauthProvider: "facebook",
+          oauthId: oauthUser.oauthId,
+          userSettings: {
+            reviewMode: "manual",
+            autoReviewDelay: 10,
+          },
+        });
+        await user.save();
+      } else {
+        user.oauthProvider = "facebook";
+        user.oauthId = oauthUser.oauthId;
+        if (!user.email && oauthUser.email) {
+          user.email = oauthUser.email;
+        }
+        await user.save();
+      }
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
+    const userObj = user.toObject();
+    delete userObj.password;
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+
+    res.json({ token, user: userObj, sourceLanguage, targetLanguage });
+  } catch (error) {
+    console.error("Facebook OAuth error:", error);
+    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
+  }
+});
+
 export default router;
