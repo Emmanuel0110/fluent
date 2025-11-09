@@ -335,10 +335,15 @@ function getLast7DaysScores(dailyScores) {
 
   // Fill in missing days with 0 score
   const result = [];
+
+  // Get yesterday's date (set to beginning of day for consistency)
   const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(0, 0, 0, 0);
 
   for (let i = 0; i < 7; i++) {
-    const date = new Date(today);
+    const date = new Date(yesterday);
     date.setDate(date.getDate() - (6 - i));
 
     // Format date as MM/DD
