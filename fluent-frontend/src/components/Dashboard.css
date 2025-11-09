@@ -121,9 +121,9 @@
   display: flex;
   align-items: flex-end;
   gap: 0.5rem;
-  height: 100%;
+  height: 80%;
   padding: 0 0.5rem;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
 }
 
 .chart-bar-wrapper {
@@ -147,6 +147,9 @@
 
 .chart-bar-score {
   display: flex;
+  position: absolute;
+  top: -25px;
+  width: 100%;
   align-items: flex-end;
   justify-content: center;
   height: auto;
@@ -163,6 +166,7 @@
 }
 
 .chart-bar {
+  position: relative;
   width: 100%;
   max-width: 40px;
   background: linear-gradient(180deg, #28a745 0%, #20c997 100%);
@@ -174,9 +178,10 @@
 
 .chart-bar-label {
   display: flex;
+  position: absolute;
+  bottom: -25px;
   align-items: flex-start;
   height: auto;
-  min-height: 40px;
   font-size: 0.7rem;
   color: #666;
   text-align: center;
