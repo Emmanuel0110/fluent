@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import express from "express";
 import { redisClient } from "../../index.js";
 import mongoose from "mongoose";
+import fetch from "node-fetch";
 const router = express.Router();
 
 //register
