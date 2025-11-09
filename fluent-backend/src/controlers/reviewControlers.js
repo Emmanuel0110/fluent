@@ -10,7 +10,9 @@ router.get("/suggestions", auth, cache, getSuggestionsEasyConversations);
 
 async function getSuggestionsEasyConversations(req, res) {
   try {
-    const suggestedConversations = req.userLearningData ? await getUnsubscribedConversations(req.userLearningData) : [];
+    const suggestedConversations = req.userLearningData
+      ? (await getUnsubscribedConversations(req.userLearningData)).slice(0, 10)
+      : [];
     //console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
     res.json({
       success: true,
