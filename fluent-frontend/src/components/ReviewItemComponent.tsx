@@ -93,7 +93,8 @@ function ReviewItemComponent({
   };
 
   const handleSentenceClick = (sentenceIndex: number, sourceOrTarget: "source" | "target") => {
-    if (sentenceIndex <= currentSentenceNumber) openConversation(conversation._id, sentenceIndex, sourceOrTarget);
+    if (sentenceIndex <= currentSentenceNumber || timeIsUp)
+      openConversation(conversation._id, sentenceIndex, sourceOrTarget);
   };
 
   const conversationIsCompleted = () => {
@@ -107,9 +108,9 @@ function ReviewItemComponent({
     <div id="reviewItem">
       <div id="reviewSentences">
         {conversation.multiLingualSentences.map(({ sourceLanguage, targetLanguage }, index) => (
-          <div key={index} className={index <= currentSentenceNumber ? "green" : "gray"}>
+          <div key={index} className={index <= currentSentenceNumber || timeIsUp ? "green" : "gray"}>
             <div
-              className={index <= currentSentenceNumber ? "clickable-sentence" : ""}
+              className={index <= currentSentenceNumber || timeIsUp ? "clickable-sentence" : ""}
               onClick={() => handleSentenceClick(index, "source")}
             >
               {sourceLanguage.text}
