@@ -93,7 +93,7 @@ function ReviewItemComponent({
   };
 
   const handleSentenceClick = (sentenceIndex: number, sourceOrTarget: "source" | "target") => {
-    openConversation(conversation._id, sentenceIndex, sourceOrTarget);
+    if (sentenceIndex <= currentSentenceNumber) openConversation(conversation._id, sentenceIndex, sourceOrTarget);
   };
 
   const conversationIsCompleted = () => {
@@ -109,19 +109,14 @@ function ReviewItemComponent({
         {conversation.multiLingualSentences.map(({ sourceLanguage, targetLanguage }, index) => (
           <div key={index} className={index <= currentSentenceNumber ? "green" : "gray"}>
             <div
-              className="clickable-sentence"
+              className={index <= currentSentenceNumber ? "clickable-sentence" : ""}
               onClick={() => handleSentenceClick(index, "source")}
-              style={{ cursor: "pointer" }}
             >
               {sourceLanguage.text}
             </div>
             <div className="translationSpaceholder">
               {timeIsUp && (
-                <div
-                  className="clickable-sentence bold"
-                  onClick={() => handleSentenceClick(index, "target")}
-                  style={{ cursor: "pointer" }}
-                >
+                <div className="clickable-sentence bold" onClick={() => handleSentenceClick(index, "target")}>
                   {targetLanguage.text}
                 </div>
               )}
