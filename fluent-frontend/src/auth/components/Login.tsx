@@ -52,11 +52,6 @@ function Login() {
   }
   return (
     <>
-      <div id="loginNavbar" className="navb">
-        <Link className="navButton" to="/register">
-          Register
-        </Link>
-      </div>
       <Form id="loginForm">
         <Form.Group className="formgroup">
           <Form.Label>Username</Form.Label>
@@ -76,13 +71,23 @@ function Login() {
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
           />
         </Form.Group>
-        <Button onClick={onSubmit}>Login</Button>
+        <Button className="loginButton" onClick={onSubmit}>
+          Login
+        </Button>
       </Form>
       <SocialAuthButtons
         onGoogleClick={handleGoogleAuth}
         onLinkedInClick={handleLinkedInAuth}
         onFacebookClick={handleFacebookAuth}
       />
+      <div className="text-center mt-4">
+        <p className="mb-0 small text-muted">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-primary fw-semibold text-decoration-none">
+            Register
+          </Link>
+        </p>
+      </div>
     </>
   );
 }

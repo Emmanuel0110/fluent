@@ -52,12 +52,7 @@ function Register() {
   }
   return (
     <>
-      <div id="registerNavbar" className="navb">
-        <Link className="navButton" to="/login">
-          Login
-        </Link>
-      </div>
-      <Form id="registerForm">
+      <Form id="loginForm">
         <Form.Group className="formgroup">
           <Form.Label>Username</Form.Label>
           <Form.Control
@@ -76,13 +71,18 @@ function Register() {
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
           />
         </Form.Group>
-        <Button onClick={onSubmit}>Register</Button>
+        <Button className="loginButton" onClick={onSubmit}>
+          Register
+        </Button>
       </Form>
-      <SocialAuthButtons
-        onGoogleClick={handleGoogleAuth}
-        onLinkedInClick={handleLinkedInAuth}
-        onFacebookClick={handleFacebookAuth}
-      />
+      <div className="text-center mt-4">
+        <p className="mb-0 small text-muted">
+          Back to{" "}
+          <Link to="/login" className="text-primary fw-semibold text-decoration-none">
+            Login
+          </Link>
+        </p>
+      </div>
     </>
   );
 }
