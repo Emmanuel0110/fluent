@@ -13,6 +13,7 @@ import userRoutes from "./src/controlers/userControlers.js";
 import userCourseRoutes from "./src/controlers/userCourseControlers.js";
 import wordRoutes from "./src/controlers/wordControlers.js";
 import languageRoutes from "./src/controlers/languageControlers.js";
+import feedbackRoutes from "./src/controlers/feedbackControlers.js";
 import { createClient } from "redis";
 
 const useRedis = !process.argv.includes("--no-redis");
@@ -74,6 +75,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/usercourses", userCourseRoutes);
 app.use("/api/words", wordRoutes);
 app.use("/api/languages", languageRoutes);
+app.use("/api/feedback", feedbackRoutes);
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });
 });

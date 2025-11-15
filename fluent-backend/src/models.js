@@ -138,3 +138,12 @@ const MultiLingualConversationSchema = new Schema({
   ],
 });
 export const MultiLingualConversationModel = model("MultiLingualConversation", MultiLingualConversationSchema);
+
+const FeedbackSchema = new Schema({
+  comment: { type: String, required: true },
+  pageUrl: { type: String, required: true },
+  userId: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+export const FeedbackModel = model("Feedback", FeedbackSchema);

@@ -4,6 +4,7 @@ import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import Feedback from "../feedback/Feedback";
 
 interface LeftMenuBarProps {
   isOpen: boolean;
@@ -78,9 +79,12 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
           </div>
         </div>
         <div>
-          <Button id="startAReviewButton" variant="outline-primary" onClick={startReview}>
-            Start a review
-          </Button>
+          <div>
+            <Button id="startAReviewButton" variant="outline-primary" onClick={startReview}>
+              Start a review
+            </Button>
+          </div>
+          <Feedback />
         </div>
       </div>
     </div>

@@ -317,3 +317,15 @@ export const getDashboardData = async () => {
       return null;
     });
 };
+
+export const saveFeedback = async (comment: string, pageUrl: string) => {
+  const body = JSON.stringify({ comment, pageUrl });
+  return customFetch(url + "feedback", { method: "POST", headers: authHeaders(), body })
+    .then((res) => {
+      return { success: true };
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return { success: false, message: err.message };
+    });
+};

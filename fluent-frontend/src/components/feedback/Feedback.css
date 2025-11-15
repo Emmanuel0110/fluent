@@ -1,0 +1,27 @@
+.language-selector-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.language-selector-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.language-selector-actions button:first-child {
+  background: #6c757d;
+  color: white;
+}
+
+.language-selector-actions button:last-child {
+  background: #28a745;
+  color: white;
+}
+
+.language-selector-actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
