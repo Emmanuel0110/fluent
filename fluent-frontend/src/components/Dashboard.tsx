@@ -34,6 +34,7 @@ function Dashboard() {
 
   const { progress, rank, chartData } = dashboardData;
   const maxWords = Math.max(...chartData.map((d) => d.wordsLearned), 1);
+  const minWords = Math.min(...chartData.map((d) => d.wordsLearned));
 
   return (
     <div className="dashboard-container">
@@ -70,7 +71,7 @@ function Dashboard() {
         <h2>Words Learned Over Time</h2>
         <div className="chart-container">
           {chartData.map((data, index) => {
-            const height = (data.wordsLearned / maxWords) * 100;
+            const height = maxWords !== minWords ? ((data.wordsLearned - minWords) / (maxWords - minWords)) * 100 : 100;
             return (
               <div key={index} className="chart-bar-wrapper">
                 <div className="chart-bar-container">
