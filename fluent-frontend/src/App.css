@@ -33,7 +33,8 @@ body {
   font-family: "Inter", "Poppins", "Segoe UI", sans-serif;
   font-weight: 400;
   color: #1a1a1a;
-  padding: 1rem;
+  width: 18em;
+  margin: auto;
 }
 
 #loginForm label {
