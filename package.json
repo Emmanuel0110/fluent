@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd fluent-backend && npm run dev",
-    "dev:frontend": "cd fluent-frontend && npm start"
+    "dev:frontend": "cd fluent-frontend && npm run dev"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

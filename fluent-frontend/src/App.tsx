@@ -22,7 +22,7 @@ import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
 import SuggestionList from "./components/SuggestionList";
 import AdminRoute from "./AdminRoute";
 
-export const url = process.env.REACT_APP_API_URL;
+export const url = import.meta.env.VITE_API_URL;
 
 export default function App() {
   return (
