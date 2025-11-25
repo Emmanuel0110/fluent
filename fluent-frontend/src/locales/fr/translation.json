@@ -1,0 +1,7 @@
+{
+  "auth.login": "Connexion",
+  "auth.username": "Nom d'utilisateur",
+  "auth.password": "Mot de passe",
+  "auth.register": "S'inscrire",
+  "auth.no_account": "Vous n'avez pas de compte ?"
+}

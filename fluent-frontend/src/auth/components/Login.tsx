@@ -5,8 +5,10 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import SocialAuthButtons from "./SocialAuthButtons";
+import { useTranslation } from "react-i18next";
 
 function Login() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [searchParams] = useSearchParams();
@@ -54,7 +56,7 @@ function Login() {
     <>
       <Form id="loginForm">
         <Form.Group className="formgroup">
-          <Form.Label>Username</Form.Label>
+          <Form.Label>{t("auth.username")}</Form.Label>
           <Form.Control
             id="username"
             name="username"
@@ -63,7 +65,7 @@ function Login() {
           />
         </Form.Group>
         <Form.Group className="formgroup">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>{t("auth.password")}</Form.Label>
           <Form.Control
             id="password"
             name="password"
@@ -72,7 +74,7 @@ function Login() {
           />
         </Form.Group>
         <Button className="loginButton" onClick={onSubmit}>
-          Login
+          {t("auth.login")}
         </Button>
       </Form>
       <SocialAuthButtons
@@ -82,9 +84,9 @@ function Login() {
       />
       <div className="text-center mt-4">
         <p className="mb-0 small text-muted">
-          Don’t have an account?{" "}
+          {t("auth.no_account") + " "}
           <Link to="/register" className="text-primary fw-semibold text-decoration-none">
-            Register
+            {t("auth.register")}
           </Link>
         </p>
       </div>

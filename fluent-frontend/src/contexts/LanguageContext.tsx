@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { fetchLanguages, updateLanguages } from "../APICalls";
 import { useAuth } from "./AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface Language {
   _id: string;
@@ -37,6 +38,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   const [languages, setLanguages] = useState<Language[]>([]);
   const [sourceLanguage, setSourceLanguage] = useState<string>("");
   const [targetLanguage, setTargetLanguage] = useState<string>("");
+  const { i18n } = useTranslation();
 
   const loadLanguages = async () => {
     const data = await fetchLanguages();
@@ -54,6 +56,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     if (result) {
       setSourceLanguage(source);
       setTargetLanguage(target);
+      i18n.changeLanguage(getLanguageLabel(source));
       return true;
     }
     return false;
@@ -69,6 +72,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       loadLanguages();
       setSourceLanguage(user.sourceLanguage);
       setTargetLanguage(user.targetLanguage);
+      i18n.changeLanguage(getLanguageLabel(user.sourceLanguage));
     }
   }, [user]);
 
