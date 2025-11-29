@@ -15,6 +15,8 @@ import wordRoutes from "./src/controlers/wordControlers.js";
 import languageRoutes from "./src/controlers/languageControlers.js";
 import feedbackRoutes from "./src/controlers/feedbackControlers.js";
 import { createClient } from "redis";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 const useRedis = !process.argv.includes("--no-redis");
 
@@ -65,7 +67,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(helmet());
+app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 app.use("/", express.static(path.join(__dirname, "./public")));
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/reviewItems", reviewItemsRoutes);

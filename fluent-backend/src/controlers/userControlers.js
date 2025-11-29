@@ -6,10 +6,20 @@ import express from "express";
 import { redisClient } from "../../index.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
+import rateLimit from "express-rate-limit";
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // 5 attempts allowed
+  message: "Too many login attempts. Please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const router = express.Router();
 
 //register
-router.post("/", async function (req, res) {
+router.post("/", loginLimiter, async function (req, res) {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -56,7 +66,7 @@ router.post("/", async function (req, res) {
 });
 
 //login
-router.post("/auth", function (req, res) {
+router.post("/auth", loginLimiter, function (req, res) {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({ msg: "Please enter all fields" });
@@ -81,7 +91,7 @@ router.post("/auth", function (req, res) {
     });
 });
 
-router.get("/auth", auth, async function (req, res) {
+router.get("/auth", loginLimiter, auth, async function (req, res) {
   UserModel.findById(req.user._id).then(async (user) => {
     const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
     res.json({ user, sourceLanguage, targetLanguage });
