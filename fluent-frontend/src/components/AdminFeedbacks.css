@@ -1,0 +1,144 @@
+.admin-feedbacks-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.admin-feedbacks-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.admin-feedbacks-header h1 {
+  margin: 0 0 10px 0;
+  font-size: 2rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.admin-feedbacks-count {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.admin-feedbacks-loading,
+.admin-feedbacks-error,
+.admin-feedbacks-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.admin-feedbacks-error {
+  color: #d32f2f;
+}
+
+.admin-feedbacks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-feedback-item {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.admin-feedback-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.admin-feedback-header {
+  margin-bottom: 15px;
+}
+
+.admin-feedback-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.admin-feedback-date {
+  font-weight: 500;
+  color: #333;
+}
+
+.admin-feedback-user {
+  color: #666;
+}
+
+.admin-feedback-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-feedback-comment,
+.admin-feedback-url {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-feedback-comment strong,
+.admin-feedback-url strong {
+  color: #1a1a1a;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.admin-feedback-comment p {
+  margin: 0;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  color: #333;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.admin-feedback-url a {
+  color: #1976d2;
+  text-decoration: none;
+  padding: 8px 12px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  word-break: break-all;
+  transition: background-color 0.2s ease;
+}
+
+.admin-feedback-url a:hover {
+  background: #e3f2fd;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .admin-feedbacks-container {
+    padding: 15px;
+  }
+
+  .admin-feedbacks-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .admin-feedback-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .admin-feedback-item {
+    padding: 15px;
+  }
+}
+

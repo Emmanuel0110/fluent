@@ -21,6 +21,7 @@ import { DataProvider } from "./contexts/DataContext";
 import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
 import SuggestionList from "./components/SuggestionList";
 import AdminRoute from "./AdminRoute";
+import AdminFeedbacks from "./components/AdminFeedbacks";
 
 export const url = import.meta.env.VITE_API_URL;
 
@@ -59,6 +60,7 @@ export default function App() {
               <Route path="new" element={<CreationForm />} />
               <Route path="words/:wordId/edit" element={<WordForm />} />
               <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+              <Route path="admin/feedbacks" element={<AdminFeedbacks />} />
             </Route>
             <Route path="review" element={<Review />} />
             <Route path="profile" element={<Profile />} />

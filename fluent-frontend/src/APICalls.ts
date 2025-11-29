@@ -329,3 +329,19 @@ export const saveFeedback = async (comment: string, pageUrl: string) => {
       return { success: false, message: err.message };
     });
 };
+
+export const fetchFeedbacks = async () => {
+  return customFetch(url + "feedback", { headers: authHeaders() })
+    .then((res) => {
+      if (res.success) {
+        return res.data;
+      } else {
+        console.log(res?.message);
+        return [];
+      }
+    })
+    .catch((err: Error) => {
+      console.log(err);
+      return [];
+    });
+};
