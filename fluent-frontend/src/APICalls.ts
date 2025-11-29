@@ -330,18 +330,21 @@ export const saveFeedback = async (comment: string, pageUrl: string) => {
     });
 };
 
-export const fetchFeedbacks = async () => {
-  return customFetch(url + "feedback", { headers: authHeaders() })
+export const fetchFeedbacks = async (page: number = 1, limit: number = 50) => {
+  return customFetch(url + `feedback?page=${page}&limit=${limit}`, { headers: authHeaders() })
     .then((res) => {
       if (res.success) {
-        return res.data;
+        return {
+          feedbacks: res.data,
+          pagination: res.pagination,
+        };
       } else {
         console.log(res?.message);
-        return [];
+        return { feedbacks: [], pagination: null };
       }
     })
     .catch((err: Error) => {
       console.log(err);
-      return [];
+      return { feedbacks: [], pagination: null };
     });
 };

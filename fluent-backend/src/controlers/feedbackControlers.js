@@ -36,7 +36,7 @@ router.post("/", auth, cache, async (req, res) => {
   }
 });
 
-// GET all feedbacks (admin only)
+// GET all feedbacks (admin only) with pagination
 router.get("/", auth, async (req, res) => {
   try {
     // Check if user is admin
@@ -45,12 +45,40 @@ router.get("/", auth, async (req, res) => {
       return res.status(403).json({ error: "Access denied. Admin privileges required." });
     }
 
-    // Fetch all feedbacks, sorted by creation date (newest first)
-    const feedbacks = await FeedbackModel.find()
-      .sort({ createdAt: -1 })
-      .lean();
+    // Parse pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
 
-    res.status(200).json({ success: true, data: feedbacks });
+    // Validate pagination parameters
+    if (page < 1 || limit < 1 || limit > 100) {
+      return res.status(400).json({ error: "Invalid pagination parameters" });
+    }
+
+    // Get total count and paginated feedbacks
+    const [feedbacks, totalCount] = await Promise.all([
+      FeedbackModel.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      FeedbackModel.countDocuments(),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / limit);
+
+    res.status(200).json({
+      success: true,
+      data: feedbacks,
+      pagination: {
+        page,
+        limit,
+        totalCount,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
