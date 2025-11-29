@@ -68,7 +68,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(helmet());
-app.use("/api", rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
+app.use("/api", rateLimit({ windowMs: 60 * 1000, max: 100 }));
 app.use("/", express.static(path.join(__dirname, "./public")));
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/reviewItems", reviewItemsRoutes);

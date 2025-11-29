@@ -9,7 +9,7 @@ import fetch from "node-fetch";
 import rateLimit from "express-rate-limit";
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 60 * 1000, // 1 minute
   max: 5, // 5 attempts allowed
   message: "Too many login attempts. Please try again later.",
   standardHeaders: true,
