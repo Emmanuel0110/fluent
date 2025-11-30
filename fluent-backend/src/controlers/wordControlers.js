@@ -1,12 +1,14 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import { validateWordQuery, validateWordCreate, validateWordUpdate } from "../middleware/validation.js";
+import { sanitizeText } from "../utils/sanitize.js";
 import express from "express";
 import mongoose from "mongoose";
 import { LexicalItemModel } from "../models.js";
 import { validateAndParseDate } from "../utils.js";
 const router = express.Router();
 
-router.get("/", auth, cache, (req, res) => {
+router.get("/", auth, cache, validateWordQuery, (req, res) => {
   const { sourceLanguage, targetLanguage } = req.userLearningData;
   const lastUpdateDate = validateAndParseDate(req.query.lastUpdateDate);
 
@@ -25,8 +27,13 @@ router.get("/", auth, cache, (req, res) => {
     });
 });
 
-router.post("/", auth, (req, res) => {
-  const newWord = new LexicalItemModel(req.body);
+router.post("/", auth, validateWordCreate, (req, res) => {
+  // Sanitize word text
+  const sanitizedBody = {
+    ...req.body,
+    text: sanitizeText(req.body.text),
+  };
+  const newWord = new LexicalItemModel(sanitizedBody);
   newWord
     .save()
     .then((newElement) => {
@@ -43,11 +50,14 @@ router.post("/", auth, (req, res) => {
     });
 });
 
-router.put("/:id", auth, cache, async function (req, res) {
+router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   const { tags, text, language, translations } = req.body;
-  await LexicalItemModel.updateOne(filter, { text, language, tags });
+  
+  // Sanitize word text
+  const sanitizedText = text ? sanitizeText(text) : text;
+  await LexicalItemModel.updateOne(filter, { text: sanitizedText, language, tags });
   await LexicalItemModel.updateOne(filter, {
     $pull: {
       translations: { language: translations[0].language },

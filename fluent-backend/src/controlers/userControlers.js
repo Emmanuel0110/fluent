@@ -1,4 +1,12 @@
 import auth from "../middleware/auth.js";
+import {
+  validateRegister,
+  validateLogin,
+  validateUpdateLanguages,
+  validateUserSettings,
+  validateOAuthCallback,
+} from "../middleware/validation.js";
+import { sanitizeText } from "../utils/sanitize.js";
 import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -19,16 +27,16 @@ const loginLimiter = rateLimit({
 const router = express.Router();
 
 //register
-router.post("/", loginLimiter, async function (req, res) {
+router.post("/", loginLimiter, validateRegister, async function (req, res) {
   const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
-  }
-  const user = await UserModel.findOne({ username });
+
+  // Sanitize username
+  const sanitizedUsername = sanitizeText(username);
+  const user = await UserModel.findOne({ username: sanitizedUsername });
   if (user) return res.status(400).json({ msg: "User already exists" });
 
   const newUser = new UserModel({
-    username,
+    username: sanitizedUsername,
     password,
     userSettings: {
       reviewMode: "manual",
@@ -66,11 +74,8 @@ router.post("/", loginLimiter, async function (req, res) {
 });
 
 //login
-router.post("/auth", loginLimiter, function (req, res) {
+router.post("/auth", loginLimiter, validateLogin, function (req, res) {
   const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
-  }
   UserModel.findOne({ username: username.trim() })
     .select("+password")
     .lean()
@@ -123,7 +128,7 @@ export async function cacheUserLearningData(user) {
   return course;
 }
 
-router.patch("/", auth, async function (req, res) {
+router.patch("/", auth, validateUpdateLanguages, async function (req, res) {
   try {
     const { sourceLanguage, targetLanguage } = req.body;
     const user = await UserModel.findById(req.user._id);
@@ -135,7 +140,7 @@ router.patch("/", auth, async function (req, res) {
   }
 });
 
-router.patch("/settings", auth, async function (req, res) {
+router.patch("/settings", auth, validateUserSettings, async function (req, res) {
   try {
     const { reviewMode, autoReviewDelay } = req.body;
     const updateData = {};
@@ -269,7 +274,7 @@ router.get("/auth/facebook", (req, res) => {
   res.redirect(`${config.authUrl}?${params.toString()}`);
 });
 
-// Helper function to exchange code for to²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²²
+// Helper function to exchange code for token
 async function exchangeCodeForUser(provider, code) {
   const config = getOAuthConfig(provider);
 
@@ -336,12 +341,9 @@ async function exchangeCodeForUser(provider, code) {
 }
 
 // OAuth callback endpoints
-router.post("/auth/google/callback", async (req, res) => {
+router.post("/auth/google/callback", validateOAuthCallback, async (req, res) => {
   try {
     const { code } = req.body;
-    if (!code) {
-      return res.status(400).json({ msg: "Authorization code required" });
-    }
 
     const oauthUser = await exchangeCodeForUser("google", code);
 
@@ -364,18 +366,18 @@ router.post("/auth/google/callback", async (req, res) => {
           oauthUser.email?.split("@")[0] ||
           oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
           `user_${oauthUser.oauthId}`;
-        let username = baseUsername;
+        let username = sanitizeText(baseUsername);
         let counter = 1;
 
         // Ensure unique username
         while (await UserModel.findOne({ username })) {
-          username = `${baseUsername}${counter}`;
+          username = sanitizeText(`${baseUsername}${counter}`);
           counter++;
         }
 
         user = new UserModel({
           username,
-          email: oauthUser.email,
+          email: oauthUser.email ? sanitizeText(oauthUser.email) : oauthUser.email,
           oauthProvider: "google",
           oauthId: oauthUser.oauthId,
           userSettings: {
@@ -389,7 +391,7 @@ router.post("/auth/google/callback", async (req, res) => {
         user.oauthProvider = "google";
         user.oauthId = oauthUser.oauthId;
         if (!user.email && oauthUser.email) {
-          user.email = oauthUser.email;
+          user.email = sanitizeText(oauthUser.email);
         }
         await user.save();
       }
@@ -408,12 +410,9 @@ router.post("/auth/google/callback", async (req, res) => {
   }
 });
 
-router.post("/auth/linkedin/callback", async (req, res) => {
+router.post("/auth/linkedin/callback", validateOAuthCallback, async (req, res) => {
   try {
     const { code } = req.body;
-    if (!code) {
-      return res.status(400).json({ msg: "Authorization code required" });
-    }
 
     const oauthUser = await exchangeCodeForUser("linkedin", code);
 
@@ -476,12 +475,9 @@ router.post("/auth/linkedin/callback", async (req, res) => {
   }
 });
 
-router.post("/auth/facebook/callback", async (req, res) => {
+router.post("/auth/facebook/callback", validateOAuthCallback, async (req, res) => {
   try {
     const { code } = req.body;
-    if (!code) {
-      return res.status(400).json({ msg: "Authorization code required" });
-    }
 
     const oauthUser = await exchangeCodeForUser("facebook", code);
 

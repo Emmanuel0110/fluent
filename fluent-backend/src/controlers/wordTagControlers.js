@@ -1,5 +1,7 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import { validateWordTagCreate } from "../middleware/validation.js";
+import { sanitizeText } from "../utils/sanitize.js";
 import mongoose from "mongoose";
 import { WordTagModel } from "../models.js";
 import express from "express";
@@ -14,8 +16,13 @@ router.get("/", auth, cache, (req, res) => {
     });
 });
 
-router.post("/", auth, (req, res) => {
-  const newTag = new WordTagModel(req.body);
+router.post("/", auth, validateWordTagCreate, (req, res) => {
+  // Sanitize tag label/text
+  const sanitizedBody = {
+    ...req.body,
+    label: sanitizeText(req.body.label),
+  };
+  const newTag = new WordTagModel(sanitizedBody);
   newTag
     .save()
     .then((newElement) => {

@@ -1,12 +1,18 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import {
+  validateConversationQuery,
+  validateConversationCreate,
+  validateConversationUpdate,
+} from "../middleware/validation.js";
+import { sanitizeObject } from "../utils/sanitize.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
 import { getConversationsForWords } from "./reviewControlers.js";
 const router = express.Router();
 
-router.get("/", auth, cache, async (req, res) => {
+router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
   const MAX_NUMBER_OF_CONVERSATIONS = 10;
   try {
     const { tag, conversationId, wordId } = req.query;
@@ -55,9 +61,11 @@ function onlyKeepLanguages(sourceLanguage, targetLanguage) {
   };
 }
 
-router.post("/", auth, async (req, res) => {
+router.post("/", auth, validateConversationCreate, async (req, res) => {
   try {
-    const newConversation = new MultiLingualConversationModel(req.body);
+    // Sanitize all text fields in conversations (sentences text)
+    const sanitizedBody = sanitizeObject(req.body);
+    const newConversation = new MultiLingualConversationModel(sanitizedBody);
     newConversation
       .save()
       .then((newConversation) => res.json({ success: true, data: { ...newConversation, subscribed: false } }));
@@ -72,10 +80,13 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-router.put("/:id", auth, cache, async function (req, res) {
+router.put("/:id", auth, cache, validateConversationUpdate, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   const { tags, conversations } = req.body;
+
+  // Sanitize conversation sentences text
+  const sanitizedConversations = conversations ? sanitizeObject(conversations) : conversations;
   await MultiLingualConversationModel.updateOne(filter, { tags });
   await MultiLingualConversationModel.updateOne(filter, {
     $pull: {
@@ -84,7 +95,7 @@ router.put("/:id", auth, cache, async function (req, res) {
   });
   const conversation = await MultiLingualConversationModel.findOneAndUpdate(
     filter,
-    { $push: { conversations: { $each: conversations } } },
+    { $push: { conversations: { $each: sanitizedConversations } } },
     { new: true }
   );
   const completedConversation = {

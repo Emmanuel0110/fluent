@@ -1,21 +1,14 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import { validateFeedback, validateFeedbackQuery } from "../middleware/validation.js";
 import { FeedbackModel, UserModel } from "../models.js";
 import sanitizeHtml from "sanitize-html";
 import express from "express";
 const router = express.Router();
 
-router.post("/", auth, cache, async (req, res) => {
+router.post("/", auth, cache, validateFeedback, async (req, res) => {
   try {
     const { comment, pageUrl } = req.body;
-
-    if (typeof comment !== "string" || typeof pageUrl !== "string") {
-      return res.status(400).json({ error: "Invalid input type" });
-    }
-
-    if (comment.length > 4000 || pageUrl.length > 4000) {
-      return res.status(400).json({ error: "Message too long" });
-    }
 
     //Sanitize to avoid XSS
     const cleanComment = sanitizeHtml(comment);
@@ -26,8 +19,6 @@ router.post("/", auth, cache, async (req, res) => {
       return res.status(400).json({ error: "Invalid input" });
     }
 
-    if (!cleanComment || !cleanPageUrl) return res.status(400).json({ message: "Comment and pageUrl are required" });
-
     const feedback = new FeedbackModel({ comment: cleanComment, pageUrl: cleanPageUrl, userId: req.user._id });
     await feedback.save();
     res.status(201).json({ message: "Feedback saved" });
@@ -37,7 +28,7 @@ router.post("/", auth, cache, async (req, res) => {
 });
 
 // GET all feedbacks (admin only) with pagination
-router.get("/", auth, async (req, res) => {
+router.get("/", auth, validateFeedbackQuery, async (req, res) => {
   try {
     // Check if user is admin
     const user = await UserModel.findById(req.user._id);
@@ -50,18 +41,9 @@ router.get("/", auth, async (req, res) => {
     const limit = parseInt(req.query.limit) || 50;
     const skip = (page - 1) * limit;
 
-    // Validate pagination parameters
-    if (page < 1 || limit < 1 || limit > 100) {
-      return res.status(400).json({ error: "Invalid pagination parameters" });
-    }
-
     // Get total count and paginated feedbacks
     const [feedbacks, totalCount] = await Promise.all([
-      FeedbackModel.find()
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .lean(),
+      FeedbackModel.find().sort({ createdAt: -1 }).skip(skip).limit(limit).lean(),
       FeedbackModel.countDocuments(),
     ]);
 

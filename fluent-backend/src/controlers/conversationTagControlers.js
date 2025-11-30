@@ -1,5 +1,7 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
+import { validateConversationTagCreate } from "../middleware/validation.js";
+import { sanitizeObject } from "../utils/sanitize.js";
 import { ConversationTagModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
@@ -32,8 +34,10 @@ router.get("/", auth, cache, (req, res) => {
   });
 });
 
-router.post("/", auth, (req, res) => {
-  const newTag = new ConversationTagModel(req.body);
+router.post("/", auth, validateConversationTagCreate, (req, res) => {
+  // Sanitize tag labels text
+  const sanitizedBody = sanitizeObject(req.body);
+  const newTag = new ConversationTagModel(sanitizedBody);
   newTag
     .save()
     .then((newElement) => {

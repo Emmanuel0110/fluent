@@ -1,12 +1,13 @@
 import auth from "../middleware/auth.js";
 import cache, { refreshLearningDataCache } from "../middleware/cache.js";
+import { validateUpdateLearningData } from "../middleware/validation.js";
 import { redisClient } from "../../index.js";
 import { UserCourseModel } from "../models.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 const router = express.Router();
 
-router.patch("/", auth, cache, updateLearningData);
+router.patch("/", auth, cache, validateUpdateLearningData, updateLearningData);
 
 router.get("/dashboard", auth, cache, getDashboardData);
 
