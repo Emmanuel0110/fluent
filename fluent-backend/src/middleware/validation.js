@@ -72,10 +72,7 @@ export const validateUpdateLanguages = [
 ];
 
 export const validateUserSettings = [
-  body("reviewMode")
-    .optional()
-    .isIn(["manual", "auto"])
-    .withMessage("Review mode must be either 'manual' or 'auto'"),
+  body("reviewMode").optional().isIn(["manual", "auto"]).withMessage("Review mode must be either 'manual' or 'auto'"),
   body("autoReviewDelay")
     .optional()
     .isInt({ min: 0, max: 10080 })
@@ -104,22 +101,14 @@ export const validateFeedback = [
     .withMessage("Page URL is required")
     .isLength({ max: 4000 })
     .withMessage("Page URL must not exceed 4000 characters")
-    .isURL({ require_protocol: false })
+    .isURL({ require_protocol: true, require_tld: false })
     .withMessage("Page URL must be a valid URL"),
   handleValidationErrors,
 ];
 
 export const validateFeedbackQuery = [
-  query("page")
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage("Page must be a positive integer")
-    .toInt(),
-  query("limit")
-    .optional()
-    .isInt({ min: 1, max: 100 })
-    .withMessage("Limit must be between 1 and 100")
-    .toInt(),
+  query("page").optional().isInt({ min: 1 }).withMessage("Page must be a positive integer").toInt(),
+  query("limit").optional().isInt({ min: 1, max: 100 }).withMessage("Limit must be between 1 and 100").toInt(),
   handleValidationErrors,
 ];
 
@@ -149,27 +138,25 @@ export const validateUpdateLearningData = [
       }
       return true;
     }),
-  body("success")
-    .optional()
-    .isBoolean()
-    .withMessage("Success must be a boolean value"),
-  body()
-    .custom((value) => {
-      const hasConversationToSubscribe = !!value.conversationToSubscribe;
-      const hasConversationToUnsubscribe = !!value.conversationToUnsubscribe;
-      const hasReviewedConversationId = !!value.reviewedConversationId;
+  body("success").optional().isBoolean().withMessage("Success must be a boolean value"),
+  body().custom((value) => {
+    const hasConversationToSubscribe = !!value.conversationToSubscribe;
+    const hasConversationToUnsubscribe = !!value.conversationToUnsubscribe;
+    const hasReviewedConversationId = !!value.reviewedConversationId;
 
-      if (!hasConversationToSubscribe && !hasConversationToUnsubscribe && !hasReviewedConversationId) {
-        throw new Error("At least one of conversationToSubscribe, conversationToUnsubscribe, or reviewedConversationId must be provided");
-      }
+    if (!hasConversationToSubscribe && !hasConversationToUnsubscribe && !hasReviewedConversationId) {
+      throw new Error(
+        "At least one of conversationToSubscribe, conversationToUnsubscribe, or reviewedConversationId must be provided"
+      );
+    }
 
-      // If reviewedConversationId is provided, success should also be provided
-      if (hasReviewedConversationId && value.success === undefined) {
-        throw new Error("Success field is required when reviewedConversationId is provided");
-      }
+    // If reviewedConversationId is provided, success should also be provided
+    if (hasReviewedConversationId && value.success === undefined) {
+      throw new Error("Success field is required when reviewedConversationId is provided");
+    }
 
-      return true;
-    }),
+    return true;
+  }),
   handleValidationErrors,
 ];
 
@@ -196,9 +183,7 @@ export const validateConversationQuery = [
 ];
 
 export const validateConversationCreate = [
-  body("conversations")
-    .isArray({ min: 1 })
-    .withMessage("Conversations must be a non-empty array"),
+  body("conversations").isArray({ min: 1 }).withMessage("Conversations must be a non-empty array"),
   body("conversations.*.language")
     .notEmpty()
     .withMessage("Language is required for each conversation")
@@ -233,10 +218,7 @@ export const validateConversationUpdate = [
     }),
   body("tags").optional().isArray().withMessage("Tags must be an array"),
   body("tags.*").optional().isString().withMessage("Each tag must be a string"),
-  body("conversations")
-    .optional()
-    .isArray({ min: 1 })
-    .withMessage("Conversations must be a non-empty array"),
+  body("conversations").optional().isArray({ min: 1 }).withMessage("Conversations must be a non-empty array"),
   body("conversations.*.language")
     .optional()
     .custom((value) => {
@@ -250,11 +232,7 @@ export const validateConversationUpdate = [
 
 // Word validation rules
 export const validateWordQuery = [
-  query("lastUpdateDate")
-    .optional()
-    .isISO8601()
-    .withMessage("Last update date must be a valid ISO 8601 date")
-    .toDate(),
+  query("lastUpdateDate").optional().isISO8601().withMessage("Last update date must be a valid ISO 8601 date").toDate(),
   handleValidationErrors,
 ];
 
@@ -269,10 +247,7 @@ export const validateWordCreate = [
       }
       return true;
     }),
-  body("translations")
-    .optional()
-    .isArray()
-    .withMessage("Translations must be an array"),
+  body("translations").optional().isArray().withMessage("Translations must be an array"),
   body("translations.*.language")
     .optional()
     .custom((value) => {
@@ -281,10 +256,7 @@ export const validateWordCreate = [
       }
       return true;
     }),
-  body("translations.*.text")
-    .optional()
-    .isString()
-    .withMessage("Translation text must be a string"),
+  body("translations.*.text").optional().isString().withMessage("Translation text must be a string"),
   body("tags").optional().isArray().withMessage("Tags must be an array"),
   body("tags.*").optional().isString().withMessage("Each tag must be a string"),
   handleValidationErrors,
@@ -309,10 +281,7 @@ export const validateWordUpdate = [
       }
       return true;
     }),
-  body("translations")
-    .optional()
-    .isArray()
-    .withMessage("Translations must be an array"),
+  body("translations").optional().isArray().withMessage("Translations must be an array"),
   body("translations.*.language")
     .optional()
     .custom((value) => {
@@ -321,10 +290,7 @@ export const validateWordUpdate = [
       }
       return true;
     }),
-  body("translations.*.text")
-    .optional()
-    .isString()
-    .withMessage("Translation text must be a string"),
+  body("translations.*.text").optional().isString().withMessage("Translation text must be a string"),
   body("tags").optional().isArray().withMessage("Tags must be an array"),
   body("tags.*").optional().isString().withMessage("Each tag must be a string"),
   handleValidationErrors,
@@ -332,9 +298,7 @@ export const validateWordUpdate = [
 
 // Tag validation rules
 export const validateConversationTagCreate = [
-  body("labels")
-    .isArray({ min: 1 })
-    .withMessage("Labels must be a non-empty array"),
+  body("labels").isArray({ min: 1 }).withMessage("Labels must be a non-empty array"),
   body("labels.*.language")
     .notEmpty()
     .withMessage("Language is required for each label")
@@ -366,4 +330,3 @@ export const validateWordTagCreate = [
     }),
   handleValidationErrors,
 ];
-
