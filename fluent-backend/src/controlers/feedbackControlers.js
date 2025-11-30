@@ -6,7 +6,7 @@ import sanitizeHtml from "sanitize-html";
 import express from "express";
 const router = express.Router();
 
-router.post("/", auth, cache, validateFeedback, async (req, res) => {
+router.post("/", auth, cache, validateFeedback, async (req, res, next) => {
   try {
     const { comment, pageUrl } = req.body;
 
@@ -23,12 +23,13 @@ router.post("/", auth, cache, validateFeedback, async (req, res) => {
     await feedback.save();
     res.status(201).json({ message: "Feedback saved" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    // Let the error handler middleware handle this
+    next(error);
   }
 });
 
 // GET all feedbacks (admin only) with pagination
-router.get("/", auth, validateFeedbackQuery, async (req, res) => {
+router.get("/", auth, validateFeedbackQuery, async (req, res, next) => {
   try {
     // Check if user is admin
     const user = await UserModel.findById(req.user._id);
@@ -62,7 +63,8 @@ router.get("/", auth, validateFeedbackQuery, async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    // Let the error handler middleware handle this
+    next(error);
   }
 });
 

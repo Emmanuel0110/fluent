@@ -6,6 +6,7 @@ import {
   validateUserSettings,
   validateOAuthCallback,
 } from "../middleware/validation.js";
+import { asyncHandler } from "../middleware/errorHandler.js";
 import { sanitizeText } from "../utils/sanitize.js";
 import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
@@ -27,81 +28,80 @@ const loginLimiter = rateLimit({
 const router = express.Router();
 
 //register
-router.post("/", loginLimiter, validateRegister, async function (req, res) {
-  const { username, password } = req.body;
+router.post(
+  "/",
+  loginLimiter,
+  validateRegister,
+  asyncHandler(async function (req, res) {
+    const { username, password } = req.body;
 
-  // Sanitize username
-  const sanitizedUsername = sanitizeText(username);
-  const user = await UserModel.findOne({ username: sanitizedUsername });
-  if (user) return res.status(400).json({ msg: "User already exists" });
+    // Sanitize username
+    const sanitizedUsername = sanitizeText(username);
+    const user = await UserModel.findOne({ username: sanitizedUsername });
+    if (user) {
+      return res.status(409).json({ success: false, message: "User already exists" });
+    }
 
-  const newUser = new UserModel({
-    username: sanitizedUsername,
-    password,
-    userSettings: {
-      reviewMode: "manual",
-      autoReviewDelay: 10,
-    },
-  });
-  // Create salt & hash
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(newUser.password, salt, (err, hash) => {
-      if (err) throw err;
-      newUser.password = hash;
-      newUser.save().then((newUser) => {
-        let user = newUser.toObject();
-        if (err) {
-          console.log("save error ", err);
-          if (err.name === "MongoError" && err.code === 11000) {
-            // Duplicate error happened. You can handle it separately.
-            res.json({ success: false, message: "already exists" });
-            return;
-          }
-          // Some other error happened, you might also want to handle it.
-          res.json({ success: false, message: "some error happened" });
-          return;
-        }
-
-        jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
-          if (err) throw err;
-          delete user.password;
-          const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
-          res.json({ token, user, sourceLanguage, targetLanguage });
-        });
-      });
+    const newUser = new UserModel({
+      username: sanitizedUsername,
+      password,
+      userSettings: {
+        reviewMode: "manual",
+        autoReviewDelay: 10,
+      },
     });
-  });
-});
+
+    // Create salt & hash
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newUser.password, salt);
+    newUser.password = hash;
+
+    const savedUser = await newUser.save();
+    const userObj = savedUser.toObject();
+
+    const token = jwt.sign({ _id: userObj._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
+    delete userObj.password;
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+    res.json({ token, user: userObj, sourceLanguage, targetLanguage });
+  })
+);
 
 //login
-router.post("/auth", loginLimiter, validateLogin, function (req, res) {
-  const { username, password } = req.body;
-  UserModel.findOne({ username: username.trim() })
-    .select("+password")
-    .lean()
-    .then((user) => {
-      if (!user) return res.status(400).json({ msg: "User does not exist" });
+router.post(
+  "/auth",
+  loginLimiter,
+  validateLogin,
+  asyncHandler(async function (req, res) {
+    const { username, password } = req.body;
+    const user = await UserModel.findOne({ username: username.trim() }).select("+password").lean();
 
-      //Validate password
-      bcrypt.compare(password, user.password).then((isMatch) => {
-        if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
+    if (!user) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
 
-        jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 }, async (err, token) => {
-          if (err) throw err;
-          delete user.password;
-          const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
-          res.json({ token, user, sourceLanguage, targetLanguage });
-        });
-      });
-    });
-});
+    // Validate password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
 
-router.get("/auth", loginLimiter, auth, async function (req, res) {
-  UserModel.findById(req.user._id).then(async (user) => {
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
+    delete user.password;
+    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
+    res.json({ token, user, sourceLanguage, targetLanguage });
+  })
+);
+
+router.get(
+  "/auth",
+  loginLimiter,
+  auth,
+  asyncHandler(async function (req, res) {
+    const user = await UserModel.findById(req.user._id);
     const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
     res.json({ user, sourceLanguage, targetLanguage });
-  });
-});
+  })
+);
 
 export async function cacheUserLearningData(user) {
   let course;
@@ -128,20 +128,23 @@ export async function cacheUserLearningData(user) {
   return course;
 }
 
-router.patch("/", auth, validateUpdateLanguages, async function (req, res) {
-  try {
+router.patch(
+  "/",
+  auth,
+  validateUpdateLanguages,
+  asyncHandler(async function (req, res) {
     const { sourceLanguage, targetLanguage } = req.body;
     const user = await UserModel.findById(req.user._id);
     await updateLanguages(user, sourceLanguage, targetLanguage);
     res.json({ success: true, data: { sourceLanguage, targetLanguage } });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, message: "Couldn't update language choice" });
-  }
-});
+  })
+);
 
-router.patch("/settings", auth, validateUserSettings, async function (req, res) {
-  try {
+router.patch(
+  "/settings",
+  auth,
+  validateUserSettings,
+  asyncHandler(async function (req, res) {
     const { reviewMode, autoReviewDelay } = req.body;
     const updateData = {};
 
@@ -161,11 +164,8 @@ router.patch("/settings", auth, validateUserSettings, async function (req, res) 
         autoReviewDelay: updatedUser.userSettings.autoReviewDelay,
       },
     });
-  } catch (error) {
-    console.error(error);
-    res.json({ success: false, message: "Couldn't update user settings" });
-  }
-});
+  })
+);
 
 export async function updateLanguages(user, sourceLanguage, targetLanguage) {
   let course = await UserCourseModel.findOne({ _id: { $in: user.courses }, sourceLanguage, targetLanguage });
@@ -341,8 +341,10 @@ async function exchangeCodeForUser(provider, code) {
 }
 
 // OAuth callback endpoints
-router.post("/auth/google/callback", validateOAuthCallback, async (req, res) => {
-  try {
+router.post(
+  "/auth/google/callback",
+  validateOAuthCallback,
+  asyncHandler(async (req, res) => {
     const { code } = req.body;
 
     const oauthUser = await exchangeCodeForUser("google", code);
@@ -404,14 +406,13 @@ router.post("/auth/google/callback", validateOAuthCallback, async (req, res) => 
     const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
-  } catch (error) {
-    console.error("Google OAuth error:", error);
-    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
-  }
-});
+  })
+);
 
-router.post("/auth/linkedin/callback", validateOAuthCallback, async (req, res) => {
-  try {
+router.post(
+  "/auth/linkedin/callback",
+  validateOAuthCallback,
+  asyncHandler(async (req, res) => {
     const { code } = req.body;
 
     const oauthUser = await exchangeCodeForUser("linkedin", code);
@@ -434,17 +435,17 @@ router.post("/auth/linkedin/callback", validateOAuthCallback, async (req, res) =
           oauthUser.email?.split("@")[0] ||
           oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
           `user_${oauthUser.oauthId}`;
-        let username = baseUsername;
+        let username = sanitizeText(baseUsername);
         let counter = 1;
 
         while (await UserModel.findOne({ username })) {
-          username = `${baseUsername}${counter}`;
+          username = sanitizeText(`${baseUsername}${counter}`);
           counter++;
         }
 
         user = new UserModel({
           username,
-          email: oauthUser.email,
+          email: oauthUser.email ? sanitizeText(oauthUser.email) : oauthUser.email,
           oauthProvider: "linkedin",
           oauthId: oauthUser.oauthId,
           userSettings: {
@@ -457,7 +458,7 @@ router.post("/auth/linkedin/callback", validateOAuthCallback, async (req, res) =
         user.oauthProvider = "linkedin";
         user.oauthId = oauthUser.oauthId;
         if (!user.email && oauthUser.email) {
-          user.email = oauthUser.email;
+          user.email = sanitizeText(oauthUser.email);
         }
         await user.save();
       }
@@ -469,14 +470,13 @@ router.post("/auth/linkedin/callback", validateOAuthCallback, async (req, res) =
     const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
-  } catch (error) {
-    console.error("LinkedIn OAuth error:", error);
-    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
-  }
-});
+  })
+);
 
-router.post("/auth/facebook/callback", validateOAuthCallback, async (req, res) => {
-  try {
+router.post(
+  "/auth/facebook/callback",
+  validateOAuthCallback,
+  asyncHandler(async (req, res) => {
     const { code } = req.body;
 
     const oauthUser = await exchangeCodeForUser("facebook", code);
@@ -499,17 +499,17 @@ router.post("/auth/facebook/callback", validateOAuthCallback, async (req, res) =
           oauthUser.email?.split("@")[0] ||
           oauthUser.name?.toLowerCase().replace(/\s+/g, "") ||
           `user_${oauthUser.oauthId}`;
-        let username = baseUsername;
+        let username = sanitizeText(baseUsername);
         let counter = 1;
 
         while (await UserModel.findOne({ username })) {
-          username = `${baseUsername}${counter}`;
+          username = sanitizeText(`${baseUsername}${counter}`);
           counter++;
         }
 
         user = new UserModel({
           username,
-          email: oauthUser.email,
+          email: oauthUser.email ? sanitizeText(oauthUser.email) : oauthUser.email,
           oauthProvider: "facebook",
           oauthId: oauthUser.oauthId,
           userSettings: {
@@ -522,7 +522,7 @@ router.post("/auth/facebook/callback", validateOAuthCallback, async (req, res) =
         user.oauthProvider = "facebook";
         user.oauthId = oauthUser.oauthId;
         if (!user.email && oauthUser.email) {
-          user.email = oauthUser.email;
+          user.email = sanitizeText(oauthUser.email);
         }
         await user.save();
       }
@@ -534,10 +534,7 @@ router.post("/auth/facebook/callback", validateOAuthCallback, async (req, res) =
     const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
-  } catch (error) {
-    console.error("Facebook OAuth error:", error);
-    res.status(500).json({ msg: error.message || "OAuth authentication failed" });
-  }
-});
+  })
+);
 
 export default router;

@@ -17,6 +17,7 @@ import feedbackRoutes from "./src/controlers/feedbackControlers.js";
 import { createClient } from "redis";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { errorHandler } from "./src/middleware/errorHandler.js";
 
 const useRedis = !process.argv.includes("--no-redis");
 
@@ -79,11 +80,17 @@ app.use("/api/usercourses", userCourseRoutes);
 app.use("/api/words", wordRoutes);
 app.use("/api/languages", languageRoutes);
 app.use("/api/feedback", feedbackRoutes);
+
+// 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).json({ success: false, message: "Route not found" });
 });
 
-mongoose.set("debug", true);
+// Global error handler (must be last)
+app.use(errorHandler);
+
+// Only enable mongoose debug in development
+mongoose.set("debug", process.env.NODE_ENV === "development");
 mongoose.set("strictQuery", true);
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`

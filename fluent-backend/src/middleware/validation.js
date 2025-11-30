@@ -5,12 +5,14 @@ import mongoose from "mongoose";
 export const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    const isProduction = process.env.NODE_ENV === "production";
     return res.status(400).json({
       success: false,
       errors: errors.array().map((err) => ({
         field: err.path || err.param,
         message: err.msg,
-        value: err.value,
+        // Don't expose actual values in production (could contain sensitive data)
+        ...(isProduction ? {} : { value: err.value }),
       })),
     });
   }
