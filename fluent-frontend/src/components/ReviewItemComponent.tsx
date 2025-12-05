@@ -16,7 +16,7 @@ function ReviewItemComponent({
   const { openConversation } = useContext(ConfigContext) as Context;
   const [timeIsUp, setTimeIsUp] = useState(false);
   const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartY = useRef<number | null>(null);
   const touchEndY = useRef<number | null>(null);
 
