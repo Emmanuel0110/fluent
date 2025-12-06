@@ -1,17 +1,15 @@
 import React, { useContext, useEffect } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, RowConversation } from "../types";
-import { getReviewList } from "../APICalls";
-import ReviewItemComponent from "./ReviewItemComponent";
+import { getReviewList, updateRemoteConversationReviewStatus } from "../APICalls";
 import { useLanguage } from "../contexts/LanguageContext";
-import { useData } from "../contexts/DataContext";
 import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import ReviewItem from "./ReviewItem";
 
 function Review() {
   const { targetLanguage } = useLanguage();
-  const { updateConversationReviewStatus } = useData();
   const { reviewList, setReviewList } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
 
@@ -23,7 +21,7 @@ function Review() {
     const currentConversation = reviewList[0];
     if (success) {
       setReviewList((reviewList) => reviewList.slice(1));
-      await updateConversationReviewStatus(currentConversation);
+      await updateRemoteConversationReviewStatus(currentConversation._id, currentConversation.alreadyFailed);
       if (reviewList.length <= 1) fetchNewReviewItems();
     } else {
       currentConversation.alreadyFailed = true;
@@ -52,7 +50,7 @@ function Review() {
       </div>
     </div>
   ) : (
-    <ReviewItemComponent conversation={reviewList[0]} nextConversation={nextConversation} />
+    <ReviewItem conversation={reviewList[0]} nextConversation={nextConversation} />
   );
 }
 
