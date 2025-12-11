@@ -34,7 +34,7 @@ function ReviewItem({
   }, [isAnswerRevealed, currentSentenceNumber, conversation.multiLingualSentences.length, nextConversation]);
 
   useSwipeAndKeyboard({
-    onAdvance: handleAdvance,
+    callback: handleAdvance,
     dependencies: [currentSentenceNumber, isAnswerRevealed],
   });
 
