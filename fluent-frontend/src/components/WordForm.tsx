@@ -1,4 +1,4 @@
-import React, { Dispatch, Fragment, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useEffect, useMemo, useState } from "react";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
@@ -181,8 +181,9 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
   };
 
   return (
-    <Fragment>
+    <div className="word-form">
       <div id="sourceLanguage">
+        <h3 className="word-form-section-title">Source Language</h3>
         <div className="prerequisiteInput">
           <AutoComplete
             dropdownList={sourceWords}
@@ -192,14 +193,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
           />
         </div>
         {sourceWord?.text && (
-          <div>
-            <div>
+          <div className="word-display">
+            <div className="word-text-display">
               <span>{`${sourceWord.text}: `}</span>
               <span>
                 {sourceWord.translations.map((wordId, index) => (
-                  <span>
+                  <span key={wordId}>
                     {index !== 0 && <span>{", "}</span>}
-                    <span key={index}>{words[wordId]?.text}</span>
+                    <span>{words[wordId]?.text}</span>
                   </span>
                 ))}
               </span>
@@ -212,10 +213,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 placement="bottom-start"
               />
             </div>
-            {sourceWord.tags.map((tagId) => {
-              const tag = wordTags.find((tag) => tag._id === tagId);
-              return tag ? <div>{tag.label}</div> : undefined;
-            })}
+            {sourceWord.tags.length > 0 && (
+              <div className="word-tags">
+                {sourceWord.tags.map((tagId) => {
+                  const tag = wordTags.find((tag) => tag._id === tagId);
+                  return tag ? <span key={tagId} className="word-tag">{tag.label}</span> : undefined;
+                })}
+              </div>
+            )}
             <div className="prerequisiteInput">
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
@@ -229,6 +234,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
         )}
       </div>
       <div id="targetLanguage">
+        <h3 className="word-form-section-title">Target Language</h3>
         <div className="prerequisiteInput">
           <AutoComplete
             dropdownList={targetWords}
@@ -238,14 +244,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
           />
         </div>
         {targetWord?.text && (
-          <div>
-            <div>
+          <div className="word-display">
+            <div className="word-text-display">
               <span>{`${targetWord.text}: `}</span>
               <span>
                 {targetWord.translations.map((wordId, index) => (
-                  <span>
+                  <span key={wordId}>
                     {index !== 0 && <span>{", "}</span>}
-                    <span key={index}>{words[wordId]?.text}</span>
+                    <span>{words[wordId]?.text}</span>
                   </span>
                 ))}
               </span>
@@ -258,10 +264,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 placement="bottom-start"
               />
             </div>
-            {targetWord.tags.map((tagId) => {
-              const tag = wordTags.find((tag) => tag._id === tagId);
-              return tag ? <div>{tag.label}</div> : undefined;
-            })}
+            {targetWord.tags.length > 0 && (
+              <div className="word-tags">
+                {targetWord.tags.map((tagId) => {
+                  const tag = wordTags.find((tag) => tag._id === tagId);
+                  return tag ? <span key={tagId} className="word-tag">{tag.label}</span> : undefined;
+                })}
+              </div>
+            )}
             <div className="prerequisiteInput">
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
@@ -274,7 +284,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
           </div>
         )}
       </div>
-    </Fragment>
+    </div>
   );
 }
 

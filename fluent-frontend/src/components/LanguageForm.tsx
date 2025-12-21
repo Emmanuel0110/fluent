@@ -25,9 +25,11 @@ export default function LanguageForm() {
   };
 
   return (
-    <div>
-      <input type="text" onChange={(e) => setLocalSourceLanguage(e.target.value)} placeholder="Source language" />
-      <input type="text" onChange={(e) => setLocalTargetLanguage(e.target.value)} placeholder="Target language" />
+    <div className="language-form">
+      <div className="language-form-inputs">
+        <input type="text" onChange={(e) => setLocalSourceLanguage(e.target.value)} placeholder="Source language" />
+        <input type="text" onChange={(e) => setLocalTargetLanguage(e.target.value)} placeholder="Target language" />
+      </div>
       <button onClick={chooseLanguage}>Choose languages</button>
     </div>
   );

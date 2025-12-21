@@ -59,7 +59,15 @@ export default function App() {
             <Route element={<AdminRoute redirectPath="home" />}>
               <Route path="new" element={<CreationForm />} />
               <Route path="words/:wordId/edit" element={<WordForm />} />
-              <Route path="conversations/:conversationId/edit" element={<ConversationForm />} />
+              <Route
+                path="conversations/:conversationId/edit"
+                element={
+                  //Move styling in the component
+                  <div style={{ height: "100%", overflow: "auto", padding: "1rem" }}>
+                    <ConversationForm />
+                  </div>
+                }
+              />
               <Route path="admin/feedbacks" element={<AdminFeedbacks />} />
             </Route>
             <Route path="review" element={<Review />} />
