@@ -156,10 +156,9 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     const res = await (infos._id
       ? editRemoteConversation(infos, sourceLanguage, targetLanguage)
       : saveNewConversation(infos, sourceLanguage, targetLanguage));
-
     if (res.success) {
       setConversations((conversations) => updateCacheWithNewConversations(conversations, [res.data], targetLanguage));
-      navigate("/conversations" + res.data._id); //TODO: separate concerns
+      navigate("/conversations/" + res.data._id); //TODO: separate concerns
     }
   };
 

@@ -97,7 +97,7 @@ router.put("/:id", auth, cache, validateConversationUpdate, async function (req,
     filter,
     { $push: { conversations: { $each: sanitizedConversations } } },
     { new: true }
-  );
+  ).lean();
   const completedConversation = {
     ...conversation,
     subscribed: !!req.userLearningData.conversations.find(({ _id }) => _id === conversation._id),
