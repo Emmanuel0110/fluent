@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { Conversation } from "../types";
+import { ReviewItem as ReviewItemType } from "../types";
 import { useReviewSettings } from "../contexts/ReviewSettingsContext";
 import ReviewSentence from "./ReviewSentence";
 import { useSwipeAndKeyboard } from "../hooks/useSwipeAndKeyboard";
@@ -9,13 +9,13 @@ function ReviewItem({
   conversation,
   nextConversation,
 }: {
-  conversation: Conversation;
-  nextConversation: (success: boolean) => void;
+  conversation: ReviewItemType;
+  nextConversation: (successArray: boolean[]) => void;
 }) {
   const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
   const isAutoMode = shouldShowAnswerAutomatically();
 
-  const [isAnswerRevealed, setIsAnswerRevealed] = useState(false);
+  const [answersRevealed, setAnswersRevealed] = useState(conversation.multiLingualSentences.map((sentence) => false));
   const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -23,41 +23,45 @@ function ReviewItem({
     const numberOfSentences = conversation.multiLingualSentences.length;
     const isCompleted = currentSentenceNumber >= numberOfSentences - 1;
 
-    if (isAnswerRevealed || isCompleted) {
-      const success = !isAnswerRevealed;
-      setIsAnswerRevealed(false);
+    if (isCompleted) {
+      const successArr = conversation.multiLingualSentences.map((sentence) => sentence.success);
       setCurrentSentenceNumber(0);
-      nextConversation(success);
+      nextConversation(successArr);
     } else {
       setCurrentSentenceNumber((n) => n + 1);
     }
-  }, [isAnswerRevealed, currentSentenceNumber, conversation.multiLingualSentences.length, nextConversation]);
+  }, [answersRevealed, currentSentenceNumber, conversation.multiLingualSentences.length, nextConversation]);
 
   useSwipeAndKeyboard({
     callback: handleAdvance,
-    dependencies: [currentSentenceNumber, isAnswerRevealed],
+    dependencies: [currentSentenceNumber, answersRevealed],
   });
+
+  useEffect(() => {
+    setAnswersRevealed(conversation.multiLingualSentences.map((sentence) => false));
+  }, [conversation]);
 
   // Timer effect for auto-revealing answers (only in auto mode)
   useEffect(() => {
     if (!isAutoMode) return;
 
     if (timer.current) clearTimeout(timer.current);
-    if (!isAnswerRevealed) {
+    if (!answersRevealed[currentSentenceNumber]) {
       const delay = getReviewDelay();
       if (delay > 0) {
         timer.current = setTimeout(() => {
-          setIsAnswerRevealed(true);
+          handleRevealAnswer();
         }, delay);
       }
     }
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [currentSentenceNumber, isAnswerRevealed, isAutoMode, getReviewDelay]);
+  }, [currentSentenceNumber, answersRevealed, isAutoMode, getReviewDelay]);
 
   const handleRevealAnswer = () => {
-    setIsAnswerRevealed(true);
+    setAnswersRevealed(answersRevealed.map((answer, index) => (index === currentSentenceNumber ? true : answer)));
+    conversation.multiLingualSentences[currentSentenceNumber].success = false;
   };
 
   return (
@@ -68,12 +72,12 @@ function ReviewItem({
             key={index}
             index={index}
             currentSentenceNumber={currentSentenceNumber}
-            success={!isAnswerRevealed}
+            answerRevealed={answersRevealed[index]}
             conversation={conversation}
           />
         ))}
       </div>
-      {!isAutoMode && !isAnswerRevealed && (
+      {!isAutoMode && !answersRevealed[currentSentenceNumber] && (
         <div className="reveal-answer-container">
           <button onClick={handleRevealAnswer} className="reveal-answer-btn">
             Reveal Answer

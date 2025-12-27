@@ -15,7 +15,7 @@ async function updateLearningData(req, res) {
   try {
     const { userLearningData, user } = req;
     if (userLearningData) {
-      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, success } = req.body;
+      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, successArray } = req.body;
       if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, userLearningData);
         res.json({ success: true });
@@ -23,7 +23,7 @@ async function updateLearningData(req, res) {
         await unsubscribeToConversation(conversationToUnsubscribe, userLearningData);
         res.json({ success: true });
       } else if (reviewedConversationId) {
-        await updateReviewData(reviewedConversationId, success, userLearningData);
+        await updateReviewData(reviewedConversationId, successArray, userLearningData);
         res.json({ success: true });
       }
       if (redisClient) {
@@ -53,6 +53,22 @@ async function getWordIdsForConversation(conversationId, language) {
     }
   }
   return Array.from(wordIdSet);
+}
+
+async function getWordIdsForSentences(conversationId, language) {
+  const convo = await MultiLingualConversationModel.findById(conversationId).lean();
+  if (!convo) return [];
+  for (const conv of convo.conversations) {
+    if (conv.language.toString() == language.toString()) {
+      const arr = [];
+      for (const sentence of conv.sentences) {
+        if (sentence.prerequisites) {
+          arr.push(sentence.prerequisites.map((id) => id.toString()));
+        }
+      }
+      return arr;
+    }
+  }
 }
 
 async function subscribeToConversation(conversationToSubscribe, userLearningData) {
@@ -144,26 +160,29 @@ async function updateWordsSubscription(userLearningDataId, updates) {
   }
 }
 
-async function updateReviewData(reviewedConversationId, success, userLearningData) {
+async function updateReviewData(reviewedConversationId, successArray, userLearningData) {
   if (userLearningData.conversations.find(({ _id }) => _id == reviewedConversationId)) {
     await UserCourseModel.updateOne(
       { _id: userLearningData._id, "conversations._id": reviewedConversationId },
       { $set: { "conversations.$.lastReviewDate": new Date() } }
     );
   }
-  const wordIds = await getWordIdsForConversation(reviewedConversationId, userLearningData.sourceLanguage);
-  const uniqIds = [...new Set(wordIds)];
-  const [wordUpdates, newWordIds] = uniqIds.reduce(
-    ([wordUpdates, newWordIds], wordId) => {
+  const wordIdsBySentence = await getWordIdsForSentences(reviewedConversationId, userLearningData.sourceLanguage);
+  if (successArray.length !== wordIdsBySentence.length) return [];
+  const wordUpdates = [];
+  const newWordIds = [];
+  const alreadyProcessed = [];
+  wordIdsBySentence.forEach((wordIds) =>
+    wordIds.forEach((wordId, index) => {
+      if (alreadyProcessed.includes(wordId)) return;
+      alreadyProcessed.push(wordId);
       const word = userLearningData.words.find(({ _id }) => _id == wordId);
       if (word) {
-        wordUpdates.push(getUpdate(word, success));
+        wordUpdates.push(getUpdate(word, successArray[index]));
       } else {
         newWordIds.push(wordId);
       }
-      return [wordUpdates, newWordIds];
-    },
-    [[], []]
+    })
   );
 
   if (wordUpdates.length > 0) await updateWords(userLearningData._id, wordUpdates);

@@ -88,7 +88,7 @@ export interface Conversation {
 }
 
 export interface ReviewItem extends Conversation {
-  alreadyFailed: boolean;
+  multiLingualSentences: { sourceLanguage: Sentence; targetLanguage: Sentence; success: boolean }[];
 }
 
 export interface DashboardData {

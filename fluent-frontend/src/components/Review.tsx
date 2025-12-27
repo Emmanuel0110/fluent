@@ -17,14 +17,13 @@ function Review() {
     fetchNewReviewItems();
   }, []);
 
-  const nextConversation = async (success: boolean): Promise<void> => {
+  const nextConversation = async (successArray: boolean[]): Promise<void> => {
     const currentConversation = reviewList[0];
-    if (success) {
+    if (successArray.every((success) => success)) {
       setReviewList((reviewList) => reviewList.slice(1));
-      await updateRemoteConversationReviewStatus(currentConversation._id, currentConversation.alreadyFailed);
+      await updateRemoteConversationReviewStatus(currentConversation._id, successArray);
       if (reviewList.length <= 1) fetchNewReviewItems();
     } else {
-      currentConversation.alreadyFailed = true;
       setReviewList((reviewList) => [...reviewList.slice(1), currentConversation]);
     }
   };
@@ -35,7 +34,10 @@ function Review() {
         setReviewList((reviewList) =>
           updateCacheWithNewConversations(reviewList, newReviewList, targetLanguage).map((reviewItem) => ({
             ...reviewItem,
-            alreadyFailed: false,
+            multiLingualSentences: reviewItem.multiLingualSentences.map((multiLingualSentence) => ({
+              ...multiLingualSentence,
+              success: true,
+            })),
           }))
         );
       }

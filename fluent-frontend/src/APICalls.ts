@@ -155,11 +155,8 @@ export const unsubscribeToRemoteConversation = async (id: string) => {
   });
 };
 
-export const updateRemoteConversationReviewStatus = async (id: string, failed: boolean) => {
-  const body = JSON.stringify({
-    reviewedConversationId: id,
-    success: !failed,
-  });
+export const updateRemoteConversationReviewStatus = async (reviewedConversationId: string, successArray: boolean[]) => {
+  const body = JSON.stringify({ reviewedConversationId, successArray });
   return customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
     return { success: false, message: err.message };

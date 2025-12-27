@@ -218,8 +218,8 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
   const updateConversationReviewStatus = async (reviewItem: ReviewItem) => {
     const conversationId = reviewItem._id;
-    const successOnFirstTry = !reviewItem.alreadyFailed;
-    await updateRemoteConversationReviewStatus(conversationId, successOnFirstTry);
+    const successArray = reviewItem.multiLingualSentences.map(({ success }) => success);
+    await updateRemoteConversationReviewStatus(conversationId, successArray);
   };
 
   const getConversationById = (id: string): Promise<Conversation> => {
