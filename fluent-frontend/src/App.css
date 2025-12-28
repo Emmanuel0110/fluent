@@ -171,7 +171,7 @@ button:focus {
 
 .subscribe {
   cursor: pointer;
-  mask: url(./images/star-regular.svg); /*google icons*/
+  mask: url(/images/star-regular.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
   width: 1.5rem;
@@ -187,7 +187,7 @@ button:focus {
 
 .edit {
   cursor: pointer;
-  mask: url(./images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  mask: url(/images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
   width: 1.5rem;
@@ -198,7 +198,7 @@ button:focus {
 }
 .delete {
   cursor: pointer;
-  mask: url(./images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
+  mask: url(/images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
   background: #8a8a8a;
   margin: auto;
   width: 1.5rem;
@@ -275,7 +275,7 @@ button:focus {
 
 .filterClose {
   cursor: pointer;
-  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
   background: rgb(151, 151, 151);
   display: inline-block;
   width: 1.5ch;
@@ -291,7 +291,7 @@ button:focus {
 
 .lineClose {
   cursor: pointer;
-  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
   background: rgb(151, 151, 151);
   width: 1.5ch;
   height: 1.5ch;
@@ -311,7 +311,7 @@ button:focus {
 
 .tabClose {
   cursor: pointer;
-  mask: url(images/times-solid.svg); /*https://fontawesome.com/license*/
+  mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
   background: rgb(151, 151, 151);
   width: 1.5ch;
   height: 1.5ch;
@@ -361,7 +361,7 @@ button:focus {
 }
 
 .pannelClose {
-  mask: url(images/tab_close_FILL0_wght400_GRAD0_opsz24.svg); /*https://fontawesome.com/license*/
+  mask: url(/images/tab_close_FILL0_wght400_GRAD0_opsz24.svg); /*https://fontawesome.com/license*/
   background: rgb(129, 129, 129);
   width: 3ch;
   height: 3ch;
@@ -383,7 +383,7 @@ a.nav-link {
   position: absolute;
   top: -27px;
   left: -10px;
-  mask: url(images/circle-solid.svg); /*https://fontawesome.com/license*/
+  mask: url(/images/circle-solid.svg); /*https://fontawesome.com/license*/
   background: rgb(151, 151, 151);
   width: 5px;
   height: 5px;

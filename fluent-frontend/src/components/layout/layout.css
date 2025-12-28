@@ -79,7 +79,7 @@
 
 #cancelFilterForSearch {
   cursor: pointer;
-  mask: url("../../images/filter_alt_off_FILL0_wght400_GRAD0_opsz24.svg"); /*google icons*/
+  mask: url("/images/filter_alt_off_FILL0_wght400_GRAD0_opsz24.svg"); /*google icons*/
   background: #848383;
   background-size: cover;
   display: inline-block;
@@ -137,7 +137,7 @@
   height: 1.5rem;
   cursor: pointer;
   background-color: white;
-  mask: url(../../images/profile-icon.svg);
+  mask: url(/images/profile-icon.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
   mask-size: contain;
@@ -181,7 +181,7 @@
   height: 1.5rem;
   cursor: pointer;
   background-color: white;
-  mask: url(../../images/logout_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
+  mask: url(/images/logout_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
   mask-size: contain;
@@ -192,7 +192,7 @@
   height: 1.5rem;
   cursor: pointer;
   background-color: white;
-  mask: url(../../images/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
+  mask: url(/images/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
   display: none;

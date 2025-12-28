@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="expTitle" style="--main:#d9534f; --accent:#ffffff;">
+  <title id="expTitle">Expert</title>
+  <rect width="64" height="64" rx="12" fill="none"/>
+  <rect x="4" y="4" width="56" height="56" rx="10" fill="var(--main)" opacity="0.12"/>
+  <!-- crown base -->
+  <path d="M12 38 h40 v4 a4 4 0 0 1 -4 4 H16 a4 4 0 0 1 -4 -4 z" fill="var(--main)" />
+  <!-- crown points -->
+  <path d="M14 36 l7 -14 6 8 6 -12 6 10 7 -6" fill="none" stroke="var(--main)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- centered star above crown -->
+  <polygon points="32,14 34,19 39,20 35,23 36,28 32,25 28,28 29,23 25,20 30,19" fill="var(--main)"/>
+</svg>

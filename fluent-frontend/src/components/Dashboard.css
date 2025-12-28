@@ -278,7 +278,7 @@
 }
 
 .rank-Beginner {
-  mask: url(./../images/sprout.svg);
+  mask: url(/images/sprout.svg);
   background: #2cbd00;
   margin: auto;
   width: 4rem;
@@ -289,7 +289,7 @@
 }
 
 .rank-Amateur {
-  mask: url(./../images/book.svg);
+  mask: url(/images/book.svg);
   background: #2cbd00;
   margin: auto;
   width: 4rem;
@@ -300,7 +300,7 @@
 }
 
 .rank-Advanced {
-  mask: url(./../images/medal.svg);
+  mask: url(/images/medal.svg);
   background: #2cbd00;
   margin: auto;
   width: 4rem;
@@ -311,7 +311,7 @@
 }
 
 .rank-Expert {
-  mask: url(./../images/crown.svg);
+  mask: url(/images/crown.svg);
   background: #8a8a8a;
   margin: auto;
   width: 4rem;
