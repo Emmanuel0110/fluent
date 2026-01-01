@@ -69,7 +69,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
       }
     }
     if (_id) {
-      setSourceWord((word) => (word ? { ...word, translations: [...word.translations, _id!] } : undefined)); // TS2345 error if I don't put a !
+      setSourceWord((word) => (word ? { ...word, translations: [...word.translations, _id] } : undefined));
       setLocalDescription("");
     } else if (label && sourceWord) {
       saveWord({
@@ -163,7 +163,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
       }
     }
     if (_id) {
-      setTargetWord((word) => (word ? { ...word, targetLanguage: [...word.translations, _id!] } : undefined));
+      setTargetWord((word) => (word ? { ...word, translations: [...word.translations, _id] } : undefined));
       setLocalDescription("");
     } else if (label && targetWord) {
       saveWord({
@@ -217,7 +217,11 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <div className="word-tags">
                 {sourceWord.tags.map((tagId) => {
                   const tag = wordTags.find((tag) => tag._id === tagId);
-                  return tag ? <span key={tagId} className="word-tag">{tag.label}</span> : undefined;
+                  return tag ? (
+                    <span key={tagId} className="word-tag">
+                      {tag.label}
+                    </span>
+                  ) : undefined;
                 })}
               </div>
             )}
@@ -268,7 +272,11 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <div className="word-tags">
                 {targetWord.tags.map((tagId) => {
                   const tag = wordTags.find((tag) => tag._id === tagId);
-                  return tag ? <span key={tagId} className="word-tag">{tag.label}</span> : undefined;
+                  return tag ? (
+                    <span key={tagId} className="word-tag">
+                      {tag.label}
+                    </span>
+                  ) : undefined;
                 })}
               </div>
             )}

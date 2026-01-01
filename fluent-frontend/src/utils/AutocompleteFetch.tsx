@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { Overlay } from "react-bootstrap";
 import { Placement } from "react-bootstrap/esm/types";
-import { throttle } from 'lodash';
+import { throttle } from "lodash";
 
 type DropDownList = { _id: string; label: string }[];
 type FetchCallback = (searchString: string) => Promise<DropDownList>;
@@ -100,10 +100,8 @@ const AutoCompleteFetch = forwardRef<HTMLInputElement, AutoCompleteFetchProps>(
     const forwardedRef = useForwardRef<HTMLInputElement>(ref);
     const [dropdownList, setDropdownList] = useState<DropDownList>([]);
 
-    const throttleFetchCallback = useMemo(() =>
-      throttle(fetchCallback, 500, { leading: true, trailing: true }),
-    []);
-    
+    const throttleFetchCallback = useMemo(() => throttle(fetchCallback, 500, { leading: true, trailing: true }), []);
+
     useEffect(() => {
       if (currentSearch !== "") {
         throttleFetchCallback(currentSearch).then((newList) =>
@@ -119,7 +117,7 @@ const AutoCompleteFetch = forwardRef<HTMLInputElement, AutoCompleteFetchProps>(
     }, [searchInput]);
 
     //Click outside feature ------------------
-    const dropdownMenuRef: any = useRef();
+    const dropdownMenuRef: any = useRef(null);
     useEffect(() => {
       if (editingMode) document.addEventListener("click", globalClickListener);
       return () => document.removeEventListener("click", globalClickListener);

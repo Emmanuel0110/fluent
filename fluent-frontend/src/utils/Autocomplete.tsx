@@ -116,7 +116,7 @@ const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
     }, [searchInput]);
 
     //Click outside feature ------------------
-    const dropdownMenuRef: any = useRef();
+    const dropdownMenuRef: any = useRef(null);
     useEffect(() => {
       if (editingMode) document.addEventListener("click", globalClickListener);
       return () => document.removeEventListener("click", globalClickListener);
