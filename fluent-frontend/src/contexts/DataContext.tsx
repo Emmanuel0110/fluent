@@ -136,12 +136,14 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   };
 
   const deleteWord = async (id: string) => {
-    await deleteRemoteWord(id);
-    setWords((words) => {
-      const newState = { ...words };
-      delete newState[id];
-      return newState;
-    });
+    const res = await deleteRemoteWord(id);
+    if (res.success) {
+      setWords((words) => {
+        const newState = { ...words };
+        delete newState[id];
+        return newState;
+      });
+    }
   };
 
   const saveWordTag = async (args: { language: string; label: string }) => {

@@ -296,6 +296,19 @@ export const validateWordUpdate = [
   handleValidationErrors,
 ];
 
+export const validateWordDelete = [
+  param("id")
+    .notEmpty()
+    .withMessage("Word ID is required")
+    .custom((value) => {
+      if (!isValidObjectId(value)) {
+        throw new Error("Word ID must be a valid ObjectId");
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
 // Tag validation rules
 export const validateConversationTagCreate = [
   body("labels").isArray({ min: 1 }).withMessage("Labels must be a non-empty array"),

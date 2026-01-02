@@ -1,6 +1,11 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
-import { validateWordQuery, validateWordCreate, validateWordUpdate } from "../middleware/validation.js";
+import {
+  validateWordQuery,
+  validateWordCreate,
+  validateWordUpdate,
+  validateWordDelete,
+} from "../middleware/validation.js";
 import { sanitizeText } from "../utils/sanitize.js";
 import express from "express";
 import mongoose from "mongoose";
@@ -54,7 +59,7 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   const { id: _id } = req.params;
   const filter = { _id };
   const { tags, text, language, translations } = req.body;
-  
+
   // Sanitize word text
   const sanitizedText = text ? sanitizeText(text) : text;
   await LexicalItemModel.updateOne(filter, { text: sanitizedText, language, tags });
@@ -73,6 +78,12 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
     subscribed: !!req.userLearningData.words.find(({ _id }) => _id === word._id),
   };
   res.json({ success: true, data: completedWord });
+});
+
+router.delete("/:id", auth, validateWordDelete, async function (req, res) {
+  const { id: _id } = req.params;
+  await LexicalItemModel.deleteOne({ _id });
+  res.json({ success: true });
 });
 
 function generateAggregationPipeline(language, translationLanguage, lastUpdateDate) {
