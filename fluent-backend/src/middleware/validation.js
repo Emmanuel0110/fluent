@@ -321,7 +321,7 @@ export const validateConversationTagCreate = [
       }
       return true;
     }),
-  body("labels.*.text")
+  body("labels.*.label")
     .trim()
     .notEmpty()
     .withMessage("Label text is required")

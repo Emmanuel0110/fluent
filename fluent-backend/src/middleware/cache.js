@@ -1,4 +1,4 @@
-import { cacheUserLearningData } from "../controlers/userControlers.js";
+import { cacheUserLearningData } from "../controllers/userControllers.js";
 import { redisClient } from "../../index.js";
 import { UserModel, UserCourseModel } from "../models.js";
 import mongoose from "mongoose";

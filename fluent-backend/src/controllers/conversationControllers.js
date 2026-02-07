@@ -9,7 +9,7 @@ import { sanitizeObject } from "../utils/sanitize.js";
 import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
-import { getConversationsForWords } from "./reviewControlers.js";
+import { getConversationsForWords } from "./reviewControllers.js";
 const router = express.Router();
 
 router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
