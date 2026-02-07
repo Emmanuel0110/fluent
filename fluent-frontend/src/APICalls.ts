@@ -101,16 +101,38 @@ export const editRemoteConversation = async (
   );
 };
 
-export const saveNewConversationTag = async ({ _id, ...infos }: ConversationTag) => {
-  const body = JSON.stringify(infos);
+const formatConversationTag = (tag: Partial<ConversationTag>, appSourceLanguage: string, appTargetLanguage: string) => {
+  const { sourceLabel, targetLabel } = tag;
+  return {
+    labels: [
+      { language: appSourceLanguage, label: sourceLabel || "" },
+      { language: appTargetLanguage, label: targetLabel || "" },
+    ],
+  };
+};
+
+export const saveNewConversationTag = async (
+  tag: ConversationTag,
+  appSourceLanguage: string,
+  appTargetLanguage: string
+) => {
+  const { _id, ...infos } = tag;
+  const formattedTag = formatConversationTag(infos, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedTag);
   return customFetch(url + "conversationTags", { method: "POST", headers: authHeaders(), body }).catch((err: Error) => {
     console.log(err);
     return { success: false, message: err.message };
   });
 };
 
-export const editRemoteConversationTag = async ({ _id, ...infos }: ConversationTag) => {
-  const body = JSON.stringify(infos);
+export const editRemoteConversationTag = async (
+  tag: ConversationTag,
+  appSourceLanguage: string,
+  appTargetLanguage: string
+) => {
+  const { _id, ...infos } = tag;
+  const formattedTag = formatConversationTag(infos, appSourceLanguage, appTargetLanguage);
+  const body = JSON.stringify(formattedTag);
   return customFetch(url + "conversationTags/" + _id, { method: "PUT", headers: authHeaders(), body }).catch(
     (err: Error) => {
       console.log(err);

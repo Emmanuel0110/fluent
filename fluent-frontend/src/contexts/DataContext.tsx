@@ -170,7 +170,9 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   };
 
   const saveConversationTag = async (infos: ConversationTag) => {
-    const res = await (infos._id ? editRemoteConversationTag(infos) : saveNewConversationTag(infos));
+    const res = await (infos._id
+      ? editRemoteConversationTag(infos, sourceLanguage, targetLanguage)
+      : saveNewConversationTag(infos, sourceLanguage, targetLanguage));
 
     if (res.success) {
       setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
