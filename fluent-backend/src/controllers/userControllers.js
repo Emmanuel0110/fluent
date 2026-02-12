@@ -61,7 +61,7 @@ router.post(
 
     const token = jwt.sign({ _id: userObj._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete userObj.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   })
 );
@@ -87,7 +87,7 @@ router.post(
 
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete user.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
     res.json({ token, user, sourceLanguage, targetLanguage });
   })
 );
@@ -98,34 +98,37 @@ router.get(
   auth,
   asyncHandler(async function (req, res) {
     const user = await UserModel.findById(req.user._id);
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(user);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
     res.json({ user, sourceLanguage, targetLanguage });
   })
 );
 
-export async function cacheUserLearningData(user) {
-  let course;
+export async function cacheUserCourse(user) {
+  let userCourse;
   if (user.lastCourseId) {
-    course = await UserCourseModel.findById(user.lastCourseId).lean();
+    userCourse = await UserCourseModel.findById(user.lastCourseId).lean();
   } else if (user.courses.length > 0) {
     await UserModel.findByIdAndUpdate(user._id, { lastCourseId: user.courses[0] });
-    course = await UserCourseModel.findById(user.courses[0]).lean();
+    userCourse = await UserCourseModel.findById(user.courses[0]).lean();
   } else {
     const availableLanguages = await LanguageModel.find().select("-flag");
-    course = new UserCourseModel({
+    userCourse = new UserCourseModel({
       sourceLanguage: availableLanguages.find((language) => language.label === "fr")?._id,
       targetLanguage: availableLanguages.find((language) => language.label === "en")?._id,
       wishListConversations: [],
       words: [],
       conversations: [],
     });
-    await course.save();
-    await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
+    await userCourse.save();
+    await UserModel.findByIdAndUpdate(user._id, {
+      lastCourseId: userCourse._id,
+      $addToSet: { courses: userCourse._id },
+    });
   }
   if (redisClient) {
-    await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+    await redisClient.set(`userCourse:${user._id}`, JSON.stringify(userCourse), { EX: 3600 });
   }
-  return course;
+  return userCourse;
 }
 
 router.patch(
@@ -168,9 +171,9 @@ router.patch(
 );
 
 export async function updateLanguages(user, sourceLanguage, targetLanguage) {
-  let course = await UserCourseModel.findOne({ _id: { $in: user.courses }, sourceLanguage, targetLanguage });
-  if (!course) {
-    course = await new UserCourseModel({
+  let userCourse = await UserCourseModel.findOne({ _id: { $in: user.courses }, sourceLanguage, targetLanguage });
+  if (!userCourse) {
+    userCourse = await new UserCourseModel({
       sourceLanguage,
       targetLanguage,
       wishListConversations: [],
@@ -178,9 +181,12 @@ export async function updateLanguages(user, sourceLanguage, targetLanguage) {
       conversations: [],
     }).save();
   }
-  await UserModel.findByIdAndUpdate(user._id, { lastCourseId: course._id, $addToSet: { courses: course._id } });
+  await UserModel.findByIdAndUpdate(user._id, {
+    lastCourseId: userCourse._id,
+    $addToSet: { courses: userCourse._id },
+  });
   if (redisClient) {
-    await redisClient.set(`userLearningData:${user._id}`, JSON.stringify(course), { EX: 3600 });
+    await redisClient.set(`userCourse:${user._id}`, JSON.stringify(userCourse), { EX: 3600 });
   }
 }
 
@@ -403,7 +409,7 @@ router.post(
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     const userObj = user.toObject();
     delete userObj.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   })
@@ -467,7 +473,7 @@ router.post(
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     const userObj = user.toObject();
     delete userObj.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   })
@@ -531,7 +537,7 @@ router.post(
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     const userObj = user.toObject();
     delete userObj.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserLearningData(userObj);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   })

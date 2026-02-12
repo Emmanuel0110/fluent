@@ -16,7 +16,7 @@ router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
   const MAX_NUMBER_OF_CONVERSATIONS = 10;
   try {
     const { tag, conversationId, wordId } = req.query;
-    const { conversations: userConversations, sourceLanguage, targetLanguage } = req.userLearningData;
+    const { conversations: userConversations, sourceLanguage, targetLanguage } = req.userCourse;
     if (tag) {
       const conversations = await MultiLingualConversationModel.find({ tags: { $in: [tag] } }).lean();
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
@@ -32,7 +32,7 @@ router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
       };
       res.json({ success: true, data: completedConversation });
     } else if (wordId) {
-      const conversations = await getConversationsForWords([wordId], req.userLearningData);
+      const conversations = await getConversationsForWords([wordId], req.userCourse);
       res.json({
         success: true,
         data: completeConversations(conversations.slice(0, MAX_NUMBER_OF_CONVERSATIONS), userConversations),
@@ -90,7 +90,7 @@ router.put("/:id", auth, cache, validateConversationUpdate, async function (req,
   await MultiLingualConversationModel.updateOne(filter, { tags });
   await MultiLingualConversationModel.updateOne(filter, {
     $pull: {
-      conversations: { language: { $in: [req.userLearningData.sourceLanguage, req.userLearningData.targetLanguage] } },
+      conversations: { language: { $in: [req.userCourse.sourceLanguage, req.userCourse.targetLanguage] } },
     },
   });
   const conversation = await MultiLingualConversationModel.findOneAndUpdate(
@@ -100,7 +100,7 @@ router.put("/:id", auth, cache, validateConversationUpdate, async function (req,
   ).lean();
   const completedConversation = {
     ...conversation,
-    subscribed: !!req.userLearningData.conversations.find(({ _id }) => _id === conversation._id),
+    subscribed: !!req.userCourse.conversations.find(({ _id }) => _id === conversation._id),
   };
   res.json({ success: true, data: completedConversation });
 });

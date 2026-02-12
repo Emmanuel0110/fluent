@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 const router = express.Router();
 
 router.get("/", auth, cache, (req, res) => {
-  const { sourceLanguage, targetLanguage } = req.userLearningData;
+  const { sourceLanguage, targetLanguage } = req.userCourse;
   ConversationTagModel.aggregate([
     {
       $match: {

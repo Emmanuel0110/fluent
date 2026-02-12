@@ -8,7 +8,7 @@ import express from "express";
 const router = express.Router();
 
 router.get("/", auth, cache, (req, res) => {
-  const { sourceLanguage } = req.userLearningData;
+  const { sourceLanguage } = req.userCourse;
   WordTagModel.find({ language: sourceLanguage })
     .limit(10000)
     .then((tags) => {

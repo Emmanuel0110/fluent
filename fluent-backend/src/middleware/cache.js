@@ -1,4 +1,4 @@
-import { cacheUserLearningData } from "../controllers/userControllers.js";
+import { cacheUserCourse } from "../controllers/userControllers.js";
 import { redisClient } from "../../index.js";
 import { UserModel, UserCourseModel } from "../models.js";
 import mongoose from "mongoose";
@@ -7,36 +7,36 @@ async function cache(req, res, next) {
   const userId = req.user._id;
   let cachedData = null;
   if (redisClient) {
-    cachedData = await redisClient.get(`userLearningData:${userId}`);
+    cachedData = await redisClient.get(`userCourse:${userId}`);
   }
 
-  let userLearningData;
+  let userCourse;
 
   if (cachedData) {
-    userLearningData = JSON.parse(cachedData);
+    userCourse = JSON.parse(cachedData);
 
     // ✅ Recast all _id fields that you’ll use in Mongo queries
-    if (Array.isArray(userLearningData.conversations)) {
-      userLearningData.conversations = userLearningData.conversations.map((conv) => ({
+    if (Array.isArray(userCourse.conversations)) {
+      userCourse.conversations = userCourse.conversations.map((conv) => ({
         ...conv,
         _id: new mongoose.Types.ObjectId(conv._id),
       }));
     }
 
     // Also cast sourceLanguage/targetLanguage:
-    userLearningData.sourceLanguage = new mongoose.Types.ObjectId(userLearningData.sourceLanguage);
-    userLearningData.targetLanguage = new mongoose.Types.ObjectId(userLearningData.targetLanguage);
+    userCourse.sourceLanguage = new mongoose.Types.ObjectId(userCourse.sourceLanguage);
+    userCourse.targetLanguage = new mongoose.Types.ObjectId(userCourse.targetLanguage);
   } else {
-    userLearningData = await UserModel.findById(userId).then((user) => cacheUserLearningData(user));
+    userCourse = await UserModel.findById(userId).then((user) => cacheUserCourse(user));
   }
 
-  req.userLearningData = userLearningData;
+  req.userCourse = userCourse;
   next();
 }
 
-export async function refreshLearningDataCache(userCourseId, userId) {
-  const course = await UserCourseModel.findById(userCourseId);
-  await redisClient.set(`userLearningData:${userId}`, JSON.stringify(course), { EX: 3600 });
+export async function refreshUserCourseCache(userCourseId, userId) {
+  const userCourse = await UserCourseModel.findById(userCourseId);
+  await redisClient.set(`userCourse:${userId}`, JSON.stringify(userCourse), { EX: 3600 });
 }
 
 export default cache;

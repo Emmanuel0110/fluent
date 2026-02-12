@@ -10,8 +10,8 @@ router.get("/suggestions", auth, cache, getSuggestionsEasyConversations);
 
 async function getSuggestionsEasyConversations(req, res) {
   try {
-    const suggestedConversations = req.userLearningData
-      ? (await getUnsubscribedConversations(req.userLearningData)).slice(0, 10)
+    const suggestedConversations = req.userCourse
+      ? (await getUnsubscribedConversations(req.userCourse)).slice(0, 10)
       : [];
     //console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
     res.json({
@@ -34,8 +34,8 @@ async function getSuggestionsEasyConversations(req, res) {
 
 async function getNextReviewItems(req, res) {
   try {
-    // console.log("🔍 Debug - userLearningData:", req.userLearningData); // Add this
-    const nextReviewItems = req.userLearningData ? await getReviewItems(req.userLearningData) : []; //TODO, set userLearningData when user first chooses a language
+    // console.log("🔍 Debug - userCourse:", req.userCourse); // Add this
+    const nextReviewItems = req.userCourse ? await getReviewItems(req.userCourse) : []; // TODO: set userCourse when user first chooses a language
     // console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
     res.json({ success: true, data: nextReviewItems });
   } catch (error) {
@@ -47,7 +47,7 @@ async function getNextReviewItems(req, res) {
   }
 }
 
-async function getReviewItems(userLearningData) {
+async function getReviewItems(userCourse) {
   const MAX_REVIEW_ITEMS = 10;
   const reviewStrategies = [
     { type: "lateReviewWords", handler: getLateReviewItems },
@@ -57,24 +57,24 @@ async function getReviewItems(userLearningData) {
 
   for (const strategy of reviewStrategies) {
     //console.log(`🔍 Debug - Trying strategy: ${strategy.type}`); // Add this
-    const reviewItems = await strategy.handler(userLearningData);
+    const reviewItems = await strategy.handler(userCourse);
     //console.log(`🔍 Debug - ${strategy.type} returned:`, reviewItems.length, "items"); // Add this
     if (reviewItems.length > 0) return reviewItems.slice(0, MAX_REVIEW_ITEMS);
   }
   return [];
 }
 
-async function getLateReviewItems(userLearningData) {
-  const lateReviewWordIds = getLateReviewWordIds(userLearningData.words);
+async function getLateReviewItems(userCourse) {
+  const lateReviewWordIds = getLateReviewWordIds(userCourse.words);
   //console.log(`🔍 Debug - lateReviewWordIds: ${lateReviewWordIds}`);
   if (lateReviewWordIds.length === 0) return [];
 
-  const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userLearningData);
+  const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userCourse);
   return knownConversations.map((conversation) => ({ ...conversation, subscribed: true }));
 }
 
-async function getWishListReviewItems(userLearningData) {
-  const { wishListConversations, sourceLanguage, targetLanguage } = userLearningData;
+async function getWishListReviewItems(userCourse) {
+  const { wishListConversations, sourceLanguage, targetLanguage } = userCourse;
   const MAX_ITEM = 10;
   if (wishListConversations.length > 0) {
     return (
@@ -88,14 +88,14 @@ async function getWishListReviewItems(userLearningData) {
   } else return [];
 }
 
-async function getStoryReviewItems(userLearningData) {
-  if (userLearningData.nextStoryNodeId) {
-    const storyNode = await StoryNodeModel.findById(userLearningData.nextStoryNodeId);
+async function getStoryReviewItems(userCourse) {
+  if (userCourse.nextStoryNodeId) {
+    const storyNode = await StoryNodeModel.findById(userCourse.nextStoryNodeId);
     const missingPrerequisites = storyNode.prerequisites.filter(
-      (prerequisite) => !userLearningData.words.find(({ _id }) => prerequisite == _id)
+      (prerequisite) => !userCourse.words.find(({ _id }) => prerequisite == _id)
     );
     if (missingPrerequisites.length > 0) {
-      const easyConversations = await getEasyConversationsForWords(missingPrerequisites, userLearningData);
+      const easyConversations = await getEasyConversationsForWords(missingPrerequisites, userCourse);
       return easyConversations.map((conversation) => ({ ...conversation, subscribed: false }));
     }
   }
@@ -111,10 +111,10 @@ function getLateReviewWordIds(reviewWords) {
     .map(({ _id }) => _id);
 }
 
-async function getKnownConversationsForWords(wordIds, userLearningData) {
-  const conversations = await getConversationsForWords(wordIds, userLearningData);
+async function getKnownConversationsForWords(wordIds, userCourse) {
+  const conversations = await getConversationsForWords(wordIds, userCourse);
   //console.log(`🔍 Debug - conversations: ${conversations}`);
-  const userConversations = userLearningData.conversations;
+  const userConversations = userCourse.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
     const lastReviewDate = userConversations.find(({ _id }) => _id.equals(conversation._id))?.lastReviewDate;
     if (lastReviewDate) {
@@ -173,9 +173,9 @@ function getWordsFromConversation(conversation) {
   }, []);
 }
 
-async function getEasyConversationsForWords(wordIds, userLearningData) {
-  const multiLingualConversations = await getConversationsForWords(wordIds, userLearningData);
-  const userWords = userLearningData.words;
+async function getEasyConversationsForWords(wordIds, userCourse) {
+  const multiLingualConversations = await getConversationsForWords(wordIds, userCourse);
+  const userWords = userCourse.words;
   const easyConversations = multiLingualConversations.reduce((acc, multiLingualConversation) => {
     const maxDifficulty = 100;
     let difficulty = 0,
@@ -199,16 +199,16 @@ async function getEasyConversationsForWords(wordIds, userLearningData) {
   return Object.values(easyConversations);
 }
 
-async function getUnsubscribedConversations(userLearningData) {
+async function getUnsubscribedConversations(userCourse) {
   return MultiLingualConversationModel.aggregate([
     // Step 1: Match conversations containing sentences with wordIds in prerequisites
     {
       $match: {
-        _id: { $nin: userLearningData.conversations.map(({ _id }) => _id) },
+        _id: { $nin: userCourse.conversations.map(({ _id }) => _id) },
         "conversations.language": {
           $all: [
-            new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
-            new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+            new mongoose.Types.ObjectId(userCourse.sourceLanguage),
+            new mongoose.Types.ObjectId(userCourse.targetLanguage),
           ],
         },
       },
@@ -227,8 +227,8 @@ async function getUnsubscribedConversations(userLearningData) {
               $in: [
                 "$$conversation.language",
                 [
-                  new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
-                  new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+                  new mongoose.Types.ObjectId(userCourse.sourceLanguage),
+                  new mongoose.Types.ObjectId(userCourse.targetLanguage),
                 ],
               ],
             },
@@ -239,7 +239,7 @@ async function getUnsubscribedConversations(userLearningData) {
   ]);
 }
 
-export async function getConversationsForWords(wordIds, userLearningData) {
+export async function getConversationsForWords(wordIds, userCourse) {
   return MultiLingualConversationModel.aggregate([
     // Step 1: Match conversations containing sentences with wordIds in prerequisites
     {
@@ -247,8 +247,8 @@ export async function getConversationsForWords(wordIds, userLearningData) {
         "conversations.sentences.prerequisites": { $in: wordIds.map((id) => new mongoose.Types.ObjectId(id)) },
         "conversations.language": {
           $all: [
-            new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
-            new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+            new mongoose.Types.ObjectId(userCourse.sourceLanguage),
+            new mongoose.Types.ObjectId(userCourse.targetLanguage),
           ],
         },
       },
@@ -267,8 +267,8 @@ export async function getConversationsForWords(wordIds, userLearningData) {
               $in: [
                 "$$conversation.language",
                 [
-                  new mongoose.Types.ObjectId(userLearningData.sourceLanguage),
-                  new mongoose.Types.ObjectId(userLearningData.targetLanguage),
+                  new mongoose.Types.ObjectId(userCourse.sourceLanguage),
+                  new mongoose.Types.ObjectId(userCourse.targetLanguage),
                 ],
               ], // Keep only source and target languages
             },

@@ -14,7 +14,7 @@ import { validateAndParseDate } from "../utils.js";
 const router = express.Router();
 
 router.get("/", auth, cache, validateWordQuery, (req, res) => {
-  const { sourceLanguage, targetLanguage } = req.userLearningData;
+  const { sourceLanguage, targetLanguage } = req.userCourse;
   const lastUpdateDate = validateAndParseDate(req.query.lastUpdateDate);
 
   // Define the two aggregation pipelines
@@ -24,7 +24,7 @@ router.get("/", auth, cache, validateWordQuery, (req, res) => {
   // Run both queries
   Promise.all([LexicalItemModel.aggregate(sourceWordsPipeline), LexicalItemModel.aggregate(targetWordsPipeline)])
     .then(([sourceWords, targetWords]) => {
-      const completedWords = completeWords(sourceWords.concat(targetWords), req.userLearningData.words);
+      const completedWords = completeWords(sourceWords.concat(targetWords), req.userCourse.words);
       res.json({ success: true, data: completedWords });
     })
     .catch((err) => {
@@ -75,7 +75,7 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   ).lean();
   const completedWord = {
     ...word,
-    subscribed: !!req.userLearningData.words.find(({ _id }) => _id === word._id),
+    subscribed: !!req.userCourse.words.find(({ _id }) => _id === word._id),
   };
   res.json({ success: true, data: completedWord });
 });
