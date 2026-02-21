@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { UserCourseModel } from "../models.js";
+import { logger } from "../logger.js";
 
 dotenv.config("./.env");
 
@@ -36,7 +37,7 @@ function computeNumberOfKnownWords(userCourse) {
 
     return score;
   } catch (error) {
-    console.error("Error calculating user score:", error);
+    logger.error({ err: error }, "Error calculating user score");
     return 0;
   }
 }
@@ -53,11 +54,11 @@ await mongoose.connect(
  */
 async function updateAllUserScores() {
   try {
-    console.log("Starting score update process...");
+    logger.info("Starting score update process");
 
     // Get all user courses
     const userCourses = await UserCourseModel.find().lean();
-    console.log(`Found ${userCourses.length} user courses to process`);
+    logger.info({ count: userCourses.length }, "User courses to process");
 
     // Get yesterday's date (set to beginning of day for consistency)
     const today = new Date();
@@ -107,30 +108,29 @@ async function updateAllUserScores() {
 
         updatedCount++;
       } catch (error) {
-        console.error(`Error updating course ${userCourse._id}:`, error);
+        logger.error({ err: error, userCourseId: userCourse._id }, "Error updating course scores");
       }
     }
 
-    console.log(`Score update completed. Updated ${updatedCount} user courses.`);
+    logger.info({ updatedCount, total: userCourses.length }, "Score update completed");
   } catch (error) {
-    console.error("Error in updateAllUserScores:", error);
+    logger.error({ err: error }, "Error in updateAllUserScores");
   }
 }
 
 // Run the update
 try {
   await updateAllUserScores();
-  console.log("Script completed successfully");
+  logger.info("Script completed successfully");
 } catch (error) {
-  console.error("Script failed:", error);
+  logger.error({ err: error }, "Script failed");
   process.exitCode = 1;
 } finally {
   try {
     await mongoose.disconnect();
-    // eslint-disable-next-line no-console
-    console.log("MongoDB connection closed");
+    logger.info("MongoDB connection closed");
   } catch (e) {
-    console.error("Error closing MongoDB connection:", e);
+    logger.error({ err: e }, "Error closing MongoDB connection");
   }
   process.exit();
 }

@@ -4,6 +4,7 @@ import { validateUpdateLearningData } from "../middleware/validation.js";
 import { redisClient } from "../../index.js";
 import { UserCourseModel } from "../models.js";
 import { MultiLingualConversationModel } from "../models.js";
+import { logger } from "../logger.js";
 import express from "express";
 const router = express.Router();
 
@@ -18,12 +19,15 @@ async function updateLearningData(req, res) {
       const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, successArray } = req.body;
       if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, userCourse);
+        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: conversationToSubscribe }, "Subscribed to conversation");
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
         await unsubscribeToConversation(conversationToUnsubscribe, userCourse);
+        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: conversationToUnsubscribe }, "Unsubscribed from conversation");
         res.json({ success: true });
       } else if (reviewedConversationId) {
         await updateReviewData(reviewedConversationId, successArray, userCourse);
+        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: reviewedConversationId }, "Review completed");
         res.json({ success: true });
       }
       if (redisClient) {
@@ -31,7 +35,7 @@ async function updateLearningData(req, res) {
       }
     }
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error }, "Failed to update user course");
     res.status(500).json({
       status: "error",
       message: "Failed to update user course",
@@ -94,7 +98,7 @@ async function subscribeToConversation(conversationToSubscribe, userCourse) {
     if (wordUpdates.length > 0) await updateWordsSubscription(userCourse._id, wordUpdates);
     if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
   } else {
-    console.log("Already subscribed to conversation " + conversationToSubscribe);
+    logger.debug({ conversationToSubscribe }, "Already subscribed to conversation");
   }
 }
 
@@ -115,10 +119,13 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
           } else if (word.numberOfSentencesUsedIn > 1) {
             wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn - 1 });
           } else {
-            console.log("word.numberOfSentencesUsedIn should be > 0 and not equal to " + word.numberOfSentencesUsedIn);
+            logger.warn(
+              { wordId, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn },
+              "word.numberOfSentencesUsedIn should be > 0"
+            );
           }
         } else {
-          console.log("Not subscribed to word " + wordId);
+          logger.debug({ wordId }, "Not subscribed to word");
         }
         return [wordUpdates, wordIdsToRemove];
       },
@@ -128,7 +135,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
     if (wordIdsToUnsubcribe.length > 0) await removeWords(userCourse._id, wordIdsToUnsubcribe);
     return wordIdsToUnsubcribe;
   } else {
-    console.log("Not subscribed to conversation " + conversationToUnsubscribe);
+    logger.debug({ conversationToUnsubscribe }, "Not subscribed to conversation");
   }
 }
 
@@ -139,7 +146,7 @@ async function removeWords(userCourseId, wordIdsToRemove) {
       { $pull: { words: { _id: { $in: wordIdsToRemove } } } }
     );
   } catch (error) {
-    console.error("Error removing multiple items:", error);
+    logger.error({ err: error, userCourseId, wordIdsToRemove }, "Error removing words from user course");
   }
 }
 
@@ -156,7 +163,7 @@ async function updateWordsSubscription(userCourseId, updates) {
 
     await UserCourseModel.updateOne({ _id: userCourseId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
-    console.error("Error updating multiple items:", error);
+    logger.error({ err: error, userCourseId }, "Error updating words subscription");
   }
 }
 
@@ -207,8 +214,6 @@ async function updateWords(userCourseId, updates) {
     const arrayFilters = updates.map((update, index) => ({
       [`element${index}._id`]: update._id,
     }));
-    console.log("arrayFilters", arrayFilters);
-
     const setOperations = updates.reduce((acc, update, index) => {
       acc[`words.$[element${index}].nextReviewDate`] = update.nextReviewDate;
       if (update.reviewDelayInMs) {
@@ -216,11 +221,10 @@ async function updateWords(userCourseId, updates) {
       }
       return acc;
     }, {});
-    console.log("setOperations", setOperations);
 
     await UserCourseModel.updateOne({ _id: userCourseId }, { $set: setOperations }, { arrayFilters });
   } catch (error) {
-    console.error("Error updating multiple items:", error);
+    logger.error({ err: error, userCourseId }, "Error updating words in user course");
   }
 }
 
@@ -279,7 +283,7 @@ async function getDashboardData(req, res) {
       },
     });
   } catch (error) {
-    console.error("Dashboard error:", error);
+    logger.error({ err: error }, "Dashboard error");
     res.status(500).json({
       success: false,
       message: "Failed to get dashboard data",
@@ -312,7 +316,7 @@ export async function calculateUserScore(userCourse) {
 
     return score;
   } catch (error) {
-    console.error("Error calculating user score:", error);
+    logger.error({ err: error }, "Error calculating user score");
     return 0;
   }
 }
@@ -339,7 +343,6 @@ function getPreviousRankScore(currentScore) {
 }
 
 function calculateProgress(currentScore, previousScore, nextScore) {
-  console.log("currentScore, previousScore, nextScore", currentScore, previousScore, nextScore);
   const range = nextScore - previousScore;
   const position = currentScore - previousScore;
   const percentage = Math.round((position / range) * 100);

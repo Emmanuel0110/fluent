@@ -11,6 +11,7 @@ import express from "express";
 import mongoose from "mongoose";
 import { LexicalItemModel } from "../models.js";
 import { validateAndParseDate } from "../utils.js";
+import { logger } from "../logger.js";
 const router = express.Router();
 
 router.get("/", auth, cache, validateWordQuery, (req, res) => {
@@ -28,6 +29,7 @@ router.get("/", auth, cache, validateWordQuery, (req, res) => {
       res.json({ success: true, data: completedWords });
     })
     .catch((err) => {
+      logger.error({ err }, "Words list error");
       res.status(500).json({ success: false, message: err.message });
     });
 });
@@ -45,7 +47,7 @@ router.post("/", auth, validateWordCreate, (req, res) => {
       res.send({ success: true, data: newElement });
     })
     .catch(function (err) {
-      console.log("save error ", err);
+      logger.error({ err }, "Word save error");
       if (err.name === "MongoError" && err.code === 11000) {
         res.json({ success: false, message: "already exists" });
         return;

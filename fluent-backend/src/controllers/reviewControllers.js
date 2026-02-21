@@ -1,6 +1,7 @@
 import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
 import { MultiLingualConversationModel, StoryNodeModel } from "../models.js";
+import { logger } from "../logger.js";
 import express from "express";
 import mongoose from "mongoose";
 const router = express.Router();
@@ -13,33 +14,25 @@ async function getSuggestionsEasyConversations(req, res) {
     const suggestedConversations = req.userCourse
       ? (await getUnsubscribedConversations(req.userCourse)).slice(0, 10)
       : [];
-    //console.log("🔍 Debug - suggestedConversations:", suggestedConversations);
     res.json({
       success: true,
       data: suggestedConversations.map((conversation) => ({ ...conversation, subscribed: false })),
     });
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error }, "Failed to get suggestions");
     res.status(500).json({
       success: false,
       message: "Failed to get suggestions",
     });
   }
-  //get 10 unsubscribed conversations
-  //const NUMBER_OF_UNSUBSCRIBED_CONVERSATIONS = 100;
-
-  //return 10 easiest one
-  //const NUMBER_OF_EASY_CONVERSATIONS = 10;
 }
 
 async function getNextReviewItems(req, res) {
   try {
-    // console.log("🔍 Debug - userCourse:", req.userCourse); // Add this
-    const nextReviewItems = req.userCourse ? await getReviewItems(req.userCourse) : []; // TODO: set userCourse when user first chooses a language
-    // console.log("🔍 Debug - nextReviewItems:", nextReviewItems); // Add this
+    const nextReviewItems = req.userCourse ? await getReviewItems(req.userCourse) : [];
     res.json({ success: true, data: nextReviewItems });
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error }, "Failed to get next review items");
     res.status(500).json({
       success: false,
       message: "Failed to get next review items",
@@ -56,9 +49,8 @@ async function getReviewItems(userCourse) {
   ];
 
   for (const strategy of reviewStrategies) {
-    //console.log(`🔍 Debug - Trying strategy: ${strategy.type}`); // Add this
     const reviewItems = await strategy.handler(userCourse);
-    //console.log(`🔍 Debug - ${strategy.type} returned:`, reviewItems.length, "items"); // Add this
+    logger.debug({ strategy: strategy.type, count: reviewItems.length }, "Review strategy result");
     if (reviewItems.length > 0) return reviewItems.slice(0, MAX_REVIEW_ITEMS);
   }
   return [];
@@ -66,7 +58,6 @@ async function getReviewItems(userCourse) {
 
 async function getLateReviewItems(userCourse) {
   const lateReviewWordIds = getLateReviewWordIds(userCourse.words);
-  //console.log(`🔍 Debug - lateReviewWordIds: ${lateReviewWordIds}`);
   if (lateReviewWordIds.length === 0) return [];
 
   const knownConversations = await getKnownConversationsForWords(lateReviewWordIds, userCourse);
@@ -113,7 +104,6 @@ function getLateReviewWordIds(reviewWords) {
 
 async function getKnownConversationsForWords(wordIds, userCourse) {
   const conversations = await getConversationsForWords(wordIds, userCourse);
-  //console.log(`🔍 Debug - conversations: ${conversations}`);
   const userConversations = userCourse.conversations;
   const knownConversations = conversations.reduce((acc, conversation) => {
     const lastReviewDate = userConversations.find(({ _id }) => _id.equals(conversation._id))?.lastReviewDate;
@@ -122,12 +112,10 @@ async function getKnownConversationsForWords(wordIds, userCourse) {
     }
     return acc;
   }, []);
-  //console.log(`🔍 Debug - knownConversations: ${knownConversations}`);
   const sortedConversations = knownConversations.sort(
     (a, b) => new Date(a.lastReviewDate).getTime() - new Date(b.lastReviewDate).getTime() // ascending order (review the oldest ones to avoid reviewing always the same conversations)
   );
   const selectedConversations = selectUsefulConversations(sortedConversations, [...wordIds]);
-  //console.log(`🔍 Debug - selectedConversations: ${selectedConversations}`);
   return selectedConversations;
 }
 

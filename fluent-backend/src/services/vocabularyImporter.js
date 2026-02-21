@@ -1,5 +1,6 @@
 import { dbService } from "./vocabularyService.js";
 import { vocabularyProcessor } from "./vocabularyProcessor.js";
+import { logger } from "../logger.js";
 
 export async function importVocabulary(arr) {
   if (Array.isArray(arr)) {
@@ -10,7 +11,7 @@ export async function importVocabulary(arr) {
           await setTranslationsAndTagsForTranslations(newWord);
         }
       } catch (error) {
-        console.error("could not import word " + JSON.stringify(element));
+        logger.error({ err: error, element }, "Could not import word");
         throw error;
       }
     }
@@ -27,7 +28,7 @@ export async function importWord(data) {
 
     if (wordFound) {
       if (vocabularyProcessor.sameTagsAndTranslations(wordFound, tagIds, translationsWithIds)) {
-        console.log(`Word ${text} already exists`);
+        logger.debug({ text }, "Word already exists, skip import");
         return null;
       } else {
         const { translations: mergedTranslations, tags: mergedTags } = vocabularyProcessor.prepareTranslationsAndTags(
@@ -56,7 +57,7 @@ export async function importWord(data) {
       return word;
     }
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error, text: data?.text }, "importWord failed");
     throw error;
   }
 }
@@ -68,7 +69,7 @@ async function getWordTags(tags, languageId) {
       const result = await dbService.getWordTag(languageId, tag);
       results.push(result._id);
     } catch (error) {
-      console.error("Error getting word tag", tag, error);
+      logger.error({ err: error, tag, languageId }, "Error getting word tag");
     }
   }
   return results;
@@ -81,7 +82,7 @@ async function getTranslations(translations) {
       const result = await getTranslation(translation);
       results.push(result);
     } catch (error) {
-      console.error("Error getting translation", translation, error);
+      logger.error({ err: error, translation }, "Error getting translation");
     }
   }
   return results;
@@ -97,7 +98,7 @@ async function getTranslation({ language, lexicalItems }) {
       const result = await getWord(languageId, lexicalItem);
       results.push(result);
     } catch (error) {
-      console.error("Error getting lexicalItem", lexicalItem, error);
+      logger.error({ err: error, lexicalItem, languageId }, "Error getting lexical item");
     }
   }
 

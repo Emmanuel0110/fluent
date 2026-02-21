@@ -3,6 +3,7 @@ import cache from "../middleware/cache.js";
 import { validateConversationTagCreate } from "../middleware/validation.js";
 import { sanitizeObject } from "../utils/sanitize.js";
 import { ConversationTagModel } from "../models.js";
+import { logger } from "../logger.js";
 import express from "express";
 import mongoose from "mongoose";
 const router = express.Router();
@@ -44,7 +45,7 @@ router.post("/", auth, validateConversationTagCreate, (req, res) => {
       res.send({ data: newElement });
     })
     .catch(function (err) {
-      console.log("save error ", err);
+      logger.error({ err }, "Conversation tag save error");
       if (err.name === "MongoError" && err.code === 11000) {
         res.json({ success: false, message: "already exists" });
         return;

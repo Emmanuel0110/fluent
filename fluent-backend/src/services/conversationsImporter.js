@@ -1,5 +1,6 @@
 import { dbService } from "./vocabularyService.js";
 import { MultiLingualConversationModel } from "../models.js";
+import { logger } from "../logger.js";
 
 export async function importConversations(arr) {
   if (Array.isArray(arr)) {
@@ -7,7 +8,7 @@ export async function importConversations(arr) {
       try {
         await importConversation(element);
       } catch (error) {
-        console.error("could not import conversation " + JSON.stringify(element));
+        logger.error({ err: error, element }, "Could not import conversation");
         throw error;
       }
     }
@@ -26,7 +27,7 @@ export async function importConversation(data) {
 
     return conversation;
   } catch (error) {
-    console.error(error);
+    logger.error({ err: error }, "importConversation failed");
     throw error;
   }
 }
@@ -38,7 +39,7 @@ async function getConversations(conversations) {
       const result = await getConversation(conversation);
       results.push(result);
     } catch (error) {
-      console.error("Error getting conversation ", conversation, error);
+      logger.error({ err: error, conversation }, "Error getting conversation");
     }
   }
   return results;
@@ -54,7 +55,7 @@ async function getConversation({ language, sentences }) {
       const result = await getSentence(languageId, sentence);
       results.push(result);
     } catch (error) {
-      console.error("Error getting sentence ", sentence, error);
+      logger.error({ err: error, sentence, languageId }, "Error getting sentence");
     }
   }
 
@@ -75,7 +76,7 @@ async function getPrerequisites(languageId, prerequisites) {
       const result = await getWord(languageId, prerequisite);
       results.push(result);
     } catch (error) {
-      console.error("Error getting lexicalItem ", prerequisite, error);
+      logger.error({ err: error, prerequisite, languageId }, "Error getting prerequisite lexical item");
     }
   }
   return results;

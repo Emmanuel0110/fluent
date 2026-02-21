@@ -1,3 +1,5 @@
+import { logger } from "./logger.js";
+
 export function escapeRegExp(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
@@ -25,11 +27,11 @@ export function validateAndParseDate(dateString) {
     if (!isNaN(date.getTime())) {
       return date;
     } else {
-      console.warn(`Invalid date string provided: ${dateString}`);
+      logger.warn({ dateString }, "Invalid date string provided");
       return null;
     }
   } catch (error) {
-    console.warn(`Error parsing date string: ${dateString}`, error);
+    logger.warn({ err: error, dateString }, "Error parsing date string");
     return null;
   }
 }

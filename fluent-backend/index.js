@@ -18,6 +18,7 @@ import { createClient } from "redis";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { errorHandler } from "./src/middleware/errorHandler.js";
+import { logger } from "./src/logger.js";
 
 const useRedis = !process.argv.includes("--no-redis");
 
@@ -25,11 +26,11 @@ let redisClient = null;
 if (useRedis) {
   const { createClient } = await import("redis");
   redisClient = createClient();
-  redisClient.on("error", (err) => console.log("Redis Client Error", err));
-  redisClient.connect().catch(console.error);
-  console.log("Redis enabled");
+  redisClient.on("error", (err) => logger.error({ err }, "Redis client error"));
+  redisClient.connect().catch((err) => logger.error({ err }, "Redis connect failed"));
+  logger.info("Redis enabled");
 } else {
-  console.log("Redis disabled by --no-redis flag");
+  logger.info("Redis disabled by --no-redis flag");
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -98,13 +99,10 @@ mongoose.connect(
 mongoose.Promise = Promise;
 
 const db = mongoose.connection;
-db.on("error", function (e) {
-  console.error("connection error:", e);
-});
-db.once("open", function (callback) {
-  // the connection to the DB is okay, let's start the application
-  const httpServer = app.listen(process.env.PORT || port, () => {
-    console.log(`Example app listening on port ${process.env.PORT || port}!`);
+db.on("error", (e) => logger.error({ err: e }, "MongoDB connection error"));
+db.once("open", () => {
+  app.listen(process.env.PORT || port, () => {
+    logger.info({ port: process.env.PORT || port }, "Server listening");
   });
 });
 

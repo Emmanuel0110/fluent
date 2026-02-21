@@ -4,6 +4,7 @@ import { validateWordTagCreate } from "../middleware/validation.js";
 import { sanitizeText } from "../utils/sanitize.js";
 import mongoose from "mongoose";
 import { WordTagModel } from "../models.js";
+import { logger } from "../logger.js";
 import express from "express";
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.post("/", auth, validateWordTagCreate, (req, res) => {
       res.send({ success: true, data: newElement });
     })
     .catch(function (err) {
-      console.log("save error ", err);
+      logger.error({ err }, "Word tag save error");
       if (err.name === "MongoError" && err.code === 11000) {
         res.json({ success: false, message: "already exists" });
         return;

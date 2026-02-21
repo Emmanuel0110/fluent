@@ -10,6 +10,7 @@ import { MultiLingualConversationModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
 import { getConversationsForWords } from "./reviewControllers.js";
+import { logger } from "../logger.js";
 const router = express.Router();
 
 router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
@@ -46,7 +47,8 @@ router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
       res.json({ success: true, data: completeConversations(conversations, userConversations) });
     }
   } catch (err) {
-    console.log(err);
+    logger.error({ err }, "Conversations list error");
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 
@@ -70,7 +72,7 @@ router.post("/", auth, validateConversationCreate, async (req, res) => {
       .save()
       .then((newConversation) => res.json({ success: true, data: { ...newConversation, subscribed: false } }));
   } catch (err) {
-    console.log("save error ", err);
+    logger.error({ err }, "Conversation save error");
     if (err.name === "MongoError" && err.code === 11000) {
       res.json({ success: false, message: "already exists" });
       return;

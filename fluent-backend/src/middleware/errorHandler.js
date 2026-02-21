@@ -3,14 +3,18 @@
  * Hides sensitive error details in production
  */
 
+import { logger } from "../logger.js";
+
 export const errorHandler = (err, req, res, next) => {
-  // Log the full error for debugging (server-side only)
-  console.error("Error:", {
-    message: err.message,
-    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
-    path: req.path,
-    method: req.method,
-  });
+  logger.error(
+    {
+      err,
+      path: req.path,
+      method: req.method,
+      ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    },
+    err.message || "Request error"
+  );
 
   // Determine if we're in production
   const isProduction = process.env.NODE_ENV === "production";

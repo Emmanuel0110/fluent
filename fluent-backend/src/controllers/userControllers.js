@@ -16,6 +16,7 @@ import { redisClient } from "../../index.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import rateLimit from "express-rate-limit";
+import { logger } from "../logger.js";
 
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -62,6 +63,7 @@ router.post(
     const token = jwt.sign({ _id: userObj._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete userObj.password;
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
+    logger.info({ userId: userObj._id, username: sanitizedUsername }, "User registered");
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   })
 );
@@ -88,6 +90,7 @@ router.post(
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete user.password;
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
+    logger.info({ userId: user._id }, "User logged in");
     res.json({ token, user, sourceLanguage, targetLanguage });
   })
 );

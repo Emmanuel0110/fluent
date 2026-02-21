@@ -2,6 +2,7 @@ import auth from "../middleware/auth.js";
 import cache from "../middleware/cache.js";
 import { validateFeedback, validateFeedbackQuery } from "../middleware/validation.js";
 import { FeedbackModel, UserModel } from "../models.js";
+import { logger } from "../logger.js";
 import sanitizeHtml from "sanitize-html";
 import express from "express";
 const router = express.Router();
@@ -21,6 +22,7 @@ router.post("/", auth, cache, validateFeedback, async (req, res, next) => {
 
     const feedback = new FeedbackModel({ comment: cleanComment, pageUrl: cleanPageUrl, userId: req.user._id });
     await feedback.save();
+    logger.info({ userId: req.user._id, pageUrl: cleanPageUrl }, "Feedback submitted");
     res.status(201).json({ message: "Feedback saved" });
   } catch (error) {
     // Let the error handler middleware handle this
