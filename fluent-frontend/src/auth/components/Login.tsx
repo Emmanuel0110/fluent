@@ -11,30 +11,29 @@ function Login() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
 
-  // Handle OAuth callback
   useEffect(() => {
     const code = searchParams.get("code");
-    const error = searchParams.get("error");
+    const errorParam = searchParams.get("error");
     const provider = searchParams.get("provider") as "google" | "linkedin" | "facebook" | null;
 
-    if (error) {
-      console.error("OAuth error:", error);
-      // Clear URL parameters
+    if (errorParam) {
+      setError("Sign-in was cancelled or failed.");
       window.history.replaceState({}, document.title, window.location.pathname);
       return;
     }
 
     if (code && provider && (provider === "google" || provider === "linkedin" || provider === "facebook")) {
-      handleOAuthCallback(provider, code, setIsAuthenticated, setUser);
+      handleOAuthCallback(provider, code, setIsAuthenticated, setUser, setError);
     }
   }, [searchParams, setIsAuthenticated, setUser]);
 
   const onSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    login({ username, password }, setIsAuthenticated, setUser);
+    login({ username, password }, setIsAuthenticated, setUser, setError);
   };
 
   const handleGoogleAuth = () => {
@@ -54,6 +53,11 @@ function Login() {
   }
   return (
     <>
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
       <Form id="loginForm">
         <Form.Group className="formgroup">
           <Form.Label>{t("auth.username")}</Form.Label>

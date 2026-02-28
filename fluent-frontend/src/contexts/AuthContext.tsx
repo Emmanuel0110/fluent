@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
 import { loadUser } from "../auth/authActions";
+import { setOnUnauthorized } from "../utils/http-helpers";
 import { User } from "../types";
 
 interface AuthContextType {
@@ -30,6 +31,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    setUser(null);
+    localStorage.removeItem("token");
+  }, []);
+
+  // Global 401 handler: any API call that gets 401 will trigger logout
+  useEffect(() => {
+    setOnUnauthorized(logout);
+    return () => setOnUnauthorized(null);
+  }, [logout]);
+
   // Initialize auth state on mount
   useEffect(() => {
     if (isAuthenticated === null && !loading) {
@@ -37,12 +50,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       loadUser(setUser, setIsAuthenticated, setLoading);
     }
   }, [isAuthenticated, loading]);
-
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    localStorage.removeItem("token"); // Assuming you store token in localStorage
-  };
 
   return (
     <AuthContext.Provider

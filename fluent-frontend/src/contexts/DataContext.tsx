@@ -31,6 +31,13 @@ import {
 } from "../utils/conversationUtils";
 import { formatWord, updateCacheWithNewWordTags } from "../utils/wordUtils";
 import { LocalStorageService } from "../services/localStorageService";
+import { ApiError } from "../utils/http-helpers";
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof ApiError) return err.userMessage;
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
 
 interface DataContextType {
   words: { [id: string]: Word };
@@ -38,11 +45,12 @@ interface DataContextType {
   wordTags: WordTag[];
   conversationTags: ConversationTag[];
   isLoading: boolean;
+  loadError: string | null;
   fetchMoreUsedInConversations: (multiLingualSentenceId: string) => void;
   subscribeToConversation: (conversation: Conversation) => void;
   unsubscribeToConversation: (conversation: Conversation) => void;
   fetchSuggestions: () => Promise<string[]>;
-  getConversationById: (id: string) => Promise<Conversation>;
+  getConversationById: (id: string) => Promise<Conversation | undefined>;
   updateConversationReviewStatus: (conversation: ReviewItem) => Promise<void>;
   saveWord: (infos: Word) => Promise<Word | undefined>;
   deleteWord: (id: string) => Promise<void>;
@@ -77,6 +85,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
   const [wordTags, setWordTags] = useState<WordTag[]>([]);
   const [conversationTags, setConversationTags] = useState<ConversationTag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Load data when authenticated or languages change
@@ -96,6 +105,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     if (!isAuthenticated) return;
 
     setIsLoading(true);
+    setLoadError(null);
     try {
       const localStorageService = new LocalStorageService(sourceLanguage, targetLanguage);
       if (localStorageService.localStorageWords) setWords(localStorageService.localStorageWords);
@@ -104,16 +114,16 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         fetchWordTags(),
         fetchConversationTags(),
         fetchWords(localStorageService.lastUpdateDate),
-        fetchConversations(), // TODO : only for testing. Remove later
+        fetchConversations(),
       ]);
 
       setWordTags(wordTagsData || []);
       setConversationTags(conversationTagsData || []);
       localStorageService.updateLocalStorageWords(newWords);
-      setWords((words) => ({ ...words, ...newWords })); // TODO : profile when words is {} and wordsData is big
+      setWords((words) => ({ ...words, ...newWords }));
       setConversations(formatConversations(conversationsData, targetLanguage) || []);
     } catch (error) {
-      console.error("Error loading data:", error);
+      setLoadError(getErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -226,18 +236,21 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
     await updateRemoteConversationReviewStatus(conversationId, successArray);
   };
 
-  const getConversationById = (id: string): Promise<Conversation> => {
+  const getConversationById = (id: string): Promise<Conversation | undefined> => {
     const conversation = conversations.find(({ _id }) => _id === id);
-    return conversation
-      ? Promise.resolve(conversation)
-      : getRemoteConversationById(id).then(({ newConversation }) => {
-          if (newConversation) {
-            setConversations((conversations) =>
-              updateCacheWithNewConversations(conversations, [newConversation], targetLanguage)
-            );
-          }
-          return newConversation;
-        });
+    if (conversation) return Promise.resolve(conversation);
+    return getRemoteConversationById(id).then((res) => {
+      if (!res || !(res as { success?: boolean }).success) return undefined;
+      const row = (res as { data?: RowConversation }).data;
+      if (row) {
+        setConversations((conversations) =>
+          updateCacheWithNewConversations(conversations, [row], targetLanguage)
+        );
+        const formatted = formatConversations([row], targetLanguage);
+        return formatted[0];
+      }
+      return undefined;
+    });
   };
 
   return (
@@ -248,6 +261,7 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
         wordTags,
         conversationTags,
         isLoading,
+        loadError,
         fetchMoreUsedInConversations,
         subscribeToConversation,
         unsubscribeToConversation,

@@ -1,7 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
 import { url } from "../App";
 import { User } from "../types";
-import { customFetch, authHeaders } from "../utils/http-helpers";
+import { customFetch, authHeaders, ApiError } from "../utils/http-helpers";
+
+function getErrorMessage(err: unknown): string {
+  if (err instanceof ApiError) return err.userMessage;
+  if (err instanceof Error) return err.message;
+  return String(err);
+}
 
 //Check token & load user
 export const loadUser = (
@@ -27,48 +33,46 @@ export const loadUser = (
 export const register = (
   { username, password }: { username: string; password: string },
   setIsAuthenticated: (b: boolean) => void,
-  setUser: (user: any) => void
+  setUser: (user: any) => void,
+  setError?: (message: string) => void
 ) => {
-  const headers = {
-    "Content-Type": "application/json",
-  };
+  setError?.("");
+  const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify({ username, password });
   customFetch(url + "users", { method: "POST", headers, body })
     .then((res: any) => {
-      if (!res.token) {
-        throw Error(res.msg);
-      }
+      if (!res.token) throw new Error(res.message || res.msg || "Registration failed");
       const { user, sourceLanguage, targetLanguage } = res;
       setUser({ ...user, sourceLanguage, targetLanguage });
       setIsAuthenticated(true);
       localStorage.setItem("token", res.token);
     })
-    .catch((err: Error) => {
+    .catch((err) => {
       setIsAuthenticated(false);
+      setError?.(getErrorMessage(err));
     });
 };
 
 export const login = (
   { username, password }: { username: string; password: string },
   setIsAuthenticated: (b: boolean) => void,
-  setUser: (user: any) => void
+  setUser: (user: any) => void,
+  setError?: (message: string) => void
 ) => {
-  const headers = {
-    "Content-Type": "application/json",
-  };
+  setError?.("");
+  const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify({ username, password });
   customFetch(url + "users/auth", { method: "POST", headers, body })
     .then((res) => {
-      if (!res.token) {
-        throw Error(res.msg);
-      }
+      if (!res.token) throw new Error(res.message || res.msg || "Login failed");
       const { user, sourceLanguage, targetLanguage } = res;
       setUser({ ...user, sourceLanguage, targetLanguage });
       setIsAuthenticated(true);
       localStorage.setItem("token", res.token);
     })
-    .catch((err: Error) => {
+    .catch((err) => {
       setIsAuthenticated(false);
+      setError?.(getErrorMessage(err));
     });
 };
 
@@ -84,18 +88,15 @@ export const handleOAuthCallback = (
   provider: "google" | "linkedin" | "facebook",
   code: string,
   setIsAuthenticated: (b: boolean) => void,
-  setUser: (user: any) => void
+  setUser: (user: any) => void,
+  setError?: (message: string) => void
 ) => {
-  const headers = {
-    "Content-Type": "application/json",
-  };
+  const headers = { "Content-Type": "application/json" };
   const body = JSON.stringify({ code });
   const backendUrl = url?.replace(/\/$/, ""); // Remove trailing slash if present
   customFetch(`${backendUrl}/users/auth/${provider}/callback`, { method: "POST", headers, body })
     .then((res) => {
-      if (!res.token) {
-        throw Error(res.msg || "Authentication failed");
-      }
+      if (!res.token) throw new Error(res.message || res.msg || "Authentication failed");
       const { user, sourceLanguage, targetLanguage } = res;
       setUser({ ...user, sourceLanguage, targetLanguage });
       setIsAuthenticated(true);
@@ -103,10 +104,9 @@ export const handleOAuthCallback = (
       // Clear URL parameters
       window.history.replaceState({}, document.title, window.location.pathname);
     })
-    .catch((err: Error) => {
+    .catch((err) => {
       setIsAuthenticated(false);
-      console.error("OAuth authentication error:", err);
-      // Clear URL parameters
+      setError?.(getErrorMessage(err));
       window.history.replaceState({}, document.title, window.location.pathname);
     });
 };
