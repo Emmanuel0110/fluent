@@ -1,7 +1,7 @@
 import auth from "../middleware/auth.js";
 import cache, { refreshUserCourseCache } from "../middleware/cache.js";
 import { validateUpdateLearningData } from "../middleware/validation.js";
-import { redisClient } from "../../index.js";
+import { redisClient } from "../redis.js";
 import { UserCourseModel } from "../models.js";
 import { MultiLingualConversationModel } from "../models.js";
 import { logger } from "../logger.js";

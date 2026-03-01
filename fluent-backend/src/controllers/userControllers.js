@@ -12,7 +12,7 @@ import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
-import { redisClient } from "../../index.js";
+import { redisClient } from "../redis.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import rateLimit from "express-rate-limit";

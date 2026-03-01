@@ -1,5 +1,5 @@
 import { cacheUserCourse } from "../controllers/userControllers.js";
-import { redisClient } from "../../index.js";
+import { redisClient } from "../redis.js";
 import { UserModel, UserCourseModel } from "../models.js";
 import mongoose from "mongoose";
 
