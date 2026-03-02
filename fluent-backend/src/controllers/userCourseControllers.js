@@ -19,15 +19,24 @@ async function updateLearningData(req, res) {
       const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, successArray } = req.body;
       if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, userCourse);
-        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: conversationToSubscribe }, "Subscribed to conversation");
+        logger.info(
+          { userId: user._id, userCourseId: userCourse._id, conversationId: conversationToSubscribe },
+          "Subscribed to conversation",
+        );
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
         await unsubscribeToConversation(conversationToUnsubscribe, userCourse);
-        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: conversationToUnsubscribe }, "Unsubscribed from conversation");
+        logger.info(
+          { userId: user._id, userCourseId: userCourse._id, conversationId: conversationToUnsubscribe },
+          "Unsubscribed from conversation",
+        );
         res.json({ success: true });
       } else if (reviewedConversationId) {
         await updateReviewData(reviewedConversationId, successArray, userCourse);
-        logger.info({ userId: user._id, userCourseId: userCourse._id, conversationId: reviewedConversationId }, "Review completed");
+        logger.info(
+          { userId: user._id, userCourseId: userCourse._id, conversationId: reviewedConversationId },
+          "Review completed",
+        );
         res.json({ success: true });
       }
       if (redisClient) {
@@ -79,7 +88,7 @@ async function subscribeToConversation(conversationToSubscribe, userCourse) {
   if (!userCourse.conversations.find(({ _id }) => _id == conversationToSubscribe)) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id },
-      { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } }
+      { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } },
     );
     const wordIds = await getWordIdsForConversation(conversationToSubscribe, userCourse.sourceLanguage);
     const uniqIds = [...new Set(wordIds)];
@@ -93,7 +102,7 @@ async function subscribeToConversation(conversationToSubscribe, userCourse) {
         }
         return [wordUpdates, newWordIds];
       },
-      [[], []]
+      [[], []],
     );
     if (wordUpdates.length > 0) await updateWordsSubscription(userCourse._id, wordUpdates);
     if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
@@ -106,7 +115,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
   if (userCourse.conversations.find(({ _id }) => _id == conversationToUnsubscribe)) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id },
-      { $pull: { conversations: { _id: conversationToUnsubscribe } } }
+      { $pull: { conversations: { _id: conversationToUnsubscribe } } },
     );
     const wordIds = await getWordIdsForConversation(conversationToUnsubscribe, userCourse.sourceLanguage);
     const uniqIds = [...new Set(wordIds)];
@@ -121,7 +130,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
           } else {
             logger.warn(
               { wordId, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn },
-              "word.numberOfSentencesUsedIn should be > 0"
+              "word.numberOfSentencesUsedIn should be > 0",
             );
           }
         } else {
@@ -129,7 +138,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
         }
         return [wordUpdates, wordIdsToRemove];
       },
-      [[], []]
+      [[], []],
     );
     if (wordUpdates.length > 0) await updateWordsSubscription(userCourse._id, wordUpdates);
     if (wordIdsToUnsubcribe.length > 0) await removeWords(userCourse._id, wordIdsToUnsubcribe);
@@ -141,10 +150,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
 
 async function removeWords(userCourseId, wordIdsToRemove) {
   try {
-    await UserCourseModel.updateOne(
-      { _id: userCourseId },
-      { $pull: { words: { _id: { $in: wordIdsToRemove } } } }
-    );
+    await UserCourseModel.updateOne({ _id: userCourseId }, { $pull: { words: { _id: { $in: wordIdsToRemove } } } });
   } catch (error) {
     logger.error({ err: error, userCourseId, wordIdsToRemove }, "Error removing words from user course");
   }
@@ -171,7 +177,7 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
   if (userCourse.conversations.find(({ _id }) => _id == reviewedConversationId)) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id, "conversations._id": reviewedConversationId },
-      { $set: { "conversations.$.lastReviewDate": new Date() } }
+      { $set: { "conversations.$.lastReviewDate": new Date() } },
     );
   }
   const wordIdsBySentence = await getWordIdsForSentences(reviewedConversationId, userCourse.sourceLanguage);
@@ -189,7 +195,7 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
       } else {
         newWordIds.push(wordId);
       }
-    })
+    }),
   );
 
   if (wordUpdates.length > 0) await updateWords(userCourse._id, wordUpdates);

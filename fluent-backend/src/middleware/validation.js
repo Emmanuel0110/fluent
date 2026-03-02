@@ -138,7 +138,8 @@ export const validateUpdateLearningData = [
       }
       return true;
     }),
-  body("success").optional().isBoolean().withMessage("Success must be a boolean value"),
+  body("successArray").optional().isArray().withMessage("successArray must be an array"),
+  body("successArray.*").optional().isBoolean().withMessage("Each element of successArray must be a boolean"),
   body().custom((value) => {
     const hasConversationToSubscribe = !!value.conversationToSubscribe;
     const hasConversationToUnsubscribe = !!value.conversationToUnsubscribe;
@@ -150,9 +151,8 @@ export const validateUpdateLearningData = [
       );
     }
 
-    // If reviewedConversationId is provided, success should also be provided
-    if (hasReviewedConversationId && value.success === undefined) {
-      throw new Error("Success field is required when reviewedConversationId is provided");
+    if (hasReviewedConversationId && !Array.isArray(value.successArray)) {
+      throw new Error("successArray is required when reviewedConversationId is provided");
     }
 
     return true;
