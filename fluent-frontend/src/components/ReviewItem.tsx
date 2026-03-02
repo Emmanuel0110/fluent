@@ -10,7 +10,7 @@ function ReviewItem({
   nextConversation,
 }: {
   conversation: ReviewItemType;
-  nextConversation: (successArray: boolean[]) => void;
+  nextConversation: (successArray: boolean[], answersRevealed: boolean[]) => void;
 }) {
   const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
   const isAutoMode = shouldShowAnswerAutomatically();
@@ -26,7 +26,7 @@ function ReviewItem({
     if (isCompleted) {
       const successArr = conversation.multiLingualSentences.map((sentence) => sentence.success);
       setCurrentSentenceNumber(0);
-      nextConversation(successArr);
+      nextConversation(successArr, answersRevealed);
     } else {
       setCurrentSentenceNumber((n) => n + 1);
     }
