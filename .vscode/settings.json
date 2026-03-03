@@ -1,0 +1,10 @@
+{
+  "filewatcher.commands": [
+    {
+      "match": "**/*.{js,ts,tsx,jsx,json,css,scss,md}",
+      "isAsync": true,
+      "cmd": "npx prettier --write ${file}",
+      "event": "onFileChange"
+    }
+  ]
+}
