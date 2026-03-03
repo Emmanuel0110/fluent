@@ -1,8 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "Bash(npm test)",
-      "Bash(npm test -- --no-coverage)"
-    ]
+    "allow": ["Bash(npm test)", "Bash(npm test -- --no-coverage)", "Bash(grep * .)"]
   }
 }
