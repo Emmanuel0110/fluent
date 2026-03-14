@@ -197,18 +197,17 @@ describe("loadAllData", () => {
     await waitFor(() => expect(result.current.loadError).toBe("network error"));
   });
 
-  it("clears loadError on a successful reload", async () => {
+  it("clears loadError on a successful reload triggered by language change", async () => {
     vi.mocked(APICalls.fetchConversationTags).mockRejectedValueOnce(new Error("fail"));
 
-    const { result } = renderHook(() => useData(), { wrapper });
+    const { result, rerender } = renderHook(() => useData(), { wrapper });
     await waitFor(() => expect(result.current.loadError).toBe("fail"));
 
-    vi.mocked(APICalls.fetchConversationTags).mockResolvedValue([]);
-    await act(async () => {
-      await result.current.loadAllData();
-    });
+    // Fix the mock, then trigger reload by simulating a language change
+    setupAuthAndLanguage({ targetLanguage: "de" });
+    rerender();
 
-    expect(result.current.loadError).toBeNull();
+    await waitFor(() => expect(result.current.loadError).toBeNull());
   });
 });
 
@@ -349,18 +348,19 @@ describe("saveConversation", () => {
     expect(APICalls.editRemoteConversation).toHaveBeenCalledWith(formattedConv, SOURCE, TARGET);
   });
 
-  it("adds the formatted conversation to state and navigates to it", async () => {
+  it("adds the formatted conversation to state and returns the id", async () => {
     vi.mocked(APICalls.saveNewConversation).mockResolvedValue({ success: true, data: rowConv });
 
     const result = await renderDataHook();
     const newConv: Conversation = { _id: "", tags: [], subscribed: false, multiLingualSentences: [] };
 
+    let savedId: string | undefined;
     await act(async () => {
-      await result.current.saveConversation(newConv);
+      savedId = await result.current.saveConversation(newConv);
     });
 
     expect(result.current.conversations).toContainEqual(formattedConv);
-    expect(mockNavigate).toHaveBeenCalledWith("/conversations/conv1");
+    expect(savedId).toBe("conv1");
   });
 });
 

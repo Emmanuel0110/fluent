@@ -2,7 +2,7 @@ import React, { Dispatch, useEffect, useMemo, useState } from "react";
 import "../App.css";
 import { Conversation, ConversationTag, Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
 import { SentenceEdit } from "./SentenceEdit";
@@ -21,6 +21,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const { conversationId } = useParams();
+  const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
   const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useData();
 
@@ -133,9 +134,10 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
       </div>
       <div className="conversation-form-actions">
         <button
-          onClick={() => {
+          onClick={async () => {
             if (conversation) {
-              saveConversation(conversation);
+              const id = await saveConversation(conversation);
+              if (id) navigate("/conversations/" + id);
             }
           }}
         >
