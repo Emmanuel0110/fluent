@@ -31,6 +31,6 @@ jobs:
           cd fluent-frontend
           npm install
           npm run build
-          cp -a build/. ../fluent-backend/public/
+          cp -a dist/. ../fluent-backend/public/
           npm install --only=prod
           pm2 restart fluent
