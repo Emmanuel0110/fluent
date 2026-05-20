@@ -22,13 +22,18 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
       <div id="detail-card">
         <div id="detail-card-main">
           <WordDefinition word={word} />
-          <div id="tags">
+          <div id="word-tags">
             {word &&
               word.tags.map((tagId, index) => {
                 const tag = wordTags.find((tag) => tag._id === tagId);
                 if (tag)
                   return (
-                    <div key={index} className="tag" onClick={(e) => searchTag(tag._id)}>
+                    <div
+                      key={index}
+                      className="word-tag"
+                      style={{ cursor: "pointer" }}
+                      onClick={(e) => searchTag(tag._id)}
+                    >
                       {"#" + tag.label}
                     </div>
                   );
