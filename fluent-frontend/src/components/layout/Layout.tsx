@@ -11,7 +11,7 @@ function Layout() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   return (
     <div id="container">
-      <Navbar onMenuToggle={toggleMenu} />
+      <Navbar onMenuToggle={toggleMenu} onMenuClose={() => setIsMenuOpen(false)} />
       <LeftMenuBar isOpen={isMenuOpen} setOpen={setIsMenuOpen} />
       {loadError && (
         <div className="alert alert-warning m-2 mb-0" role="alert">

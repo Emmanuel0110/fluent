@@ -1,18 +1,18 @@
-import { RefObject, useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { logout } from "../../auth/authActions";
 import LanguageSelector from "../languageSelector/LanguageSelector";
 import ProfileOptions from "../profileOptions/ProfileOptions";
-import { useData } from "../../contexts/DataContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   onMenuToggle: () => void;
+  onMenuClose: () => void;
 }
 
-function Navbar({ onMenuToggle }: NavbarProps) {
+function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
   const { setIsAuthenticated } = useAuth();
   const { searchFilter, setSearchFilter, tagFilter, setTagFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
@@ -59,6 +59,7 @@ function Navbar({ onMenuToggle }: NavbarProps) {
             <input
               type="text"
               value={searchFilter}
+              onFocus={onMenuClose}
               onChange={(e) => {
                 if (location.pathname !== "/words") navigate("/words");
                 setSearchFilter(e.target.value);
