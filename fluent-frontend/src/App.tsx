@@ -58,7 +58,14 @@ export default function App() {
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
             <Route element={<AdminRoute redirectPath="home" />}>
               <Route path="new" element={<CreationForm />} />
-              <Route path="words/:wordId/edit" element={<WordForm />} />
+              <Route
+                path="words/:wordId/edit"
+                element={
+                  <div style={{ height: "100%", overflow: "auto", padding: "1rem" }}>
+                    <WordForm />
+                  </div>
+                }
+              />
               <Route
                 path="conversations/:conversationId/edit"
                 element={
