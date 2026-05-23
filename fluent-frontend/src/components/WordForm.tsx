@@ -228,15 +228,17 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
       )}
       <div id="sourceLanguage">
         <h3 className="word-form-section-title">Source Language</h3>
-        <div className="prerequisiteInput">
-          <AutoComplete
-            dropdownList={sourceWords}
-            callback={selectSourceWord}
-            placeholder="Add source word"
-            placement="bottom-start"
-          />
-        </div>
-        {sourceWord?.text !== undefined && sourceWord.text !== "" && (
+        {!sourceWord && (
+          <div className="prerequisiteInput">
+            <AutoComplete
+              dropdownList={sourceWords}
+              callback={selectSourceWord}
+              placeholder="Add source word"
+              placement="bottom-start"
+            />
+          </div>
+        )}
+        {sourceWord && (
           <div className="word-display">
             <div className="word-text-display">
               <input
@@ -317,15 +319,17 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
       </div>
       <div id="targetLanguage">
         <h3 className="word-form-section-title">Target Language</h3>
-        <div className="prerequisiteInput">
-          <AutoComplete
-            dropdownList={targetWords}
-            callback={selectTargetWord}
-            placeholder="Add target word"
-            placement="bottom-start"
-          />
-        </div>
-        {targetWord?.text !== undefined && targetWord.text !== "" && (
+        {!targetWord && (
+          <div className="prerequisiteInput">
+            <AutoComplete
+              dropdownList={targetWords}
+              callback={selectTargetWord}
+              placeholder="Add target word"
+              placement="bottom-start"
+            />
+          </div>
+        )}
+        {targetWord && (
           <div className="word-display">
             <div className="word-text-display">
               <input
