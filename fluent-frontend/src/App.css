@@ -483,6 +483,7 @@ a.nav-link {
   background: transparent;
   outline: none;
   width: auto;
+  field-sizing: content;
 }
 
 .word-text-input:focus {
