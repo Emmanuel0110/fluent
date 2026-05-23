@@ -91,6 +91,11 @@ button:focus {
   outline: none;
 }
 
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
 .line {
   display: flex;
   gap: 10px;
@@ -445,4 +450,61 @@ a.nav-link {
   display: flex;
   justify-content: center;
   margin-top: 30px;
+}
+
+.word-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #e8f0fe;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+}
+
+.item-delete-btn {
+  all: unset;
+  cursor: pointer;
+  color: #999;
+  font-size: 0.75rem;
+  line-height: 1;
+  margin-left: 3px;
+}
+
+.item-delete-btn:hover {
+  color: #d32f2f;
+}
+
+.word-text-input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: inherit;
+  font-weight: 600;
+  background: transparent;
+  outline: none;
+  width: auto;
+}
+
+.word-text-input:focus {
+  border-bottom-color: #00a6ed;
+}
+
+.word-form-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.delete-btn {
+  background-color: #dc3545 !important;
+  border: 1px solid #dc3545 !important;
+  color: white !important;
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #c82333 !important;
+  border-color: #bd2130 !important;
 }

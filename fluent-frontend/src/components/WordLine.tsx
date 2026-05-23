@@ -6,6 +6,7 @@ import { Context } from "../types";
 import { useAuth } from "../contexts/AuthContext";
 import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 export const WordLine = ({ word }: { word: Word }) => {
   const { wordId } = useParams();
@@ -32,29 +33,14 @@ export const WordLine = ({ word }: { word: Word }) => {
     setShowConfirm(true);
   };
 
-  const confirmDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowConfirm(false);
-    deleteWord(word._id);
-  };
-
-  const cancelDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowConfirm(false);
-  };
-
   return (
     <>
       {showConfirm && (
-        <div className="blockerDarkBackground" onClick={cancelDelete}>
-          <div id="above" onClick={(e) => e.stopPropagation()}>
-            <p>Are you sure you want to delete this word?</p>
-            <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "20px" }}>
-              <button className="btn btn-secondary" onClick={cancelDelete}>Cancel</button>
-              <button className="btn btn-danger" onClick={confirmDelete}>Delete</button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          message="Are you sure you want to delete this word?"
+          onConfirm={() => { setShowConfirm(false); deleteWord(word._id); }}
+          onCancel={() => setShowConfirm(false)}
+        />
       )}
       <div
         ref={lineRef}

@@ -328,14 +328,6 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-.word-text-display span:first-child {
-  color: #4f46e5;
-  font-weight: 600;
-}
-
-.word-text-display span:last-child {
-  color: #6b7280;
-}
 
 .word-tags {
   display: flex;

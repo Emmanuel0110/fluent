@@ -2,15 +2,18 @@ import React, { Dispatch, useEffect, useMemo, useState } from "react";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 type Callback = {
   _id?: string;
   label?: string;
   setLocalDescription: Dispatch<React.SetStateAction<string>>;
 };
+
+type SaveState = "idle" | "saving" | "saved";
 
 WordForm.defaultProps = {
   initialSourceWord: { _id: "", tags: [], text: "", translations: [] },
@@ -20,10 +23,14 @@ WordForm.defaultProps = {
 function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord: Word; initialTargetWord: Word }) {
   const [sourceWord, setSourceWord] = useState<Word | undefined>();
   const [targetWord, setTargetWord] = useState<Word | undefined>();
+  const [sourceSaveState, setSourceSaveState] = useState<SaveState>("idle");
+  const [targetSaveState, setTargetSaveState] = useState<SaveState>("idle");
+  const [showDeleteSource, setShowDeleteSource] = useState(false);
+  const [showDeleteTarget, setShowDeleteTarget] = useState(false);
   const { wordId } = useParams();
+  const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
-
-  const { words, saveWord, saveWordTag, wordTags } = useData();
+  const { words, saveWord, saveWordTag, wordTags, deleteWord } = useData();
 
   useEffect(() => {
     setSourceWord(wordId ? words[wordId] : { ...initialSourceWord, language: appSourceLanguage });
@@ -38,8 +45,25 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
 
   const [sourceWords, targetWords] = useMemo(
     () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
-    [words, appSourceLanguage]
+    [words, appSourceLanguage],
   );
+
+  const handleSave = (
+    word: Word,
+    setWord: Dispatch<React.SetStateAction<Word | undefined>>,
+    setSaveState: Dispatch<React.SetStateAction<SaveState>>,
+  ) => {
+    setSaveState("saving");
+    saveWord(word).then((savedWord) => {
+      if (savedWord) setWord(savedWord);
+      setSaveState("saved");
+      setTimeout(() => setSaveState("idle"), 1000);
+    });
+  };
+
+  const handleDelete = (id: string) => {
+    deleteWord(id).then(() => navigate("/words"));
+  };
 
   const selectSourceWord = ({ _id, label, setLocalDescription }: Callback) => {
     if (label) {
@@ -126,7 +150,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
         if (tag) {
           saveWord({ ...targetWord, tags: [...targetWord.tags, tag._id] }).then((word) => {
             if (word) {
-              setSourceWord(word);
+              setTargetWord(word);
               setLocalDescription("");
             }
           });
@@ -182,6 +206,26 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
 
   return (
     <div className="word-form">
+      {showDeleteSource && sourceWord && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this word?"
+          onConfirm={() => {
+            setShowDeleteSource(false);
+            handleDelete(sourceWord._id);
+          }}
+          onCancel={() => setShowDeleteSource(false)}
+        />
+      )}
+      {showDeleteTarget && targetWord && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this word?"
+          onConfirm={() => {
+            setShowDeleteTarget(false);
+            handleDelete(targetWord._id);
+          }}
+          onCancel={() => setShowDeleteTarget(false)}
+        />
+      )}
       <div id="sourceLanguage">
         <h3 className="word-form-section-title">Source Language</h3>
         <div className="prerequisiteInput">
@@ -192,15 +236,31 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
             placement="bottom-start"
           />
         </div>
-        {sourceWord?.text && (
+        {sourceWord?.text !== undefined && sourceWord.text !== "" && (
           <div className="word-display">
             <div className="word-text-display">
-              <span>{`${sourceWord.text}: `}</span>
+              <input
+                className="word-text-input"
+                value={sourceWord.text}
+                onChange={(e) => setSourceWord({ ...sourceWord, text: e.target.value })}
+              />
+              <span>{": "}</span>
               <span>
-                {sourceWord.translations.map((wordId, index) => (
-                  <span key={wordId}>
+                {sourceWord.translations.map((translationId, index) => (
+                  <span key={translationId}>
                     {index !== 0 && <span>{", "}</span>}
-                    <span>{words[wordId]?.text}</span>
+                    <span>{words[translationId]?.text}</span>
+                    <span
+                      className="item-delete-btn"
+                      onClick={() =>
+                        setSourceWord({
+                          ...sourceWord,
+                          translations: sourceWord.translations.filter((id) => id !== translationId),
+                        })
+                      }
+                    >
+                      ×
+                    </span>
                   </span>
                 ))}
               </span>
@@ -220,6 +280,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                   return tag ? (
                     <span key={tagId} className="word-tag">
                       {tag.label}
+                      <span
+                        className="item-delete-btn"
+                        onClick={() =>
+                          setSourceWord({ ...sourceWord, tags: sourceWord.tags.filter((id) => id !== tagId) })
+                        }
+                      >
+                        ×
+                      </span>
                     </span>
                   ) : undefined;
                 })}
@@ -233,7 +301,17 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 placement="bottom-start"
               />
             </div>
-            <button onClick={() => saveWord(sourceWord)}>Save word</button>
+            <div className="word-form-actions">
+              <button
+                onClick={() => handleSave(sourceWord, setSourceWord, setSourceSaveState)}
+                disabled={sourceSaveState !== "idle"}
+              >
+                {sourceSaveState === "saved" ? "Saved!" : "Save word"}
+              </button>
+              <button className="delete-btn" onClick={() => setShowDeleteSource(true)}>
+                Delete word
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -247,15 +325,31 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
             placement="bottom-start"
           />
         </div>
-        {targetWord?.text && (
+        {targetWord?.text !== undefined && targetWord.text !== "" && (
           <div className="word-display">
             <div className="word-text-display">
-              <span>{`${targetWord.text}: `}</span>
+              <input
+                className="word-text-input"
+                value={targetWord.text}
+                onChange={(e) => setTargetWord({ ...targetWord, text: e.target.value })}
+              />
+              <span>{": "}</span>
               <span>
-                {targetWord.translations.map((wordId, index) => (
-                  <span key={wordId}>
+                {targetWord.translations.map((translationId, index) => (
+                  <span key={translationId}>
                     {index !== 0 && <span>{", "}</span>}
-                    <span>{words[wordId]?.text}</span>
+                    <span>{words[translationId]?.text}</span>
+                    <span
+                      className="item-delete-btn"
+                      onClick={() =>
+                        setTargetWord({
+                          ...targetWord,
+                          translations: targetWord.translations.filter((id) => id !== translationId),
+                        })
+                      }
+                    >
+                      ×
+                    </span>
                   </span>
                 ))}
               </span>
@@ -275,6 +369,14 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                   return tag ? (
                     <span key={tagId} className="word-tag">
                       {tag.label}
+                      <span
+                        className="item-delete-btn"
+                        onClick={() =>
+                          setTargetWord({ ...targetWord, tags: targetWord.tags.filter((id) => id !== tagId) })
+                        }
+                      >
+                        ×
+                      </span>
                     </span>
                   ) : undefined;
                 })}
@@ -288,7 +390,17 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 placement="bottom-start"
               />
             </div>
-            <button onClick={() => saveWord(targetWord)}>Save word</button>
+            <div className="word-form-actions">
+              <button
+                onClick={() => handleSave(targetWord, setTargetWord, setTargetSaveState)}
+                disabled={targetSaveState !== "idle"}
+              >
+                {targetSaveState === "saved" ? "Saved!" : "Save word"}
+              </button>
+              <button className="delete-btn" onClick={() => setShowDeleteTarget(true)}>
+                Delete word
+              </button>
+            </div>
           </div>
         )}
       </div>
