@@ -113,7 +113,7 @@ export const handleOAuthCallback = (
 
 //Logout User
 export const logout = (setIsAuthenticated: (arg: boolean) => void) => {
-  window.localStorage.clear(); //Clear out the cache
+  window.localStorage.removeItem("token");
   setIsAuthenticated(false);
   //window.location.href = '/'; //Force a browser refresh to clear in-memory data
 };
