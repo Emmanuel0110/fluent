@@ -18,7 +18,7 @@ function Login() {
   useEffect(() => {
     const code = searchParams.get("code");
     const errorParam = searchParams.get("error");
-    const provider = searchParams.get("provider") as "google" | "linkedin" | "facebook" | null;
+    const provider = searchParams.get("provider") as "google" | null;
 
     if (errorParam) {
       setError("Sign-in was cancelled or failed.");
@@ -26,7 +26,7 @@ function Login() {
       return;
     }
 
-    if (code && provider && (provider === "google" || provider === "linkedin" || provider === "facebook")) {
+    if (code && provider === "google") {
       handleOAuthCallback(provider, code, setIsAuthenticated, setUser, setError);
     }
   }, [searchParams, setIsAuthenticated, setUser]);
@@ -38,14 +38,6 @@ function Login() {
 
   const handleGoogleAuth = () => {
     initiateSocialAuth("google");
-  };
-
-  const handleLinkedInAuth = () => {
-    initiateSocialAuth("linkedin");
-  };
-
-  const handleFacebookAuth = () => {
-    initiateSocialAuth("facebook");
   };
 
   if (isAuthenticated) {
@@ -81,11 +73,7 @@ function Login() {
           {t("auth.login")}
         </Button>
       </Form>
-      <SocialAuthButtons
-        onGoogleClick={handleGoogleAuth}
-        onLinkedInClick={handleLinkedInAuth}
-        onFacebookClick={handleFacebookAuth}
-      />
+      <SocialAuthButtons onGoogleClick={handleGoogleAuth} />
       <div className="text-center mt-4">
         <p className="mb-0 small text-muted">
           {t("auth.no_account") + " "}

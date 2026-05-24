@@ -61,23 +61,3 @@
   background-color: var(--bg-surface-alt);
   border-color: #4285f4;
 }
-
-.linkedin-button {
-  border-color: #0077b5;
-  color: #0077b5;
-}
-
-.linkedin-button:hover {
-  background-color: var(--bg-surface-alt);
-  border-color: #0077b5;
-}
-
-.facebook-button {
-  border-color: #1877f2;
-  color: #1877f2;
-}
-
-.facebook-button:hover {
-  background-color: var(--bg-surface-alt);
-  border-color: #1877f2;
-}

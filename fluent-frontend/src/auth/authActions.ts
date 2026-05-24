@@ -77,7 +77,7 @@ export const login = (
 };
 
 //Social Authentication
-export const initiateSocialAuth = (provider: "google" | "linkedin" | "facebook") => {
+export const initiateSocialAuth = (provider: "google") => {
   // Redirect to backend OAuth endpoint
   const backendUrl = url?.replace(/\/$/, ""); // Remove trailing slash if present
   window.location.href = `${backendUrl}/users/auth/${provider}`;
@@ -85,7 +85,7 @@ export const initiateSocialAuth = (provider: "google" | "linkedin" | "facebook")
 
 // Handle OAuth callback
 export const handleOAuthCallback = (
-  provider: "google" | "linkedin" | "facebook",
+  provider: "google",
   code: string,
   setIsAuthenticated: (b: boolean) => void,
   setUser: (user: any) => void,

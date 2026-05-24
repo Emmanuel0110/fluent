@@ -30,7 +30,7 @@ const userSchema = new Schema({
   username: { type: String, required: true, unique: true, trim: true },
   password: { type: String, select: false }, // Made optional for OAuth users
   email: { type: String, trim: true }, // For OAuth users
-  oauthProvider: { type: String, enum: ["google", "linkedin", "facebook"] }, // Track OAuth provider
+  oauthProvider: { type: String, enum: ["google"] }, // Track OAuth provider
   oauthId: { type: String }, // OAuth provider user ID
   lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },
   courses: [{ type: Schema.Types.ObjectId, ref: "UserCourse" }],
