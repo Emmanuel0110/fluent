@@ -14,6 +14,15 @@
     <link rel="manifest" href="/manifest.json" />
     <title>Fluent</title>
     <script src="https://js.puter.com/v2/"></script>
+    <script>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

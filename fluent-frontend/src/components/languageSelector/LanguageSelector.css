@@ -2,7 +2,7 @@
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--text-on-dark);
   mask: url(/images/translate_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg); /*https://fonts.google.com/icons*/
   mask-repeat: no-repeat;
   margin: auto 5px;
@@ -15,7 +15,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--shadow-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +23,7 @@
 }
 
 #language-selector-content {
-  background: white;
+  background: var(--bg-surface);
   padding: 30px;
   border-radius: 10px;
 }
@@ -36,13 +36,16 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: var(--text-primary);
 }
 
 .language-field select {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-light);
   border-radius: 5px;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
 }
 
 .language-selector-actions {
@@ -59,16 +62,16 @@
 }
 
 .language-selector-actions button:first-child {
-  background: #6c757d;
+  background: var(--color-btn-secondary);
   color: white;
 }
 
 .language-selector-actions button:last-child {
-  background: #28a745;
+  background: var(--color-success);
   color: white;
 }
 
 .language-selector-actions button:disabled {
-  background: #ccc;
+  background: var(--border-input);
   cursor: not-allowed;
 }

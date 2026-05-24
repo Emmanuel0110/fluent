@@ -7,7 +7,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 9;
-  background-color: #f8f8f8;
+  background-color: var(--bg-app);
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -32,7 +32,7 @@ body {
 #loginForm {
   font-family: "Inter", "Poppins", "Segoe UI", sans-serif;
   font-weight: 400;
-  color: #1a1a1a;
+  color: var(--text-primary);
   width: 18em;
   margin: auto;
 }
@@ -40,7 +40,7 @@ body {
 #loginForm label {
   font-weight: 500;
   font-size: 0.95rem;
-  color: #444;
+  color: var(--text-secondary);
   letter-spacing: 0.2px;
   margin-bottom: 0.4rem;
 }
@@ -49,7 +49,7 @@ body {
   font-family: inherit;
   font-size: 1rem;
   border-radius: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-light);
   padding: 0.75rem 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
@@ -57,7 +57,7 @@ body {
 
 #loginForm input:focus {
   outline: none;
-  border-color: #4f46e5; /* Indigo accent */
+  border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
@@ -100,7 +100,7 @@ button:disabled {
   display: flex;
   gap: 10px;
   justify-content: space-between;
-  background-color: white;
+  background-color: var(--bg-surface);
   border-radius: 10px;
   padding: 10px;
   margin-bottom: 10px;
@@ -119,7 +119,7 @@ button:disabled {
 }
 
 .selectedLine {
-  background-color: #ededed;
+  background-color: var(--bg-selected);
 }
 
 .alignLeft {
@@ -177,7 +177,7 @@ button:disabled {
 .subscribe {
   cursor: pointer;
   mask: url(/images/star-regular.svg); /*google icons*/
-  background: #8a8a8a;
+  background: var(--icon);
   margin: auto;
   width: 1.5rem;
   height: 1.5rem;
@@ -187,13 +187,13 @@ button:disabled {
 }
 
 .subscribed {
-  background: orange;
+  background: var(--color-subscribed);
 }
 
 .edit {
   cursor: pointer;
   mask: url(/images/edit_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
-  background: #8a8a8a;
+  background: var(--icon);
   margin: auto;
   width: 1.5rem;
   height: 1.5rem;
@@ -204,7 +204,7 @@ button:disabled {
 .delete {
   cursor: pointer;
   mask: url(/images/delete_FILL0_wght400_GRAD0_opsz24.svg); /*google icons*/
-  background: #8a8a8a;
+  background: var(--icon);
   margin: auto;
   width: 1.5rem;
   height: 1.5rem;
@@ -239,8 +239,8 @@ button:disabled {
 .tagInput,
 .prerequisiteInput {
   padding: 5px;
-  background: white;
-  border: 1px solid lightgray;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
 }
 
@@ -251,7 +251,7 @@ button:disabled {
 }
 
 .usedInSection {
-  color: rgb(119, 119, 119);
+  color: var(--text-muted);
   font-weight: 600;
   margin-bottom: 7px;
 }
@@ -271,17 +271,16 @@ button:disabled {
   padding: 0.2em 1em 0.3em 1em;
   margin: 5px;
   border-radius: 1em;
-  color: rgb(34, 34, 34);
-  border: solid lightgrey 1.5px;
+  border: solid var(--border-light) 1.5px;
   position: relative;
-  color: #424242;
-  background-color: rgb(252, 252, 252);
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
 }
 
 .filterClose {
   cursor: pointer;
   mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
-  background: rgb(151, 151, 151);
+  background: var(--icon);
   display: inline-block;
   width: 1.5ch;
   height: 1.5ch;
@@ -297,7 +296,7 @@ button:disabled {
 .lineClose {
   cursor: pointer;
   mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
-  background: rgb(151, 151, 151);
+  background: var(--icon);
   width: 1.5ch;
   height: 1.5ch;
   mask-repeat: no-repeat;
@@ -317,7 +316,7 @@ button:disabled {
 .tabClose {
   cursor: pointer;
   mask: url(/images/times-solid.svg); /*https://fontawesome.com/license*/
-  background: rgb(151, 151, 151);
+  background: var(--icon);
   width: 1.5ch;
   height: 1.5ch;
   mask-repeat: no-repeat;
@@ -341,7 +340,7 @@ button:disabled {
 }
 
 .tabCloseHover:hover {
-  background-color: rgb(227, 227, 227);
+  background-color: var(--bg-hover);
 }
 
 #openedWords {
@@ -367,7 +366,7 @@ button:disabled {
 
 .pannelClose {
   mask: url(/images/tab_close_FILL0_wght400_GRAD0_opsz24.svg); /*https://fontawesome.com/license*/
-  background: rgb(129, 129, 129);
+  background: var(--icon);
   width: 3ch;
   height: 3ch;
   mask-repeat: no-repeat;
@@ -376,7 +375,7 @@ button:disabled {
 }
 
 a.nav-link {
-  color: #636b74;
+  color: var(--text-link);
 }
 
 #tabNav {
@@ -389,7 +388,7 @@ a.nav-link {
   top: -27px;
   left: -10px;
   mask: url(/images/circle-solid.svg); /*https://fontawesome.com/license*/
-  background: rgb(151, 151, 151);
+  background: var(--icon);
   width: 5px;
   height: 5px;
   mask-repeat: no-repeat;
@@ -404,7 +403,7 @@ a.nav-link {
   margin-right: auto;
   margin-top: 50vh; /* poussé de la moitié de hauteur de viewport */
   transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
-  background-color: white;
+  background-color: var(--bg-surface);
   border-radius: 15px;
   padding: 20px;
 }
@@ -416,7 +415,7 @@ a.nav-link {
   bottom: 0;
   right: 0;
   z-index: 20;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--shadow-overlay);
 }
 
 .translationLabel {
@@ -424,7 +423,7 @@ a.nav-link {
 }
 
 .translationLabel:hover {
-  color: #00a6ed;
+  color: var(--color-interactive);
 }
 
 .translationSpaceholder {
@@ -455,7 +454,8 @@ a.nav-link {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background-color: #e8f0fe;
+  background-color: var(--word-tag-bg);
+  color: var(--word-tag-color);
   border-radius: 12px;
   padding: 2px 8px;
   font-size: 0.85rem;
@@ -464,19 +464,19 @@ a.nav-link {
 .item-delete-btn {
   all: unset;
   cursor: pointer;
-  color: #999;
+  color: var(--text-subtle);
   font-size: 0.75rem;
   line-height: 1;
   margin-left: 3px;
 }
 
 .item-delete-btn:hover {
-  color: #d32f2f;
+  color: var(--color-danger);
 }
 
 .word-text-input {
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--border-light);
   font-size: inherit;
   font-weight: 600;
   background: transparent;
@@ -486,7 +486,7 @@ a.nav-link {
 }
 
 .word-text-input:focus {
-  border-bottom-color: #00a6ed;
+  border-bottom-color: var(--color-interactive);
 }
 
 .word-form-actions {
@@ -496,8 +496,8 @@ a.nav-link {
 }
 
 .delete-btn {
-  background-color: #dc3545 !important;
-  border: 1px solid #dc3545 !important;
+  background-color: var(--color-danger) !important;
+  border: 1px solid var(--color-danger) !important;
   color: white !important;
   border-radius: 4px;
   padding: 4px 10px;
@@ -505,6 +505,6 @@ a.nav-link {
 }
 
 .delete-btn:hover {
-  background-color: #c82333 !important;
-  border-color: #bd2130 !important;
+  background-color: var(--color-danger-dark) !important;
+  border-color: var(--color-danger-darkest) !important;
 }

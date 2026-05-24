@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--shadow-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,9 +12,10 @@
 }
 
 #profile-options-content {
-  background: white;
+  background: var(--bg-surface);
   padding: 30px;
   border-radius: 10px;
+  color: var(--text-primary);
 }
 
 .profile-field {
@@ -25,6 +26,7 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
+  color: var(--text-primary);
 }
 
 .radio-group {
@@ -39,6 +41,7 @@
   gap: 8px;
   font-weight: normal;
   cursor: pointer;
+  color: var(--text-primary);
 }
 
 .radio-group input[type="radio"] {
@@ -49,9 +52,11 @@
 .delay-input {
   width: 80px;
   padding: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-light);
   border-radius: 5px;
   font-size: 14px;
+  background-color: var(--bg-surface-alt);
+  color: var(--text-primary);
 }
 
 .profile-options-actions {
@@ -69,15 +74,70 @@
 }
 
 .profile-options-actions button:first-child {
-  background: #6c757d;
+  background: var(--color-btn-secondary);
   color: white;
 }
 
 .profile-options-actions button:last-child {
-  background: #28a745;
+  background: var(--color-success);
   color: white;
 }
 
 .profile-options-actions button:hover {
   opacity: 0.9;
+}
+
+/* Theme toggle row */
+.theme-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.theme-field > label {
+  margin-bottom: 0;
+}
+
+.theme-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.theme-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.theme-toggle-track {
+  position: absolute;
+  inset: 0;
+  background-color: var(--border-input);
+  border-radius: 24px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle-track::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle-switch input:checked + .theme-toggle-track {
+  background-color: var(--accent);
+}
+
+.theme-toggle-switch input:checked + .theme-toggle-track::before {
+  transform: translateX(20px);
 }

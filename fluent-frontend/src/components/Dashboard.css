@@ -14,18 +14,18 @@
   align-items: center;
   height: 100%;
   font-size: 1.2rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .dashboard-header h1 {
   margin: 0;
   font-size: 1.8rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .dashboard-section {
-  background: white;
+  background: var(--bg-surface);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -35,7 +35,7 @@
   margin: 0 0 1rem 0;
   font-size: 1.3rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
 }
 
 /* Rank and Progress Container */
@@ -72,7 +72,7 @@
 .rank-label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -94,13 +94,13 @@
 .progress-value {
   font-size: 1.2rem;
   font-weight: 700;
-  color: #007bff;
+  color: var(--color-btn-primary);
 }
 
 .progress-bar-container {
   width: 100%;
   height: 20px;
-  background-color: #e9ecef;
+  background-color: var(--progress-track);
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -158,7 +158,7 @@
   min-height: 20px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
   margin-bottom: 0.25rem;
 }
@@ -184,7 +184,7 @@
   align-items: flex-end;
   height: auto;
   font-size: 0.7rem;
-  color: #666;
+  color: var(--text-muted);
   text-align: center;
   word-break: break-word;
   width: 100%;
@@ -279,7 +279,7 @@
 
 .rank-Beginner {
   mask: url(/images/sprout.svg);
-  background: #2cbd00;
+  background: var(--rank-color);
   margin: auto;
   width: 4rem;
   height: 4rem;
@@ -290,7 +290,7 @@
 
 .rank-Amateur {
   mask: url(/images/book.svg);
-  background: #2cbd00;
+  background: var(--rank-color);
   margin: auto;
   width: 4rem;
   height: 4rem;
@@ -301,7 +301,7 @@
 
 .rank-Advanced {
   mask: url(/images/medal.svg);
-  background: #2cbd00;
+  background: var(--rank-color);
   margin: auto;
   width: 4rem;
   height: 4rem;
@@ -312,7 +312,7 @@
 
 .rank-Expert {
   mask: url(/images/crown.svg);
-  background: #8a8a8a;
+  background: var(--icon);
   margin: auto;
   width: 4rem;
   height: 4rem;

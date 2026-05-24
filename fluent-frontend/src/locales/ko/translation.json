@@ -49,6 +49,7 @@
   "profile.auto_after": "{{seconds}}초 후 자동 표시",
   "profile.manually": "수동 (클릭하여 확인)",
   "profile.delay": "지연 시간 (초):",
+  "profile.dark_mode": "다크 모드",
 
   "language.choose_title": "언어 선택",
   "language.source_label": "소스 언어 (알고 있는 언어):",

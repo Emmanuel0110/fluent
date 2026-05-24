@@ -13,7 +13,7 @@
 
 #mainPannel {
   grid-area: mainPannel;
-  background-color: #f8f8f8;
+  background-color: var(--bg-app);
   min-height: 0;
 }
 
@@ -26,7 +26,7 @@
 }
 
 .navb {
-  background-color: #282c34;
+  background-color: var(--bg-nav);
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -34,7 +34,7 @@
 
 #leftSideMenu {
   grid-area: leftSideMenu;
-  background-color: #303f9f;
+  background-color: var(--bg-sidebar);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -44,7 +44,7 @@
 
 #statusSection > div {
   cursor: pointer;
-  color: white;
+  color: var(--text-on-dark);
   padding: 6px;
   display: flex;
   gap: 10px;
@@ -52,12 +52,12 @@
 }
 
 #statusSection > div:hover {
-  background-color: #3f51b5;
+  background-color: var(--bg-sidebar-hover);
 }
 
 #statusSection .selected {
   width: 5px;
-  background-color: rgb(131, 150, 236);
+  background-color: var(--bg-sidebar-indicator);
 }
 
 #statusSection .unselected {
@@ -80,7 +80,7 @@
 #cancelFilterForSearch {
   cursor: pointer;
   mask: url("/images/filter_alt_off_FILL0_wght400_GRAD0_opsz24.svg"); /*google icons*/
-  background: #848383;
+  background: var(--icon);
   background-size: cover;
   display: inline-block;
   width: 24px;
@@ -96,7 +96,7 @@
 #searchAreaContainer {
   position: relative;
   padding: 2px 28px 2px 2px;
-  background: white;
+  background: var(--bg-surface);
   border-radius: 5px;
   margin: 5px;
 }
@@ -108,11 +108,11 @@
 .dropdownList {
   z-index: 1;
   padding: 5px 0px;
-  background: white;
+  background: var(--bg-surface);
   list-style-type: none;
-  -moz-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
-  -webkit-box-shadow: -1px 0 5px 0 rgb(165, 165, 165);
-  box-shadow: 1px 0 5px 0 rgb(165, 165, 165);
+  -moz-box-shadow: -1px 0 5px 0 var(--shadow-dropdown);
+  -webkit-box-shadow: -1px 0 5px 0 var(--shadow-dropdown);
+  box-shadow: 1px 0 5px 0 var(--shadow-dropdown);
   border-radius: 3px;
   max-height: 300px;
   overflow: auto;
@@ -125,18 +125,18 @@
 }
 
 .dropdownItem:hover {
-  background: lightgrey;
+  background: var(--bg-hover);
 }
 
 .dropdownItem.selected {
-  background: lightgrey;
+  background: var(--bg-hover);
 }
 
 #nameLabel {
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--text-on-dark);
   mask: url(/images/profile-icon.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
@@ -150,12 +150,12 @@
 
 .navButton {
   padding: 5px 10px 10px 5px;
-  color: rgb(153, 153, 153);
+  color: var(--text-nav-btn);
 }
 
 .navButton:hover {
   padding: 5px 10px 10px 5px;
-  color: #fafafa;
+  color: var(--text-nav-btn-hover);
   cursor: pointer;
 }
 
@@ -168,11 +168,11 @@
   border: 2px solid;
   margin: 10px;
   color: #d1e8fc;
-  background-color: #007bff;
+  background-color: var(--color-btn-primary);
 }
 
 #startAReviewButton:hover {
-  color: #007bff;
+  color: var(--color-btn-primary);
   background-color: #e7f4ff;
 }
 
@@ -180,7 +180,7 @@
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--text-on-dark);
   mask: url(/images/logout_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
@@ -191,7 +191,7 @@
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
-  background-color: white;
+  background-color: var(--text-on-dark);
   mask: url(/images/menu_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg);
   mask-repeat: no-repeat;
   margin: auto 5px;
@@ -226,7 +226,7 @@
 }
 
 #detailRightPanel {
-  background-color: white;
+  background-color: var(--bg-surface);
   height: 100%;
 }
 

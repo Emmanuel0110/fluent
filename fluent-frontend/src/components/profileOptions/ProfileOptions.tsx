@@ -3,11 +3,13 @@ import "./ProfileOptions.css";
 import { useReviewSettings } from "../../contexts/ReviewSettingsContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../../hooks/useTheme";
 
 const ProfileOptions: React.FC = () => {
   const { t } = useTranslation();
   const { settings, updateSettings } = useReviewSettings();
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.reviewMode);
   const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +31,19 @@ const ProfileOptions: React.FC = () => {
         <div id="profile-options-modal">
           <div id="profile-options-content">
             <h3>{t("profile.title")}</h3>
+
+            <div className="profile-field theme-field">
+              <label htmlFor="theme-toggle">{t("profile.dark_mode")}</label>
+              <label className="theme-toggle-switch">
+                <input
+                  type="checkbox"
+                  id="theme-toggle"
+                  checked={theme === "dark"}
+                  onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+                />
+                <span className="theme-toggle-track" />
+              </label>
+            </div>
 
             <div className="profile-field">
               <label>{t("profile.review_display")}</label>

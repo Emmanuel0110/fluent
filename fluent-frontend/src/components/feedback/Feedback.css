@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--shadow-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -13,7 +13,7 @@
 
 #feedback-selector-content {
   display: flex;
-  background: white;
+  background: var(--bg-surface);
   padding: 30px;
   border-radius: 10px;
   width: 300px;
@@ -35,17 +35,17 @@
 }
 
 .feedback-selector-actions button:first-child {
-  background: #6c757d;
+  background: var(--color-btn-secondary);
   color: white;
 }
 
 .feedback-selector-actions button:last-child {
-  background: #28a745;
+  background: var(--color-success);
   color: white;
 }
 
 .feedback-selector-actions button:disabled {
-  background: #ccc;
+  background: var(--border-input);
   cursor: not-allowed;
 }
 
@@ -54,4 +54,6 @@
   border: 2px solid transparent;
   box-shadow: 2px 4px 8px 3px rgba(110, 168, 254, 0.14);
   transform: translateY(-1px);
+  background-color: var(--bg-surface-alt);
+  color: var(--text-primary);
 }

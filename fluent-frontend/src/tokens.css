@@ -1,0 +1,132 @@
+/* ─── Design tokens ─────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-app: #f8f8f8;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #f9fafb;
+  --bg-surface-muted: #f5f5f5;
+  --bg-hover: #ededed;
+  --bg-selected: #ededed;
+  --bg-nav: #282c34;
+  --bg-sidebar: #303f9f;
+  --bg-sidebar-hover: #3f51b5;
+  --bg-sidebar-indicator: rgb(131, 150, 236);
+
+  /* Text */
+  --text-primary: #1a1a1a;
+  --text-secondary: #444;
+  --text-muted: #666;
+  --text-subtle: #999;
+  --text-on-dark: #ffffff;
+  --text-nav-btn: rgb(153, 153, 153);
+  --text-nav-btn-hover: #fafafa;
+  --text-link: #636b74;
+
+  /* Borders */
+  --border: #e5e7eb;
+  --border-light: #ddd;
+  --border-input: #d1d5db;
+
+  /* Accent (primary interactive color) */
+  --accent: #4f46e5;
+  --accent-dark: #4338ca;
+  --accent-secondary: #7c3aed;
+  --accent-shadow: rgba(79, 70, 229, 0.1);
+  --accent-shadow-hover: rgba(79, 70, 229, 0.3);
+
+  /* Semantic colors */
+  --color-source: #3b82f6;
+  --color-target: #10b981;
+  --color-danger: #dc3545;
+  --color-danger-dark: #c82333;
+  --color-danger-darkest: #bd2130;
+  --color-success: #28a745;
+  --color-btn-secondary: #6c757d;
+  --color-btn-primary: #007bff;
+  --color-btn-primary-dark: #0056b3;
+  --color-btn-primary-darkest: #004085;
+  --color-link-admin: #1976d2;
+  --color-link-admin-hover-bg: #e3f2fd;
+  --color-subscribed: orange;
+  --color-interactive: #00a6ed;
+
+  /* Icons */
+  --icon: rgb(151, 151, 151);
+  --icon-hover: rgb(82, 82, 82);
+
+  /* Misc */
+  --word-tag-bg: #e8f0fe;
+  --word-tag-color: #4f46e5;
+  --word-tag-accent-bg: #e0e7ff;
+  --spinner-track: #f3f3f3;
+  --spinner: #3498db;
+  --rank-color: #2cbd00;
+  --progress-track: #e9ecef;
+  --review-green: #54cf54;
+  --review-gray: #c1c1c1;
+  --shadow-overlay: rgba(0, 0, 0, 0.5);
+  --shadow-dropdown: rgb(165, 165, 165);
+}
+
+/* ─── Dark mode overrides ────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --bg-app: #121212;
+  --bg-surface: #1e1e1e;
+  --bg-surface-alt: #252525;
+  --bg-surface-muted: #2a2a2a;
+  --bg-hover: #333333;
+  --bg-selected: #2d2d2d;
+
+  --text-primary: #e0e0e0;
+  --text-secondary: #bdbdbd;
+  --text-muted: #9e9e9e;
+  --text-subtle: #757575;
+  --text-link: #9da5ad;
+
+  --border: #333333;
+  --border-light: #3a3a3a;
+  --border-input: #424242;
+
+  --accent-shadow: rgba(79, 70, 229, 0.2);
+  --accent-shadow-hover: rgba(79, 70, 229, 0.4);
+
+  --word-tag-bg: rgba(79, 70, 229, 0.2);
+  --word-tag-color: #a5b4fc;
+  --word-tag-accent-bg: rgba(79, 70, 229, 0.2);
+  --spinner-track: #333333;
+  --progress-track: #333333;
+  --color-link-admin-hover-bg: #1a2a3a;
+  --shadow-dropdown: rgb(20, 20, 20);
+}
+
+/* ─── Bootstrap overrides for dark mode ─────────────────────────────────── */
+[data-theme="dark"] .form-control {
+  background-color: var(--bg-surface-alt);
+  color: var(--text-primary);
+  border-color: var(--border-input);
+}
+
+[data-theme="dark"] .form-control:focus {
+  background-color: var(--bg-surface-alt);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-link {
+  color: var(--text-link);
+}
+
+[data-theme="dark"] .nav-tabs {
+  border-bottom-color: var(--border);
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+  background-color: var(--bg-surface);
+  border-color: var(--border);
+  border-bottom-color: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-tabs .nav-link:not(.active):hover {
+  border-color: var(--border);
+  color: var(--text-primary);
+}

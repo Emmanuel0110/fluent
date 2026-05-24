@@ -49,6 +49,7 @@
   "profile.auto_after": "Automatiquement après {{seconds}} secondes",
   "profile.manually": "Manuellement (cliquer pour révéler)",
   "profile.delay": "Délai (secondes) :",
+  "profile.dark_mode": "Mode sombre",
 
   "language.choose_title": "Choisissez vos langues",
   "language.source_label": "Langue source (que vous connaissez) :",

@@ -14,12 +14,12 @@
 .social-auth-divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--border);
 }
 
 .social-auth-divider span {
   padding: 0 10px;
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 500;
 }
@@ -51,13 +51,14 @@
   flex-shrink: 0;
 }
 
+/* Brand colors are intentionally kept hardcoded */
 .google-button {
   border-color: #4285f4;
   color: #4285f4;
 }
 
 .google-button:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-surface-alt);
   border-color: #4285f4;
 }
 
@@ -67,7 +68,7 @@
 }
 
 .linkedin-button:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-surface-alt);
   border-color: #0077b5;
 }
 
@@ -77,6 +78,6 @@
 }
 
 .facebook-button:hover {
-  background-color: #f8f9fa;
+  background-color: var(--bg-surface-alt);
   border-color: #1877f2;
 }

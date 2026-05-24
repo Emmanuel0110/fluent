@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import "./App.css";
+import { useTheme } from "./hooks/useTheme";
 import Register from "./auth/components/Register";
 import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -26,6 +27,7 @@ import AdminFeedbacks from "./components/AdminFeedbacks";
 export const url = import.meta.env.VITE_API_URL;
 
 export default function App() {
+  useTheme();
   return (
     <AuthProvider>
       <Routes>

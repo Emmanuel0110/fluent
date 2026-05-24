@@ -9,19 +9,19 @@
 .admin-feedbacks-header {
   margin-bottom: 30px;
   padding-bottom: 15px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border);
 }
 
 .admin-feedbacks-header h1 {
   margin: 0 0 10px 0;
   font-size: 2rem;
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
 .admin-feedbacks-count {
   margin: 0;
-  color: #666;
+  color: var(--text-muted);
   font-size: 0.95rem;
 }
 
@@ -30,11 +30,11 @@
 .admin-feedbacks-empty {
   text-align: center;
   padding: 40px 20px;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .admin-feedbacks-error {
-  color: #d32f2f;
+  color: var(--color-danger);
 }
 
 .admin-feedbacks-list {
@@ -44,8 +44,8 @@
 }
 
 .admin-feedback-item {
-  background: #ffffff;
-  border: 1px solid #e0e0e0;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -65,16 +65,16 @@
   gap: 20px;
   flex-wrap: wrap;
   font-size: 0.9rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .admin-feedback-date {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .admin-feedback-user {
-  color: #666;
+  color: var(--text-muted);
 }
 
 .admin-feedback-content {
@@ -92,7 +92,7 @@
 
 .admin-feedback-comment strong,
 .admin-feedback-url strong {
-  color: #1a1a1a;
+  color: var(--text-primary);
   font-size: 0.95rem;
   font-weight: 600;
 }
@@ -100,26 +100,26 @@
 .admin-feedback-comment p {
   margin: 0;
   padding: 12px;
-  background: #f5f5f5;
+  background: var(--bg-surface-muted);
   border-radius: 4px;
-  color: #333;
+  color: var(--text-primary);
   line-height: 1.6;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
 .admin-feedback-url a {
-  color: #1976d2;
+  color: var(--color-link-admin);
   text-decoration: none;
   padding: 8px 12px;
-  background: #f5f5f5;
+  background: var(--bg-surface-muted);
   border-radius: 4px;
   word-break: break-all;
   transition: background-color 0.2s ease;
 }
 
 .admin-feedback-url a:hover {
-  background: #e3f2fd;
+  background: var(--color-link-admin-hover-bg);
   text-decoration: underline;
 }
 
@@ -137,9 +137,9 @@
   min-width: 40px;
   height: 40px;
   padding: 8px 12px;
-  border: 1px solid #e0e0e0;
-  background: #ffffff;
-  color: #333;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.95rem;
@@ -150,21 +150,21 @@
 }
 
 .admin-pagination-btn:hover:not(:disabled) {
-  background: #f5f5f5;
-  border-color: #1976d2;
-  color: #1976d2;
+  background: var(--bg-surface-muted);
+  border-color: var(--color-link-admin);
+  color: var(--color-link-admin);
 }
 
 .admin-pagination-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background: #f5f5f5;
+  background: var(--bg-surface-muted);
 }
 
 .admin-pagination-btn.active {
-  background: #1976d2;
+  background: var(--color-link-admin);
   color: #ffffff;
-  border-color: #1976d2;
+  border-color: var(--color-link-admin);
   font-weight: 600;
 }
 
@@ -175,7 +175,7 @@
 
 .admin-pagination-ellipsis {
   padding: 0 8px;
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   height: 40px;
@@ -215,4 +215,3 @@
     height: 36px;
   }
 }
-
