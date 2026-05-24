@@ -1,8 +1,10 @@
 import "./Feedback.css";
 import { useState } from "react";
 import { saveFeedback } from "../../APICalls";
+import { useTranslation } from "react-i18next";
 
 export default function Feedback() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [comment, setComment] = useState("");
   const [success, setSuccess] = useState(false);
@@ -29,7 +31,7 @@ export default function Feedback() {
           style={{ color: "#d0d9ff", fontSize: "14px", textDecoration: "underline", cursor: "pointer" }}
           onClick={() => setIsOpen(true)}
         >
-          Send a feedback
+          {t("feedback.send_link")}
         </div>
       )}
 
@@ -37,20 +39,20 @@ export default function Feedback() {
         <div id="feedback-selector-modal">
           <div id="feedback-selector-content">
             {success ? (
-              <div>Thanks for your feedback !</div>
+              <div>{t("feedback.thanks")}</div>
             ) : (
               <>
                 <textarea
-                  placeholder="Your feedback ..."
+                  placeholder={t("feedback.placeholder")}
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   rows={4}
                   maxLength={4000}
                 />
                 <div className="feedback-selector-actions">
-                  <button onClick={() => setIsOpen(false)}>Cancel</button>
+                  <button onClick={() => setIsOpen(false)}>{t("common.cancel")}</button>
                   <button onClick={sendFeedback} disabled={!comment}>
-                    Send
+                    {t("feedback.send")}
                   </button>
                 </div>
               </>

@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
 import { SentenceEdit } from "./SentenceEdit";
+import { useTranslation } from "react-i18next";
 
 type Callback = {
   _id?: string;
@@ -18,6 +19,7 @@ ConversationForm.defaultProps = {
 };
 
 function ConversationForm({ initialConversation }: { initialConversation: Conversation }) {
+  const { t } = useTranslation();
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const { conversationId } = useParams();
@@ -87,7 +89,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
               listOfWords={sourceWords}
               style="sourceSentence"
               sentence={sentence.sourceLanguage}
-              placeholder="Source sentence"
+              placeholder={t("conversation.source_sentence")}
               setConversation={setConversation}
               index={index}
             />
@@ -96,15 +98,15 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
               listOfWords={targetWords}
               style="targetSentence"
               sentence={sentence.targetLanguage}
-              placeholder="Target sentence"
+              placeholder={t("conversation.target_sentence")}
               setConversation={setConversation}
               index={index}
             />
           </div>
         ))}
       <div className="conversation-form-actions">
-        <button type="button" onClick={(e) => addSentence()}>
-          Add sentence
+        <button type="button" onClick={() => addSentence()}>
+          {t("conversation.add_sentence")}
         </button>
       </div>
       <div className="conversation-tag-section">
@@ -112,7 +114,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
           <AutoComplete
             dropdownList={conversationTags.map(({ _id, sourceLabel }) => ({ _id, label: sourceLabel }))}
             callback={selectConversationTag}
-            placeholder="Add tag"
+            placeholder={t("conversation.add_tag")}
             placement="bottom-start"
           />
         </div>
@@ -123,11 +125,11 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
               type="text"
               value={conversationTag.targetLabel}
               onChange={(e) => changeConversationTagTranslation(e.target.value)}
-              placeholder="Tag translation"
+              placeholder={t("conversation.tag_translation")}
             />
             <div className="conversation-tag-actions">
-              <button onClick={() => saveConversationTag(conversationTag)}>Save tag translation</button>
-              <button onClick={() => addTagToConversation()}>Add tag to conversation</button>
+              <button onClick={() => saveConversationTag(conversationTag)}>{t("conversation.save_tag")}</button>
+              <button onClick={() => addTagToConversation()}>{t("conversation.add_tag_to")}</button>
             </div>
           </div>
         )}
@@ -141,7 +143,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
             }
           }}
         >
-          Save conversation
+          {t("conversation.save")}
         </button>
       </div>
     </div>

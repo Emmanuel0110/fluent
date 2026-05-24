@@ -15,7 +15,7 @@ interface LanguageContextType {
   setSourceLanguage: React.Dispatch<React.SetStateAction<string>>;
   setTargetLanguage: React.Dispatch<React.SetStateAction<string>>;
   updateUserLanguages: (source: string, target: string) => Promise<boolean>;
-  loadLanguages: () => Promise<void>;
+  loadLanguages: () => Promise<Language[]>;
   getLanguageLabel: (languageId: string) => string;
 }
 
@@ -40,11 +40,18 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   const [targetLanguage, setTargetLanguage] = useState<string>("");
   const { i18n } = useTranslation();
 
-  const loadLanguages = async () => {
+  const loadLanguages = async (): Promise<Language[]> => {
     const data = await fetchLanguages();
     if (data) {
       setLanguages(data);
+      return data;
     }
+    return [];
+  };
+
+  const getLanguageLabel = (languageId: string) => {
+    const language = languages.find((lang) => lang._id === languageId);
+    return language ? language.label : "";
   };
 
   const updateUserLanguages = async (source: string, target: string): Promise<boolean> => {
@@ -56,23 +63,21 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     if (result) {
       setSourceLanguage(source);
       setTargetLanguage(target);
-      i18n.changeLanguage(getLanguageLabel(source));
+      const lang = languages.find((l) => l._id === source);
+      if (lang) i18n.changeLanguage(lang.label);
       return true;
     }
     return false;
   };
 
-  const getLanguageLabel = (languageId: string) => {
-    const language = languages.find((lang) => lang._id === languageId);
-    return language ? language.label : "";
-  };
-
   useEffect(() => {
     if (user?.sourceLanguage && user?.targetLanguage) {
-      loadLanguages();
       setSourceLanguage(user.sourceLanguage);
       setTargetLanguage(user.targetLanguage);
-      i18n.changeLanguage(getLanguageLabel(user.sourceLanguage));
+      loadLanguages().then((langs) => {
+        const lang = langs.find((l) => l._id === user.sourceLanguage);
+        if (lang) i18n.changeLanguage(lang.label);
+      });
     }
   }, [user]);
 

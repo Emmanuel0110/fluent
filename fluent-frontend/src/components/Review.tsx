@@ -7,8 +7,10 @@ import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReviewItem from "./ReviewItem";
+import { useTranslation } from "react-i18next";
 
 function Review() {
+  const { t } = useTranslation();
   const { targetLanguage } = useLanguage();
   const { reviewList, setReviewList } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
@@ -46,9 +48,9 @@ function Review() {
 
   return reviewList.length === 0 ? (
     <div>
-      <div id="nothingToReview">Nothing to review</div>
+      <div id="nothingToReview">{t("review.nothing")}</div>
       <div className="hcenter">
-        <Button onClick={() => navigate("/suggestions")}>See suggestions</Button>
+        <Button onClick={() => navigate("/suggestions")}>{t("review.see_suggestions")}</Button>
       </div>
     </div>
   ) : (

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import "./LanguageSelector.css";
 import { useLanguage } from "../../contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const LanguageSelector: React.FC = () => {
+  const { t } = useTranslation();
   const { languages, sourceLanguage, targetLanguage, updateUserLanguages } = useLanguage();
   const [tempSourceLanguage, setTempSourceLanguage] = useState<string>(sourceLanguage);
   const [tempTargetLanguage, setTempTargetLanguage] = useState<string>(targetLanguage);
@@ -15,22 +17,18 @@ const LanguageSelector: React.FC = () => {
     }
   };
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
   return (
     <>
-      <div id="language-selector-button" onClick={handleOpen} />
+      <div id="language-selector-button" onClick={() => setIsOpen(true)} />
       {isOpen && (
         <div id="language-selector-modal">
           <div id="language-selector-content">
-            <h3>Choose Your Languages</h3>
+            <h3>{t("language.choose_title")}</h3>
 
             <div className="language-field">
-              <label>Source Language (you know):</label>
+              <label>{t("language.source_label")}</label>
               <select value={tempSourceLanguage} onChange={(e) => setTempSourceLanguage(e.target.value)}>
-                <option value="">Select source language</option>
+                <option value="">{t("language.select_source")}</option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
                     {lang.label}
@@ -40,9 +38,9 @@ const LanguageSelector: React.FC = () => {
             </div>
 
             <div className="language-field">
-              <label>Target Language (you're learning):</label>
+              <label>{t("language.target_label")}</label>
               <select value={tempTargetLanguage} onChange={(e) => setTempTargetLanguage(e.target.value)}>
-                <option value="">Select target language</option>
+                <option value="">{t("language.select_target")}</option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
                     {lang.label}
@@ -52,12 +50,12 @@ const LanguageSelector: React.FC = () => {
             </div>
 
             <div className="language-selector-actions">
-              <button onClick={() => setIsOpen(false)}>Cancel</button>
+              <button onClick={() => setIsOpen(false)}>{t("common.cancel")}</button>
               <button
                 onClick={handleSave}
                 disabled={!tempSourceLanguage || !tempTargetLanguage || tempSourceLanguage === tempTargetLanguage}
               >
-                Save
+                {t("common.save")}
               </button>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { useReviewSettings } from "../contexts/ReviewSettingsContext";
 import ReviewSentence from "./ReviewSentence";
 import { useSwipeAndKeyboard } from "../hooks/useSwipeAndKeyboard";
 import "./ReviewItemComponent.css";
+import { useTranslation } from "react-i18next";
 
 function ReviewItem({
   conversation,
@@ -12,10 +13,11 @@ function ReviewItem({
   conversation: ReviewItemType;
   nextConversation: (successArray: boolean[], answersRevealed: boolean[]) => void;
 }) {
+  const { t } = useTranslation();
   const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
   const isAutoMode = shouldShowAnswerAutomatically();
 
-  const [answersRevealed, setAnswersRevealed] = useState(conversation.multiLingualSentences.map((sentence) => false));
+  const [answersRevealed, setAnswersRevealed] = useState(conversation.multiLingualSentences.map(() => false));
   const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -38,10 +40,9 @@ function ReviewItem({
   });
 
   useEffect(() => {
-    setAnswersRevealed(conversation.multiLingualSentences.map((sentence) => false));
+    setAnswersRevealed(conversation.multiLingualSentences.map(() => false));
   }, [conversation]);
 
-  // Timer effect for auto-revealing answers (only in auto mode)
   useEffect(() => {
     if (!isAutoMode) return;
 
@@ -80,7 +81,7 @@ function ReviewItem({
       {!isAutoMode && !answersRevealed[currentSentenceNumber] && (
         <div className="reveal-answer-container">
           <button onClick={handleRevealAnswer} className="reveal-answer-btn">
-            Reveal Answer
+            {t("review.reveal")}
           </button>
         </div>
       )}

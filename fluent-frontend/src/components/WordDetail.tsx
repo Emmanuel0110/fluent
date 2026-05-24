@@ -5,8 +5,10 @@ import { ConversationLine } from "./ConversationLine";
 import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
+  const { t } = useTranslation();
   const { wordTags } = useData();
   const { setTagFilter, setSearchFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
@@ -32,7 +34,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
                       key={index}
                       className="word-tag"
                       style={{ cursor: "pointer" }}
-                      onClick={(e) => searchTag(tag._id)}
+                      onClick={() => searchTag(tag._id)}
                     >
                       {"#" + tag.label}
                     </div>
@@ -41,7 +43,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
           </div>
           {usedIn.length > 0 && (
             <div id="usedIn">
-              <div className="usedInSection">Used in</div>
+              <div className="usedInSection">{t("word.used_in")}</div>
               {usedIn.map((conversation, index) => (
                 <ConversationLine key={index} conversation={conversation} />
               ))}

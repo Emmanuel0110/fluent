@@ -6,6 +6,7 @@ import LanguageSelector from "../languageSelector/LanguageSelector";
 import ProfileOptions from "../profileOptions/ProfileOptions";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface NavbarProps {
   onMenuToggle: () => void;
@@ -13,6 +14,7 @@ interface NavbarProps {
 }
 
 function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
+  const { t } = useTranslation();
   const { setIsAuthenticated } = useAuth();
   const { searchFilter, setSearchFilter, tagFilter, setTagFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
@@ -71,7 +73,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
       </div>
       <LanguageSelector />
       <ProfileOptions />
-      <div id="logoutButton" className="navButton" title="Logout" onClick={() => logout(setIsAuthenticated)} />
+      <div id="logoutButton" className="navButton" title={t("nav.logout")} onClick={() => logout(setIsAuthenticated)} />
     </div>
   );
 }

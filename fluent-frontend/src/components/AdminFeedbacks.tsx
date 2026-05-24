@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { fetchFeedbacks } from "../APICalls";
 import "./AdminFeedbacks.css";
+import { useTranslation } from "react-i18next";
 
 interface Feedback {
   _id: string;
@@ -22,6 +23,7 @@ interface PaginationInfo {
 const FEEDBACKS_PER_PAGE = 50;
 
 function AdminFeedbacks() {
+  const { t } = useTranslation();
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -39,10 +41,10 @@ function AdminFeedbacks() {
           setFeedbacks(result.feedbacks);
           setPagination(result.pagination);
         } else {
-          setError("Failed to load feedbacks");
+          setError(t("admin.load_error"));
         }
       } catch (err: any) {
-        setError(err.message || "Failed to load feedbacks");
+        setError(err.message || t("admin.load_error"));
       } finally {
         setLoading(false);
       }
@@ -50,7 +52,6 @@ function AdminFeedbacks() {
     loadFeedbacks();
   }, [currentPage]);
 
-  // Scroll to top when page changes and content is loaded
   useEffect(() => {
     if (!loading && containerRef.current) {
       containerRef.current.scrollTo({ top: 0, behavior: "smooth" });
@@ -65,7 +66,7 @@ function AdminFeedbacks() {
   if (loading) {
     return (
       <div className="admin-feedbacks-loading">
-        <p>Loading feedbacks...</p>
+        <p>{t("admin.loading")}</p>
       </div>
     );
   }
@@ -96,7 +97,6 @@ function AdminFeedbacks() {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
 
-    // Previous button
     pages.push(
       <button
         key="prev"
@@ -104,11 +104,10 @@ function AdminFeedbacks() {
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={!pagination.hasPrevPage}
       >
-        Previous
+        {t("admin.prev")}
       </button>
     );
 
-    // First page
     if (startPage > 1) {
       pages.push(
         <button key={1} className="admin-pagination-btn" onClick={() => handlePageChange(1)}>
@@ -124,7 +123,6 @@ function AdminFeedbacks() {
       }
     }
 
-    // Page numbers
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <button
@@ -137,7 +135,6 @@ function AdminFeedbacks() {
       );
     }
 
-    // Last page
     if (endPage < pagination.totalPages) {
       if (endPage < pagination.totalPages - 1) {
         pages.push(
@@ -157,7 +154,6 @@ function AdminFeedbacks() {
       );
     }
 
-    // Next button
     pages.push(
       <button
         key="next"
@@ -165,7 +161,7 @@ function AdminFeedbacks() {
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={!pagination.hasNextPage}
       >
-        Next
+        {t("admin.next")}
       </button>
     );
 
@@ -175,20 +171,21 @@ function AdminFeedbacks() {
   return (
     <div className="admin-feedbacks-container" ref={containerRef}>
       <div className="admin-feedbacks-header">
-        <h1>User Feedbacks</h1>
+        <h1>{t("admin.feedbacks_title")}</h1>
         <p className="admin-feedbacks-count">
           {pagination
-            ? `Showing ${(currentPage - 1) * FEEDBACKS_PER_PAGE + 1}-${Math.min(
-                currentPage * FEEDBACKS_PER_PAGE,
-                pagination.totalCount
-              )} of ${pagination.totalCount}`
-            : `Total: ${feedbacks.length}`}
+            ? t("admin.showing", {
+                from: (currentPage - 1) * FEEDBACKS_PER_PAGE + 1,
+                to: Math.min(currentPage * FEEDBACKS_PER_PAGE, pagination.totalCount),
+                total: pagination.totalCount,
+              })
+            : t("admin.total", { count: feedbacks.length })}
         </p>
       </div>
 
       {feedbacks.length === 0 ? (
         <div className="admin-feedbacks-empty">
-          <p>No feedbacks available</p>
+          <p>{t("admin.no_feedbacks")}</p>
         </div>
       ) : (
         <>
@@ -198,16 +195,16 @@ function AdminFeedbacks() {
                 <div className="admin-feedback-header">
                   <div className="admin-feedback-meta">
                     <span className="admin-feedback-date">{formatDate(feedback.createdAt)}</span>
-                    <span className="admin-feedback-user">User ID: {feedback.userId}</span>
+                    <span className="admin-feedback-user">{t("admin.user_id")} {feedback.userId}</span>
                   </div>
                 </div>
                 <div className="admin-feedback-content">
                   <div className="admin-feedback-comment">
-                    <strong>Comment:</strong>
+                    <strong>{t("admin.comment")}</strong>
                     <p>{feedback.comment}</p>
                   </div>
                   <div className="admin-feedback-url">
-                    <strong>Page URL:</strong>
+                    <strong>{t("admin.page_url")}</strong>
                     <a href={feedback.pageUrl} target="_blank" rel="noopener noreferrer">
                       {feedback.pageUrl}
                     </a>

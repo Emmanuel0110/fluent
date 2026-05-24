@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
 import { ConfirmDialog } from "./ConfirmDialog";
+import { useTranslation } from "react-i18next";
 
 type Callback = {
   _id?: string;
@@ -21,6 +22,7 @@ WordForm.defaultProps = {
 };
 
 function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord: Word; initialTargetWord: Word }) {
+  const { t } = useTranslation();
   const [sourceWord, setSourceWord] = useState<Word | undefined>();
   const [targetWord, setTargetWord] = useState<Word | undefined>();
   const [sourceSaveState, setSourceSaveState] = useState<SaveState>("idle");
@@ -208,7 +210,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
     <div className="word-form">
       {showDeleteSource && sourceWord && (
         <ConfirmDialog
-          message="Are you sure you want to delete this word?"
+          message={t("word.delete_confirm")}
           onConfirm={() => {
             setShowDeleteSource(false);
             handleDelete(sourceWord._id);
@@ -218,7 +220,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
       )}
       {showDeleteTarget && targetWord && (
         <ConfirmDialog
-          message="Are you sure you want to delete this word?"
+          message={t("word.delete_confirm")}
           onConfirm={() => {
             setShowDeleteTarget(false);
             handleDelete(targetWord._id);
@@ -227,13 +229,13 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
         />
       )}
       <div id="sourceLanguage">
-        <h3 className="word-form-section-title">Source Language</h3>
+        <h3 className="word-form-section-title">{t("word.source_language")}</h3>
         {!sourceWord && (
           <div className="prerequisiteInput">
             <AutoComplete
               dropdownList={sourceWords}
               callback={selectSourceWord}
-              placeholder="Add source word"
+              placeholder={t("word.add_source")}
               placement="bottom-start"
             />
           </div>
@@ -271,7 +273,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <AutoComplete
                 dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
                 callback={selectSourceTranslation}
-                placeholder="Add translation"
+                placeholder={t("word.add_translation")}
                 placement="bottom-start"
               />
             </div>
@@ -299,7 +301,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
                 callback={selectSourceWordTag}
-                placeholder="Add tag"
+                placeholder={t("word.add_tag")}
                 placement="bottom-start"
               />
             </div>
@@ -308,23 +310,23 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 onClick={() => handleSave(sourceWord, setSourceWord, setSourceSaveState)}
                 disabled={sourceSaveState !== "idle"}
               >
-                {sourceSaveState === "saved" ? "Saved!" : "Save word"}
+                {sourceSaveState === "saved" ? t("word.saved") : t("word.save")}
               </button>
               <button className="delete-btn" onClick={() => setShowDeleteSource(true)}>
-                Delete word
+                {t("word.delete")}
               </button>
             </div>
           </div>
         )}
       </div>
       <div id="targetLanguage">
-        <h3 className="word-form-section-title">Target Language</h3>
+        <h3 className="word-form-section-title">{t("word.target_language")}</h3>
         {!targetWord && (
           <div className="prerequisiteInput">
             <AutoComplete
               dropdownList={targetWords}
               callback={selectTargetWord}
-              placeholder="Add target word"
+              placeholder={t("word.add_target")}
               placement="bottom-start"
             />
           </div>
@@ -362,7 +364,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <AutoComplete
                 dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}
                 callback={selectTargetTranslation}
-                placeholder="Add translation"
+                placeholder={t("word.add_translation")}
                 placement="bottom-start"
               />
             </div>
@@ -390,7 +392,7 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
                 callback={selectTargetWordTag}
-                placeholder="Add tag"
+                placeholder={t("word.add_tag")}
                 placement="bottom-start"
               />
             </div>
@@ -399,10 +401,10 @@ function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord:
                 onClick={() => handleSave(targetWord, setTargetWord, setTargetSaveState)}
                 disabled={targetSaveState !== "idle"}
               >
-                {targetSaveState === "saved" ? "Saved!" : "Save word"}
+                {targetSaveState === "saved" ? t("word.saved") : t("word.save")}
               </button>
               <button className="delete-btn" onClick={() => setShowDeleteTarget(true)}>
-                Delete word
+                {t("word.delete")}
               </button>
             </div>
           </div>

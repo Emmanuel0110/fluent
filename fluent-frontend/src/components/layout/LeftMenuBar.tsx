@@ -5,6 +5,7 @@ import { Context } from "../../types";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Feedback from "../feedback/Feedback";
+import { useTranslation } from "react-i18next";
 
 interface LeftMenuBarProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface LeftMenuBarProps {
 }
 
 function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { status, setStatus } = useContext(ConfigContext) as Context;
@@ -52,7 +54,7 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
         <div>
           {user?.isAdmin && (
             <Button id="newConversationButton" onClick={openNewDraft}>
-              New conversation
+              {t("nav.new_conversation")}
             </Button>
           )}
           <div id="statusSection">
@@ -64,7 +66,7 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
               }}
             >
               <div className={status === "dashboard" ? "selected" : "unselected"}></div>
-              <div>Dashboard</div>
+              <div>{t("nav.dashboard")}</div>
             </div>
             <div
               onClick={() => {
@@ -74,14 +76,14 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
               }}
             >
               <div className={status === "suggestions" ? "selected" : "unselected"}></div>
-              <div>Suggestions</div>
+              <div>{t("nav.suggestions")}</div>
             </div>
           </div>
         </div>
         <div>
           <div>
             <Button id="startAReviewButton" variant="outline-primary" onClick={startReview}>
-              Start a review
+              {t("nav.start_review")}
             </Button>
           </div>
           <Feedback />

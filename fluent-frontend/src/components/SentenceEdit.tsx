@@ -4,6 +4,7 @@ import AutoComplete from "../utils/Autocomplete";
 import { useData } from "../contexts/DataContext";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { WordDefinition } from "./WordDefinition";
+import { useTranslation } from "react-i18next";
 
 type SourceOrTarget = "sourceLanguage" | "targetLanguage";
 
@@ -30,6 +31,7 @@ export const SentenceEdit = ({
   placeholder: string;
   setConversation: Dispatch<SetStateAction<Conversation | undefined>>;
 }) => {
+  const { t } = useTranslation();
   const { words } = useData();
   const { openWord } = useContext(ConfigContext) as Context;
 
@@ -147,7 +149,7 @@ export const SentenceEdit = ({
         <AutoComplete
           dropdownList={listOfWords}
           callback={addPrerequisite(index, type)}
-          placeholder="Add prerequisite"
+          placeholder={t("conversation.add_prerequisite")}
           placement="bottom-start"
         />
       </div>

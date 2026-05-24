@@ -5,8 +5,10 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import SocialAuthButtons from "./SocialAuthButtons";
+import { useTranslation } from "react-i18next";
 
 function Register() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -58,7 +60,7 @@ function Register() {
       )}
       <Form id="loginForm">
         <Form.Group className="formgroup">
-          <Form.Label>Username</Form.Label>
+          <Form.Label>{t("auth.username")}</Form.Label>
           <Form.Control
             id="username"
             name="username"
@@ -67,7 +69,7 @@ function Register() {
           />
         </Form.Group>
         <Form.Group className="formgroup">
-          <Form.Label>Password</Form.Label>
+          <Form.Label>{t("auth.password")}</Form.Label>
           <Form.Control
             id="password"
             name="password"
@@ -76,14 +78,19 @@ function Register() {
           />
         </Form.Group>
         <Button className="loginButton" onClick={onSubmit}>
-          Register
+          {t("auth.register")}
         </Button>
       </Form>
+      <SocialAuthButtons
+        onGoogleClick={handleGoogleAuth}
+        onLinkedInClick={handleLinkedInAuth}
+        onFacebookClick={handleFacebookAuth}
+      />
       <div className="text-center mt-4">
         <p className="mb-0 small text-muted">
-          Back to{" "}
+          {t("auth.back_to_login") + " "}
           <Link to="/login" className="text-primary fw-semibold text-decoration-none">
-            Login
+            {t("auth.login")}
           </Link>
         </p>
       </div>

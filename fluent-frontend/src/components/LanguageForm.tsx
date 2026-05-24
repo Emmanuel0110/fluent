@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { updateLanguages } from "../APICalls";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 export default function LanguageForm() {
+  const { t } = useTranslation();
   const { languages, setSourceLanguage, setTargetLanguage } = useLanguage();
   const [localSourceLanguage, setLocalSourceLanguage] = useState<string | null>(null);
   const [localTargetLanguage, setLocalTargetLanguage] = useState<string | null>(null);
@@ -27,10 +29,18 @@ export default function LanguageForm() {
   return (
     <div className="language-form">
       <div className="language-form-inputs">
-        <input type="text" onChange={(e) => setLocalSourceLanguage(e.target.value)} placeholder="Source language" />
-        <input type="text" onChange={(e) => setLocalTargetLanguage(e.target.value)} placeholder="Target language" />
+        <input
+          type="text"
+          onChange={(e) => setLocalSourceLanguage(e.target.value)}
+          placeholder={t("language.source_placeholder")}
+        />
+        <input
+          type="text"
+          onChange={(e) => setLocalTargetLanguage(e.target.value)}
+          placeholder={t("language.target_placeholder")}
+        />
       </div>
-      <button onClick={chooseLanguage}>Choose languages</button>
+      <button onClick={chooseLanguage}>{t("language.choose_btn")}</button>
     </div>
   );
 }

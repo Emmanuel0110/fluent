@@ -18,5 +18,5 @@ export default async function textToSpeech(text, language) {
 const puterLanguageLabels = {
   en: "en-US",
   fr: "fr-FR",
-  kr: "ko-KR",
+  ko: "ko-KR",
 };

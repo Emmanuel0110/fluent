@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../APICalls";
 import { DashboardData } from "../types";
 import "./Dashboard.css";
+import { useTranslation } from "react-i18next";
 
 function Dashboard() {
+  const { t } = useTranslation();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -19,7 +21,7 @@ function Dashboard() {
   if (loading) {
     return (
       <div className="dashboard-loading">
-        <p>Loading...</p>
+        <p>{t("dashboard.loading")}</p>
       </div>
     );
   }
@@ -27,7 +29,7 @@ function Dashboard() {
   if (!dashboardData) {
     return (
       <div className="dashboard-error">
-        <p>Failed to load dashboard data</p>
+        <p>{t("dashboard.error")}</p>
       </div>
     );
   }
@@ -39,13 +41,11 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Your Progress</h1>
+        <h1>{t("dashboard.title")}</h1>
       </div>
 
-      {/* Rank and Progress Section */}
       <div className="dashboard-section">
         <div className="rank-progress-container">
-          {/* Rank on the left */}
           <div className="rank-display">
             {rank && (
               <div className="rank-icon">
@@ -54,7 +54,6 @@ function Dashboard() {
             )}
             <span className="rank-label">{rank}</span>
           </div>
-          {/* Progress bar on the right */}
           <div className="progress-display">
             <div className="progress-header">
               <span className="progress-value">{progress}%</span>
@@ -66,9 +65,8 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Chart Section */}
       <div className="dashboard-section chart-section">
-        <h2>Words Learned Over Time</h2>
+        <h2>{t("dashboard.chart_title")}</h2>
         <div className="chart-container">
           {chartData.map((data, index) => {
             const height = maxWords !== minWords ? ((data.wordsLearned - minWords) / (maxWords - minWords)) * 100 : 100;

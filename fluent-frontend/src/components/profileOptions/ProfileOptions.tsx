@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./ProfileOptions.css";
 import { useReviewSettings } from "../../contexts/ReviewSettingsContext";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 const ProfileOptions: React.FC = () => {
+  const { t } = useTranslation();
   const { settings, updateSettings } = useReviewSettings();
   const { user } = useAuth();
   const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.reviewMode);
   const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [isOpen, setIsOpen] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setReviewMode(settings.reviewMode);
@@ -21,20 +22,16 @@ const ProfileOptions: React.FC = () => {
     setIsOpen(false);
   };
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-
   return (
     <>
-      <div id="nameLabel" title={user?.username} onClick={handleOpen} />
+      <div id="nameLabel" title={user?.username} onClick={() => setIsOpen(true)} />
       {isOpen && (
         <div id="profile-options-modal">
           <div id="profile-options-content">
-            <h3>Profile Options</h3>
+            <h3>{t("profile.title")}</h3>
 
             <div className="profile-field">
-              <label>Review Answer Display:</label>
+              <label>{t("profile.review_display")}</label>
               <div className="radio-group">
                 <label>
                   <input
@@ -44,7 +41,7 @@ const ProfileOptions: React.FC = () => {
                     checked={reviewMode === "auto"}
                     onChange={(e) => setReviewMode(e.target.value as "auto" | "manual")}
                   />
-                  Automatically after {autoReviewDelay} seconds
+                  {t("profile.auto_after", { seconds: autoReviewDelay })}
                 </label>
                 <label>
                   <input
@@ -54,14 +51,14 @@ const ProfileOptions: React.FC = () => {
                     checked={reviewMode === "manual"}
                     onChange={(e) => setReviewMode(e.target.value as "auto" | "manual")}
                   />
-                  Manually (click to reveal)
+                  {t("profile.manually")}
                 </label>
               </div>
             </div>
 
             {reviewMode === "auto" && (
               <div className="profile-field">
-                <label>Delay (seconds):</label>
+                <label>{t("profile.delay")}</label>
                 <input
                   type="number"
                   min="1"
@@ -74,8 +71,8 @@ const ProfileOptions: React.FC = () => {
             )}
 
             <div className="profile-options-actions">
-              <button onClick={() => setIsOpen(false)}>Cancel</button>
-              <button onClick={handleSave}>Save</button>
+              <button onClick={() => setIsOpen(false)}>{t("common.cancel")}</button>
+              <button onClick={handleSave}>{t("common.save")}</button>
             </div>
           </div>
         </div>

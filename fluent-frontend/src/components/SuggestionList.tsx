@@ -1,13 +1,11 @@
-import { Context, RowConversation } from "../types";
+import { Context } from "../types";
 import { ConversationLine } from "./ConversationLine";
-import { useContext, useEffect, useState } from "react";
-import { ConfigContext } from "../contexts/ConfigContext";
-import { getSuggestions } from "../APICalls";
-import { formatConversations, updateCacheWithNewConversations } from "../utils/conversationUtils";
-import { useLanguage } from "../contexts/LanguageContext";
+import { useEffect, useState } from "react";
 import { useData } from "../contexts/DataContext";
+import { useTranslation } from "react-i18next";
 
 export default function SuggestionList() {
+  const { t } = useTranslation();
   const { conversations, fetchSuggestions } = useData();
   const [suggestionIds, setSuggestionIds] = useState([] as string[] | null);
 
@@ -21,8 +19,6 @@ export default function SuggestionList() {
     });
   }, []);
 
-  useEffect(() => {}, []);
-
   return suggestionIds ? (
     <div style={{ height: "100%", overflow: "auto" }}>
       <div id="conversationList">
@@ -34,6 +30,6 @@ export default function SuggestionList() {
       </div>
     </div>
   ) : (
-    <div id="nothingToReview">No suggestion available</div>
+    <div id="nothingToReview">{t("conversation.no_suggestion")}</div>
   );
 }
