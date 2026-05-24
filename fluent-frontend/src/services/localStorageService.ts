@@ -45,6 +45,15 @@ export class LocalStorageService {
     }
   };
 
+  public clearCache() {
+    const key = this.languageKey || this.generateLanguageKey(this.sourceLanguage, this.targetLanguage);
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error("Failed to clear localStorage cache:", e);
+    }
+  }
+
   private findLanguageKeyInLocalStorage() {
     return this.possibleLanguageKeys().find((key) => key in localStorage);
   }

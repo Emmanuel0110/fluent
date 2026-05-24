@@ -95,6 +95,7 @@ export const WordProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         delete newState[id];
         return newState;
       });
+      new LocalStorageService(sourceLanguage, targetLanguage).clearCache();
     }
   };
 
