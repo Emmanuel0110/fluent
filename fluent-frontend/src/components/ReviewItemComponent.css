@@ -14,14 +14,16 @@
 #reviewSentences .green {
   width: 100%;
   text-align: center;
-  border-left: 3px solid var(--review-green);
+  border-left: 4px solid var(--review-green);
+  margin-bottom: 5px;
 }
 
 #reviewSentences .gray {
   width: 100%;
   text-align: center;
-  border-left: 3px solid var(--review-gray);
+  border-left: 4px solid var(--review-gray);
   color: transparent;
+  margin-bottom: 5px;
 }
 
 #nothingToReview {
