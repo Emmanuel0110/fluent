@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import { Context, Conversation } from "../types";
 import { ConfigContext } from "../contexts/ConfigContext";
+import { TextToSpeech } from "./textToSpeech/TextToSpeech";
+import { useLanguage } from "../contexts/LanguageContext";
 
 interface ReviewSentenceProps {
   index: number;
@@ -11,10 +13,13 @@ interface ReviewSentenceProps {
 
 function ReviewSentence({ index, currentSentenceNumber, answerRevealed, conversation }: ReviewSentenceProps) {
   const { openConversation } = useContext(ConfigContext) as Context;
+  const { targetLanguage, getLanguageLabel } = useLanguage();
 
   const handleSentenceClick = (sentenceIndex: number, sourceOrTarget: "source" | "target") => {
     if (answerRevealed) openConversation(conversation._id, sentenceIndex, sourceOrTarget);
   };
+
+  const targetText = conversation.multiLingualSentences[index].targetLanguage.text;
 
   return (
     <div className={index <= currentSentenceNumber ? "green" : "gray"}>
@@ -24,7 +29,8 @@ function ReviewSentence({ index, currentSentenceNumber, answerRevealed, conversa
       <div className="translationSpaceholder">
         {answerRevealed && (
           <div className="clickable-sentence bold" onClick={() => handleSentenceClick(index, "target")}>
-            {conversation.multiLingualSentences[index].targetLanguage.text}
+            {targetText}
+            <TextToSpeech text={targetText} language={getLanguageLabel(targetLanguage)} />
           </div>
         )}
       </div>
