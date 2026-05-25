@@ -6,11 +6,13 @@ import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conversation[] }) {
   const { t } = useTranslation();
   const { wordTags } = useData();
-  const { setTagFilter, setSearchFilter } = useContext(ConfigContext) as Context;
+  const { setTagFilter, setSearchFilter, editWord } = useContext(ConfigContext) as Context;
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const searchTag = (tagId: string) => {
@@ -22,6 +24,11 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
   return (
     <div id="detail-container">
       <div id="detail-card">
+        {user?.isAdmin && (
+          <div id="detail-card-left">
+            <div className="edit" onClick={() => editWord(word._id)}></div>
+          </div>
+        )}
         <div id="detail-card-main">
           <WordDefinition word={word} />
           <div id="word-tags">

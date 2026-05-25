@@ -158,7 +158,15 @@ button:disabled {
   flex: 0 0 40px;
   position: relative;
   margin-right: 10px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+#detail-card-left > * {
+  margin: 0;
 }
 
 #detail-card-main {
