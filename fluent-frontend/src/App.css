@@ -435,7 +435,7 @@ a.nav-link {
 }
 
 .translationSpaceholder {
-  height: 1.5em;
+  height: calc(1em + 16px + 2px); /* line-height + clickable-sentence vertical padding + border */
 }
 
 .wordLabel {

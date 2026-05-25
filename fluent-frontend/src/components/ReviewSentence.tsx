@@ -23,7 +23,7 @@ function ReviewSentence({ index, currentSentenceNumber, answerRevealed, conversa
 
   return (
     <div className={index <= currentSentenceNumber ? "green" : "gray"}>
-      <div className={answerRevealed ? "clickable-sentence" : ""} onClick={() => handleSentenceClick(index, "source")}>
+      <div className="clickable-sentence" onClick={() => handleSentenceClick(index, "source")}>
         {conversation.multiLingualSentences[index].sourceLanguage.text}
       </div>
       <div className="translationSpaceholder">
