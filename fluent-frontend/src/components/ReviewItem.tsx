@@ -78,10 +78,15 @@ function ReviewItem({
           />
         ))}
       </div>
-      {!isAutoMode && !answersRevealed[currentSentenceNumber] && (
+      {!isAutoMode && (
         <div className="reveal-answer-container">
-          <button onClick={handleRevealAnswer} className="reveal-answer-btn">
-            {t("review.reveal")}
+          {!answersRevealed[currentSentenceNumber] && (
+            <button onClick={handleRevealAnswer} className="reveal-answer-btn">
+              {t("review.reveal")}
+            </button>
+          )}
+          <button onClick={handleAdvance} className="next-btn">
+            {t("review.next")}
           </button>
         </div>
       )}
