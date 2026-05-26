@@ -37,9 +37,7 @@ export const validateRegister = [
     .withMessage("Username can only contain letters, numbers, and underscores"),
   body("password")
     .notEmpty()
-    .withMessage("Password is required")
-    .isLength({ min: 6 })
-    .withMessage("Password must be at least 6 characters long"),
+    .withMessage("Password is required"),
   handleValidationErrors,
 ];
 

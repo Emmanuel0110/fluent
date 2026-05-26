@@ -8,9 +8,12 @@ export class ApiError extends Error {
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 
-  /** User-facing message: backend message, or default for status, or generic. */
+  /** User-facing message: backend message, or validation errors, or default for status, or generic. */
   get userMessage(): string {
     if (this.body?.message) return this.body.message;
+    if (Array.isArray(this.body?.errors) && (this.body.errors as any[]).length > 0) {
+      return (this.body.errors as { message: string }[]).map((e) => e.message).join(". ");
+    }
     if (this.status === 401) return "Session expired or invalid. Please log in again.";
     if (this.status === 403) return "You are not allowed to do this.";
     if (this.status >= 500) return "Something went wrong. Please try again later.";
