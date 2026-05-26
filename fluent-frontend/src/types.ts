@@ -117,6 +117,8 @@ export interface Context {
   openConversation: (id: string, index?: number, sourceOrTarget?: "source" | "target") => void;
   tagFilter: WordTag | null;
   setTagFilter: Dispatch<SetStateAction<WordTag | null>>;
+  conversationTagFilter: ConversationTag | null;
+  setConversationTagFilter: Dispatch<SetStateAction<ConversationTag | null>>;
   searchInput: string;
   setSearchInput: Dispatch<SetStateAction<string>>;
   reviewList: ReviewItem[];

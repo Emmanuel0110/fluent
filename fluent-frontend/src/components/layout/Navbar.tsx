@@ -16,7 +16,7 @@ interface NavbarProps {
 function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
   const { t } = useTranslation();
   const { setIsAuthenticated } = useAuth();
-  const { searchFilter, setSearchFilter, tagFilter, setTagFilter } = useContext(ConfigContext) as Context;
+  const { searchFilter, setSearchFilter, tagFilter, setTagFilter, conversationTagFilter, setConversationTagFilter } = useContext(ConfigContext) as Context;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,6 +50,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
   const cancelFilter = () => {
     setSearchFilter("");
     setTagFilter(null);
+    setConversationTagFilter(null);
   };
 
   return (
@@ -68,7 +69,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
               }}
             />
           </div>
-          {(searchFilter || tagFilter) && <div id="cancelFilterForSearch" onClick={cancelFilter}></div>}
+          {(searchFilter || tagFilter || conversationTagFilter) && <div id="cancelFilterForSearch" onClick={cancelFilter}></div>}
         </div>
       </div>
       <LanguageSelector />

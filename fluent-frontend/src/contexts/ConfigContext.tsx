@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect, ReactNode, useMemo } from "react";
-import { Context, Conversation, conversationFilter, ReviewItem, Word, WordTag } from "../types";
+import { Context, Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
 import { useData } from "./DataContext";
-import { someConversationFilter, isConversationFiltered } from "../utils/conversationUtils";
 import { useNavigation } from "../hooks/useNavigation";
 import { useNavigate } from "react-router-dom";
 
@@ -15,7 +14,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [searchInput, setSearchInput] = useState("");
   const [searchFilter, setSearchFilter] = useState<string>("");
   const [tagFilter, setTagFilter] = useState<WordTag | null>(null);
-  const [conversationFilter, setConversationFilter] = useState<conversationFilter>({});
+  const [conversationTagFilter, setConversationTagFilter] = useState<ConversationTag | null>(null);
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [status, setStatus] = useState("words");
@@ -47,13 +46,9 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [words, status, searchFilter, tagFilter, wordTags]);
 
   const filteredConversations = useMemo(() => {
-    return conversations.filter((conversation) => {
-      return (
-        status === "suggestions" &&
-        (!someConversationFilter(conversationFilter) || isConversationFiltered(conversation, conversationFilter))
-      );
-    });
-  }, [conversations, status, conversationFilter]);
+    if (!conversationTagFilter) return [];
+    return conversations.filter((conversation) => conversation.tags.includes(conversationTagFilter._id));
+  }, [conversations, conversationTagFilter]);
 
   useEffect(() => {
     if (openedConversations.length !== 0) {
@@ -119,6 +114,8 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         openConversation,
         tagFilter,
         setTagFilter,
+        conversationTagFilter,
+        setConversationTagFilter,
         searchInput,
         setSearchInput,
         reviewList,

@@ -19,6 +19,7 @@ import {
 import { Conversation, ConversationTag, ReviewItem, RowConversation } from "../types";
 import {
   formatConversations,
+  formatConversationTags,
   updateCacheWithNewConversations,
   updateCacheWithNewConversationTags,
 } from "../utils/conversationUtils";
@@ -81,7 +82,7 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
         fetchConversationTags(),
         fetchConversations(),
       ]);
-      setConversationTags(conversationTagsData || []);
+      setConversationTags(formatConversationTags(conversationTagsData || [], sourceLanguage, targetLanguage));
       setConversations(formatConversations(conversationsData, targetLanguage) || []);
     } catch (error) {
       setConversationLoadError(getErrorMessage(error));
@@ -111,7 +112,8 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
       : saveNewConversationTag(infos, sourceLanguage, targetLanguage));
 
     if (res.success) {
-      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, [res.data]));
+      const formatted = formatConversationTags([res.data], sourceLanguage, targetLanguage);
+      setConversationTags((conversationTags) => updateCacheWithNewConversationTags(conversationTags, formatted));
     }
   };
 

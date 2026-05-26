@@ -42,7 +42,7 @@ router.post("/", auth, validateConversationTagCreate, (req, res) => {
   newTag
     .save()
     .then((newElement) => {
-      res.send({ data: newElement });
+      res.send({ success: true, data: newElement });
     })
     .catch(function (err) {
       logger.error({ err }, "Conversation tag save error");

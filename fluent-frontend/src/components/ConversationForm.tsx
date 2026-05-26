@@ -59,7 +59,7 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
     );
   };
 
-  const selectConversationTag = ({ _id, label, setLocalDescription }: Callback) => {
+  const selectConversationTag = ({ _id, setLocalDescription }: Callback) => {
     if (_id) {
       setConversationTag(conversationTags.find((tag) => tag._id === _id));
       setLocalDescription("");
@@ -71,12 +71,20 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
   };
 
   const addTagToConversation = () => {
-    setConversation((conversation) =>
-      conversation
-        ? { ...conversation, tags: conversationTag ? [...conversation.tags, conversationTag._id] : conversation.tags }
-        : undefined
-    );
+    if (conversationTag) {
+      setConversation((conversation) =>
+        conversation && !conversation.tags.includes(conversationTag._id)
+          ? { ...conversation, tags: [...conversation.tags, conversationTag._id] }
+          : conversation
+      );
+    }
     setConversationTag(undefined);
+  };
+
+  const removeTagFromConversation = (tagId: string) => {
+    setConversation((conversation) =>
+      conversation ? { ...conversation, tags: conversation.tags.filter((id) => id !== tagId) } : undefined
+    );
   };
 
   return (
@@ -110,6 +118,19 @@ function ConversationForm({ initialConversation }: { initialConversation: Conver
         </button>
       </div>
       <div className="conversation-tag-section">
+        {conversation && conversation.tags.length > 0 && (
+          <div className="word-tags">
+            {conversation.tags.map((tagId) => {
+              const tag = conversationTags.find((t) => t._id === tagId);
+              return tag ? (
+                <span key={tagId} className="word-tag">
+                  {tag.sourceLabel}
+                  <span className="item-delete-btn" onClick={() => removeTagFromConversation(tagId)}>×</span>
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
         <div className="prerequisiteInput">
           <AutoComplete
             dropdownList={conversationTags.map(({ _id, sourceLabel }) => ({ _id, label: sourceLabel }))}
