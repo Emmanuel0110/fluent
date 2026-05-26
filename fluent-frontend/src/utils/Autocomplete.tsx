@@ -93,7 +93,7 @@ const getCurrentSearch = (e: ChangeEvent<HTMLInputElement>, forwardedRef: Mutabl
     ? e.target.value
         .slice(
           e.target.value.lastIndexOf(" ", forwardedRef.current.selectionStart - 1) + 1,
-          forwardedRef.current.selectionStart
+          forwardedRef.current.selectionStart,
         )
         .replace(/^\#/, "")
     : "";
@@ -203,7 +203,7 @@ const AutoComplete = forwardRef<HTMLInputElement, AutoCompleteProps>(
         ) : null}
       </div>
     );
-  }
+  },
 );
 
 export default AutoComplete;
