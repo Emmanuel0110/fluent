@@ -96,7 +96,7 @@
 #searchAreaContainer {
   position: relative;
   padding: 2px 28px 2px 2px;
-  background: var(--bg-surface);
+  background: white;
   border-radius: 5px;
   margin: 5px;
 }
