@@ -52,7 +52,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
             <div id="usedIn">
               <div className="usedInSection">{t("word.used_in")}</div>
               {usedIn.map((conversation, index) => (
-                <ConversationLine key={index} conversation={conversation} />
+                <ConversationLine key={index} conversation={conversation} readOnly />
               ))}
             </div>
           )}

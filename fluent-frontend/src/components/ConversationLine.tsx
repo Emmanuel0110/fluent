@@ -7,7 +7,7 @@ import { SentenceLine } from "./SentenceLine";
 import { useData } from "../contexts/DataContext";
 import { useAuth } from "../contexts/AuthContext";
 
-export const ConversationLine = ({ conversation }: { conversation: Conversation }) => {
+export const ConversationLine = ({ conversation, readOnly = false }: { conversation: Conversation; readOnly?: boolean }) => {
   const { user } = useAuth();
   const { conversationId, wordId } = useParams();
   const { deleteConversation, subscribeToConversation, unsubscribeToConversation } = useData();
@@ -64,8 +64,12 @@ export const ConversationLine = ({ conversation }: { conversation: Conversation 
         ))}
       </div>
       <div className="lineOptions">
-        <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
-        {user?.isAdmin && (
+        <div
+          className={"subscribe" + (conversation.subscribed ? " subscribed" : "")}
+          onClick={readOnly ? undefined : handleSubscribe}
+          style={readOnly ? { pointerEvents: "none" } : undefined}
+        ></div>
+        {!readOnly && user?.isAdmin && (
           <>
             <div className="edit" onClick={onEdit}></div>
             <div className="delete" onClick={onDelete}></div>
