@@ -14,11 +14,13 @@ type Callback = {
   setLocalDescription: Dispatch<React.SetStateAction<string>>;
 };
 
-ConversationForm.defaultProps = {
-  initialConversation: { _id: "", tags: [], multiLingualSentences: [], subscribed: false },
-};
+const emptyConversation: Conversation = { _id: "", tags: [], multiLingualSentences: [], subscribed: false };
 
-function ConversationForm({ initialConversation }: { initialConversation: Conversation }) {
+function ConversationForm({
+  initialConversation = emptyConversation,
+}: {
+  initialConversation?: Conversation;
+}) {
   const { t } = useTranslation();
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();

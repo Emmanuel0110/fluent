@@ -16,12 +16,17 @@ type Callback = {
 
 type SaveState = "idle" | "saving" | "saved";
 
-WordForm.defaultProps = {
-  initialSourceWord: { _id: "", tags: [], text: "", translations: [] },
-  initialTargetWord: { _id: "", tags: [], text: "", translations: [] },
-};
+type WordTemplate = Omit<Word, "language">;
 
-function WordForm({ initialSourceWord, initialTargetWord }: { initialSourceWord: Word; initialTargetWord: Word }) {
+const emptyWord: WordTemplate = { _id: "", tags: [], text: "", translations: [] };
+
+function WordForm({
+  initialSourceWord = emptyWord,
+  initialTargetWord = emptyWord,
+}: {
+  initialSourceWord?: WordTemplate;
+  initialTargetWord?: WordTemplate;
+}) {
   const { t } = useTranslation();
   const [sourceWord, setSourceWord] = useState<Word | undefined>();
   const [targetWord, setTargetWord] = useState<Word | undefined>();

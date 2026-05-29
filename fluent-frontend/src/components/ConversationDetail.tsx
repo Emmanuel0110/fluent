@@ -16,7 +16,7 @@ export default function ConversationDetail({ conversation }: { conversation: Con
     const tag = conversationTags.find(({ _id }) => _id === tagId);
     if (tag) {
       setConversationTagFilter(tag);
-      navigate("/home");
+      navigate("/conversations");
     }
   };
 
@@ -33,9 +33,7 @@ export default function ConversationDetail({ conversation }: { conversation: Con
       <div id="detail-card">
         <div id="detail-card-left">
           <div className={"subscribe" + (conversation.subscribed ? " subscribed" : "")} onClick={handleSubscribe}></div>
-          {user?.isAdmin && (
-            <div className="edit" onClick={() => editConversation(conversation._id)}></div>
-          )}
+          {user?.isAdmin && <div className="edit" onClick={() => editConversation(conversation._id)}></div>}
         </div>
         <div id="detail-card-main">
           {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
