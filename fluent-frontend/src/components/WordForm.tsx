@@ -283,7 +283,7 @@ function WordForm({
               />
             </div>
             {sourceWord.tags.length > 0 && (
-              <div className="word-tags">
+              <div className="tags">
                 {sourceWord.tags.map((tagId) => {
                   const tag = wordTags.find((tag) => tag._id === tagId);
                   return tag ? (
@@ -374,7 +374,7 @@ function WordForm({
               />
             </div>
             {targetWord.tags.length > 0 && (
-              <div className="word-tags">
+              <div className="tags">
                 {targetWord.tags.map((tagId) => {
                   const tag = wordTags.find((tag) => tag._id === tagId);
                   return tag ? (

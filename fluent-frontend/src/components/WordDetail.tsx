@@ -31,7 +31,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
         )}
         <div id="detail-card-main">
           <WordDefinition word={word} />
-          <div id="word-tags">
+          <div className="tags">
             {word &&
               word.tags.map((tagId, index) => {
                 const tag = wordTags.find((tag) => tag._id === tagId);
@@ -43,7 +43,7 @@ export default function WordDetail({ word, usedIn }: { word: Word; usedIn: Conve
                       style={{ cursor: "pointer" }}
                       onClick={() => searchTag(tag._id)}
                     >
-                      {"#" + tag.label}
+                      {tag.label}
                     </div>
                   );
               })}

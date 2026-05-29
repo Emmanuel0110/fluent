@@ -40,12 +40,12 @@ export default function ConversationDetail({ conversation }: { conversation: Con
             <SentenceDetail key={index} index={index} multiLingualSentence={multiLingualSentence} />
           ))}
           {conversation.tags.length > 0 && (
-            <div id="word-tags">
+            <div className="tags">
               {conversation.tags.map((tagId) => {
                 const tag = conversationTags.find(({ _id }) => _id === tagId);
                 return tag ? (
                   <div key={tagId} className="word-tag" style={{ cursor: "pointer" }} onClick={() => searchTag(tagId)}>
-                    {"#" + tag.sourceLabel}
+                    {tag.sourceLabel}
                   </div>
                 ) : null;
               })}

@@ -16,11 +16,7 @@ type Callback = {
 
 const emptyConversation: Conversation = { _id: "", tags: [], multiLingualSentences: [], subscribed: false };
 
-function ConversationForm({
-  initialConversation = emptyConversation,
-}: {
-  initialConversation?: Conversation;
-}) {
+function ConversationForm({ initialConversation = emptyConversation }: { initialConversation?: Conversation }) {
   const { t } = useTranslation();
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
@@ -41,7 +37,7 @@ function ConversationForm({
 
   const [sourceWords, targetWords] = useMemo(
     () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
-    [words, appSourceLanguage]
+    [words, appSourceLanguage],
   );
 
   const addSentence = () => {
@@ -57,7 +53,7 @@ function ConversationForm({
               },
             ],
           }
-        : undefined
+        : undefined,
     );
   };
 
@@ -77,7 +73,7 @@ function ConversationForm({
       setConversation((conversation) =>
         conversation && !conversation.tags.includes(conversationTag._id)
           ? { ...conversation, tags: [...conversation.tags, conversationTag._id] }
-          : conversation
+          : conversation,
       );
     }
     setConversationTag(undefined);
@@ -85,7 +81,7 @@ function ConversationForm({
 
   const removeTagFromConversation = (tagId: string) => {
     setConversation((conversation) =>
-      conversation ? { ...conversation, tags: conversation.tags.filter((id) => id !== tagId) } : undefined
+      conversation ? { ...conversation, tags: conversation.tags.filter((id) => id !== tagId) } : undefined,
     );
   };
 
@@ -121,13 +117,15 @@ function ConversationForm({
       </div>
       <div className="conversation-tag-section">
         {conversation && conversation.tags.length > 0 && (
-          <div className="word-tags">
+          <div className="tags">
             {conversation.tags.map((tagId) => {
               const tag = conversationTags.find((t) => t._id === tagId);
               return tag ? (
                 <span key={tagId} className="word-tag">
                   {tag.sourceLabel}
-                  <span className="item-delete-btn" onClick={() => removeTagFromConversation(tagId)}>×</span>
+                  <span className="item-delete-btn" onClick={() => removeTagFromConversation(tagId)}>
+                    ×
+                  </span>
                 </span>
               ) : null;
             })}
