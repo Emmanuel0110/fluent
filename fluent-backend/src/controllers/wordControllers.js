@@ -64,11 +64,10 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
 
   // Sanitize word text
   const sanitizedText = text ? sanitizeText(text) : text;
+  const languagesToUpdate = translations.map((t) => t.language);
   await LexicalItemModel.updateOne(filter, { text: sanitizedText, language, tags });
   await LexicalItemModel.updateOne(filter, {
-    $pull: {
-      translations: { language: translations[0].language },
-    },
+    $pull: { translations: { language: { $in: languagesToUpdate } } },
   });
   const word = await LexicalItemModel.findOneAndUpdate(
     filter,
