@@ -20,7 +20,7 @@ import { logger } from "../logger.js";
 
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 5, // 5 attempts allowed
+  max: 10, // 5 attempts allowed
   message: "Too many login attempts. Please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
@@ -65,7 +65,7 @@ router.post(
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
     logger.info({ userId: userObj._id, username: sanitizedUsername }, "User registered");
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
-  })
+  }),
 );
 
 //login
@@ -92,7 +92,7 @@ router.post(
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
     logger.info({ userId: user._id }, "User logged in");
     res.json({ token, user, sourceLanguage, targetLanguage });
-  })
+  }),
 );
 
 router.get(
@@ -103,7 +103,7 @@ router.get(
     const user = await UserModel.findById(req.user._id);
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
     res.json({ user, sourceLanguage, targetLanguage });
-  })
+  }),
 );
 
 export async function cacheUserCourse(user) {
@@ -143,7 +143,7 @@ router.patch(
     const user = await UserModel.findById(req.user._id);
     await updateLanguages(user, sourceLanguage, targetLanguage);
     res.json({ success: true, data: { sourceLanguage, targetLanguage } });
-  })
+  }),
 );
 
 router.patch(
@@ -170,7 +170,7 @@ router.patch(
         autoReviewDelay: updatedUser.userSettings.autoReviewDelay,
       },
     });
-  })
+  }),
 );
 
 export async function updateLanguages(user, sourceLanguage, targetLanguage) {
@@ -351,7 +351,7 @@ router.post(
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
-  })
+  }),
 );
 
 export default router;
