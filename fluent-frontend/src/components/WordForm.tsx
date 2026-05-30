@@ -236,7 +236,7 @@ function WordForm({
       <div id="sourceLanguage">
         <h3 className="word-form-section-title">{t("word.source_language")}</h3>
         {!sourceWord && (
-          <div className="prerequisiteInput">
+          <div className="autocomplete-field">
             <AutoComplete
               dropdownList={sourceWords}
               callback={selectSourceWord}
@@ -274,7 +274,7 @@ function WordForm({
                 ))}
               </span>
             </div>
-            <div className="prerequisiteInput">
+            <div className="autocomplete-field">
               <AutoComplete
                 dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
                 callback={selectSourceTranslation}
@@ -302,7 +302,7 @@ function WordForm({
                 })}
               </div>
             )}
-            <div className="prerequisiteInput">
+            <div className="autocomplete-field">
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
                 callback={selectSourceWordTag}
@@ -327,7 +327,7 @@ function WordForm({
       <div id="targetLanguage">
         <h3 className="word-form-section-title">{t("word.target_language")}</h3>
         {!targetWord && (
-          <div className="prerequisiteInput">
+          <div className="autocomplete-field">
             <AutoComplete
               dropdownList={targetWords}
               callback={selectTargetWord}
@@ -365,7 +365,7 @@ function WordForm({
                 ))}
               </span>
             </div>
-            <div className="prerequisiteInput">
+            <div className="autocomplete-field">
               <AutoComplete
                 dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}
                 callback={selectTargetTranslation}
@@ -393,7 +393,7 @@ function WordForm({
                 })}
               </div>
             )}
-            <div className="prerequisiteInput">
+            <div className="autocomplete-field">
               <AutoComplete
                 dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
                 callback={selectTargetWordTag}

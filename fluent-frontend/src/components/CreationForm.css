@@ -373,8 +373,8 @@
   transform: translateY(0);
 }
 
-/* Prerequisite Input Styles (Enhanced) */
-.prerequisiteInput {
+/* Autocomplete Field Styles */
+.autocomplete-field {
   margin-top: 0.75rem;
   padding: 0.5rem;
   background: var(--bg-surface);
@@ -383,12 +383,12 @@
   transition: all 0.2s ease;
 }
 
-.prerequisiteInput:focus-within {
+.autocomplete-field:focus-within {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-shadow);
 }
 
-.prerequisiteInput input {
+.autocomplete-field input {
   border: none;
   width: 100%;
   padding: 0.5rem;
@@ -397,11 +397,11 @@
   color: var(--text-primary);
 }
 
-.prerequisiteInput input:focus {
+.autocomplete-field input:focus {
   outline: none;
 }
 
-.prerequisiteInput input::placeholder {
+.autocomplete-field input::placeholder {
   color: var(--text-subtle);
 }
 

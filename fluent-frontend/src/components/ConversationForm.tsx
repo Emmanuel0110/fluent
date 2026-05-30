@@ -131,7 +131,7 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
             })}
           </div>
         )}
-        <div className="prerequisiteInput">
+        <div className="autocomplete-field">
           <AutoComplete
             dropdownList={conversationTags.map(({ _id, sourceLabel }) => ({ _id, label: sourceLabel }))}
             callback={selectConversationTag}

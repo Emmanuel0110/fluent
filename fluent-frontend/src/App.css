@@ -245,7 +245,7 @@ button:disabled {
 }
 
 .tagInput,
-.prerequisiteInput {
+.autocomplete-field {
   padding: 5px;
   background: var(--bg-surface);
   border: 1px solid var(--border-light);
@@ -253,7 +253,7 @@ button:disabled {
 }
 
 .tagInput input,
-.prerequisiteInput input {
+.autocomplete-field input {
   border: none;
   width: 100%;
 }

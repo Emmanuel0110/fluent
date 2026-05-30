@@ -145,7 +145,7 @@ export const SentenceEdit = ({
           })}
         </div>
       )}
-      <div className="prerequisiteInput">
+      <div className="autocomplete-field">
         <AutoComplete
           dropdownList={listOfWords}
           callback={addPrerequisite(index, type)}
