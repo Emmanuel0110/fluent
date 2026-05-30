@@ -12,7 +12,6 @@ export interface User {
   };
 }
 
-export type Status = "word" | "conversation" | "dashboard" | "review" | "new";
 
 export interface WordTag {
   _id: string;
@@ -36,7 +35,6 @@ export type conversationFilter = { tag?: string };
 export interface View {
   openedConversations: Conversation[];
   openedWords: Word[];
-  status: string;
   searchFilter: string;
   tagFilter: WordTag | null;
   location: string;
@@ -111,8 +109,6 @@ export interface Context {
   openedConversations: Conversation[];
   searchFilter: string;
   setSearchFilter: Dispatch<SetStateAction<string>>;
-  status: string;
-  setStatus: Dispatch<SetStateAction<string>>;
   openWord: (id: string) => void;
   openConversation: (id: string, index?: number, sourceOrTarget?: "source" | "target") => void;
   tagFilter: WordTag | null;

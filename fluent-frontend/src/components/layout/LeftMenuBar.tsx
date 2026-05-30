@@ -1,8 +1,6 @@
-import { Dispatch, SetStateAction, useContext, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "react-bootstrap";
-import { ConfigContext } from "../../contexts/ConfigContext";
-import { Context } from "../../types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Feedback from "../feedback/Feedback";
 import { useTranslation } from "react-i18next";
@@ -16,7 +14,7 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { status, setStatus } = useContext(ConfigContext) as Context;
+  const location = useLocation();
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
@@ -37,13 +35,11 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
   };
 
   const startReview = () => {
-    setStatus("review");
     navigate("/review");
     setOpen(false);
   };
 
   const openNewDraft = () => {
-    setStatus("new");
     navigate("/new");
     setOpen(false);
   };
@@ -60,22 +56,20 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
           <div id="statusSection">
             <div
               onClick={() => {
-                setStatus("dashboard");
                 navigate("/dashboard");
                 setOpen(false);
               }}
             >
-              <div className={status === "dashboard" ? "selected" : "unselected"}></div>
+              <div className={location.pathname === "/dashboard" ? "selected" : "unselected"}></div>
               <div>{t("nav.dashboard")}</div>
             </div>
             <div
               onClick={() => {
-                setStatus("suggestions");
                 navigate("/suggestions");
                 setOpen(false);
               }}
             >
-              <div className={status === "suggestions" ? "selected" : "unselected"}></div>
+              <div className={location.pathname === "/suggestions" ? "selected" : "unselected"}></div>
               <div>{t("nav.suggestions")}</div>
             </div>
           </div>

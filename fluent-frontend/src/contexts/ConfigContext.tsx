@@ -17,7 +17,6 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [conversationTagFilter, setConversationTagFilter] = useState<ConversationTag | null>(null);
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
-  const [status, setStatus] = useState("words");
   const [reviewList, setReviewList] = useState<ReviewItem[]>([]);
   const [suggestions, setSuggestions] = useState<Conversation[]>([]);
   const navigate = useNavigate();
@@ -27,12 +26,10 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useNavigation(
     openedWords,
     openedConversations,
-    status,
     searchFilter,
     tagFilter,
     setOpenedWords,
     setOpenedConversations,
-    setStatus,
     setSearchFilter
   );
 
@@ -43,7 +40,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         (!tagFilter || word.tags.includes(tagFilter._id))
       );
     });
-  }, [words, status, searchFilter, tagFilter, wordTags]);
+  }, [words, searchFilter, tagFilter, wordTags]);
 
   const filteredConversations = useMemo(() => {
     if (!conversationTagFilter) return [];
@@ -108,8 +105,6 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setOpenedConversations,
         searchFilter,
         setSearchFilter,
-        status,
-        setStatus,
         openWord,
         openConversation,
         tagFilter,

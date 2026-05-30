@@ -6,12 +6,10 @@ import { View, WordTag } from "../types";
 export const useNavigation = (
   openedWords: any[],
   openedConversations: any[],
-  status: string,
   searchFilter: string,
   tagFilter: WordTag | null,
   setOpenedWords: (words: any[]) => void,
   setOpenedConversations: (conversations: any[]) => void,
-  setStatus: (status: string) => void,
   setSearchFilter: (filter: string) => void
 ) => {
   const navigate = useNavigate();
@@ -22,13 +20,12 @@ export const useNavigation = (
     const view: View = {
       openedWords,
       openedConversations,
-      status,
       searchFilter,
       tagFilter,
       location: location.pathname,
     };
     navigationService.current.addToHistory(view);
-  }, [location, status, searchFilter]);
+  }, [location, searchFilter]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -64,7 +61,6 @@ export const useNavigation = (
   const refreshView = (view: View) => {
     setOpenedWords(view.openedWords);
     setOpenedConversations(view.openedConversations);
-    setStatus(view.status);
     setSearchFilter(view.searchFilter);
     navigate(view.location);
   };
