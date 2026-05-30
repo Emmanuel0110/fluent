@@ -52,7 +52,7 @@ function Dashboard() {
                 <div className={`rank-${rank}`} />
               </div>
             )}
-            <span className="rank-label">{rank}</span>
+            <span className="rank-label">{rank ? t(`dashboard.rank.${rank}`) : ""}</span>
           </div>
           <div className="progress-display">
             <div className="progress-header">

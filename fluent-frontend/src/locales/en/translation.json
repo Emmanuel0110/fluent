@@ -70,6 +70,10 @@
   "dashboard.error": "Failed to load dashboard data",
   "dashboard.title": "Your Progress",
   "dashboard.chart_title": "Words Learned Over Time",
+  "dashboard.rank.Beginner": "Beginner",
+  "dashboard.rank.Amateur": "Amateur",
+  "dashboard.rank.Advanced": "Advanced",
+  "dashboard.rank.Expert": "Expert",
 
   "creation.language_section": "Language Selection",
   "creation.conversation_section": "Conversation",

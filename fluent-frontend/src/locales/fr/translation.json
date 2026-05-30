@@ -70,6 +70,10 @@
   "dashboard.error": "Échec du chargement des données",
   "dashboard.title": "Votre progression",
   "dashboard.chart_title": "Mots appris dans le temps",
+  "dashboard.rank.Beginner": "Débutant",
+  "dashboard.rank.Amateur": "Amateur",
+  "dashboard.rank.Advanced": "Avancé",
+  "dashboard.rank.Expert": "Expert",
 
   "creation.language_section": "Sélection de la langue",
   "creation.conversation_section": "Conversation",
