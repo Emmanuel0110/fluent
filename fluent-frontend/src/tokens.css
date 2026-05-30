@@ -115,6 +115,14 @@
   color: var(--text-link);
 }
 
+.nav-tabs .nav-link:not(.active) {
+  color: var(--text-secondary);
+}
+
+.nav-tabs .nav-link:not(.active):hover {
+  color: var(--text-primary);
+}
+
 [data-theme="dark"] .nav-tabs {
   border-bottom-color: var(--border);
 }

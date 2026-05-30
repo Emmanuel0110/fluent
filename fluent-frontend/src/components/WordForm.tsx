@@ -1,4 +1,5 @@
 import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import { Tab, Tabs } from "react-bootstrap";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
@@ -39,6 +40,7 @@ function WordForm() {
   const [targetSaveState, setTargetSaveState] = useState<SaveState>("idle");
   const [showDeleteSource, setShowDeleteSource] = useState(false);
   const [showDeleteTarget, setShowDeleteTarget] = useState(false);
+  const [activeTab, setActiveTab] = useState<"source" | "target">("source");
 
   useEffect(() => {
     if (wordId && words[wordId]) {
@@ -235,186 +237,188 @@ function WordForm() {
         />
       )}
       <div id="sourceLanguage">
-        <h3 className="word-form-section-title">{t("word.source_language")}</h3>
-        {!sourceWord && (
-          <div className="autocomplete-field">
-            <AutoComplete
-              dropdownList={sourceWords}
-              callback={selectSourceWord}
-              placeholder={t("word.add_source")}
-              placement="bottom-start"
-            />
-          </div>
-        )}
-        {sourceWord && (
-          <div className="word-display">
-            <div className="word-text-display">
-              <input
-                className="word-text-input"
-                value={sourceWord.text}
-                onChange={(e) => setSourceWord({ ...sourceWord, text: e.target.value })}
-              />
-              <span>{": "}</span>
-              <span>
-                {sourceWord.translations.map((translationId, index) => (
-                  <span key={translationId}>
-                    {index !== 0 && <span>{", "}</span>}
-                    <span>{words[translationId]?.text}</span>
-                    <span
-                      className="item-delete-btn"
-                      onClick={() =>
-                        setSourceWord({
-                          ...sourceWord,
-                          translations: sourceWord.translations.filter((id) => id !== translationId),
-                        })
-                      }
-                    >
-                      ×
-                    </span>
-                  </span>
-                ))}
-              </span>
-            </div>
-            <div className="autocomplete-field">
-              <AutoComplete
-                dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
-                callback={selectSourceTranslation}
-                placeholder={t("word.add_translation")}
-                placement="bottom-start"
-              />
-            </div>
-            {sourceWord.tags.length > 0 && (
-              <div className="tags">
-                {sourceWord.tags.map((tagId) => {
-                  const tag = wordTags.find((tag) => tag._id === tagId);
-                  return tag ? (
-                    <span key={tagId} className="word-tag">
-                      {tag.label}
-                      <span
-                        className="item-delete-btn"
-                        onClick={() =>
-                          setSourceWord({ ...sourceWord, tags: sourceWord.tags.filter((id) => id !== tagId) })
-                        }
-                      >
-                        ×
-                      </span>
-                    </span>
-                  ) : undefined;
-                })}
+      <Tabs fill activeKey={activeTab} onSelect={(k) => setActiveTab(k as "source" | "target")}>
+        <Tab eventKey="source" title={t("word.source_language")}>
+            {!sourceWord && (
+              <div className="autocomplete-field">
+                <AutoComplete
+                  dropdownList={sourceWords}
+                  callback={selectSourceWord}
+                  placeholder={t("word.add_source")}
+                  placement="bottom-start"
+                />
               </div>
             )}
-            <div className="autocomplete-field">
-              <AutoComplete
-                dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
-                callback={selectSourceWordTag}
-                placeholder={t("word.add_tag")}
-                placement="bottom-start"
-              />
-            </div>
-            <div className="word-form-actions">
-              <button
-                onClick={() => handleSave(sourceWord, setSourceWord, setSourceSaveState)}
-                disabled={sourceSaveState !== "idle"}
-              >
-                {sourceSaveState === "saved" ? t("word.saved") : t("word.save")}
-              </button>
-              <button className="delete-btn" onClick={() => setShowDeleteSource(true)}>
-                {t("word.delete")}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-      <div id="targetLanguage">
-        <h3 className="word-form-section-title">{t("word.target_language")}</h3>
-        {!targetWord && (
-          <div className="autocomplete-field">
-            <AutoComplete
-              dropdownList={targetWords}
-              callback={selectTargetWord}
-              placeholder={t("word.add_target")}
-              placement="bottom-start"
-            />
-          </div>
-        )}
-        {targetWord && (
-          <div className="word-display">
-            <div className="word-text-display">
-              <input
-                className="word-text-input"
-                value={targetWord.text}
-                onChange={(e) => setTargetWord({ ...targetWord, text: e.target.value })}
-              />
-              <span>{": "}</span>
-              <span>
-                {targetWord.translations.map((translationId, index) => (
-                  <span key={translationId}>
-                    {index !== 0 && <span>{", "}</span>}
-                    <span>{words[translationId]?.text}</span>
-                    <span
-                      className="item-delete-btn"
-                      onClick={() =>
-                        setTargetWord({
-                          ...targetWord,
-                          translations: targetWord.translations.filter((id) => id !== translationId),
-                        })
-                      }
-                    >
-                      ×
-                    </span>
-                  </span>
-                ))}
-              </span>
-            </div>
-            <div className="autocomplete-field">
-              <AutoComplete
-                dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}
-                callback={selectTargetTranslation}
-                placeholder={t("word.add_translation")}
-                placement="bottom-start"
-              />
-            </div>
-            {targetWord.tags.length > 0 && (
-              <div className="tags">
-                {targetWord.tags.map((tagId) => {
-                  const tag = wordTags.find((tag) => tag._id === tagId);
-                  return tag ? (
-                    <span key={tagId} className="word-tag">
-                      {tag.label}
-                      <span
-                        className="item-delete-btn"
-                        onClick={() =>
-                          setTargetWord({ ...targetWord, tags: targetWord.tags.filter((id) => id !== tagId) })
-                        }
-                      >
-                        ×
+            {sourceWord && (
+              <div className="word-display">
+                <div className="word-text-display">
+                  <input
+                    className="word-text-input"
+                    value={sourceWord.text}
+                    onChange={(e) => setSourceWord({ ...sourceWord, text: e.target.value })}
+                  />
+                  <span>{": "}</span>
+                  <span>
+                    {sourceWord.translations.map((translationId, index) => (
+                      <span key={translationId}>
+                        {index !== 0 && <span>{", "}</span>}
+                        <span>{words[translationId]?.text}</span>
+                        <span
+                          className="item-delete-btn"
+                          onClick={() =>
+                            setSourceWord({
+                              ...sourceWord,
+                              translations: sourceWord.translations.filter((id) => id !== translationId),
+                            })
+                          }
+                        >
+                          ×
+                        </span>
                       </span>
-                    </span>
-                  ) : undefined;
-                })}
+                    ))}
+                  </span>
+                </div>
+                <div className="autocomplete-field">
+                  <AutoComplete
+                    dropdownList={targetWords.filter(({ _id }) => !sourceWord.translations.includes(_id))}
+                    callback={selectSourceTranslation}
+                    placeholder={t("word.add_translation")}
+                    placement="bottom-start"
+                  />
+                </div>
+                {sourceWord.tags.length > 0 && (
+                  <div className="tags">
+                    {sourceWord.tags.map((tagId) => {
+                      const tag = wordTags.find((tag) => tag._id === tagId);
+                      return tag ? (
+                        <span key={tagId} className="word-tag">
+                          {tag.label}
+                          <span
+                            className="item-delete-btn"
+                            onClick={() =>
+                              setSourceWord({ ...sourceWord, tags: sourceWord.tags.filter((id) => id !== tagId) })
+                            }
+                          >
+                            ×
+                          </span>
+                        </span>
+                      ) : undefined;
+                    })}
+                  </div>
+                )}
+                <div className="autocomplete-field">
+                  <AutoComplete
+                    dropdownList={wordTags.filter(({ language }) => language === appSourceLanguage)}
+                    callback={selectSourceWordTag}
+                    placeholder={t("word.add_tag")}
+                    placement="bottom-start"
+                  />
+                </div>
+                <div className="word-form-actions">
+                  <button
+                    onClick={() => handleSave(sourceWord, setSourceWord, setSourceSaveState)}
+                    disabled={sourceSaveState !== "idle"}
+                  >
+                    {sourceSaveState === "saved" ? t("word.saved") : t("word.save")}
+                  </button>
+                  <button className="delete-btn" onClick={() => setShowDeleteSource(true)}>
+                    {t("word.delete")}
+                  </button>
+                </div>
               </div>
             )}
-            <div className="autocomplete-field">
-              <AutoComplete
-                dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
-                callback={selectTargetWordTag}
-                placeholder={t("word.add_tag")}
-                placement="bottom-start"
-              />
-            </div>
-            <div className="word-form-actions">
-              <button
-                onClick={() => handleSave(targetWord, setTargetWord, setTargetSaveState)}
-                disabled={targetSaveState !== "idle"}
-              >
-                {targetSaveState === "saved" ? t("word.saved") : t("word.save")}
-              </button>
-              <button className="delete-btn" onClick={() => setShowDeleteTarget(true)}>
-                {t("word.delete")}
-              </button>
-            </div>
-          </div>
-        )}
+        </Tab>
+        <Tab eventKey="target" title={t("word.target_language")}>
+            {!targetWord && (
+              <div className="autocomplete-field">
+                <AutoComplete
+                  dropdownList={targetWords}
+                  callback={selectTargetWord}
+                  placeholder={t("word.add_target")}
+                  placement="bottom-start"
+                />
+              </div>
+            )}
+            {targetWord && (
+              <div className="word-display">
+                <div className="word-text-display">
+                  <input
+                    className="word-text-input"
+                    value={targetWord.text}
+                    onChange={(e) => setTargetWord({ ...targetWord, text: e.target.value })}
+                  />
+                  <span>{": "}</span>
+                  <span>
+                    {targetWord.translations.map((translationId, index) => (
+                      <span key={translationId}>
+                        {index !== 0 && <span>{", "}</span>}
+                        <span>{words[translationId]?.text}</span>
+                        <span
+                          className="item-delete-btn"
+                          onClick={() =>
+                            setTargetWord({
+                              ...targetWord,
+                              translations: targetWord.translations.filter((id) => id !== translationId),
+                            })
+                          }
+                        >
+                          ×
+                        </span>
+                      </span>
+                    ))}
+                  </span>
+                </div>
+                <div className="autocomplete-field">
+                  <AutoComplete
+                    dropdownList={sourceWords.filter(({ _id }) => !targetWord.translations.includes(_id))}
+                    callback={selectTargetTranslation}
+                    placeholder={t("word.add_translation")}
+                    placement="bottom-start"
+                  />
+                </div>
+                {targetWord.tags.length > 0 && (
+                  <div className="tags">
+                    {targetWord.tags.map((tagId) => {
+                      const tag = wordTags.find((tag) => tag._id === tagId);
+                      return tag ? (
+                        <span key={tagId} className="word-tag">
+                          {tag.label}
+                          <span
+                            className="item-delete-btn"
+                            onClick={() =>
+                              setTargetWord({ ...targetWord, tags: targetWord.tags.filter((id) => id !== tagId) })
+                            }
+                          >
+                            ×
+                          </span>
+                        </span>
+                      ) : undefined;
+                    })}
+                  </div>
+                )}
+                <div className="autocomplete-field">
+                  <AutoComplete
+                    dropdownList={wordTags.filter(({ language }) => language === appTargetLanguage)}
+                    callback={selectTargetWordTag}
+                    placeholder={t("word.add_tag")}
+                    placement="bottom-start"
+                  />
+                </div>
+                <div className="word-form-actions">
+                  <button
+                    onClick={() => handleSave(targetWord, setTargetWord, setTargetSaveState)}
+                    disabled={targetSaveState !== "idle"}
+                  >
+                    {targetSaveState === "saved" ? t("word.saved") : t("word.save")}
+                  </button>
+                  <button className="delete-btn" onClick={() => setShowDeleteTarget(true)}>
+                    {t("word.delete")}
+                  </button>
+                </div>
+              </div>
+            )}
+        </Tab>
+      </Tabs>
       </div>
     </div>
   );

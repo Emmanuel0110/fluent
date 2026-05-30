@@ -293,20 +293,28 @@
   gap: 2rem;
 }
 
-#sourceLanguage,
-#targetLanguage {
+#sourceLanguage {
   background: var(--bg-surface-alt);
   border: 1px solid var(--border);
   border-radius: 10px;
+  overflow: hidden;
+}
+
+#sourceLanguage .nav-tabs {
+  width: 100%;
+}
+
+#sourceLanguage .nav-tabs .nav-item {
+  flex: 1;
+}
+
+#sourceLanguage .nav-tabs .nav-link {
+  width: 100%;
+  text-align: center;
+}
+
+#sourceLanguage .tab-content {
   padding: 1.5rem;
-}
-
-#sourceLanguage {
-  border-left: 4px solid var(--color-source);
-}
-
-#targetLanguage {
-  border-left: 4px solid var(--color-target);
 }
 
 .word-form-section-title {
