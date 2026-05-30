@@ -72,10 +72,11 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   const word = await LexicalItemModel.findOneAndUpdate(
     filter,
     { $push: { translations: { $each: translations } } },
-    { new: true }
+    { new: true },
   ).lean();
   const completedWord = {
     ...word,
+    translations: word.translations.filter((t) => languagesToUpdate.includes(t.language.toString())), //should be managed systematically in another module
     subscribed: !!req.userCourse.words.find(({ _id }) => _id === word._id),
   };
   res.json({ success: true, data: completedWord });
