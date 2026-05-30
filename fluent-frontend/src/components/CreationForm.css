@@ -364,7 +364,6 @@
   background: var(--accent);
   color: white;
   border: none;
-  border-radius: 8px;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
@@ -372,7 +371,6 @@
 }
 
 .word-form button:hover {
-  background: var(--accent-dark);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px var(--accent-shadow-hover);
 }

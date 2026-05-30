@@ -490,6 +490,7 @@ a.nav-link {
   background: transparent;
   outline: none;
   width: auto;
+  color: var(--text-primary);
   field-sizing: content;
 }
 
