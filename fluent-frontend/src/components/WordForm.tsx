@@ -1,4 +1,4 @@
-import React, { Dispatch, useMemo, useState } from "react";
+import React, { Dispatch, useEffect, useMemo, useState } from "react";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
@@ -16,6 +16,11 @@ type Callback = {
 
 type SaveState = "idle" | "saving" | "saved";
 
+const getWordList = (words: { [key: string]: Word }, language: string) => {
+  return Object.values(words)
+    .filter((word) => word.language === language)
+    .map(({ _id, text }) => ({ _id, label: text }));
+};
 
 function WordForm() {
   const { t } = useTranslation();
@@ -30,11 +35,11 @@ function WordForm() {
   const [showDeleteSource, setShowDeleteSource] = useState(false);
   const [showDeleteTarget, setShowDeleteTarget] = useState(false);
 
-  const getWordList = (words: { [key: string]: Word }, language: string) => {
-    return Object.values(words)
-      .filter((word) => word.language === language)
-      .map(({ _id, text }) => ({ _id, label: text }));
-  };
+  useEffect(() => {
+    if (wordId && !sourceWord && words[wordId]) {
+      setSourceWord(words[wordId]);
+    }
+  }, [words, wordId]);
 
   const [sourceWords, targetWords] = useMemo(
     () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],

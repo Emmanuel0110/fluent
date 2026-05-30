@@ -26,8 +26,9 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
   const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useData();
 
   useEffect(() => {
+    if (conversation) return;
     setConversation(conversationId ? conversations.find(({ _id }) => _id === conversationId) : initialConversation);
-  }, []);
+  }, [conversations, conversationId]);
 
   const getWordList = (words: { [key: string]: Word }, language: string) => {
     return Object.values(words)
