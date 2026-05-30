@@ -69,7 +69,7 @@
   "dashboard.loading": "Chargement...",
   "dashboard.error": "Échec du chargement des données",
   "dashboard.title": "Votre progression",
-  "dashboard.chart_title": "Mots appris dans le temps",
+  "dashboard.chart_title": "Mots appris",
   "dashboard.rank.Beginner": "Débutant",
   "dashboard.rank.Amateur": "Amateur",
   "dashboard.rank.Advanced": "Avancé",
