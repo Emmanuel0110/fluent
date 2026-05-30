@@ -75,8 +75,7 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
     { new: true },
   ).lean();
   const completedWord = {
-    ...word,
-    translations: word.translations.filter((t) => languagesToUpdate.includes(t.language.toString())), //should be managed systematically in another module
+    ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(word),
     subscribed: !!req.userCourse.words.find(({ _id }) => _id === word._id),
   };
   res.json({ success: true, data: completedWord });
@@ -121,6 +120,17 @@ function generateAggregationPipeline(language, translationLanguage, lastUpdateDa
       },
     },
   ];
+}
+
+function onlyKeepLanguages(sourceLanguage, targetLanguage) {
+  return function (word) {
+    return {
+      ...word,
+      translations: word.translations.filter(({ language }) =>
+        [sourceLanguage.toString(), targetLanguage.toString()].includes(language.toString()),
+      ),
+    };
+  };
 }
 
 function completeWords(words, userWords) {

@@ -20,16 +20,22 @@ router.get("/", auth, cache, validateConversationQuery, async (req, res) => {
     const { conversations: userConversations, sourceLanguage, targetLanguage } = req.userCourse;
     if (tag) {
       const conversations = await MultiLingualConversationModel.find({ tags: { $in: [tag] } }).lean();
-      res.json({ success: true, data: completeConversations(conversations, userConversations) });
+      res.json({
+        success: true,
+        data: completeConversations(
+          conversations.map(onlyKeepLanguages(sourceLanguage, targetLanguage)),
+          userConversations,
+        ),
+      });
     } else if (conversationId) {
-      const conversation = await MultiLingualConversationModel.findById(conversationId);
+      const conversation = await MultiLingualConversationModel.findById(conversationId).lean();
       if (!conversation) {
         res.json({ success: false, message: "Conversation not found" });
         return;
       }
       const completedConversation = {
-        ...conversation,
-        subscribed: !!userConversations.find(({ _id }) => _id === conversation._id),
+        ...onlyKeepLanguages(sourceLanguage, targetLanguage)(conversation),
+        subscribed: !!userConversations.find(({ _id }) => new mongoose.Types.ObjectId(_id).equals(conversation._id)),
       };
       res.json({ success: true, data: completedConversation });
     } else if (wordId) {
@@ -57,7 +63,7 @@ function onlyKeepLanguages(sourceLanguage, targetLanguage) {
     return {
       ...conversation,
       conversations: conversation.conversations.filter(({ language }) =>
-        [sourceLanguage.toString(), targetLanguage.toString()].includes(language.toString())
+        [sourceLanguage.toString(), targetLanguage.toString()].includes(language.toString()),
       ),
     };
   };
@@ -98,10 +104,10 @@ router.put("/:id", auth, cache, validateConversationUpdate, async function (req,
   const conversation = await MultiLingualConversationModel.findOneAndUpdate(
     filter,
     { $push: { conversations: { $each: sanitizedConversations } } },
-    { new: true }
+    { new: true },
   ).lean();
   const completedConversation = {
-    ...conversation,
+    ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(conversation),
     subscribed: !!req.userCourse.conversations.find(({ _id }) => _id === conversation._id),
   };
   res.json({ success: true, data: completedConversation });
@@ -111,7 +117,7 @@ function completeConversations(conversations, userConversations) {
   return conversations.map((conversation) => ({
     ...conversation,
     subscribed: !!userConversations.find((userConversation) =>
-      new mongoose.Types.ObjectId(userConversation._id).equals(conversation._id)
+      new mongoose.Types.ObjectId(userConversation._id).equals(conversation._id),
     ),
   }));
 }
