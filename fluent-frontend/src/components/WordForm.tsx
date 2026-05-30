@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useMemo, useState } from "react";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
@@ -16,33 +16,19 @@ type Callback = {
 
 type SaveState = "idle" | "saving" | "saved";
 
-type WordTemplate = Omit<Word, "language">;
 
-const emptyWord: WordTemplate = { _id: "", tags: [], text: "", translations: [] };
-
-function WordForm({
-  initialSourceWord = emptyWord,
-  initialTargetWord = emptyWord,
-}: {
-  initialSourceWord?: WordTemplate;
-  initialTargetWord?: WordTemplate;
-}) {
+function WordForm() {
   const { t } = useTranslation();
-  const [sourceWord, setSourceWord] = useState<Word | undefined>();
+  const { wordId } = useParams();
+  const navigate = useNavigate();
+  const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
+  const { words, saveWord, saveWordTag, wordTags, deleteWord } = useData();
+  const [sourceWord, setSourceWord] = useState<Word | undefined>(wordId ? words[wordId] : undefined);
   const [targetWord, setTargetWord] = useState<Word | undefined>();
   const [sourceSaveState, setSourceSaveState] = useState<SaveState>("idle");
   const [targetSaveState, setTargetSaveState] = useState<SaveState>("idle");
   const [showDeleteSource, setShowDeleteSource] = useState(false);
   const [showDeleteTarget, setShowDeleteTarget] = useState(false);
-  const { wordId } = useParams();
-  const navigate = useNavigate();
-  const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
-  const { words, saveWord, saveWordTag, wordTags, deleteWord } = useData();
-
-  useEffect(() => {
-    setSourceWord(wordId ? words[wordId] : { ...initialSourceWord, language: appSourceLanguage });
-    setTargetWord({ ...initialTargetWord, language: appTargetLanguage });
-  }, []);
 
   const getWordList = (words: { [key: string]: Word }, language: string) => {
     return Object.values(words)
@@ -82,8 +68,8 @@ function WordForm({
     if (_id) {
       setSourceWord(words[_id]);
       setLocalDescription("");
-    } else if (label && sourceWord) {
-      saveWord({ ...sourceWord, text: label }).then((word) => {
+    } else if (label) {
+      saveWord({ _id: "", language: appSourceLanguage, text: label, translations: [], tags: [] }).then((word) => {
         if (word) {
           setSourceWord(word);
           setLocalDescription("");
@@ -176,8 +162,8 @@ function WordForm({
     if (_id) {
       setTargetWord(words[_id]);
       setLocalDescription("");
-    } else if (label && targetWord) {
-      saveWord({ ...targetWord, text: label }).then((word) => {
+    } else if (label) {
+      saveWord({ _id: "", language: appTargetLanguage, text: label, translations: [], tags: [] }).then((word) => {
         if (word) {
           setTargetWord(word);
           setLocalDescription("");
