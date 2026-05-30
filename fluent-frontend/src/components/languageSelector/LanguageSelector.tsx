@@ -21,8 +21,8 @@ const LanguageSelector: React.FC = () => {
     <>
       <div id="language-selector-button" onClick={() => setIsOpen(true)} />
       {isOpen && (
-        <div id="language-selector-modal">
-          <div id="language-selector-content">
+        <div id="language-selector-modal" onClick={() => setIsOpen(false)}>
+          <div id="language-selector-content" onClick={(e) => e.stopPropagation()}>
             <h3>{t("language.choose_title")}</h3>
 
             <div className="language-field">

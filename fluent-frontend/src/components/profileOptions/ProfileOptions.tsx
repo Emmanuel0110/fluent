@@ -10,6 +10,7 @@ const ProfileOptions: React.FC = () => {
   const { settings, updateSettings } = useReviewSettings();
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [tempTheme, setTempTheme] = useState<"light" | "dark">(theme);
   const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.reviewMode);
   const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [isOpen, setIsOpen] = useState(false);
@@ -19,17 +20,25 @@ const ProfileOptions: React.FC = () => {
     setAutoReviewDelay(settings.autoReviewDelay);
   }, [settings]);
 
+  const handleOpen = () => {
+    setTempTheme(theme);
+    setReviewMode(settings.reviewMode);
+    setAutoReviewDelay(settings.autoReviewDelay);
+    setIsOpen(true);
+  };
+
   const handleSave = async () => {
+    setTheme(tempTheme);
     updateSettings({ reviewMode, autoReviewDelay });
     setIsOpen(false);
   };
 
   return (
     <>
-      <div id="nameLabel" title={user?.username} onClick={() => setIsOpen(true)} />
+      <div id="nameLabel" title={user?.username} onClick={handleOpen} />
       {isOpen && (
-        <div id="profile-options-modal">
-          <div id="profile-options-content">
+        <div id="profile-options-modal" onClick={() => setIsOpen(false)}>
+          <div id="profile-options-content" onClick={(e) => e.stopPropagation()}>
             <h3>{t("profile.title")}</h3>
 
             <div className="profile-field theme-field">
@@ -38,8 +47,8 @@ const ProfileOptions: React.FC = () => {
                 <input
                   type="checkbox"
                   id="theme-toggle"
-                  checked={theme === "dark"}
-                  onChange={(e) => setTheme(e.target.checked ? "dark" : "light")}
+                  checked={tempTheme === "dark"}
+                  onChange={(e) => setTempTheme(e.target.checked ? "dark" : "light")}
                 />
                 <span className="theme-toggle-track" />
               </label>
