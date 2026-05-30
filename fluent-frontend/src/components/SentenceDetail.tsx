@@ -42,7 +42,7 @@ export default function SentenceDetail({
         searchParams.get("language") === "source" && (
           <div id="sourcePrerequisites">
             {sourceSentence.prerequisites.map((wordId, index) =>
-              words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
+              words[wordId] ? <WordLine key={index} word={words[wordId]} readonly /> : null,
             )}
           </div>
         )}
@@ -51,7 +51,7 @@ export default function SentenceDetail({
         searchParams.get("language") === "target" && (
           <div id="targetPrerequisites">
             {targetSentence.prerequisites.map((wordId, index) =>
-              words[wordId] ? <WordLine key={index} word={words[wordId]} /> : null
+              words[wordId] ? <WordLine key={index} word={words[wordId]} readonly /> : null,
             )}
           </div>
         )}

@@ -8,7 +8,7 @@ import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 import { ConfirmDialog } from "./ConfirmDialog";
 
-export const WordLine = ({ word }: { word: Word }) => {
+export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: boolean }) => {
   const { wordId } = useParams();
   const { user } = useAuth();
   const { deleteWord } = useData();
@@ -48,7 +48,7 @@ export const WordLine = ({ word }: { word: Word }) => {
         onClick={() => openWord(word._id)}
       >
         <WordDefinition word={word} />
-        {user?.isAdmin && (
+        {user?.isAdmin && !readonly && (
           <div className="lineOptions">
             <div className="edit" onClick={onEdit}></div>
             <div className="delete" onClick={onDelete}></div>
