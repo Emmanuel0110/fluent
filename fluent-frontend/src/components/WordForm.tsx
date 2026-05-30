@@ -28,16 +28,26 @@ function WordForm() {
   const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
   const { words, saveWord, saveWordTag, wordTags, deleteWord } = useData();
-  const [sourceWord, setSourceWord] = useState<Word | undefined>(wordId ? words[wordId] : undefined);
-  const [targetWord, setTargetWord] = useState<Word | undefined>();
+  const initialWord = wordId ? words[wordId] : undefined;
+  const [sourceWord, setSourceWord] = useState<Word | undefined>(
+    initialWord?.language === appSourceLanguage ? initialWord : undefined,
+  );
+  const [targetWord, setTargetWord] = useState<Word | undefined>(
+    initialWord?.language === appTargetLanguage ? initialWord : undefined,
+  );
   const [sourceSaveState, setSourceSaveState] = useState<SaveState>("idle");
   const [targetSaveState, setTargetSaveState] = useState<SaveState>("idle");
   const [showDeleteSource, setShowDeleteSource] = useState(false);
   const [showDeleteTarget, setShowDeleteTarget] = useState(false);
 
   useEffect(() => {
-    if (wordId && !sourceWord && words[wordId]) {
-      setSourceWord(words[wordId]);
+    if (wordId && words[wordId]) {
+      const word = words[wordId];
+      if (word.language === appSourceLanguage && !sourceWord) {
+        setSourceWord(word);
+      } else if (word.language === appTargetLanguage && !targetWord) {
+        setTargetWord(word);
+      }
     }
   }, [words, wordId]);
 
