@@ -3,6 +3,18 @@ import "./LanguageSelector.css";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
 
+const nativeNames: Record<string, string> = {
+  en: "English",
+  fr: "Français",
+  ko: "한국어",
+};
+
+const translatedNames: Record<string, Record<string, string>> = {
+  en: { en: "English", fr: "French", ko: "Korean" },
+  fr: { en: "Anglais", fr: "Français", ko: "Coréen" },
+  ko: { en: "영어", fr: "프랑스어", ko: "한국어" },
+};
+
 const LanguageSelector: React.FC = () => {
   const { t } = useTranslation();
   const { languages, sourceLanguage, targetLanguage, updateUserLanguages } = useLanguage();
@@ -16,6 +28,13 @@ const LanguageSelector: React.FC = () => {
       if (success) setIsOpen(false);
     }
   };
+
+  const sourceLanguageCode = languages.find((l) => l._id === tempSourceLanguage)?.label;
+
+  const getTargetLabel = (langCode: string) =>
+    sourceLanguageCode
+      ? (translatedNames[sourceLanguageCode]?.[langCode] ?? langCode)
+      : langCode;
 
   return (
     <>
@@ -31,7 +50,7 @@ const LanguageSelector: React.FC = () => {
                 <option value="">{t("language.select_source")}</option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
-                    {lang.label}
+                    {nativeNames[lang.label] ?? lang.label}
                   </option>
                 ))}
               </select>
@@ -43,7 +62,7 @@ const LanguageSelector: React.FC = () => {
                 <option value="">{t("language.select_target")}</option>
                 {languages.map((lang) => (
                   <option key={lang._id} value={lang._id}>
-                    {lang.label}
+                    {getTargetLabel(lang.label)}
                   </option>
                 ))}
               </select>
