@@ -29,23 +29,28 @@ const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true, trim: true },
   password: { type: String, select: false }, // Made optional for OAuth users
-  email: { type: String, trim: true }, // For OAuth users
-  oauthProvider: { type: String, enum: ["google"] }, // Track OAuth provider
-  oauthId: { type: String }, // OAuth provider user ID
+  email: { type: String, trim: true, sparse: true, index: true },
+  oauthProvider: { type: String, enum: ["google"] },
+  oauthId: { type: String },
   lastCourseId: { type: Schema.Types.ObjectId, ref: "UserCourse" },
   courses: [{ type: Schema.Types.ObjectId, ref: "UserCourse" }],
   userSettings: {
     reviewMode: { type: String, enum: ["auto", "manual"], default: "manual" },
     autoReviewDelay: { type: Number, default: 10 },
   },
+  passwordResetToken: { type: String, select: false },
+  passwordResetExpires: { type: Date, select: false },
 });
 // Compound index for OAuth lookup
 userSchema.index({ oauthProvider: 1, oauthId: 1 }, { unique: true, sparse: true });
 
 // Validate password is required for non-OAuth users
 userSchema.pre("validate", function (next) {
-  if (!this.oauthProvider && !this.password) {
+  if (this.isNew && !this.oauthProvider && !this.password) {
     this.invalidate("password", "Password is required for non-OAuth users");
+  }
+  if (this.isNew && !this.oauthProvider && !this.email) {
+    this.invalidate("email", "Email is required for non-OAuth users");
   }
   next();
 });

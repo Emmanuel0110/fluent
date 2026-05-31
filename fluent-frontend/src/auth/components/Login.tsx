@@ -68,6 +68,11 @@ function Login() {
             type="password"
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
           />
+          <div className="text-end mt-1">
+            <Link to="/forgot-password" className="small text-muted text-decoration-none">
+              {t("auth.forgot_password")}
+            </Link>
+          </div>
         </Form.Group>
         <Button className="loginButton" onClick={onSubmit}>
           {t("auth.login")}

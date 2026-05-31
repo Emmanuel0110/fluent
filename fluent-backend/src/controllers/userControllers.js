@@ -5,6 +5,9 @@ import {
   validateUpdateLanguages,
   validateUserSettings,
   validateOAuthCallback,
+  validateForgotPassword,
+  validateResetPassword,
+  validateUpdateEmail,
 } from "../middleware/validation.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
 import { sanitizeText } from "../utils/sanitize.js";
@@ -17,6 +20,8 @@ import mongoose from "mongoose";
 import fetch from "node-fetch";
 import rateLimit from "express-rate-limit";
 import { logger } from "../logger.js";
+import crypto from "crypto";
+import { sendPasswordResetEmail } from "../services/emailService.js";
 
 const loginLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
@@ -34,7 +39,7 @@ router.post(
   loginLimiter,
   validateRegister,
   asyncHandler(async function (req, res) {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     // Sanitize username
     const sanitizedUsername = sanitizeText(username);
@@ -43,9 +48,15 @@ router.post(
       return res.status(409).json({ success: false, message: "User already exists" });
     }
 
+    const existingEmail = await UserModel.findOne({ email: email.trim().toLowerCase() });
+    if (existingEmail) {
+      return res.status(409).json({ success: false, message: "Email already in use" });
+    }
+
     const newUser = new UserModel({
       username: sanitizedUsername,
       password,
+      email: email.trim().toLowerCase(),
       userSettings: {
         reviewMode: "manual",
         autoReviewDelay: 10,
@@ -106,6 +117,52 @@ router.get(
   }),
 );
 
+router.post(
+  "/forgot-password",
+  loginLimiter,
+  validateForgotPassword,
+  asyncHandler(async function (req, res) {
+    const GENERIC_MSG = "If an account with that email exists, a reset link has been sent.";
+    const user = await UserModel.findOne({ email: req.body.email.trim().toLowerCase() });
+    if (!user) return res.json({ success: true, message: GENERIC_MSG });
+
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+    await UserModel.findByIdAndUpdate(user._id, {
+      passwordResetToken: hashedToken,
+      passwordResetExpires: Date.now() + 3_600_000,
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
+    await sendPasswordResetEmail(user.email, resetUrl);
+    logger.info({ userId: user._id }, "Password reset email sent");
+    res.json({ success: true, message: GENERIC_MSG });
+  }),
+);
+
+router.post(
+  "/reset-password",
+  validateResetPassword,
+  asyncHandler(async function (req, res) {
+    const { token, newPassword } = req.body;
+    const hashed = crypto.createHash("sha256").update(token).digest("hex");
+    const user = await UserModel.findOne({
+      passwordResetToken: hashed,
+      passwordResetExpires: { $gt: Date.now() },
+    }).select("+passwordResetToken +passwordResetExpires");
+
+    if (!user) return res.status(400).json({ success: false, message: "Invalid or expired reset link." });
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+    logger.info({ userId: user._id }, "Password reset successfully");
+    res.json({ success: true, message: "Password updated successfully." });
+  }),
+);
+
 export async function cacheUserCourse(user) {
   let userCourse;
   if (user.lastCourseId) {
@@ -133,6 +190,19 @@ export async function cacheUserCourse(user) {
   }
   return userCourse;
 }
+
+router.patch(
+  "/email",
+  auth,
+  validateUpdateEmail,
+  asyncHandler(async function (req, res) {
+    const normalized = req.body.email.trim().toLowerCase();
+    const existing = await UserModel.findOne({ email: normalized, _id: { $ne: req.user._id } });
+    if (existing) return res.status(409).json({ success: false, message: "Email already in use" });
+    await UserModel.findByIdAndUpdate(req.user._id, { email: normalized });
+    res.json({ success: true, email: normalized });
+  }),
+);
 
 router.patch(
   "/",

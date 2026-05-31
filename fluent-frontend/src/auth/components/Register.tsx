@@ -11,6 +11,7 @@ function Register() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
@@ -33,7 +34,7 @@ function Register() {
 
   const onSubmit = (e: React.MouseEvent) => {
     e.preventDefault();
-    register({ username, password }, setIsAuthenticated, setUser, setError);
+    register({ username, password, email }, setIsAuthenticated, setUser, setError);
   };
 
   const handleGoogleAuth = () => {
@@ -67,6 +68,15 @@ function Register() {
             name="password"
             type="password"
             onChange={(e) => setPassword((e.target as HTMLInputElement).value)}
+          />
+        </Form.Group>
+        <Form.Group className="formgroup">
+          <Form.Label>{t("auth.email")}</Form.Label>
+          <Form.Control
+            id="email"
+            name="email"
+            type="email"
+            onChange={(e) => setEmail((e.target as HTMLInputElement).value)}
           />
         </Form.Group>
         <Button className="loginButton" onClick={onSubmit}>

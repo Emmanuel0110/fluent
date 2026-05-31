@@ -35,6 +35,7 @@ body {
   color: var(--text-primary);
   width: 18em;
   margin: auto;
+  padding-top: 2rem;
 }
 
 #loginForm label {

@@ -35,9 +35,8 @@ export const validateRegister = [
     .withMessage("Username must be between 3 and 30 characters")
     .matches(/^[a-zA-Z0-9_]+$/)
     .withMessage("Username can only contain letters, numbers, and underscores"),
-  body("password")
-    .notEmpty()
-    .withMessage("Password is required"),
+  body("password").notEmpty().withMessage("Password is required"),
+  body("email").trim().notEmpty().withMessage("Email is required").isEmail().withMessage("Email must be valid"),
   handleValidationErrors,
 ];
 
@@ -80,6 +79,26 @@ export const validateUserSettings = [
 
 export const validateOAuthCallback = [
   body("code").notEmpty().withMessage("Authorization code is required").isString().withMessage("Code must be a string"),
+  handleValidationErrors,
+];
+
+export const validateUpdateEmail = [
+  body("email").trim().notEmpty().withMessage("Email is required").isEmail().withMessage("Email must be valid"),
+  handleValidationErrors,
+];
+
+export const validateForgotPassword = [
+  body("email").trim().notEmpty().withMessage("Email is required").isEmail().withMessage("Email must be valid"),
+  handleValidationErrors,
+];
+
+export const validateResetPassword = [
+  body("token").notEmpty().withMessage("Token is required").isString().withMessage("Token must be a string"),
+  body("newPassword")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters"),
   handleValidationErrors,
 ];
 

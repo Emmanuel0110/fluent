@@ -31,14 +31,14 @@ export const loadUser = (
 };
 
 export const register = (
-  { username, password }: { username: string; password: string },
+  { username, password, email }: { username: string; password: string; email: string },
   setIsAuthenticated: (b: boolean) => void,
   setUser: (user: any) => void,
   setError?: (message: string) => void
 ) => {
   setError?.("");
   const headers = { "Content-Type": "application/json" };
-  const body = JSON.stringify({ username, password });
+  const body = JSON.stringify({ username, password, email });
   customFetch(url + "users", { method: "POST", headers, body })
     .then((res: any) => {
       if (!res.token) throw new Error(res.message || res.msg || "Registration failed");
@@ -109,6 +109,45 @@ export const handleOAuthCallback = (
       setError?.(getErrorMessage(err));
       window.history.replaceState({}, document.title, window.location.pathname);
     });
+};
+
+export const updateEmail = (email: string): Promise<string> => {
+  return customFetch(url + "users/email", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ email }),
+  }).then((res: any) => res.email);
+};
+
+export const forgotPassword = (
+  email: string,
+  setSuccess: (msg: string) => void,
+  setError: (msg: string) => void
+) => {
+  setError("");
+  customFetch(url + "users/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  })
+    .then((res: any) => setSuccess(res.message))
+    .catch((err) => setError(getErrorMessage(err)));
+};
+
+export const resetPassword = (
+  token: string,
+  newPassword: string,
+  setSuccess: (msg: string) => void,
+  setError: (msg: string) => void
+) => {
+  setError("");
+  customFetch(url + "users/reset-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token, newPassword }),
+  })
+    .then((res: any) => setSuccess(res.message))
+    .catch((err) => setError(getErrorMessage(err)));
 };
 
 //Logout User

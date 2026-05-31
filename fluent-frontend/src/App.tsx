@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import "./App.css";
 import { useTheme } from "./hooks/useTheme";
 import Register from "./auth/components/Register";
+import ForgotPassword from "./auth/components/ForgotPassword";
+import ResetPassword from "./auth/components/ResetPassword";
 import Layout from "./components/layout/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import Profile from "./Profile";
@@ -33,6 +35,8 @@ export default function App() {
       <Routes>
         <Route path="register/*" element={<Register />} />
         <Route path="login/*" element={<Login />} />
+        <Route path="forgot-password/*" element={<ForgotPassword />} />
+        <Route path="reset-password/*" element={<ResetPassword />} />
         <Route
           element={
             <LanguageProvider>

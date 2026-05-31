@@ -4,6 +4,7 @@ export interface User {
   isAdmin: boolean;
   _id: string;
   username: string;
+  email?: string;
   sourceLanguage: string; //source language of the last course
   targetLanguage: string; //target language of the last course
   userSettings: {

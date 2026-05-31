@@ -61,6 +61,13 @@
   color: var(--text-primary);
 }
 
+.profile-email-error {
+  color: var(--color-error, #dc3545);
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
 .profile-options-actions {
   display: flex;
   gap: 10px;
