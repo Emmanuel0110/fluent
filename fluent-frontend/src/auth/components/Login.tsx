@@ -31,7 +31,7 @@ function Login() {
     }
   }, [searchParams, setIsAuthenticated, setUser]);
 
-  const onSubmit = (e: React.MouseEvent) => {
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login({ username, password }, setIsAuthenticated, setUser, setError);
   };
@@ -50,7 +50,7 @@ function Login() {
           {error}
         </div>
       )}
-      <Form id="loginForm">
+      <Form id="loginForm" onSubmit={onSubmit}>
         <Form.Group className="formgroup">
           <Form.Label>{t("auth.username")}</Form.Label>
           <Form.Control
@@ -74,7 +74,7 @@ function Login() {
             </Link>
           </div>
         </Form.Group>
-        <Button className="loginButton" onClick={onSubmit}>
+        <Button className="loginButton" type="submit">
           {t("auth.login")}
         </Button>
       </Form>
