@@ -10,7 +10,7 @@ import { useData } from "../contexts/DataContext";
 
 export default function ConversationListWithDetail() {
   const { conversations, getConversationById } = useData();
-  const { setOpenedConversations, filteredConversations, openedConversations } = useContext(ConfigContext) as Context;
+  const { setOpenedConversations, openedConversations } = useContext(ConfigContext) as Context;
   const conversationId = useParams().conversationId!;
   const [currentOpenedConversation, setCurrentOpenedConversation] = useState<Conversation | null>(null);
   const loading = useRef(false);
@@ -40,12 +40,12 @@ export default function ConversationListWithDetail() {
 
   const closeTab = (tabIndex: number) => {
     setOpenedConversations((openedConversation) =>
-      openedConversation.filter((conversation, index) => index !== tabIndex)
+      openedConversation.filter((conversation, index) => index !== tabIndex),
     );
     navigate(
       openedConversations.length > 1
         ? "/conversations/" + (openedConversations[tabIndex + 1]?._id || openedConversations[tabIndex - 1]?._id)
-        : "/suggestions"
+        : "/suggestions",
     );
   };
 

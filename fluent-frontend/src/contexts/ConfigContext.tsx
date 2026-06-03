@@ -30,7 +30,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
     tagFilter,
     setOpenedWords,
     setOpenedConversations,
-    setSearchFilter
+    setSearchFilter,
   );
 
   const filteredWords = useMemo(() => {
@@ -53,7 +53,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         openedConversations.map((openedConversation) => {
           const conversation = conversations.find(({ _id }) => _id === openedConversation._id);
           return conversation || openedConversation;
-        })
+        }),
       );
     }
   }, [conversations]);
@@ -62,7 +62,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const word = words[wordId];
     if (word) {
       setOpenedWords((openedWords) =>
-        openedWords.find(({ _id }) => _id === wordId) ? openedWords : [...openedWords, word]
+        openedWords.find(({ _id }) => _id === wordId) ? openedWords : [...openedWords, word],
       );
       navigate("words/" + wordId);
     }
@@ -74,12 +74,12 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setOpenedConversations((openedConversations) =>
         openedConversations.find(({ _id }) => _id === conversationId)
           ? openedConversations
-          : [...openedConversations, conversation]
+          : [...openedConversations, conversation],
       );
       navigate(
         "conversations/" +
           conversationId +
-          (index != undefined && sourceOrTarget ? "?index=" + index + "&language=" + sourceOrTarget : "")
+          (index != undefined && sourceOrTarget ? "?index=" + index + "&language=" + sourceOrTarget : ""),
       );
     }
   };
