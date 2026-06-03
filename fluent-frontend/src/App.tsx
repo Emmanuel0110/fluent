@@ -62,7 +62,7 @@ export default function App() {
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
             <Route path="suggestions" element={<SuggestionList />} />
-            <Route path="conversations" element={<ConversationList />} />
+            <Route path="conversations" element={<ConversationListWithDetail />} />
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
             <Route element={<AdminRoute redirectPath="suggestions" />}>
               <Route path="new" element={<CreationForm />} />

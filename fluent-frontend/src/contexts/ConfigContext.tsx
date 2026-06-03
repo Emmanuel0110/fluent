@@ -43,7 +43,7 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [words, searchFilter, tagFilter, wordTags]);
 
   const filteredConversations = useMemo(() => {
-    if (!conversationTagFilter) return [];
+    if (!conversationTagFilter) return conversations;
     return conversations.filter((conversation) => conversation.tags.includes(conversationTagFilter._id));
   }, [conversations, conversationTagFilter]);
 
