@@ -5,7 +5,8 @@
       "Bash(npm test -- --no-coverage)",
       "Bash(grep * .)",
       "Bash(find * .)",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git log *)"
     ]
   }
 }
