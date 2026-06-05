@@ -507,4 +507,9 @@ a.nav-link {
 
 .delete-btn {
   background-color: var(--color-danger) !important;
+  color: #fff !important;
+}
+
+.delete-btn:hover {
+  filter: brightness(0.9);
 }
