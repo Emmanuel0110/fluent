@@ -1,7 +1,7 @@
 .privacy-container {
   height: 100vh;
   overflow-y: auto;
-  background: var(--bg-main, #fff);
+  background: var(--bg-app);
   color: var(--text-primary, #333);
   padding: 2rem 1rem;
 }
