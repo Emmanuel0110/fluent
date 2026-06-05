@@ -54,6 +54,7 @@
   "conversation.tag_translation": "Tag translation",
   "conversation.save_tag": "Save tag translation",
   "conversation.add_tag_to": "Add tag to conversation",
+  "conversation.delete_confirm": "Are you sure you want to delete this conversation?",
   "conversation.save": "Save conversation",
   "conversation.no_suggestion": "No suggestion available",
   "conversation.add_prerequisite": "Add prerequisite",

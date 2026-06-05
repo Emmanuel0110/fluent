@@ -54,6 +54,7 @@
   "conversation.tag_translation": "태그 번역",
   "conversation.save_tag": "태그 번역 저장",
   "conversation.add_tag_to": "대화에 태그 추가",
+  "conversation.delete_confirm": "이 대화를 삭제하시겠습니까?",
   "conversation.save": "대화 저장",
   "conversation.no_suggestion": "추천 없음",
   "conversation.add_prerequisite": "전제 추가",
