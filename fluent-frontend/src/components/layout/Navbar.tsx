@@ -2,8 +2,6 @@ import { useContext, useEffect, useRef } from "react";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { Context } from "../../types";
 import { logout } from "../../auth/authActions";
-import LanguageSelector from "../languageSelector/LanguageSelector";
-import ProfileOptions from "../profileOptions/ProfileOptions";
 import { useAuth } from "../../contexts/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -60,6 +58,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
         <div id="searchAreaContainer">
           <div id="searchAreaInput">
             <input
+              ref={inputRef}
               type="text"
               value={searchFilter}
               onFocus={onMenuClose}
@@ -72,8 +71,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
           {(searchFilter || tagFilter || conversationTagFilter) && <div id="cancelFilterForSearch" onClick={cancelFilter}></div>}
         </div>
       </div>
-      <LanguageSelector />
-      <ProfileOptions />
+      <div id="nameLabel" title={t("nav.profile")} onClick={() => navigate("/profile")} />
       <div id="logoutButton" className="navButton" title={t("nav.logout")} onClick={() => logout(setIsAuthenticated)} />
     </div>
   );

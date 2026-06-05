@@ -17,6 +17,7 @@
   "auth.passwords_no_match": "Passwords do not match.",
 
   "nav.logout": "Logout",
+  "nav.profile": "Settings",
   "nav.dashboard": "Dashboard",
   "nav.suggestions": "Suggestions",
   "nav.new_conversation": "New conversation",
@@ -57,7 +58,7 @@
   "conversation.no_suggestion": "No suggestion available",
   "conversation.add_prerequisite": "Add prerequisite",
 
-  "profile.title": "Profile Options",
+  "profile.title": "Settings",
   "profile.review_display": "Review Answer Display:",
   "profile.auto_after": "Automatically after {{seconds}} seconds",
   "profile.manually": "Manually (click to reveal)",
@@ -73,6 +74,10 @@
   "profile.delete_confirm_warning": "This action is irreversible. All your data will be permanently deleted.",
   "profile.delete_confirm_password": "Confirm your password",
   "profile.deleting": "Deleting...",
+  "profile.section_languages": "Languages",
+  "profile.section_appearance": "Appearance",
+  "profile.section_review": "Review",
+  "profile.section_account": "Account",
 
   "language.choose_title": "Choose Your Languages",
   "language.source_label": "Source Language (you know):",
@@ -82,6 +87,8 @@
   "language.source_placeholder": "Source language",
   "language.target_placeholder": "Target language",
   "language.choose_btn": "Choose languages",
+  "language.invalid_selection": "Please select two different languages.",
+  "language.update_failed": "Failed to update languages. Please try again.",
 
   "feedback.send_link": "Send a feedback",
   "feedback.placeholder": "Your feedback ...",

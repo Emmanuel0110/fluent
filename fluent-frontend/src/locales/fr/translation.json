@@ -17,6 +17,7 @@
   "auth.passwords_no_match": "Les mots de passe ne correspondent pas.",
 
   "nav.logout": "Déconnexion",
+  "nav.profile": "Paramètres",
   "nav.dashboard": "Tableau de bord",
   "nav.suggestions": "Suggestions",
   "nav.new_conversation": "Nouvelle conversation",
@@ -57,7 +58,7 @@
   "conversation.no_suggestion": "Aucune suggestion disponible",
   "conversation.add_prerequisite": "Ajouter un prérequis",
 
-  "profile.title": "Options du profil",
+  "profile.title": "Paramètres",
   "profile.review_display": "Affichage des réponses :",
   "profile.auto_after": "Automatiquement après {{seconds}} secondes",
   "profile.manually": "Manuellement (cliquer pour révéler)",
@@ -73,6 +74,10 @@
   "profile.delete_confirm_warning": "Cette action est irréversible. Toutes vos données seront définitivement effacées.",
   "profile.delete_confirm_password": "Confirmez votre mot de passe",
   "profile.deleting": "Suppression en cours...",
+  "profile.section_languages": "Langues",
+  "profile.section_appearance": "Apparence",
+  "profile.section_review": "Révision",
+  "profile.section_account": "Compte",
 
   "language.choose_title": "Choisissez vos langues",
   "language.source_label": "Langue source (que vous connaissez) :",
@@ -82,6 +87,8 @@
   "language.source_placeholder": "Langue source",
   "language.target_placeholder": "Langue cible",
   "language.choose_btn": "Choisir les langues",
+  "language.invalid_selection": "Veuillez sélectionner deux langues différentes.",
+  "language.update_failed": "Échec de la mise à jour des langues. Veuillez réessayer.",
 
   "feedback.send_link": "Envoyer un retour",
   "feedback.placeholder": "Votre retour...",
