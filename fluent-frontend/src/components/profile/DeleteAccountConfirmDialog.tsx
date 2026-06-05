@@ -63,7 +63,7 @@ function DeleteAccountConfirmDialog({ onClose }: Props) {
           <button className="btn btn-secondary" onClick={onClose} disabled={loading}>
             {t("common.cancel")}
           </button>
-          <button className="delete-btn" onClick={handleConfirm} disabled={loading}>
+          <button className="btn delete-btn" onClick={handleConfirm} disabled={loading}>
             {loading ? t("profile.deleting") : t("common.confirm")}
           </button>
         </div>

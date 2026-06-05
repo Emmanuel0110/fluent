@@ -321,7 +321,7 @@ function WordForm() {
                   >
                     {sourceSaveState === "saved" ? t("word.saved") : t("word.save")}
                   </button>
-                  <button className="delete-btn" onClick={() => setShowDeleteSource(true)}>
+                  <button className="btn delete-btn" onClick={() => setShowDeleteSource(true)}>
                     {t("word.delete")}
                   </button>
                 </div>
@@ -411,7 +411,7 @@ function WordForm() {
                   >
                     {targetSaveState === "saved" ? t("word.saved") : t("word.save")}
                   </button>
-                  <button className="delete-btn" onClick={() => setShowDeleteTarget(true)}>
+                  <button className="btn delete-btn" onClick={() => setShowDeleteTarget(true)}>
                     {t("word.delete")}
                   </button>
                 </div>
