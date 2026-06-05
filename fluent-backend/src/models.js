@@ -40,6 +40,7 @@ const userSchema = new Schema({
   },
   passwordResetToken: { type: String, select: false },
   passwordResetExpires: { type: Date, select: false },
+  lastLoginAt: { type: Date },
 });
 // Compound index for OAuth lookup
 userSchema.index({ oauthProvider: 1, oauthId: 1 }, { unique: true, sparse: true });

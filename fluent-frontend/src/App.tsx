@@ -26,6 +26,7 @@ import SuggestionList from "./components/SuggestionList";
 import AdminRoute from "./AdminRoute";
 import AdminFeedbacks from "./components/AdminFeedbacks";
 import Home from "./pages/Home";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 
 export const url = import.meta.env.VITE_API_URL;
 
@@ -35,6 +36,7 @@ export default function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="privacy" element={<PrivacyPolicy />} />
         <Route path="register/*" element={<Register />} />
         <Route path="login/*" element={<Login />} />
         <Route path="forgot-password/*" element={<ForgotPassword />} />

@@ -96,6 +96,82 @@
   opacity: 0.9;
 }
 
+/* Data & Privacy section */
+.profile-section-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 4px 0 20px;
+}
+
+.profile-section-title {
+  font-weight: bold;
+  color: var(--text-secondary, #888);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.profile-data-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.profile-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px 0;
+}
+
+.profile-link:hover {
+  text-decoration: underline;
+}
+
+.profile-action-btn {
+  background: none;
+  border: 1px solid var(--border-light);
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.profile-action-btn:hover:not(:disabled) {
+  background: var(--bg-surface-alt);
+}
+
+.profile-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.profile-danger-btn {
+  color: var(--color-error, #dc3545);
+  border-color: var(--color-error, #dc3545);
+}
+
+.profile-danger-btn:hover:not(:disabled) {
+  background: rgba(220, 53, 69, 0.08) !important;
+}
+
+/* Delete confirmation */
+.profile-delete-warning {
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.profile-options-actions button.profile-danger-action-btn {
+  background: var(--color-error, #dc3545);
+  color: white;
+}
+
 /* Theme toggle row */
 .theme-field {
   display: flex;

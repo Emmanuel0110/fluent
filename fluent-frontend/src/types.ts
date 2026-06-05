@@ -5,6 +5,7 @@ export interface User {
   _id: string;
   username: string;
   email?: string;
+  oauthProvider?: "google";
   sourceLanguage: string; //source language of the last course
   targetLanguage: string; //target language of the last course
   userSettings: {

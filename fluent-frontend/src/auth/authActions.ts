@@ -150,6 +150,30 @@ export const resetPassword = (
     .catch((err) => setError(getErrorMessage(err)));
 };
 
+export const deleteAccount = (password?: string): Promise<void> => {
+  return customFetch(url + "users", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ password }),
+  }).then(() => undefined);
+};
+
+export const exportUserData = (): Promise<void> => {
+  return customFetch(url + "users/export", {
+    headers: authHeaders(),
+  }).then((data: unknown) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = objectUrl;
+    a.download = "fluent-my-data.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(objectUrl);
+  });
+};
+
 //Logout User
 export const logout = (setIsAuthenticated: (arg: boolean) => void) => {
   window.localStorage.removeItem("token");

@@ -11,7 +11,7 @@ import {
 } from "../middleware/validation.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
 import { sanitizeText } from "../utils/sanitize.js";
-import { UserModel, UserCourseModel, LanguageModel } from "../models.js";
+import { UserModel, UserCourseModel, LanguageModel, FeedbackModel } from "../models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
@@ -98,6 +98,7 @@ router.post(
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
+    await UserModel.findByIdAndUpdate(user._id, { lastLoginAt: new Date() });
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete user.password;
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(user);
@@ -414,13 +415,72 @@ router.post(
       }
     }
 
-    // Generate JWT token
+    await UserModel.findByIdAndUpdate(user._id, { lastLoginAt: new Date() });
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     const userObj = user.toObject();
     delete userObj.password;
     const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
 
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
+  }),
+);
+
+router.get(
+  "/export",
+  auth,
+  asyncHandler(async function (req, res) {
+    const userId = req.user._id;
+    const user = await UserModel.findById(userId).lean();
+    const courses = await UserCourseModel.find({ _id: { $in: user.courses } }).lean();
+    const feedback = await FeedbackModel.find({ userId: userId.toString() }).lean();
+
+    const exportData = {
+      exportedAt: new Date().toISOString(),
+      profile: {
+        username: user.username,
+        email: user.email,
+        oauthProvider: user.oauthProvider,
+        lastLoginAt: user.lastLoginAt,
+        userSettings: user.userSettings,
+      },
+      courses,
+      feedback,
+    };
+
+    res.setHeader("Content-Disposition", `attachment; filename="fluent-data-${userId}.json"`);
+    res.json(exportData);
+  }),
+);
+
+router.delete(
+  "/",
+  auth,
+  asyncHandler(async function (req, res) {
+    const userId = req.user._id;
+    const user = await UserModel.findById(userId).select("+password");
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    if (!user.oauthProvider) {
+      const { password } = req.body;
+      if (!password) {
+        return res.status(400).json({ success: false, message: "Password is required to delete your account" });
+      }
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ success: false, message: "Invalid password" });
+      }
+    }
+
+    await FeedbackModel.deleteMany({ userId: userId.toString() });
+    await UserCourseModel.deleteMany({ _id: { $in: user.courses } });
+    await UserModel.findByIdAndDelete(userId);
+
+    if (redisClient) {
+      await redisClient.del(`userCourse:${userId}`);
+    }
+
+    logger.info({ userId }, "User account deleted");
+    res.json({ success: true });
   }),
 );
 
