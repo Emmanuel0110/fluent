@@ -326,6 +326,19 @@ export const validateWordDelete = [
   handleValidationErrors,
 ];
 
+export const validateConversationDelete = [
+  param("id")
+    .notEmpty()
+    .withMessage("Conversation ID is required")
+    .custom((value) => {
+      if (!isValidObjectId(value)) {
+        throw new Error("Conversation ID must be a valid ObjectId");
+      }
+      return true;
+    }),
+  handleValidationErrors,
+];
+
 // Tag validation rules
 export const validateConversationTagCreate = [
   body("labels").isArray({ min: 1 }).withMessage("Labels must be a non-empty array"),

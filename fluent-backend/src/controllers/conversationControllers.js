@@ -4,9 +4,10 @@ import {
   validateConversationQuery,
   validateConversationCreate,
   validateConversationUpdate,
+  validateConversationDelete,
 } from "../middleware/validation.js";
 import { sanitizeObject } from "../utils/sanitize.js";
-import { MultiLingualConversationModel } from "../models.js";
+import { MultiLingualConversationModel, UserCourseModel } from "../models.js";
 import express from "express";
 import mongoose from "mongoose";
 import { getConversationsForWords } from "./reviewControllers.js";
@@ -111,6 +112,26 @@ router.put("/:id", auth, cache, validateConversationUpdate, async function (req,
     subscribed: !!req.userCourse.conversations.find(({ _id }) => _id === conversation._id),
   };
   res.json({ success: true, data: completedConversation });
+});
+
+router.delete("/:id", auth, validateConversationDelete, async function (req, res) {
+  try {
+    const { id: _id } = req.params;
+    await MultiLingualConversationModel.deleteOne({ _id });
+    await UserCourseModel.updateMany(
+      {},
+      {
+        $pull: {
+          wishListConversations: new mongoose.Types.ObjectId(_id),
+          conversations: { _id: new mongoose.Types.ObjectId(_id) },
+        },
+      }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    logger.error({ err }, "Conversation delete error");
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 function completeConversations(conversations, userConversations) {
