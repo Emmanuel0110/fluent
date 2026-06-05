@@ -9,7 +9,7 @@ import {
 import { sanitizeText } from "../utils/sanitize.js";
 import express from "express";
 import mongoose from "mongoose";
-import { LexicalItemModel } from "../models.js";
+import { LexicalItemModel, UserCourseModel, MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import { validateAndParseDate } from "../utils.js";
 import { logger } from "../logger.js";
 const router = express.Router();
@@ -82,9 +82,22 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
 });
 
 router.delete("/:id", auth, validateWordDelete, async function (req, res) {
-  const { id: _id } = req.params;
-  await LexicalItemModel.deleteOne({ _id });
-  res.json({ success: true });
+  try {
+    const { id: _id } = req.params;
+    const wordId = new mongoose.Types.ObjectId(_id);
+    await LexicalItemModel.deleteOne({ _id });
+    await UserCourseModel.updateMany({}, { $pull: { words: { _id: wordId } } });
+    await LexicalItemModel.updateMany({}, { $pull: { "translations.$[].lexicalItems": wordId } });
+    await MultiLingualConversationModel.updateMany(
+      {},
+      { $pull: { "conversations.$[].sentences.$[].prerequisites": wordId } },
+    );
+    await StoryNodeModel.updateMany({}, { $pull: { prerequisites: wordId } });
+    res.json({ success: true });
+  } catch (err) {
+    logger.error({ err }, "Word delete error");
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 function generateAggregationPipeline(language, translationLanguage, lastUpdateDate) {
