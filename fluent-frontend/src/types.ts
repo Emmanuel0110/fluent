@@ -11,6 +11,7 @@ export interface User {
   userSettings: {
     reviewMode: "auto" | "manual";
     autoReviewDelay: number;
+    theme: "light" | "dark";
   };
 }
 

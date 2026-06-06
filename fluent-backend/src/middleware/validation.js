@@ -74,6 +74,7 @@ export const validateUserSettings = [
     .optional()
     .isInt({ min: 0, max: 10080 })
     .withMessage("Auto review delay must be a number between 0 and 10080 minutes"),
+  body("theme").optional().isIn(["light", "dark"]).withMessage("Theme must be 'light' or 'dark'"),
   handleValidationErrors,
 ];
 

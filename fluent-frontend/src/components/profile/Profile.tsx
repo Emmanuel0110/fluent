@@ -3,7 +3,6 @@ import "./Profile.css";
 import { useReviewSettings } from "../../contexts/ReviewSettingsContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { useTheme } from "../../hooks/useTheme";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { updateEmail, exportUserData } from "../../auth/authActions";
 import { ApiError } from "../../utils/http-helpers";
@@ -26,11 +25,10 @@ function Profile() {
   const { t } = useTranslation();
   const { settings, updateSettings } = useReviewSettings();
   const { user, setUser } = useAuth();
-  const { theme, setTheme } = useTheme();
   const { languages, sourceLanguage, targetLanguage, updateUserLanguages } = useLanguage();
   const navigate = useNavigate();
 
-  const [tempTheme, setTempTheme] = useState<"light" | "dark">(theme);
+  const [tempTheme, setTempTheme] = useState<"light" | "dark">(settings.theme);
   const [reviewMode, setReviewMode] = useState<"auto" | "manual">(settings.reviewMode);
   const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [tempEmail, setTempEmail] = useState(user?.email ?? "");
@@ -57,8 +55,7 @@ function Profile() {
     setEmailError("");
     setLangError("");
 
-    setTheme(tempTheme);
-    updateSettings({ reviewMode, autoReviewDelay });
+    updateSettings({ reviewMode, autoReviewDelay, theme: tempTheme });
 
     let hasError = false;
 

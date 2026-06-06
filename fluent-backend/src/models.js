@@ -37,6 +37,7 @@ const userSchema = new Schema({
   userSettings: {
     reviewMode: { type: String, enum: ["auto", "manual"], default: "manual" },
     autoReviewDelay: { type: Number, default: 10 },
+    theme: { type: String, enum: ["light", "dark"], default: "light" },
   },
   passwordResetToken: { type: String, select: false },
   passwordResetExpires: { type: Date, select: false },

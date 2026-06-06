@@ -219,6 +219,7 @@ export const updateLanguages = async (args: { sourceLanguage: string; targetLang
 export const updateRemoteUserSettings = async (args: {
   reviewMode?: "auto" | "manual";
   autoReviewDelay?: number;
+  theme?: "light" | "dark";
 }) => {
   return catchApiError(
     customFetch(url + "users/settings", {

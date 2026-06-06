@@ -17,7 +17,7 @@ function fakeSavedUser(overrides = {}) {
     courses: [],
     lastCourseId: null,
     password: "hashed_password",
-    userSettings: { reviewMode: "manual", autoReviewDelay: 10 },
+    userSettings: { reviewMode: "manual", autoReviewDelay: 10, theme: "light" },
     ...overrides,
   };
 }

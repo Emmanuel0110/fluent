@@ -5,6 +5,7 @@ import { updateRemoteUserSettings } from "../APICalls";
 interface ReviewSettings {
   reviewMode: "auto" | "manual";
   autoReviewDelay: number;
+  theme: "light" | "dark";
 }
 
 interface ReviewSettingsContextType {
@@ -17,6 +18,7 @@ interface ReviewSettingsContextType {
 const defaultSettings: ReviewSettings = {
   reviewMode: "manual",
   autoReviewDelay: 10,
+  theme: "light",
 };
 
 const ReviewSettingsContext = createContext<ReviewSettingsContextType | undefined>(undefined);
@@ -38,14 +40,20 @@ export const ReviewSettingsProvider: React.FC<ReviewSettingsProviderProps> = ({ 
   const [settings, setSettings] = useState<ReviewSettings>(defaultSettings);
 
   useEffect(() => {
-    // Load settings from user data on mount or when user changes
     if (user?.userSettings) {
       setSettings({
         reviewMode: user.userSettings.reviewMode,
         autoReviewDelay: user.userSettings.autoReviewDelay,
+        theme: user.userSettings.theme ?? "light",
       });
     }
   }, [user]);
+
+  // Keep DOM and localStorage cache in sync whenever theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", settings.theme);
+    localStorage.setItem("theme", settings.theme);
+  }, [settings.theme]);
 
   const updateSettings = async (newSettings: Partial<ReviewSettings>) => {
     const updatedSettings = { ...settings, ...newSettings };
@@ -60,7 +68,7 @@ export const ReviewSettingsProvider: React.FC<ReviewSettingsProviderProps> = ({ 
   };
 
   const getReviewDelay = () => {
-    return settings.reviewMode === "auto" ? settings.autoReviewDelay * 1000 : 0; // Convert to milliseconds
+    return settings.reviewMode === "auto" ? settings.autoReviewDelay * 1000 : 0;
   };
 
   const shouldShowAnswerAutomatically = () => {

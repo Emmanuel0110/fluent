@@ -231,7 +231,7 @@ router.patch(
   auth,
   validateUserSettings,
   asyncHandler(async function (req, res) {
-    const { reviewMode, autoReviewDelay } = req.body;
+    const { reviewMode, autoReviewDelay, theme } = req.body;
     const updateData = {};
 
     if (reviewMode !== undefined) {
@@ -239,6 +239,9 @@ router.patch(
     }
     if (autoReviewDelay !== undefined) {
       updateData["userSettings.autoReviewDelay"] = autoReviewDelay;
+    }
+    if (theme !== undefined) {
+      updateData["userSettings.theme"] = theme;
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(req.user._id, { $set: updateData }, { new: true });
@@ -248,6 +251,7 @@ router.patch(
       data: {
         reviewMode: updatedUser.userSettings.reviewMode,
         autoReviewDelay: updatedUser.userSettings.autoReviewDelay,
+        theme: updatedUser.userSettings.theme,
       },
     });
   }),
