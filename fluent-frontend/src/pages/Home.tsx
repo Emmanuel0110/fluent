@@ -83,7 +83,7 @@ export default function Home() {
       <p className="home-tagline">The free, opensource app to learn a language!</p>
 
       <div className="home-actions">
-        <Link to="/register" className="home-btn-primary">
+        <Link to="/get-started" className="home-btn-primary">
           GET STARTED
         </Link>
         <Link to="/login" className="home-btn-secondary">

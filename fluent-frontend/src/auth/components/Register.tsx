@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { register, initiateSocialAuth, handleOAuthCallback } from "../authActions";
-import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { Link, Navigate, useSearchParams, useLocation } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useAuth } from "../../contexts/AuthContext";
@@ -14,6 +14,8 @@ function Register() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const { sourceLanguageId, targetLanguageId } = (location.state as { sourceLanguageId?: string; targetLanguageId?: string }) ?? {};
   const { isAuthenticated, setIsAuthenticated, setUser } = useAuth();
 
   useEffect(() => {
@@ -34,7 +36,7 @@ function Register() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    register({ username, password, email }, setIsAuthenticated, setUser, setError);
+    register({ username, password, email, sourceLanguageId, targetLanguageId }, setIsAuthenticated, setUser, setError);
   };
 
   const handleGoogleAuth = () => {

@@ -73,7 +73,10 @@ router.post(
 
     const token = jwt.sign({ _id: userObj._id }, process.env.JWT_SECRET, { expiresIn: 3600 * 8 });
     delete userObj.password;
-    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj);
+    const { sourceLanguage, targetLanguage } = await cacheUserCourse(userObj, {
+      sourceLanguageId: req.body.sourceLanguage,
+      targetLanguageId: req.body.targetLanguage,
+    });
     logger.info({ userId: userObj._id, username: sanitizedUsername }, "User registered");
     res.json({ token, user: userObj, sourceLanguage, targetLanguage });
   }),
@@ -164,7 +167,7 @@ router.post(
   }),
 );
 
-export async function cacheUserCourse(user) {
+export async function cacheUserCourse(user, { sourceLanguageId, targetLanguageId } = {}) {
   let userCourse;
   if (user.lastCourseId) {
     userCourse = await UserCourseModel.findById(user.lastCourseId).lean();
@@ -173,9 +176,15 @@ export async function cacheUserCourse(user) {
     userCourse = await UserCourseModel.findById(user.courses[0]).lean();
   } else {
     const availableLanguages = await LanguageModel.find().select("-flag");
+    const resolvedSource = sourceLanguageId
+      ? availableLanguages.find((l) => l._id.toString() === sourceLanguageId)?._id
+      : availableLanguages.find((l) => l.label === "fr")?._id;
+    const resolvedTarget = targetLanguageId
+      ? availableLanguages.find((l) => l._id.toString() === targetLanguageId)?._id
+      : availableLanguages.find((l) => l.label === "en")?._id;
     userCourse = new UserCourseModel({
-      sourceLanguage: availableLanguages.find((language) => language.label === "fr")?._id,
-      targetLanguage: availableLanguages.find((language) => language.label === "en")?._id,
+      sourceLanguage: resolvedSource,
+      targetLanguage: resolvedTarget,
       wishListConversations: [],
       words: [],
       conversations: [],

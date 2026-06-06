@@ -31,14 +31,20 @@ export const loadUser = (
 };
 
 export const register = (
-  { username, password, email }: { username: string; password: string; email: string },
+  {
+    username,
+    password,
+    email,
+    sourceLanguageId,
+    targetLanguageId,
+  }: { username: string; password: string; email: string; sourceLanguageId?: string; targetLanguageId?: string },
   setIsAuthenticated: (b: boolean) => void,
   setUser: (user: any) => void,
   setError?: (message: string) => void
 ) => {
   setError?.("");
   const headers = { "Content-Type": "application/json" };
-  const body = JSON.stringify({ username, password, email });
+  const body = JSON.stringify({ username, password, email, sourceLanguage: sourceLanguageId, targetLanguage: targetLanguageId });
   customFetch(url + "users", { method: "POST", headers, body })
     .then((res: any) => {
       if (!res.token) throw new Error(res.message || res.msg || "Registration failed");
