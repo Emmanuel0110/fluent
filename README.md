@@ -38,7 +38,7 @@ NODE_ENV=development
 # Optional — Social OAuth
 GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
-GOOGLE_REDIRECT_URI=http://localhost:3000/fluent/login?provider=google
+GOOGLE_REDIRECT_URI=http://localhost:3000/login?provider=google
 
 FRONTEND_URL=http://localhost:3000
 ```
