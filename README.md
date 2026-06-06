@@ -23,13 +23,16 @@ cd ../fluent-frontend && npm install
 
 ### Backend — `fluent-backend/.env`
 
-Create the file (or edit the existing one) with the following keys:
+Create the file with the following keys:
 
 ```env
 MONGO_USERNAME=<your Atlas username>
 MONGO_PASSWORD=<your Atlas password>
-MONGO_CLUSTER=<your Atlas cluster host, e.g. cluster0.xorwi>
-MONGO_DBNAME=fluent-app
+MONGO_CLUSTER=<your Atlas cluster host>
+MONGO_DBNAME=<your Atlas DB name>
+NODE_ENV = 'development'
+EMAIL_USER=<your email user>
+EMAIL_PASS=<your email pass>
 
 JWT_SECRET=<any long random string>
 NODE_ENV=development
@@ -42,24 +45,16 @@ GOOGLE_CLIENT_ID=...
 GOOGLE_CLIENT_SECRET=...
 GOOGLE_REDIRECT_URI=http://localhost:3000/fluent/login?provider=google
 
-LINKEDIN_CLIENT_ID=...
-LINKEDIN_CLIENT_SECRET=...
-LINKEDIN_REDIRECT_URI=http://localhost:3000/fluent/login?provider=linkedin
-
-FACEBOOK_CLIENT_ID=...
-FACEBOOK_CLIENT_SECRET=...
-FACEBOOK_REDIRECT_URI=http://localhost:3000/fluent/login?provider=facebook
-
 FRONTEND_URL=http://localhost:3000
 ```
 
 ### Frontend — `fluent-frontend/.env.development`
 
+Create the file with the following keys:
+
 ```env
 VITE_API_URL=http://localhost:4001/api/
 ```
-
-This file is already committed with the correct default value for local development.
 
 ## 3. Start the dev servers
 
@@ -70,6 +65,7 @@ npm run dev
 ```
 
 This runs:
+
 - **Backend** on `http://localhost:4001` (nodemon, hot-reload, Redis skipped via `--no-redis`)
 - **Frontend** on `http://localhost:3000/fluent` (Vite)
 

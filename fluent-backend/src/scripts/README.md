@@ -22,6 +22,8 @@ crontab -e
 
 # Add this line to run at midnight every day
 0 0 * * * cd /path/to/fluent-backend && npm run update-scores >> logs/score-update.log 2>&1
+# Add this line to run at 1am every day (after score update)
+5 0 * * * cd /path/to/fluent-backend && npm run clean-old-data >> logs/clean-old-data.log 2>&1
 ```
 
 #### Windows (Task Scheduler)
