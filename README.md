@@ -30,15 +30,10 @@ MONGO_USERNAME=<your Atlas username>
 MONGO_PASSWORD=<your Atlas password>
 MONGO_CLUSTER=<your Atlas cluster host>
 MONGO_DBNAME=<your Atlas DB name>
-NODE_ENV = 'development'
 EMAIL_USER=<your email user>
 EMAIL_PASS=<your email pass>
-
 JWT_SECRET=<any long random string>
 NODE_ENV=development
-
-# Optional — AI word generation
-OPENAI_API_KEY=<your OpenAI key>
 
 # Optional — Social OAuth
 GOOGLE_CLIENT_ID=...
