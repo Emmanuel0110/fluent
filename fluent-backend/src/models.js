@@ -124,7 +124,7 @@ const LexicalItemSchema = new Schema(
     ],
     level: Number,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 export const LexicalItemModel = model("LexicalItem", LexicalItemSchema);
 
