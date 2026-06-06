@@ -62,7 +62,7 @@ npm run dev
 This runs:
 
 - **Backend** on `http://localhost:4001` (nodemon, hot-reload, Redis skipped via `--no-redis`)
-- **Frontend** on `http://localhost:3000/fluent` (Vite)
+- **Frontend** on `http://localhost:3000` (Vite)
 
 To run them separately:
 
