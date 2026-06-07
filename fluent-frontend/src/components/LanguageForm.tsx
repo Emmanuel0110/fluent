@@ -9,14 +9,17 @@ export default function LanguageForm() {
   const { languages, setSourceLanguage, setTargetLanguage } = useLanguage();
   const [localSourceId, setLocalSourceId] = useState("");
   const [localTargetId, setLocalTargetId] = useState("");
+  const [saved, setSaved] = useState(false);
 
-  const chooseLanguage = async () => {
-    if (localSourceId && localTargetId && localSourceId !== localTargetId) {
-      const res = await updateLanguages({ sourceLanguage: localSourceId, targetLanguage: localTargetId });
-      if (res && res.sourceLanguage && res.targetLanguage) {
-        setSourceLanguage(res.sourceLanguage);
-        setTargetLanguage(res.targetLanguage);
-      }
+  const handleClick = async () => {
+    if (saved || !(localSourceId && localTargetId && localSourceId !== localTargetId)) return;
+
+    const res = await updateLanguages({ sourceLanguage: localSourceId, targetLanguage: localTargetId });
+    if (res && res.sourceLanguage && res.targetLanguage) {
+      setSourceLanguage(res.sourceLanguage);
+      setTargetLanguage(res.targetLanguage);
+      setSaved(true);
+      setTimeout(() => setSaved(false), 1000);
     }
   };
 
@@ -48,7 +51,9 @@ export default function LanguageForm() {
           ))}
         </select>
       </div>
-      <button onClick={chooseLanguage}>{t("language.choose_btn")}</button>
+      <button onClick={handleClick} disabled={saved}>
+        {saved ? t("language.saved") : t("language.choose_btn")}
+      </button>
     </div>
   );
 }

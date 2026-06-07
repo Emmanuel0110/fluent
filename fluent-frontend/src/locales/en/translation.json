@@ -90,6 +90,7 @@
   "language.source_placeholder": "Source language",
   "language.target_placeholder": "Target language",
   "language.choose_btn": "Choose languages",
+  "language.saved": "Saved!",
   "language.invalid_selection": "Please select two different languages.",
   "language.update_failed": "Failed to update languages. Please try again.",
 

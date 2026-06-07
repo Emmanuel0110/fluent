@@ -90,6 +90,7 @@
   "language.source_placeholder": "소스 언어",
   "language.target_placeholder": "목표 언어",
   "language.choose_btn": "언어 선택",
+  "language.saved": "저장됨!",
   "language.invalid_selection": "서로 다른 두 언어를 선택해 주세요.",
   "language.update_failed": "언어 업데이트에 실패했습니다. 다시 시도해 주세요.",
 
