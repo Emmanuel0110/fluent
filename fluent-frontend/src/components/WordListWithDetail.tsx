@@ -83,7 +83,7 @@ export default function WordListWithDetail() {
   return (
     <div id="splitContainer" className={currentOpenedWord ? "openRightPannel" : "closeRightPannel"}>
       <div id="left">
-        <WordList />
+        <WordList selectedWordId={wordId} />
       </div>
       <div id="right">
         <div id="detailRightPanel" className={currentOpenedWord ? "open" : "close"}>

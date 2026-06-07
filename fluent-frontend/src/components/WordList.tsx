@@ -1,5 +1,4 @@
 import { useContext, useMemo } from "react";
-import { useParams } from "react-router-dom";
 import { Context } from "../types";
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
@@ -7,10 +6,9 @@ import { ConfigContext } from "../contexts/ConfigContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { FlagIcon } from "../utils/FlagIcon";
 
-export default function WordList() {
+export default function WordList({ selectedWordId }: { selectedWordId?: string }) {
   const { filteredWords } = useContext(ConfigContext) as Context;
   const { sourceLanguage, targetLanguage, getLanguageLabel } = useLanguage();
-  const { wordId } = useParams();
 
   const sourceWords = useMemo(
     () => filteredWords.filter((w) => w.language === sourceLanguage),
@@ -36,7 +34,7 @@ export default function WordList() {
               <FlagIcon languageLabel={targetLabel} />
             </div>
             {sourceWords.map((word) => (
-              <WordLine key={word._id} word={word} isSelected={word._id === wordId} />
+              <WordLine key={word._id} word={word} isSelected={word._id === selectedWordId} />
             ))}
           </>
         )}
@@ -48,7 +46,7 @@ export default function WordList() {
               <FlagIcon languageLabel={sourceLabel} />
             </div>
             {targetWords.map((word) => (
-              <WordLine key={word._id} word={word} isSelected={word._id === wordId} />
+              <WordLine key={word._id} word={word} isSelected={word._id === selectedWordId} />
             ))}
           </>
         )}
