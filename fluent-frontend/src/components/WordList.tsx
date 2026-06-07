@@ -1,13 +1,17 @@
-import { useContext, useMemo } from "react";
-import { Context } from "../types";
+import { useMemo, memo } from "react";
+import { Word } from "../types";
 import FilterBar from "./FilterBar";
 import { WordLine } from "./WordLine";
-import { ConfigContext } from "../contexts/ConfigContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { FlagIcon } from "../utils/FlagIcon";
 
-export default function WordList({ selectedWordId }: { selectedWordId?: string }) {
-  const { filteredWords } = useContext(ConfigContext) as Context;
+export default memo(function WordList({
+  filteredWords,
+  selectedWordId,
+}: {
+  filteredWords: Word[];
+  selectedWordId?: string;
+}) {
   const { sourceLanguage, targetLanguage, getLanguageLabel } = useLanguage();
 
   const sourceWords = useMemo(
@@ -53,4 +57,4 @@ export default function WordList({ selectedWordId }: { selectedWordId?: string }
       </div>
     </div>
   );
-}
+});
