@@ -3,12 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { updateLanguages } from "../APICalls";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
-
-const nativeNames: Record<string, string> = {
-  en: "English",
-  fr: "Français",
-  ko: "한국어",
-};
+import { nativeNames } from "../constants/languages";
 
 export default function LanguageForm() {
   const { t } = useTranslation();

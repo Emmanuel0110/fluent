@@ -4,18 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { url } from "../App";
 import "./LanguageSelection.css";
-
-const nativeNames: Record<string, string> = {
-  en: "English",
-  fr: "Français",
-  ko: "한국어",
-};
-
-const translatedNames: Record<string, Record<string, string>> = {
-  en: { en: "English", fr: "French", ko: "Korean" },
-  fr: { en: "Anglais", fr: "Français", ko: "Coréen" },
-  ko: { en: "영어", fr: "프랑스어", ko: "한국어" },
-};
+import { nativeNames, translatedNames } from "../constants/languages";
 
 interface Language {
   _id: string;
