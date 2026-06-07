@@ -42,7 +42,7 @@
   flex-wrap: wrap;
 }
 
-.language-form input[type="text"] {
+.language-form-select {
   flex: 1;
   min-width: 200px;
   padding: 0.75rem 1rem;
@@ -52,9 +52,11 @@
   transition: all 0.2s ease;
   background-color: var(--bg-surface);
   color: var(--text-primary);
+  cursor: pointer;
+  appearance: auto;
 }
 
-.language-form input[type="text"]:focus {
+.language-form-select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-shadow);
@@ -423,7 +425,7 @@
     flex-direction: column;
   }
 
-  .language-form input[type="text"] {
+  .language-form-select {
     min-width: 100%;
   }
 
