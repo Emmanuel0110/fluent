@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { updateLanguages } from "../APICalls";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useTranslation } from "react-i18next";
@@ -10,7 +9,6 @@ export default function LanguageForm() {
   const { languages, setSourceLanguage, setTargetLanguage } = useLanguage();
   const [localSourceId, setLocalSourceId] = useState("");
   const [localTargetId, setLocalTargetId] = useState("");
-  const navigate = useNavigate();
 
   const chooseLanguage = async () => {
     if (localSourceId && localTargetId && localSourceId !== localTargetId) {
@@ -18,7 +16,6 @@ export default function LanguageForm() {
       if (res && res.sourceLanguage && res.targetLanguage) {
         setSourceLanguage(res.sourceLanguage);
         setTargetLanguage(res.targetLanguage);
-        navigate("/words");
       }
     }
   };
