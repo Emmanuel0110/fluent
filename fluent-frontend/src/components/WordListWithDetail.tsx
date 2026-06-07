@@ -53,8 +53,8 @@ export default function WordListWithDetail() {
       multiLingualSentences.some(
         (sentence) =>
           sentence.sourceLanguage.prerequisites.includes(wordId) ||
-          sentence.targetLanguage.prerequisites.includes(wordId)
-      )
+          sentence.targetLanguage.prerequisites.includes(wordId),
+      ),
     );
     setdUsedIn(usedInConversations);
     return usedInConversations;
@@ -63,7 +63,9 @@ export default function WordListWithDetail() {
   const closeTab = (tabIndex: number) => {
     setOpenedWords((openedWords) => openedWords.filter((word, index) => index !== tabIndex));
     navigate(
-      openedWords.length > 1 ? "/words/" + (openedWords[tabIndex + 1]?._id || openedWords[tabIndex - 1]?._id) : "/words"
+      openedWords.length > 1
+        ? "/words/" + (openedWords[tabIndex + 1]?._id || openedWords[tabIndex - 1]?._id)
+        : "/words",
     );
   };
 
