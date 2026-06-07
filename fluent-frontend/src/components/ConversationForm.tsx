@@ -19,16 +19,19 @@ type SaveState = "idle" | "saving" | "saved";
 
 const emptyConversation: Conversation = { _id: "", tags: [], multiLingualSentences: [], subscribed: false };
 
-function ConversationForm({ initialConversation = emptyConversation }: { initialConversation?: Conversation }) {
+function ConversationForm() {
   const { t } = useTranslation();
-  const [conversation, setConversation] = useState<Conversation | undefined>();
-  const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
-  const [saveState, setSaveState] = useState<SaveState>("idle");
-  const [pendingDeleteSentence, setPendingDeleteSentence] = useState<number | null>(null);
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
   const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useData();
+
+  const initialConversation = conversationId ? conversations.find(({ _id }) => _id === conversationId) : undefined;
+
+  const [conversation, setConversation] = useState<Conversation | undefined>(initialConversation);
+  const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [pendingDeleteSentence, setPendingDeleteSentence] = useState<number | null>(null);
 
   useEffect(() => {
     if (conversation) return;
@@ -47,6 +50,7 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
   );
 
   const addSentence = () => {
+    if (!conversation) setConversation(emptyConversation);
     setConversation((conversation) =>
       conversation
         ? {
