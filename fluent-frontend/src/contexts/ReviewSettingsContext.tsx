@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useAuth } from "./AuthContext";
 import { updateRemoteUserSettings } from "../APICalls";
+import { REVIEW_ITEM_DELAY_DEFAULT } from "../constants/settings";
 
 interface ReviewSettings {
   reviewMode: "auto" | "manual";
@@ -17,7 +18,7 @@ interface ReviewSettingsContextType {
 
 const defaultSettings: ReviewSettings = {
   reviewMode: "manual",
-  autoReviewDelay: 10,
+  autoReviewDelay: REVIEW_ITEM_DELAY_DEFAULT,
   theme: "light",
 };
 
