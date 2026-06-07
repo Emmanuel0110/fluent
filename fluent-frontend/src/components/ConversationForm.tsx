@@ -58,6 +58,17 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
     );
   };
 
+  const removeSentence = (index: number) => {
+    setConversation((conversation) =>
+      conversation
+        ? {
+            ...conversation,
+            multiLingualSentences: conversation.multiLingualSentences.filter((_, i) => i !== index),
+          }
+        : undefined,
+    );
+  };
+
   const selectConversationTag = ({ _id, setLocalDescription }: Callback) => {
     if (_id) {
       setConversationTag(conversationTags.find((tag) => tag._id === _id));
@@ -91,6 +102,9 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
       {conversation &&
         conversation.multiLingualSentences.map((sentence, index) => (
           <div key={index} className="conversation-sentence-group">
+            <button className="btn delete-btn sentence-delete-btn" onClick={() => removeSentence(index)}>
+              ×
+            </button>
             <SentenceEdit
               type="sourceLanguage"
               listOfWords={sourceWords}
