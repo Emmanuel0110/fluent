@@ -31,6 +31,7 @@
   "word.add_tag": "Add tag",
   "word.save": "Save word",
   "word.saved": "Saved!",
+  "word.cancel": "Cancel",
   "word.delete": "Delete word",
   "word.delete_confirm": "Are you sure you want to delete this word?",
   "word.used_in": "Used in",

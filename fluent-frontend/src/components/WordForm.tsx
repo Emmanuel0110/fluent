@@ -3,10 +3,9 @@ import { Tab, Tabs } from "react-bootstrap";
 import "../App.css";
 import { Word } from "../types";
 import AutoComplete from "../utils/Autocomplete";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
-import { ConfirmDialog } from "./ConfirmDialog";
 import { useTranslation } from "react-i18next";
 
 type Callback = {
@@ -26,9 +25,8 @@ const getWordList = (words: { [key: string]: Word }, language: string) => {
 function WordForm() {
   const { t } = useTranslation();
   const { wordId } = useParams();
-  const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
-  const { words, saveWord, saveWordTag, wordTags, deleteWord } = useData();
+  const { words, saveWord, saveWordTag, wordTags } = useData();
   const initialWord = wordId ? words[wordId] : undefined;
   const [sourceWord, setSourceWord] = useState<Word | undefined>(
     initialWord?.language === appSourceLanguage ? initialWord : undefined,
@@ -38,8 +36,6 @@ function WordForm() {
   );
   const [sourceSaveState, setSourceSaveState] = useState<SaveState>("idle");
   const [targetSaveState, setTargetSaveState] = useState<SaveState>("idle");
-  const [showDeleteSource, setShowDeleteSource] = useState(false);
-  const [showDeleteTarget, setShowDeleteTarget] = useState(false);
   const [activeTab, setActiveTab] = useState<"source" | "target">("source");
 
   useEffect(() => {
@@ -64,15 +60,13 @@ function WordForm() {
     setSaveState: Dispatch<React.SetStateAction<SaveState>>,
   ) => {
     setSaveState("saving");
-    saveWord(word).then((savedWord) => {
-      if (savedWord) setWord(savedWord);
+    saveWord(word).then(() => {
       setSaveState("saved");
-      setTimeout(() => setSaveState("idle"), 1000);
+      setTimeout(() => {
+        setSaveState("idle");
+        setWord(undefined);
+      }, 1000);
     });
-  };
-
-  const handleDelete = (id: string) => {
-    deleteWord(id).then(() => navigate("/words"));
   };
 
   const selectSourceWord = ({ _id, label, setLocalDescription }: Callback) => {
@@ -216,26 +210,6 @@ function WordForm() {
 
   return (
     <div className="word-form">
-      {showDeleteSource && sourceWord && (
-        <ConfirmDialog
-          message={t("word.delete_confirm")}
-          onConfirm={() => {
-            setShowDeleteSource(false);
-            handleDelete(sourceWord._id);
-          }}
-          onCancel={() => setShowDeleteSource(false)}
-        />
-      )}
-      {showDeleteTarget && targetWord && (
-        <ConfirmDialog
-          message={t("word.delete_confirm")}
-          onConfirm={() => {
-            setShowDeleteTarget(false);
-            handleDelete(targetWord._id);
-          }}
-          onCancel={() => setShowDeleteTarget(false)}
-        />
-      )}
       <div id="sourceLanguage">
       <Tabs fill activeKey={activeTab} onSelect={(k) => setActiveTab(k as "source" | "target")}>
         <Tab eventKey="source" title={t("word.source_language")}>
@@ -321,8 +295,8 @@ function WordForm() {
                   >
                     {sourceSaveState === "saved" ? t("word.saved") : t("word.save")}
                   </button>
-                  <button className="btn delete-btn" onClick={() => setShowDeleteSource(true)}>
-                    {t("word.delete")}
+                  <button className="btn" onClick={() => setSourceWord(undefined)}>
+                    {t("word.cancel")}
                   </button>
                 </div>
               </div>
@@ -411,8 +385,8 @@ function WordForm() {
                   >
                     {targetSaveState === "saved" ? t("word.saved") : t("word.save")}
                   </button>
-                  <button className="btn delete-btn" onClick={() => setShowDeleteTarget(true)}>
-                    {t("word.delete")}
+                  <button className="btn" onClick={() => setTargetWord(undefined)}>
+                    {t("word.cancel")}
                   </button>
                 </div>
               </div>

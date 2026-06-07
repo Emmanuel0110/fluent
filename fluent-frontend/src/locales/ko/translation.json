@@ -31,6 +31,7 @@
   "word.add_tag": "태그 추가",
   "word.save": "단어 저장",
   "word.saved": "저장됨!",
+  "word.cancel": "취소",
   "word.delete": "단어 삭제",
   "word.delete_confirm": "이 단어를 삭제하시겠습니까?",
   "word.used_in": "사용 위치",
