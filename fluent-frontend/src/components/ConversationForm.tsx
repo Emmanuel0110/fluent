@@ -31,7 +31,7 @@ function ConversationForm() {
   const [conversation, setConversation] = useState<Conversation | undefined>(initialConversation);
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const [saveState, setSaveState] = useState<SaveState>("idle");
-  const [pendingDeleteSentence, setPendingDeleteSentence] = useState<number | null>(null);
+  const [pendingDeleteSentenceIndex, setPendingDeleteSentenceIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (conversation) return;
@@ -108,14 +108,14 @@ function ConversationForm() {
 
   return (
     <div className="conversation-form">
-      {pendingDeleteSentence !== null && (
+      {pendingDeleteSentenceIndex !== null && (
         <ConfirmDialog
           message={t("conversation.delete_sentence_confirm")}
           onConfirm={() => {
-            removeSentence(pendingDeleteSentence);
-            setPendingDeleteSentence(null);
+            removeSentence(pendingDeleteSentenceIndex);
+            setPendingDeleteSentenceIndex(null);
           }}
-          onCancel={() => setPendingDeleteSentence(null)}
+          onCancel={() => setPendingDeleteSentenceIndex(null)}
         />
       )}
       {conversation &&
@@ -139,7 +139,7 @@ function ConversationForm() {
               setConversation={setConversation}
               index={index}
             />
-            <button className="btn delete-btn sentence-delete-btn" onClick={() => setPendingDeleteSentence(index)}>
+            <button className="btn delete-btn sentence-delete-btn" onClick={() => setPendingDeleteSentenceIndex(index)}>
               {t("conversation.delete_sentence")}
             </button>
           </div>
