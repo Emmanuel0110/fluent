@@ -117,9 +117,6 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
       {conversation &&
         conversation.multiLingualSentences.map((sentence, index) => (
           <div key={index} className="conversation-sentence-group">
-            <button className="btn delete-btn sentence-delete-btn" onClick={() => setPendingDeleteSentence(index)}>
-              ×
-            </button>
             <SentenceEdit
               type="sourceLanguage"
               listOfWords={sourceWords}
@@ -138,6 +135,9 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
               setConversation={setConversation}
               index={index}
             />
+            <button className="btn delete-btn sentence-delete-btn" onClick={() => setPendingDeleteSentence(index)}>
+              {t("conversation.delete_sentence")}
+            </button>
           </div>
         ))}
       <div className="conversation-form-actions">

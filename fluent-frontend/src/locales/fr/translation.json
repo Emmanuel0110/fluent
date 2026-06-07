@@ -57,6 +57,7 @@
   "conversation.add_tag_to": "Ajouter le tag à la conversation",
   "conversation.delete_confirm": "Êtes-vous sûr de vouloir supprimer cette conversation ?",
   "conversation.delete_sentence_confirm": "Êtes-vous sûr de vouloir supprimer cette phrase ?",
+  "conversation.delete_sentence": "Supprimer la phrase",
   "conversation.save": "Enregistrer la conversation",
   "conversation.saved": "Enregistré !",
   "conversation.no_suggestion": "Aucune suggestion disponible",

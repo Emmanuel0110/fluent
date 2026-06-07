@@ -57,6 +57,7 @@
   "conversation.add_tag_to": "Add tag to conversation",
   "conversation.delete_confirm": "Are you sure you want to delete this conversation?",
   "conversation.delete_sentence_confirm": "Are you sure you want to delete this sentence?",
+  "conversation.delete_sentence": "Delete sentence",
   "conversation.save": "Save conversation",
   "conversation.saved": "Saved!",
   "conversation.no_suggestion": "No suggestion available",
