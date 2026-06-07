@@ -98,6 +98,23 @@
   box-sizing: border-box;
 }
 
+/* Select with flag */
+.profile-select-with-flag {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-select-with-flag .fi {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.profile-select-with-flag .profile-select {
+  flex: 1;
+}
+
 /* Radio group */
 .profile-radio-group {
   display: flex;

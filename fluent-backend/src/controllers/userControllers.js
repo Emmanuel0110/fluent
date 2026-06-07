@@ -175,7 +175,7 @@ export async function cacheUserCourse(user, { sourceLanguageId, targetLanguageId
     await UserModel.findByIdAndUpdate(user._id, { lastCourseId: user.courses[0] });
     userCourse = await UserCourseModel.findById(user.courses[0]).lean();
   } else {
-    const availableLanguages = await LanguageModel.find().select("-flag");
+    const availableLanguages = await LanguageModel.find();
     const resolvedSource = sourceLanguageId
       ? availableLanguages.find((l) => l._id.toString() === sourceLanguageId)?._id
       : availableLanguages.find((l) => l.label === "fr")?._id;

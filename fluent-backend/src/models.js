@@ -2,10 +2,6 @@ import { Schema, model } from "mongoose";
 
 const languageSchema = new Schema({
   label: { type: String, required: true },
-  flag: {
-    data: Buffer,
-    contentType: String, //Todo Make compatible with svg
-  },
 });
 export const LanguageModel = model("Language", languageSchema);
 

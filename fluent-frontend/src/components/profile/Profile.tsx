@@ -9,6 +9,7 @@ import { ApiError } from "../../utils/http-helpers";
 import { useNavigate } from "react-router-dom";
 import DeleteAccountConfirmDialog from "./DeleteAccountConfirmDialog";
 import { nativeNames, translatedNames } from "../../constants/languages";
+import { FlagIcon } from "../../utils/FlagIcon";
 
 function Profile() {
   const { t } = useTranslation();
@@ -98,39 +99,45 @@ function Profile() {
           <h2 className="profile-section-heading">{t("profile.section_languages")}</h2>
           <div className="profile-field">
             <label>{t("language.source_label")}</label>
-            <select
-              value={tempSourceLanguage}
-              onChange={(e) => {
-                setTempSourceLanguage(e.target.value);
-                setLangError("");
-              }}
-              className="profile-select"
-            >
-              <option value="">{t("language.select_source")}</option>
-              {languages.map((lang) => (
-                <option key={lang._id} value={lang._id}>
-                  {nativeNames[lang.label] ?? lang.label}
-                </option>
-              ))}
-            </select>
+            <div className="profile-select-with-flag">
+              <FlagIcon languageLabel={languages.find((l) => l._id === tempSourceLanguage)?.label ?? ""} />
+              <select
+                value={tempSourceLanguage}
+                onChange={(e) => {
+                  setTempSourceLanguage(e.target.value);
+                  setLangError("");
+                }}
+                className="profile-select"
+              >
+                <option value="">{t("language.select_source")}</option>
+                {languages.map((lang) => (
+                  <option key={lang._id} value={lang._id}>
+                    {nativeNames[lang.label] ?? lang.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="profile-field">
             <label>{t("language.target_label")}</label>
-            <select
-              value={tempTargetLanguage}
-              onChange={(e) => {
-                setTempTargetLanguage(e.target.value);
-                setLangError("");
-              }}
-              className="profile-select"
-            >
-              <option value="">{t("language.select_target")}</option>
-              {languages.map((lang) => (
-                <option key={lang._id} value={lang._id}>
-                  {getTargetLabel(lang.label)}
-                </option>
-              ))}
-            </select>
+            <div className="profile-select-with-flag">
+              <FlagIcon languageLabel={languages.find((l) => l._id === tempTargetLanguage)?.label ?? ""} />
+              <select
+                value={tempTargetLanguage}
+                onChange={(e) => {
+                  setTempTargetLanguage(e.target.value);
+                  setLangError("");
+                }}
+                className="profile-select"
+              >
+                <option value="">{t("language.select_target")}</option>
+                {languages.map((lang) => (
+                  <option key={lang._id} value={lang._id}>
+                    {getTargetLabel(lang.label)}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           {langError && <p className="profile-error">{langError}</p>}
         </section>
