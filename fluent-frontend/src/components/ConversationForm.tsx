@@ -7,6 +7,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
 import { SentenceEdit } from "./SentenceEdit";
 import { useTranslation } from "react-i18next";
+import { ConfirmDialog } from "./ConfirmDialog";
 
 type Callback = {
   _id?: string;
@@ -23,6 +24,7 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [pendingDeleteSentence, setPendingDeleteSentence] = useState<number | null>(null);
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
@@ -102,10 +104,20 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
 
   return (
     <div className="conversation-form">
+      {pendingDeleteSentence !== null && (
+        <ConfirmDialog
+          message={t("conversation.delete_sentence_confirm")}
+          onConfirm={() => {
+            removeSentence(pendingDeleteSentence);
+            setPendingDeleteSentence(null);
+          }}
+          onCancel={() => setPendingDeleteSentence(null)}
+        />
+      )}
       {conversation &&
         conversation.multiLingualSentences.map((sentence, index) => (
           <div key={index} className="conversation-sentence-group">
-            <button className="btn delete-btn sentence-delete-btn" onClick={() => removeSentence(index)}>
+            <button className="btn delete-btn sentence-delete-btn" onClick={() => setPendingDeleteSentence(index)}>
               ×
             </button>
             <SentenceEdit
