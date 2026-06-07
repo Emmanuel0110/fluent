@@ -46,7 +46,7 @@ function ConversationForm() {
 
   const [sourceWords, targetWords] = useMemo(
     () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
-    [words, appSourceLanguage],
+    [words, appSourceLanguage, appTargetLanguage],
   );
 
   const addSentence = () => {
