@@ -56,6 +56,7 @@
   "conversation.add_tag_to": "Ajouter le tag à la conversation",
   "conversation.delete_confirm": "Êtes-vous sûr de vouloir supprimer cette conversation ?",
   "conversation.save": "Enregistrer la conversation",
+  "conversation.saved": "Enregistré !",
   "conversation.no_suggestion": "Aucune suggestion disponible",
   "conversation.add_prerequisite": "Ajouter un prérequis",
 

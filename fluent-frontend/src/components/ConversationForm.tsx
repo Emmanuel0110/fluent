@@ -14,12 +14,15 @@ type Callback = {
   setLocalDescription: Dispatch<React.SetStateAction<string>>;
 };
 
+type SaveState = "idle" | "saving" | "saved";
+
 const emptyConversation: Conversation = { _id: "", tags: [], multiLingualSentences: [], subscribed: false };
 
 function ConversationForm({ initialConversation = emptyConversation }: { initialConversation?: Conversation }) {
   const { t } = useTranslation();
   const [conversation, setConversation] = useState<Conversation | undefined>();
   const [conversationTag, setConversationTag] = useState<ConversationTag | undefined>();
+  const [saveState, setSaveState] = useState<SaveState>("idle");
   const { conversationId } = useParams();
   const navigate = useNavigate();
   const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
@@ -172,14 +175,18 @@ function ConversationForm({ initialConversation = emptyConversation }: { initial
       </div>
       <div className="conversation-form-actions">
         <button
+          disabled={saveState !== "idle"}
           onClick={async () => {
             if (conversation) {
+              setSaveState("saving");
               const id = await saveConversation(conversation);
+              setSaveState("saved");
+              setTimeout(() => setSaveState("idle"), 1000);
               if (id) navigate("/conversations/" + id);
             }
           }}
         >
-          {t("conversation.save")}
+          {saveState === "saved" ? t("conversation.saved") : t("conversation.save")}
         </button>
       </div>
     </div>
