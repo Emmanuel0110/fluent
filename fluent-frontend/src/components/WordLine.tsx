@@ -1,6 +1,5 @@
-import { useParams } from "react-router-dom";
 import { Word } from "../types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState, memo } from "react";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,8 +7,15 @@ import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 import { ConfirmDialog } from "./ConfirmDialog";
 
-export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: boolean }) => {
-  const { wordId } = useParams();
+export const WordLine = memo(function WordLine({
+  word,
+  readonly = false,
+  isSelected = false,
+}: {
+  word: Word;
+  readonly?: boolean;
+  isSelected?: boolean;
+}) {
   const { user } = useAuth();
   const { deleteWord } = useData();
   const { openWord, editWord } = useContext(ConfigContext) as Context;
@@ -17,11 +23,10 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    const { current } = lineRef;
-    if (current !== null && word._id === wordId) {
-      current.scrollIntoView({ block: "nearest" });
+    if (lineRef.current && isSelected) {
+      lineRef.current.scrollIntoView({ block: "nearest" });
     }
-  }, [wordId]);
+  }, [isSelected]);
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -44,7 +49,7 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
       )}
       <div
         ref={lineRef}
-        className={"line" + (word._id === wordId ? " selectedLine" : "")}
+        className={"line" + (isSelected ? " selectedLine" : "")}
         onClick={() => openWord(word._id)}
       >
         <WordDefinition word={word} />
@@ -57,4 +62,4 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
       </div>
     </>
   );
-};
+});
