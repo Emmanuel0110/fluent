@@ -362,7 +362,7 @@ export const validateConversationTagCreate = [
 ];
 
 export const validateWordTagCreate = [
-  body("text").trim().notEmpty().withMessage("Text is required").isString().withMessage("Text must be a string"),
+  body("label").trim().notEmpty().withMessage("Label is required").isString().withMessage("Label must be a string"),
   body("language")
     .notEmpty()
     .withMessage("Language is required")

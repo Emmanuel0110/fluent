@@ -11,10 +11,6 @@ function CreationForm() {
   return (
     <div className="creation-form-container">
       <div className="creation-form-section">
-        <h2 className="creation-form-section-title">{t("creation.language_section")}</h2>
-        <LanguageForm />
-      </div>
-      <div className="creation-form-section">
         <h2 className="creation-form-section-title">{t("creation.conversation_section")}</h2>
         <ConversationForm />
       </div>
