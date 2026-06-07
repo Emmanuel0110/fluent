@@ -34,11 +34,24 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 
   const filteredWords = useMemo(() => {
-    return Object.values(words).filter((word) => {
+    const search = searchFilter.toLowerCase();
+    const filtered = Object.values(words).filter((word) => {
       return (
-        (!searchFilter || word.text.toLowerCase().includes(searchFilter.toLowerCase())) &&
-        (!tagFilter || word.tags.includes(tagFilter._id))
+        (!searchFilter || word.text.toLowerCase().includes(search)) && (!tagFilter || word.tags.includes(tagFilter._id))
       );
+    });
+    if (!searchFilter) return filtered;
+    // Exact matches come first, then prefix matches, then substring matches
+    return filtered.sort((a, b) => {
+      const aText = a.text.toLowerCase();
+      const bText = b.text.toLowerCase();
+      const aExact = aText === search;
+      const bExact = bText === search;
+      if (aExact !== bExact) return aExact ? -1 : 1;
+      const aStarts = aText.startsWith(search);
+      const bStarts = bText.startsWith(search);
+      if (aStarts !== bStarts) return aStarts ? -1 : 1;
+      return aText.localeCompare(bText);
     });
   }, [words, searchFilter, tagFilter, wordTags]);
 
