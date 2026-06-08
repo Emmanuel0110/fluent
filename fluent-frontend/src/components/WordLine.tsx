@@ -1,5 +1,7 @@
+import { useParams } from "react-router-dom";
 import { Word } from "../types";
-import { useContext, useEffect, useRef, useState, memo } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import { useAuth } from "../contexts/AuthContext";
@@ -7,15 +9,8 @@ import { useData } from "../contexts/DataContext";
 import { WordDefinition } from "./WordDefinition";
 import { ConfirmDialog } from "./ConfirmDialog";
 
-export const WordLine = memo(function WordLine({
-  word,
-  readonly = false,
-  isSelected = false,
-}: {
-  word: Word;
-  readonly?: boolean;
-  isSelected?: boolean;
-}) {
+export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: boolean }) => {
+  const { wordId } = useParams();
   const { user } = useAuth();
   const { deleteWord } = useData();
   const { openWord, editWord } = useContext(ConfigContext) as Context;
@@ -23,10 +18,11 @@ export const WordLine = memo(function WordLine({
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    if (lineRef.current && isSelected) {
-      lineRef.current.scrollIntoView({ block: "nearest" });
+    const { current } = lineRef;
+    if (current !== null && word._id === wordId) {
+      current.scrollIntoView({ block: "nearest" });
     }
-  }, [isSelected]);
+  }, [wordId]);
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -40,16 +36,17 @@ export const WordLine = memo(function WordLine({
 
   return (
     <>
-      {showConfirm && (
+      {showConfirm && createPortal(
         <ConfirmDialog
           message="Are you sure you want to delete this word?"
           onConfirm={() => { setShowConfirm(false); deleteWord(word._id); }}
           onCancel={() => setShowConfirm(false)}
-        />
+        />,
+        document.body
       )}
       <div
         ref={lineRef}
-        className={"line" + (isSelected ? " selectedLine" : "")}
+        className={"line" + (word._id === wordId ? " selectedLine" : "")}
         onClick={() => openWord(word._id)}
       >
         <WordDefinition word={word} />
@@ -62,4 +59,4 @@ export const WordLine = memo(function WordLine({
       </div>
     </>
   );
-});
+};

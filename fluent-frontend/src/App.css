@@ -132,7 +132,7 @@ button:disabled {
 }
 
 #wordList {
-  padding: 10px;
+  padding: 0;
 }
 
 .word-list-section-header {
