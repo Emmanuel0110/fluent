@@ -40,8 +40,8 @@ export const useSwipeAndKeyboard = ({
       // Detect swipe up/down/left/right (minimum distance of 50px)
       if (
         (diffY > 50 && direction === "up") ||
-        (diffX > 50 && direction === "right") ||
-        (diffX < -50 && direction === "left") ||
+        (diffX > 50 && direction === "left") ||
+        (diffX < -50 && direction === "right") ||
         (diffY < -50 && direction === "down")
       ) {
         callback();

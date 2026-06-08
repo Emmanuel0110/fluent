@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Feedback from "../feedback/Feedback";
 import { useTranslation } from "react-i18next";
+import { useSwipeAndKeyboard } from "../../hooks/useSwipeAndKeyboard";
 
 interface LeftMenuBarProps {
   isOpen: boolean;
@@ -22,6 +23,13 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
+
+  useSwipeAndKeyboard({
+    callback: () => setOpen(false),
+    direction: "left",
+    key: "",
+    dependencies: [isOpen],
+  });
 
   const handleKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {

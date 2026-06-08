@@ -7,6 +7,7 @@ import { Context } from "../types";
 import TabNav from "./layout/TabNav";
 import WordDetail from "./WordDetail";
 import { useData } from "../contexts/DataContext";
+import { useSwipeAndKeyboard } from "../hooks/useSwipeAndKeyboard";
 
 const MIN_USEDIN_LENGTH = 10;
 
@@ -59,6 +60,13 @@ export default function WordListWithDetail() {
     setdUsedIn(usedInConversations);
     return usedInConversations;
   };
+
+  useSwipeAndKeyboard({
+    callback: () => { if (currentOpenedWord) navigate("/words"); },
+    direction: "right",
+    key: "",
+    dependencies: [currentOpenedWord],
+  });
 
   const closeTab = (tabIndex: number) => {
     setOpenedWords((openedWords) => openedWords.filter((word, index) => index !== tabIndex));

@@ -7,6 +7,7 @@ import TabNav from "./layout/TabNav";
 import ConversationList from "./ConversationList";
 import ConversationDetail from "./ConversationDetail";
 import { useData } from "../contexts/DataContext";
+import { useSwipeAndKeyboard } from "../hooks/useSwipeAndKeyboard";
 
 export default function ConversationListWithDetail() {
   const { conversations, getConversationById } = useData();
@@ -37,6 +38,13 @@ export default function ConversationListWithDetail() {
       }
     }
   }, [conversations, conversationId, openedConversations]);
+
+  useSwipeAndKeyboard({
+    callback: () => { if (currentOpenedConversation) navigate("/suggestions"); },
+    direction: "right",
+    key: "",
+    dependencies: [currentOpenedConversation],
+  });
 
   const closeTab = (tabIndex: number) => {
     setOpenedConversations((openedConversation) =>
