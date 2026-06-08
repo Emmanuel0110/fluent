@@ -53,8 +53,8 @@ export default function WordListWithDetail() {
       multiLingualSentences.some(
         (sentence) =>
           sentence.sourceLanguage.prerequisites.includes(wordId) ||
-          sentence.targetLanguage.prerequisites.includes(wordId),
-      ),
+          sentence.targetLanguage.prerequisites.includes(wordId)
+      )
     );
     setdUsedIn(usedInConversations);
     return usedInConversations;
@@ -63,9 +63,7 @@ export default function WordListWithDetail() {
   const closeTab = (tabIndex: number) => {
     setOpenedWords((openedWords) => openedWords.filter((word, index) => index !== tabIndex));
     navigate(
-      openedWords.length > 1
-        ? "/words/" + (openedWords[tabIndex + 1]?._id || openedWords[tabIndex - 1]?._id)
-        : "/words",
+      openedWords.length > 1 ? "/words/" + (openedWords[tabIndex + 1]?._id || openedWords[tabIndex - 1]?._id) : "/words"
     );
   };
 
@@ -85,7 +83,7 @@ export default function WordListWithDetail() {
   return (
     <div id="splitContainer" className={currentOpenedWord ? "openRightPannel" : "closeRightPannel"}>
       <div id="left">
-        <WordList filteredWords={filteredWords} selectedWordId={wordId} />
+        <WordList />
       </div>
       <div id="right">
         <div id="detailRightPanel" className={currentOpenedWord ? "open" : "close"}>
