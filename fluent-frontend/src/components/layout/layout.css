@@ -223,6 +223,7 @@
 #right {
   height: 100%;
   position: relative;
+  overflow: hidden;
 }
 
 #detailRightPanel {
@@ -291,6 +292,10 @@
   #splitContainer.closeRightPannel {
     display: grid;
     grid-template-columns: 100% 0%;
+  }
+
+  #right {
+    overflow: visible;
   }
 
   #detailRightPanel.close {
