@@ -2,11 +2,11 @@
 
 name: Node.js CD
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -17,21 +17,21 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - name: Deploy using ssh
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.PRIVATE_KEY }}
-        port: 22
-        script: |
-          cd /home/manu/apps/fluent
-          git pull origin main
-          git status
-          cd fluent-frontend
-          npm install
-          npm run build
-          cp -a dist/. ../fluent-backend/public/
-          cd ../fluent-backend/
-          npm install --only=prod
-          pm2 restart fluent
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/manu/apps/fluent
+            git pull origin main
+            git status
+            cd fluent-frontend
+            npm install
+            npm run build
+            cp -a dist/. ../fluent-backend/public/
+            cd ../fluent-backend/
+            npm install --only=prod
+            pm2 reload ecosystem.config.cjs
