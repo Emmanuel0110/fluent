@@ -1,4 +1,4 @@
-import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
 import "../App.css";
 import { Word } from "../types";
@@ -6,6 +6,7 @@ import AutoComplete from "../utils/Autocomplete";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
+import { useWordLists } from "../hooks/useWordLists";
 import { useTranslation } from "react-i18next";
 
 type Callback = {
@@ -15,12 +16,6 @@ type Callback = {
 };
 
 type SaveState = "idle" | "saving" | "saved";
-
-const getWordList = (words: { [key: string]: Word }, language: string) => {
-  return Object.values(words)
-    .filter((word) => word.language === language)
-    .map(({ _id, text }) => ({ _id, label: text }));
-};
 
 function WordForm() {
   const { t } = useTranslation();
@@ -49,10 +44,7 @@ function WordForm() {
     }
   }, [words, wordId]);
 
-  const [sourceWords, targetWords] = useMemo(
-    () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
-    [words, appSourceLanguage, appTargetLanguage],
-  );
+  const { sourceWords, targetWords } = useWordLists();
 
   const handleSave = (
     word: Word,

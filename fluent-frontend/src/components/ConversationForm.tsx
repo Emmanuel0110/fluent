@@ -1,10 +1,10 @@
-import React, { Dispatch, useEffect, useMemo, useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import "../App.css";
-import { Conversation, ConversationTag, Word } from "../types";
+import { Conversation, ConversationTag } from "../types";
 import AutoComplete from "../utils/Autocomplete";
 import { useParams, useNavigate } from "react-router-dom";
-import { useLanguage } from "../contexts/LanguageContext";
 import { useData } from "../contexts/DataContext";
+import { useWordLists } from "../hooks/useWordLists";
 import { SentenceEdit } from "./SentenceEdit";
 import { useTranslation } from "react-i18next";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -23,8 +23,7 @@ function ConversationForm() {
   const { t } = useTranslation();
   const { conversationId } = useParams();
   const navigate = useNavigate();
-  const { sourceLanguage: appSourceLanguage, targetLanguage: appTargetLanguage } = useLanguage();
-  const { words, conversations, saveConversation, conversationTags, saveConversationTag } = useData();
+  const { conversations, saveConversation, conversationTags, saveConversationTag } = useData();
 
   const initialConversation = conversationId ? conversations.find(({ _id }) => _id === conversationId) : undefined;
 
@@ -38,16 +37,7 @@ function ConversationForm() {
     setConversation(conversationId ? conversations.find(({ _id }) => _id === conversationId) : initialConversation);
   }, [conversations, conversationId]);
 
-  const getWordList = (words: { [key: string]: Word }, language: string) => {
-    return Object.values(words)
-      .filter((word) => word.language === language)
-      .map(({ _id, text }) => ({ _id, label: text }));
-  };
-
-  const [sourceWords, targetWords] = useMemo(
-    () => [getWordList(words, appSourceLanguage), getWordList(words, appTargetLanguage)],
-    [words, appSourceLanguage, appTargetLanguage],
-  );
+  const { sourceWords, targetWords } = useWordLists();
 
   const addSentence = () => {
     if (!conversation) setConversation(emptyConversation);
