@@ -144,7 +144,12 @@ button:disabled {
 }
 
 .word-list-section-arrow {
-  font-size: 0.85rem;
+  width: 20px;
+  height: 20px;
+}
+
+[data-theme="dark"] .word-list-section-arrow {
+  filter: invert(1);
 }
 
 #conversationList {

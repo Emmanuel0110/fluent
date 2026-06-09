@@ -6,6 +6,7 @@ import { ConfigContext } from "../contexts/ConfigContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { FlagIcon } from "../utils/FlagIcon";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import arrowRight from "../images/arrow_right_alt_24dp_1F1F1F_FILL0_wght400_GRAD0_opsz24.svg";
 
 type ListItem =
   | { type: "header"; direction: "source" | "target" }
@@ -76,19 +77,16 @@ export default function WordList() {
               >
                 {item.type === "header" ? (
                   <div className="word-list-section-header">
-                    {item.direction === "source" ? (
-                      <>
-                        <FlagIcon languageLabel={sourceLabel} />
-                        <span className="word-list-section-arrow">→</span>
-                        <FlagIcon languageLabel={targetLabel} />
-                      </>
-                    ) : (
-                      <>
-                        <FlagIcon languageLabel={targetLabel} />
-                        <span className="word-list-section-arrow">→</span>
-                        <FlagIcon languageLabel={sourceLabel} />
-                      </>
-                    )}
+                    {(() => {
+                      const [from, to] = item.direction === "source" ? [sourceLabel, targetLabel] : [targetLabel, sourceLabel];
+                      return (
+                        <>
+                          <FlagIcon languageLabel={from} />
+                          <img src={arrowRight} className="word-list-section-arrow" />
+                          <FlagIcon languageLabel={to} />
+                        </>
+                      );
+                    })()}
                   </div>
                 ) : (
                   <WordLine word={item.word} />
