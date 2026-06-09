@@ -14,15 +14,8 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
   const { user } = useAuth();
   const { deleteWord } = useData();
   const { openWord, editWord } = useContext(ConfigContext) as Context;
-  const lineRef = useRef<HTMLDivElement>(null);
   const [showConfirm, setShowConfirm] = useState(false);
-
-  useEffect(() => {
-    const { current } = lineRef;
-    if (current !== null && word._id === wordId) {
-      current.scrollIntoView({ block: "nearest" });
-    }
-  }, [wordId]);
+  const lineRef = useRef<HTMLDivElement>(null);
 
   const onEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -36,14 +29,18 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
 
   return (
     <>
-      {showConfirm && createPortal(
-        <ConfirmDialog
-          message="Are you sure you want to delete this word?"
-          onConfirm={() => { setShowConfirm(false); deleteWord(word._id); }}
-          onCancel={() => setShowConfirm(false)}
-        />,
-        document.body
-      )}
+      {showConfirm &&
+        createPortal(
+          <ConfirmDialog
+            message="Are you sure you want to delete this word?"
+            onConfirm={() => {
+              setShowConfirm(false);
+              deleteWord(word._id);
+            }}
+            onCancel={() => setShowConfirm(false)}
+          />,
+          document.body,
+        )}
       <div
         ref={lineRef}
         className={"line" + (word._id === wordId ? " selectedLine" : "")}
