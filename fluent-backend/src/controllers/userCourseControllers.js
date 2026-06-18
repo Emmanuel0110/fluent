@@ -40,7 +40,7 @@ async function updateLearningData(req, res) {
         res.json({ success: true });
       }
       if (redisClient) {
-        refreshUserCourseCache(userCourse._id, user._id);
+        await refreshUserCourseCache(userCourse._id, user._id);
       }
     }
   } catch (error) {
