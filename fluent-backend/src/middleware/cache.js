@@ -26,6 +26,13 @@ async function cache(req, res, next) {
     // Also cast sourceLanguage/targetLanguage:
     userCourse.sourceLanguage = new mongoose.Types.ObjectId(userCourse.sourceLanguage);
     userCourse.targetLanguage = new mongoose.Types.ObjectId(userCourse.targetLanguage);
+
+    // NB: userCourse.words[]._id is intentionally NOT recast. It is never used raw
+    // in a query (getConversationsForWords casts each id with `new ObjectId(id)`
+    // before its aggregate), and the in-memory checks compare it with loose `==`
+    // against ObjectIds (e.g. `prerequisite == _id` in reviewControllers). Recasting
+    // it would turn those into object-vs-object `==` reference comparisons that
+    // always return false, silently breaking review selection.
   } else {
     userCourse = await UserModel.findById(userId).then((user) => cacheUserCourse(user));
   }
