@@ -112,8 +112,17 @@ export function createVocabularyImporter({ dbService, vocabularyProcessor }) {
         const wordFound = await dbService.findLexicalItem(language._id, text);
 
         if (wordFound) {
+          // Fill in the level only when it was never set (placeholder items created
+          // as prerequisites default to 0); never overwrite an existing real level.
+          const needsLevel = !wordFound.level && level > 0;
+
           if (vocabularyProcessor.sameTagsAndTranslations(wordFound, tagIds, translationsWithIds)) {
-            logger.debug({ text }, "Word already exists, skip import");
+            if (needsLevel) {
+              await dbService.updateLexicalItem({ _id: wordFound._id }, { $set: { level } });
+              logger.debug({ text, level }, "Word already exists; filled in missing level");
+            } else {
+              logger.debug({ text }, "Word already exists, skip import");
+            }
             return null;
           } else {
             const { translations: mergedTranslations, tags: mergedTags } = vocabularyProcessor.prepareTranslationsAndTags(
@@ -121,14 +130,16 @@ export function createVocabularyImporter({ dbService, vocabularyProcessor }) {
               tagIds,
               translationsWithIds
             );
-            await dbService.updateLexicalItem(
-              { _id: wordFound._id },
-              {
-                $set: { translations: mergedTranslations, tags: mergedTags },
-              }
-            );
+            const update = { translations: mergedTranslations, tags: mergedTags };
+            if (needsLevel) update.level = level;
+            await dbService.updateLexicalItem({ _id: wordFound._id }, { $set: update });
 
-            return { ...wordFound, tags: mergedTags, translations: mergedTranslations };
+            return {
+              ...wordFound,
+              tags: mergedTags,
+              translations: mergedTranslations,
+              ...(needsLevel ? { level } : {}),
+            };
           }
         } else {
           const word = await dbService.createLexicalItem({
