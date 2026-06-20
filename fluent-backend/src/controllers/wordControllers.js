@@ -76,7 +76,7 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   ).lean();
   const completedWord = {
     ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(word),
-    subscribed: !!req.userCourse.words.find(({ _id }) => _id === word._id),
+    subscribed: !!req.userCourse.words.find(({ _id }) => String(_id) === String(word._id)),
   };
   res.json({ success: true, data: completedWord });
 });
