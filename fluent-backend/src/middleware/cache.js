@@ -1,7 +1,11 @@
 import { cacheUserCourse } from "../controllers/userControllers.js";
 import { redisClient } from "../redis.js";
 import { UserModel, UserCourseModel } from "../models.js";
-import mongoose from "mongoose";
+import {
+  USER_COURSE_CACHE_TTL_SECONDS,
+  serializeUserCourse,
+  deserializeUserCourse,
+} from "../services/userCourseCache.js";
 
 async function cache(req, res, next) {
   const userId = req.user._id;
@@ -10,32 +14,11 @@ async function cache(req, res, next) {
     cachedData = await redisClient.get(`userCourse:${userId}`);
   }
 
-  let userCourse;
-
-  if (cachedData) {
-    userCourse = JSON.parse(cachedData);
-
-    // ✅ Recast all _id fields that you’ll use in Mongo queries
-    if (Array.isArray(userCourse.conversations)) {
-      userCourse.conversations = userCourse.conversations.map((conv) => ({
-        ...conv,
-        _id: new mongoose.Types.ObjectId(conv._id),
-      }));
-    }
-
-    // Also cast sourceLanguage/targetLanguage:
-    userCourse.sourceLanguage = new mongoose.Types.ObjectId(userCourse.sourceLanguage);
-    userCourse.targetLanguage = new mongoose.Types.ObjectId(userCourse.targetLanguage);
-
-    // NB: userCourse.words[]._id is intentionally NOT recast. It is never used raw
-    // in a query (getConversationsForWords casts each id with `new ObjectId(id)`
-    // before its aggregate), and the in-memory checks compare it with loose `==`
-    // against ObjectIds (e.g. `prerequisite == _id` in reviewControllers). Recasting
-    // it would turn those into object-vs-object `==` reference comparisons that
-    // always return false, silently breaking review selection.
-  } else {
-    userCourse = await UserModel.findById(userId).then((user) => cacheUserCourse(user));
-  }
+  // deserializeUserCourse rebuilds the full schema shape (ObjectIds, Dates), so
+  // req.userCourse is identical whether it came from cache or from Mongo.
+  const userCourse = cachedData
+    ? deserializeUserCourse(cachedData)
+    : await UserModel.findById(userId).then((user) => cacheUserCourse(user));
 
   req.userCourse = userCourse;
   next();
@@ -43,7 +26,9 @@ async function cache(req, res, next) {
 
 export async function refreshUserCourseCache(userCourseId, userId) {
   const userCourse = await UserCourseModel.findById(userCourseId);
-  await redisClient.set(`userCourse:${userId}`, JSON.stringify(userCourse), { EX: 3600 });
+  await redisClient.set(`userCourse:${userId}`, serializeUserCourse(userCourse), {
+    EX: USER_COURSE_CACHE_TTL_SECONDS,
+  });
 }
 
 export default cache;

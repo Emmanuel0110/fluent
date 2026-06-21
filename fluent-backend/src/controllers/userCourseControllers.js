@@ -57,7 +57,7 @@ async function getWordIdsForConversation(conversationId, language) {
   if (!convo) return [];
   const wordIdSet = new Set();
   for (const conv of convo.conversations) {
-    if (conv.language.toString() == language.toString()) {
+    if (conv.language.equals(language)) {
       for (const sentence of conv.sentences) {
         if (sentence.prerequisites) {
           sentence.prerequisites.forEach((id) => wordIdSet.add(id.toString()));
@@ -72,7 +72,7 @@ async function getWordIdsForSentences(conversationId, language) {
   const convo = await MultiLingualConversationModel.findById(conversationId).lean();
   if (!convo) return [];
   for (const conv of convo.conversations) {
-    if (conv.language.toString() == language.toString()) {
+    if (conv.language.equals(language)) {
       const arr = [];
       for (const sentence of conv.sentences) {
         if (sentence.prerequisites) {
@@ -85,7 +85,7 @@ async function getWordIdsForSentences(conversationId, language) {
 }
 
 async function subscribeToConversation(conversationToSubscribe, userCourse) {
-  if (!userCourse.conversations.find(({ _id }) => _id == conversationToSubscribe)) {
+  if (!userCourse.conversations.find(({ _id }) => _id.equals(conversationToSubscribe))) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id },
       { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } },
@@ -94,7 +94,7 @@ async function subscribeToConversation(conversationToSubscribe, userCourse) {
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, newWordIds] = uniqIds.reduce(
       ([wordUpdates, newWordIds], wordId) => {
-        const word = userCourse.words.find(({ _id }) => _id == wordId);
+        const word = userCourse.words.find(({ _id }) => _id.equals(wordId));
         if (word) {
           wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + 1 });
         } else {
@@ -112,7 +112,7 @@ async function subscribeToConversation(conversationToSubscribe, userCourse) {
 }
 
 async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) {
-  if (userCourse.conversations.find(({ _id }) => _id == conversationToUnsubscribe)) {
+  if (userCourse.conversations.find(({ _id }) => _id.equals(conversationToUnsubscribe))) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id },
       { $pull: { conversations: { _id: conversationToUnsubscribe } } },
@@ -121,7 +121,7 @@ async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) 
     const uniqIds = [...new Set(wordIds)];
     const [wordUpdates, wordIdsToUnsubcribe] = uniqIds.reduce(
       ([wordUpdates, wordIdsToRemove], wordId) => {
-        const word = userCourse.words.find(({ _id }) => _id == wordId);
+        const word = userCourse.words.find(({ _id }) => _id.equals(wordId));
         if (word) {
           if (word.numberOfSentencesUsedIn == 1) {
             wordIdsToRemove.push(wordId);
@@ -174,7 +174,7 @@ async function updateWordsSubscription(userCourseId, updates) {
 }
 
 async function updateReviewData(reviewedConversationId, successArray, userCourse) {
-  if (userCourse.conversations.find(({ _id }) => _id == reviewedConversationId)) {
+  if (userCourse.conversations.find(({ _id }) => _id.equals(reviewedConversationId))) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id, "conversations._id": reviewedConversationId },
       { $set: { "conversations.$.lastReviewDate": new Date() } },
@@ -189,7 +189,7 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
     wordIds.forEach((wordId, index) => {
       if (alreadyProcessed.includes(wordId)) return;
       alreadyProcessed.push(wordId);
-      const word = userCourse.words.find(({ _id }) => _id == wordId);
+      const word = userCourse.words.find(({ _id }) => _id.equals(wordId));
       if (word) {
         wordUpdates.push(getUpdate(word, successArray[index]));
       } else {

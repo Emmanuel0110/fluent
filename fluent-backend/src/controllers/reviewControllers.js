@@ -83,7 +83,7 @@ async function getStoryReviewItems(userCourse) {
   if (userCourse.nextStoryNodeId) {
     const storyNode = await StoryNodeModel.findById(userCourse.nextStoryNodeId);
     const missingPrerequisites = storyNode.prerequisites.filter(
-      (prerequisite) => !userCourse.words.find(({ _id }) => prerequisite == _id)
+      (prerequisite) => !userCourse.words.find(({ _id }) => _id.equals(prerequisite))
     );
     if (missingPrerequisites.length > 0) {
       const easyConversations = await getEasyConversationsForWords(missingPrerequisites, userCourse);
@@ -171,9 +171,9 @@ async function getEasyConversationsForWords(wordIds, userCourse) {
     multiLingualConversation.conversations.forEach((conversation) =>
       conversation.sentences.forEach((sentence) => {
         sentence.prerequisites.forEach((prerequisite) => {
-          if (wordIds.includes(prerequisite)) {
+          if (wordIds.some((id) => id.equals(prerequisite))) {
             key = prerequisite;
-          } else if (!userWords.find(({ _id }) => _id == prerequisite)) {
+          } else if (!userWords.find(({ _id }) => _id.equals(prerequisite))) {
             difficulty++;
           }
         });

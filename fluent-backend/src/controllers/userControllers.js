@@ -16,6 +16,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import express from "express";
 import { redisClient } from "../redis.js";
+import { serializeUserCourse, USER_COURSE_CACHE_TTL_SECONDS } from "../services/userCourseCache.js";
 import mongoose from "mongoose";
 import fetch from "node-fetch";
 import rateLimit from "express-rate-limit";
@@ -196,7 +197,9 @@ export async function cacheUserCourse(user, { sourceLanguageId, targetLanguageId
     });
   }
   if (redisClient) {
-    await redisClient.set(`userCourse:${user._id}`, JSON.stringify(userCourse), { EX: 3600 });
+    await redisClient.set(`userCourse:${user._id}`, serializeUserCourse(userCourse), {
+      EX: USER_COURSE_CACHE_TTL_SECONDS,
+    });
   }
   return userCourse;
 }
@@ -273,7 +276,9 @@ export async function updateLanguages(user, sourceLanguage, targetLanguage) {
     $addToSet: { courses: userCourse._id },
   });
   if (redisClient) {
-    await redisClient.set(`userCourse:${user._id}`, JSON.stringify(userCourse), { EX: 3600 });
+    await redisClient.set(`userCourse:${user._id}`, serializeUserCourse(userCourse), {
+      EX: USER_COURSE_CACHE_TTL_SECONDS,
+    });
   }
 }
 

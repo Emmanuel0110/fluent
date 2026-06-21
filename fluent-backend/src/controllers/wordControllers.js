@@ -76,7 +76,7 @@ router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
   ).lean();
   const completedWord = {
     ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(word),
-    subscribed: !!req.userCourse.words.find(({ _id }) => String(_id) === String(word._id)),
+    subscribed: !!req.userCourse.words.find(({ _id }) => _id.equals(word._id)),
   };
   res.json({ success: true, data: completedWord });
 });
@@ -140,7 +140,7 @@ function onlyKeepLanguages(sourceLanguage, targetLanguage) {
     return {
       ...word,
       translations: word.translations.filter(({ language }) =>
-        [sourceLanguage.toString(), targetLanguage.toString()].includes(language.toString()),
+        [sourceLanguage, targetLanguage].some((l) => l.equals(language)),
       ),
     };
   };
@@ -151,7 +151,7 @@ function completeWords(words, userWords) {
     return {
       ...word,
       subscribed: !!userWords.find((userWord) => {
-        return new mongoose.Types.ObjectId(userWord._id).equals(word._id);
+        return userWord._id.equals(word._id);
       }),
     };
   });
