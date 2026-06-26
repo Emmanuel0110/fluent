@@ -453,10 +453,6 @@ a.nav-link {
   color: var(--color-interactive);
 }
 
-.translationSpaceholder {
-  height: calc(1em + 16px + 2px); /* line-height + clickable-sentence vertical padding + border */
-}
-
 .wordLabel {
   font-weight: 600;
 }

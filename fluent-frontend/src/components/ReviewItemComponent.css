@@ -109,7 +109,11 @@
   font-weight: 500;
 }
 
-.translationSpaceholder.hidden .clickable-sentence {
+/* .translationSpaceholder has no fixed height: the translation text is always in
+   the DOM (just made transparent when hidden), so the placeholder naturally
+   matches its exact height, including when the translation wraps to multiple lines. */
+
+.hidden .clickable-sentence {
   color: transparent;
   background-color: var(--bg-app);
   border-radius: 3px;

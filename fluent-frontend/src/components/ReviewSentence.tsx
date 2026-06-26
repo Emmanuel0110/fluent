@@ -26,7 +26,7 @@ function ReviewSentence({ index, currentSentenceNumber, answerRevealed, conversa
       <div className="clickable-sentence" onClick={() => handleSentenceClick(index, "source")}>
         {conversation.multiLingualSentences[index].sourceLanguage.text}
       </div>
-      <div className={`translationSpaceholder${answerRevealed ? "" : " hidden"}`}>
+      <div className={answerRevealed ? "" : "hidden"}>
         <div className="clickable-sentence bold" onClick={() => handleSentenceClick(index, "target")}>
           {targetText}
           {answerRevealed && <TextToSpeech text={targetText} language={getLanguageLabel(targetLanguage)} />}
