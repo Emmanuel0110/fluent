@@ -92,6 +92,14 @@ export interface ReviewItem extends Conversation {
   multiLingualSentences: { sourceLanguage: Sentence; targetLanguage: Sentence; success: boolean }[];
 }
 
+// Progress within the conversation currently being reviewed. Lives in ConfigContext
+// so it survives navigating away from (and back to) the review page.
+export interface ReviewProgress {
+  conversationId: string | null;
+  currentSentenceNumber: number;
+  answersRevealed: boolean[];
+}
+
 export interface DashboardData {
   progress: number;
   rank: string;
@@ -122,6 +130,8 @@ export interface Context {
   setSearchInput: Dispatch<SetStateAction<string>>;
   reviewList: ReviewItem[];
   setReviewList: Dispatch<SetStateAction<ReviewItem[]>>;
+  reviewProgress: ReviewProgress;
+  setReviewProgress: Dispatch<SetStateAction<ReviewProgress>>;
   suggestions: Conversation[];
   setSuggestions: Dispatch<SetStateAction<Conversation[]>>;
 }
