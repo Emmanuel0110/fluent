@@ -178,13 +178,13 @@
 
 .home-feature {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.625rem;
 }
 
 .home-feature-icon {
   font-size: 1.25rem;
-  line-height: 1;
+  line-height: 3;
   flex-shrink: 0;
 }
 
@@ -195,14 +195,14 @@
 }
 
 .home-feature-name {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 3;
+  margin: 15px 0;
 }
 
 .home-feature-text {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   color: var(--text-secondary);
   line-height: 1.25;
 }
