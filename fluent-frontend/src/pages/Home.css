@@ -4,12 +4,15 @@
   padding: 0 1.5rem;
   max-width: 480px;
   margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  overflow: auto;
 }
 
 /* Hero — fills the first screen; the features section is reached by scrolling */
 .home-hero {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -146,7 +149,9 @@
   text-decoration: none;
   border: 2px solid var(--border);
   border-radius: 0.75rem;
-  transition: border-color 0.2s, background 0.2s;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .home-btn-secondary:hover {
@@ -160,16 +165,6 @@
 .home-features {
   width: 100%;
   padding: 0.5rem 0 2.5rem;
-}
-
-.home-features-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-secondary);
-  text-align: center;
-  margin: 0 0 0.625rem;
 }
 
 .home-features-list {
@@ -203,7 +198,7 @@
   font-size: 0.875rem;
   font-weight: 700;
   color: var(--text-primary);
-  line-height: 1.2;
+  line-height: 3;
 }
 
 .home-feature-text {

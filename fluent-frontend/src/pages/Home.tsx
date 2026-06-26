@@ -29,12 +29,12 @@ const FEATURES = [
   {
     icon: "🔁",
     title: "Reviews at the right time",
-    text: "Spaced repetition surfaces each word exactly when you need it.",
+    text: "Spaced repetition shows you each conversation exactly when you need it.",
   },
   {
     icon: "💬",
     title: "Words learned in context",
-    text: "See vocabulary inside real sentences, not endless lists.",
+    text: "See vocabulary inside real conversations, not endless lists.",
   },
 ];
 
@@ -112,7 +112,6 @@ export default function Home() {
       </div>
 
       <section className="home-features" aria-label="Why Fluent">
-        <h2 className="home-features-title">Designed for your brain</h2>
         <ul className="home-features-list">
           {FEATURES.map((feature) => (
             <li key={feature.title} className="home-feature">
