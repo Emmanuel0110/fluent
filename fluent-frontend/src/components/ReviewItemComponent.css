@@ -26,6 +26,11 @@
   margin-bottom: 5px;
 }
 
+#reviewSentences .gray .clickable-sentence {
+  pointer-events: none;
+  user-select: none;
+}
+
 #nothingToReview {
   text-align: center;
   font-size: 1.5em;
