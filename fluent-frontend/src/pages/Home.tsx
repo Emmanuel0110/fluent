@@ -20,6 +20,24 @@ const SLIDES = [
 const SLIDE_INTERVAL = 3000;
 const SWIPE_THRESHOLD = 50;
 
+const FEATURES = [
+  {
+    icon: "🧠",
+    title: "Optimized cognitive load",
+    text: "Bite-sized reviews keep your mind fresh, never overloaded.",
+  },
+  {
+    icon: "🔁",
+    title: "Reviews at the right time",
+    text: "Spaced repetition surfaces each word exactly when you need it.",
+  },
+  {
+    icon: "💬",
+    title: "Words learned in context",
+    text: "See vocabulary inside real sentences, not endless lists.",
+  },
+];
+
 export default function Home() {
   const { isAuthenticated } = useAuth();
   const [current, setCurrent] = useState(0);
@@ -50,46 +68,65 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      <h1 className="home-title">Fluent</h1>
+      <div className="home-hero">
+        <h1 className="home-title">Fluent</h1>
 
-      <div className="home-slideshow">
-        <div className="home-slide-window" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-          <div
-            className="home-slides-track"
-            style={{
-              transform: `translateX(-${current * (100 / SLIDES.length)}%)`,
-              width: `${SLIDES.length * 100}%`,
-            }}
-          >
-            {SLIDES.map((slide) => (
-              <div key={slide.id} className="home-slide">
-                <img src={slide.src} alt={slide.alt} className="home-slide-img" />
-              </div>
+        <div className="home-slideshow">
+          <div className="home-slide-window" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+            <div
+              className="home-slides-track"
+              style={{
+                transform: `translateX(-${current * (100 / SLIDES.length)}%)`,
+                width: `${SLIDES.length * 100}%`,
+              }}
+            >
+              {SLIDES.map((slide) => (
+                <div key={slide.id} className="home-slide">
+                  <img src={slide.src} alt={slide.alt} className="home-slide-img" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="home-dots">
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                className={`home-dot${i === current ? " home-dot--active" : ""}`}
+                onClick={() => setCurrent(i)}
+                aria-label={`Slide ${i + 1}`}
+              />
             ))}
           </div>
         </div>
-        <div className="home-dots">
-          {SLIDES.map((_, i) => (
-            <button
-              key={i}
-              className={`home-dot${i === current ? " home-dot--active" : ""}`}
-              onClick={() => setCurrent(i)}
-              aria-label={`Slide ${i + 1}`}
-            />
-          ))}
+
+        <p className="home-tagline">The free, opensource app to learn a language!</p>
+
+        <div className="home-actions">
+          <Link to="/get-started" className="home-btn-primary">
+            GET STARTED
+          </Link>
+          <Link to="/login" className="home-btn-secondary">
+            I ALREADY HAVE AN ACCOUNT
+          </Link>
         </div>
       </div>
 
-      <p className="home-tagline">The free, opensource app to learn a language!</p>
-
-      <div className="home-actions">
-        <Link to="/get-started" className="home-btn-primary">
-          GET STARTED
-        </Link>
-        <Link to="/login" className="home-btn-secondary">
-          I ALREADY HAVE AN ACCOUNT
-        </Link>
-      </div>
+      <section className="home-features" aria-label="Why Fluent">
+        <h2 className="home-features-title">Designed for your brain</h2>
+        <ul className="home-features-list">
+          {FEATURES.map((feature) => (
+            <li key={feature.title} className="home-feature">
+              <span className="home-feature-icon" aria-hidden="true">
+                {feature.icon}
+              </span>
+              <span className="home-feature-copy">
+                <span className="home-feature-name">{feature.title}</span>
+                <span className="home-feature-text">{feature.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
     </div>
   );
 }

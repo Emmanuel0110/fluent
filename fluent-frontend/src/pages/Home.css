@@ -1,15 +1,20 @@
 .home-container {
-  height: 100vh;
-  height: 100dvh;
-  overflow: hidden;
   box-sizing: border-box;
   background-color: var(--bg-app);
+  padding: 0 1.5rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Hero — fills the first screen; the features section is reached by scrolling */
+.home-hero {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.25rem 1.5rem;
-  max-width: 480px;
-  margin: 0 auto;
+  padding: 1.25rem 0;
   gap: 1rem;
 }
 
@@ -149,4 +154,60 @@
   background: var(--accent-shadow);
   color: var(--accent);
   text-decoration: none;
+}
+
+/* Feature highlights */
+.home-features {
+  width: 100%;
+  padding: 0.5rem 0 2.5rem;
+}
+
+.home-features-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0 0 0.625rem;
+}
+
+.home-features-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.home-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.home-feature-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.home-feature-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.home-feature-name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.home-feature-text {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.25;
 }
