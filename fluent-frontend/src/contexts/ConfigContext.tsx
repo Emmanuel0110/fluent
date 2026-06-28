@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode, useMemo } from "react";
-import { Context, Conversation, ConversationTag, ReviewItem, Word, WordTag } from "../types";
+import { Context, Conversation, ConversationTag, ReviewItem, ReviewProgress, Word, WordTag } from "../types";
 import { useData } from "./DataContext";
 import { useNavigation } from "../hooks/useNavigation";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,11 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [openedWords, setOpenedWords] = useState([] as Word[]);
   const [openedConversations, setOpenedConversations] = useState([] as Conversation[]);
   const [reviewList, setReviewList] = useState<ReviewItem[]>([]);
+  const [reviewProgress, setReviewProgress] = useState<ReviewProgress>({
+    conversationId: null,
+    currentSentenceNumber: 0,
+    answersRevealed: [],
+  });
   const [suggestions, setSuggestions] = useState<Conversation[]>([]);
   const navigate = useNavigate();
   const { words, conversations, wordTags } = useData();
@@ -128,6 +133,8 @@ export const ConfigProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setSearchInput,
         reviewList,
         setReviewList,
+        reviewProgress,
+        setReviewProgress,
         suggestions,
         setSuggestions,
       }}

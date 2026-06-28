@@ -1,0 +1,16 @@
+/* Base flag styling, replicated from flag-icons so we don't have to import the
+   whole library CSS (which references ~250 flag SVGs). The actual flag image is
+   set inline in FlagIcon, limited to the languages the app supports. */
+.fi {
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  position: relative;
+  display: inline-block;
+  width: 1.333333em;
+  line-height: 1em;
+}
+
+.fi::before {
+  content: " ";
+}

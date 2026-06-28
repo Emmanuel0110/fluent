@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { ReviewItem as ReviewItemType } from "../types";
+import React, { useContext, useEffect, useRef, useCallback } from "react";
+import { ReviewItem as ReviewItemType, Context } from "../types";
+import { ConfigContext } from "../contexts/ConfigContext";
 import { useReviewSettings } from "../contexts/ReviewSettingsContext";
 import ReviewSentence from "./ReviewSentence";
 import { useSwipeAndKeyboard } from "../hooks/useSwipeAndKeyboard";
@@ -16,10 +17,27 @@ function ReviewItem({
   const { t } = useTranslation();
   const { getReviewDelay, shouldShowAnswerAutomatically } = useReviewSettings();
   const isAutoMode = shouldShowAnswerAutomatically();
+  const { reviewProgress, setReviewProgress } = useContext(ConfigContext) as Context;
 
-  const [answersRevealed, setAnswersRevealed] = useState(conversation.multiLingualSentences.map(() => false));
-  const [currentSentenceNumber, setCurrentSentenceNumber] = useState(0);
+  // Progress is stored in the context (not local state) so it survives unmounting
+  // when the user navigates to another page and comes back to the review.
+  const isCurrent = reviewProgress.conversationId === conversation._id;
+  const currentSentenceNumber = isCurrent ? reviewProgress.currentSentenceNumber : 0;
+  const answersRevealed = isCurrent
+    ? reviewProgress.answersRevealed
+    : conversation.multiLingualSentences.map(() => false);
+
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const setCurrentSentenceNumber = useCallback(
+    (n: number) => setReviewProgress((progress) => ({ ...progress, currentSentenceNumber: n })),
+    [setReviewProgress],
+  );
+
+  const setAnswersRevealed = useCallback(
+    (revealed: boolean[]) => setReviewProgress((progress) => ({ ...progress, answersRevealed: revealed })),
+    [setReviewProgress],
+  );
 
   const handleAdvance = useCallback(() => {
     const numberOfSentences = conversation.multiLingualSentences.length;
@@ -27,21 +45,41 @@ function ReviewItem({
 
     if (isCompleted) {
       const successArr = conversation.multiLingualSentences.map((sentence) => sentence.success);
-      setCurrentSentenceNumber(0);
+      // Reset for the (possibly re-queued) conversation; the effect below re-inits when a different one comes up.
+      setReviewProgress({
+        conversationId: conversation._id,
+        currentSentenceNumber: 0,
+        answersRevealed: conversation.multiLingualSentences.map(() => false),
+      });
       nextConversation(successArr, answersRevealed);
     } else {
-      setCurrentSentenceNumber((n) => n + 1);
+      setCurrentSentenceNumber(currentSentenceNumber + 1);
     }
-  }, [answersRevealed, currentSentenceNumber, conversation.multiLingualSentences.length, nextConversation]);
+  }, [
+    answersRevealed,
+    currentSentenceNumber,
+    conversation._id,
+    conversation.multiLingualSentences,
+    nextConversation,
+    setCurrentSentenceNumber,
+    setReviewProgress,
+  ]);
 
   useSwipeAndKeyboard({
     callback: handleAdvance,
     dependencies: [currentSentenceNumber, answersRevealed],
   });
 
+  // Initialise progress whenever a different conversation comes up for review.
   useEffect(() => {
-    setAnswersRevealed(conversation.multiLingualSentences.map(() => false));
-  }, [conversation]);
+    if (reviewProgress.conversationId !== conversation._id) {
+      setReviewProgress({
+        conversationId: conversation._id,
+        currentSentenceNumber: 0,
+        answersRevealed: conversation.multiLingualSentences.map(() => false),
+      });
+    }
+  }, [conversation, reviewProgress.conversationId, setReviewProgress]);
 
   useEffect(() => {
     if (!isAutoMode) return;
