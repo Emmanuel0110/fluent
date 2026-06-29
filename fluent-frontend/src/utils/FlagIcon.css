@@ -12,5 +12,5 @@
 }
 
 .fi::before {
-  content: " ";
+  content: "\00a0";
 }

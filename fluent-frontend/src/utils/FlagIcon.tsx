@@ -21,5 +21,5 @@ export function FlagIcon({ languageLabel, className = "" }: FlagIconProps) {
   const code = flagCodes[languageLabel];
   const src = code ? flagSvgs[code] : undefined;
   if (!src) return null;
-  return <span className={`fi ${className}`.trim()} style={{ backgroundImage: `url(${src})` }} />;
+  return <span className={`fi ${className}`.trim()} style={{ backgroundImage: `url("${src}")` }} />;
 }
