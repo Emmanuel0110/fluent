@@ -107,7 +107,15 @@ export interface DashboardData {
     date: string;
     wordsLearned: number;
   }[];
+  currentStreak: number;
+  longestStreak: number;
 }
+
+// A UI event worth celebrating, computed by the backend on review completion.
+// "streak" → consecutive active days; "milestone" → total words learned (multiples of 100).
+export type CelebrationEvent =
+  | { type: "streak"; value: number }
+  | { type: "milestone"; value: number };
 
 export interface Context {
   filteredWords: Word[];

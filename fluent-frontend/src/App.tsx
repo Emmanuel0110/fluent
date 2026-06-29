@@ -21,6 +21,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { DataProvider } from "./contexts/DataContext";
 import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
+import { CelebrationProvider } from "./contexts/CelebrationContext";
 import SuggestionList from "./components/SuggestionList";
 import AdminRoute from "./AdminRoute";
 import AdminFeedbacks from "./components/AdminFeedbacks";
@@ -54,7 +55,9 @@ export default function App() {
               <DataProvider>
                 <ConfigProvider>
                   <ReviewSettingsProvider>
-                    <Layout />
+                    <CelebrationProvider>
+                      <Layout />
+                    </CelebrationProvider>
                   </ReviewSettingsProvider>
                 </ConfigProvider>
               </DataProvider>

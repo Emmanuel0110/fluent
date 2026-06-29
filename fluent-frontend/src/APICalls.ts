@@ -1,6 +1,6 @@
 import { url } from "./App";
 import { authHeaders, customFetch, ApiError } from "./utils/http-helpers";
-import { Conversation, ConversationTag, RowConversation, Word, WordTag } from "./types";
+import { CelebrationEvent, Conversation, ConversationTag, RowConversation, Word, WordTag } from "./types";
 import { groupById } from "./utils/generalUtils";
 import { formatWords } from "./utils/wordUtils";
 
@@ -148,11 +148,20 @@ export const unsubscribeToRemoteConversation = async (id: string) => {
   );
 };
 
-export const updateRemoteConversationReviewStatus = async (reviewedConversationId: string, successArray: boolean[]) => {
+export interface ReviewUpdateResponse {
+  success: boolean;
+  celebrations?: CelebrationEvent[];
+  message?: string;
+}
+
+export const updateRemoteConversationReviewStatus = async (
+  reviewedConversationId: string,
+  successArray: boolean[]
+): Promise<ReviewUpdateResponse> => {
   const body = JSON.stringify({ reviewedConversationId, successArray });
   return catchApiError(
     customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body })
-  );
+  ) as Promise<ReviewUpdateResponse>;
 };
 
 export const fetchLanguages = async () => {

@@ -82,6 +82,9 @@ const UserCourseSchema = new Schema({
       score: Number,
     },
   ],
+  currentStreak: { type: Number, default: 0 },
+  longestStreak: { type: Number, default: 0 },
+  lastActiveDate: { type: Date },
 });
 
 export const UserCourseModel = model("UserCourse", UserCourseSchema);

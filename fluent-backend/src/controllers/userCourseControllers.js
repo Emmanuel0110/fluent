@@ -32,12 +32,12 @@ async function updateLearningData(req, res) {
         );
         res.json({ success: true });
       } else if (reviewedConversationId) {
-        await updateReviewData(reviewedConversationId, successArray, userCourse);
+        const celebrations = await updateReviewData(reviewedConversationId, successArray, userCourse);
         logger.info(
           { userId: user._id, userCourseId: userCourse._id, conversationId: reviewedConversationId },
           "Review completed",
         );
-        res.json({ success: true });
+        res.json({ success: true, celebrations });
       }
       if (redisClient) {
         await refreshUserCourseCache(userCourse._id, user._id);
@@ -174,6 +174,22 @@ async function updateWordsSubscription(userCourseId, updates) {
 }
 
 async function updateReviewData(reviewedConversationId, successArray, userCourse) {
+  const celebrations = [];
+
+  // A completed review counts as activity for the day: refresh the streak and
+  // celebrate when it reaches a noteworthy threshold (avoids daily fatigue).
+  const { streak, changed } = computeStreakUpdate(userCourse.currentStreak, userCourse.lastActiveDate);
+  if (changed) {
+    const longestStreak = Math.max(streak, userCourse.longestStreak || 0);
+    await UserCourseModel.updateOne(
+      { _id: userCourse._id },
+      { $set: { currentStreak: streak, longestStreak, lastActiveDate: new Date() } },
+    );
+    if (STREAK_MILESTONES.includes(streak)) {
+      celebrations.push({ type: "streak", value: streak });
+    }
+  }
+
   if (userCourse.conversations.find(({ _id }) => _id.equals(reviewedConversationId))) {
     await UserCourseModel.updateOne(
       { _id: userCourse._id, "conversations._id": reviewedConversationId },
@@ -181,7 +197,7 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
     );
   }
   const wordIdsBySentence = await getWordIdsForSentences(reviewedConversationId, userCourse.sourceLanguage);
-  if (successArray.length !== wordIdsBySentence.length) return [];
+  if (!wordIdsBySentence || successArray.length !== wordIdsBySentence.length) return celebrations;
   const wordUpdates = [];
   const newWordIds = [];
   const alreadyProcessed = [];
@@ -200,6 +216,47 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
 
   if (wordUpdates.length > 0) await updateWords(userCourse._id, wordUpdates);
   if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
+
+  // A word counts as "learned" once it has passed at least one review (reviewDelayInMs > 0).
+  // Compare the count before and after this review to detect crossing a multiple of 100.
+  const beforeLearned = countLearnedWords(userCourse.words);
+  const updatedById = new Map(wordUpdates.map((update) => [update._id.toString(), update]));
+  const afterWords = userCourse.words.map((word) => updatedById.get(word._id.toString()) || word);
+  const afterLearned = countLearnedWords(afterWords);
+  const milestone = milestoneCrossed(beforeLearned, afterLearned, WORDS_MILESTONE_STEP);
+  if (milestone) celebrations.push({ type: "milestone", value: milestone });
+
+  return celebrations;
+}
+
+const STREAK_MILESTONES = [2, 3, 5, 7, 10, 14, 21, 30, 50, 75, 100, 150, 200, 300, 365];
+const WORDS_MILESTONE_STEP = 100;
+
+function startOfDay(date) {
+  const d = new Date(date);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+/**
+ * Decide the new streak value from the previous streak and last active date.
+ * Same day → unchanged; consecutive day → +1; any gap → reset to 1.
+ */
+export function computeStreakUpdate(currentStreak, lastActiveDate, now = new Date()) {
+  if (!lastActiveDate) return { streak: 1, changed: true };
+  const diffDays = Math.round((startOfDay(now).getTime() - startOfDay(lastActiveDate).getTime()) / 86400000);
+  if (diffDays <= 0) return { streak: currentStreak || 1, changed: false };
+  if (diffDays === 1) return { streak: (currentStreak || 0) + 1, changed: true };
+  return { streak: 1, changed: true };
+}
+
+export function countLearnedWords(words) {
+  return words.filter((word) => word.reviewDelayInMs > 0).length;
+}
+
+/** Returns the milestone value crossed (e.g. 100, 200), or null if none was crossed. */
+export function milestoneCrossed(before, after, step) {
+  return Math.floor(after / step) > Math.floor(before / step) ? Math.floor(after / step) * step : null;
 }
 
 function getUpdate(word, success) {
@@ -286,6 +343,8 @@ async function getDashboardData(req, res) {
         progress: progress,
         rank: currentRank,
         chartData: last7DaysScores,
+        currentStreak: userCourse.currentStreak || 0,
+        longestStreak: userCourse.longestStreak || 0,
       },
     });
   } catch (error) {

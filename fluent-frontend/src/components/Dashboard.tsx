@@ -34,7 +34,7 @@ function Dashboard() {
     );
   }
 
-  const { progress, rank, chartData } = dashboardData;
+  const { progress, rank, chartData, currentStreak, longestStreak } = dashboardData;
   const maxWords = Math.max(...chartData.map((d) => d.wordsLearned), 1);
   const minWords = Math.min(...chartData.map((d) => d.wordsLearned));
 
@@ -90,6 +90,20 @@ function Dashboard() {
             );
           })}
         </div>
+      </div>
+
+      <div className="dashboard-section streak-section">
+        <h2>{t("dashboard.streak_title")}</h2>
+        <div className="streak-display">
+          <span className={`streak-flame${currentStreak > 0 ? " active" : ""}`}>🔥</span>
+          <span className="streak-count">{currentStreak}</span>
+          <span className="streak-unit">{t("dashboard.streak_unit")}</span>
+        </div>
+        {longestStreak > 0 && (
+          <p className="streak-best">
+            {t("dashboard.streak_best")}: {longestStreak} {t("dashboard.streak_unit")}
+          </p>
+        )}
       </div>
     </div>
   );

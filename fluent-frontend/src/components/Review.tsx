@@ -3,6 +3,7 @@ import { ConfigContext } from "../contexts/ConfigContext";
 import { Context, RowConversation } from "../types";
 import { getReviewList, updateRemoteConversationReviewStatus } from "../APICalls";
 import { useLanguage } from "../contexts/LanguageContext";
+import { useCelebration } from "../contexts/CelebrationContext";
 import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
@@ -13,6 +14,7 @@ function Review() {
   const { t } = useTranslation();
   const { targetLanguage } = useLanguage();
   const { reviewList, setReviewList } = useContext(ConfigContext) as Context;
+  const { celebrate } = useCelebration();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +25,8 @@ function Review() {
     const currentConversation = reviewList[0];
     if (answersRevealed.every((revealed) => !revealed)) {
       setReviewList((reviewList) => reviewList.slice(1));
-      await updateRemoteConversationReviewStatus(currentConversation._id, successArray);
+      const { celebrations } = await updateRemoteConversationReviewStatus(currentConversation._id, successArray);
+      celebrations?.forEach(celebrate);
       if (reviewList.length <= 1) fetchNewReviewItems();
     } else {
       setReviewList((reviewList) => [...reviewList.slice(1), currentConversation]);

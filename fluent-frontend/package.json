@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "bootstrap": "^4.6.0",
+    "canvas-confetti": "^1.9.4",
     "dotenv": "^16.4.5",
     "flag-icons": "^7.5.0",
     "i18next": "^25.6.3",
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/lodash": "^4.17.10",
     "@types/node": "^20.19.0",
     "@types/react": "^19.2.6",

@@ -109,6 +109,12 @@
   "dashboard.rank.Amateur": "Amateur",
   "dashboard.rank.Advanced": "Avancé",
   "dashboard.rank.Expert": "Expert",
+  "dashboard.streak_title": "Série en cours",
+  "dashboard.streak_unit": "jours",
+  "dashboard.streak_best": "Record",
+
+  "celebration.streak": "{{value}} jours d'affilée !",
+  "celebration.milestone": "{{value}} mots appris !",
 
   "creation.language_section": "Sélection de la langue",
   "creation.conversation_section": "Conversation",

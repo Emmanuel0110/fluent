@@ -109,6 +109,12 @@
   "dashboard.rank.Amateur": "아마추어",
   "dashboard.rank.Advanced": "고급",
   "dashboard.rank.Expert": "전문가",
+  "dashboard.streak_title": "연속 학습",
+  "dashboard.streak_unit": "일",
+  "dashboard.streak_best": "최고 기록",
+
+  "celebration.streak": "{{value}}일 연속 학습!",
+  "celebration.milestone": "단어 {{value}}개 학습 완료!",
 
   "creation.language_section": "언어 선택",
   "creation.conversation_section": "대화",
