@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import app from "./src/app.js";
 import { logger } from "./src/logger.js";
+import { startScheduler } from "./src/scheduler.js";
 
 // Redis is initialized as a side effect of importing redis.js.
 // Controllers import it directly from src/redis.js.
@@ -21,4 +22,6 @@ db.once("open", () => {
   app.listen(process.env.PORT || port, () => {
     logger.info({ port: process.env.PORT || port }, "Server listening");
   });
+  // Start the in-process daily score scheduler once the DB connection is live.
+  startScheduler();
 });

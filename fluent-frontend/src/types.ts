@@ -105,7 +105,9 @@ export interface DashboardData {
   rank: string;
   chartData: {
     date: string;
-    wordsLearned: number;
+    // null = the daily job never recorded this day (rendered as a "no data" gap),
+    // distinct from a real 0.
+    wordsLearned: number | null;
   }[];
   currentStreak: number;
   longestStreak: number;

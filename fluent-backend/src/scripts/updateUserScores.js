@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { fileURLToPath } from "url";
 import { UserCourseModel } from "../models.js";
 import { logger } from "../logger.js";
 
@@ -19,7 +20,7 @@ const DELAYS = [
   31536000000, //1000*60*60*24*365 (1 year)
 ];
 
-function computeNumberOfKnownWords(userCourse) {
+export function computeNumberOfKnownWords(userCourse) {
   try {
     if (!userCourse || !userCourse.words) {
       return 0;
@@ -42,17 +43,13 @@ function computeNumberOfKnownWords(userCourse) {
   }
 }
 
-// Connect to MongoDB
-mongoose.set("strictQuery", true);
-await mongoose.connect(
-  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`
-);
-
 /**
- * Update scores for all user courses
- * This function should be run once daily (via cron or scheduler)
+ * Update scores for all user courses.
+ * Should be run once daily. Assumes an active mongoose connection already exists
+ * (the in-app scheduler relies on the server's connection; the CLI wrapper below
+ * opens its own connection before calling this).
  */
-async function updateAllUserScores() {
+export async function updateAllUserScores() {
   try {
     logger.info("Starting score update process");
 
@@ -113,24 +110,33 @@ async function updateAllUserScores() {
     }
 
     logger.info({ updatedCount, total: userCourses.length }, "Score update completed");
+    return updatedCount;
   } catch (error) {
     logger.error({ err: error }, "Error in updateAllUserScores");
+    throw error;
   }
 }
 
-// Run the update
-try {
-  await updateAllUserScores();
-  logger.info("Script completed successfully");
-} catch (error) {
-  logger.error({ err: error }, "Script failed");
-  process.exitCode = 1;
-} finally {
+// CLI entry point: only runs when executed directly (`npm run update-scores`),
+// not when imported by the scheduler or tests. Opens and closes its own connection.
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  mongoose.set("strictQuery", true);
   try {
-    await mongoose.disconnect();
-    logger.info("MongoDB connection closed");
-  } catch (e) {
-    logger.error({ err: e }, "Error closing MongoDB connection");
+    await mongoose.connect(
+      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`
+    );
+    await updateAllUserScores();
+    logger.info("Script completed successfully");
+  } catch (error) {
+    logger.error({ err: error }, "Script failed");
+    process.exitCode = 1;
+  } finally {
+    try {
+      await mongoose.disconnect();
+      logger.info("MongoDB connection closed");
+    } catch (e) {
+      logger.error({ err: e }, "Error closing MongoDB connection");
+    }
+    process.exit();
   }
-  process.exit();
 }

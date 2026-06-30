@@ -2,16 +2,33 @@
 
 This script updates user scores and daily score history for all user courses. It should be run once per day.
 
-## Running the Script
+## Automated Execution (in-app scheduler)
 
-### Manual Execution
+The score update runs **in-process** via `node-cron`, started by `startScheduler()` in
+[`src/scheduler.js`](../scheduler.js) when the server boots (after the MongoDB connection
+opens). It fires daily at **00:05 server time** and records the previous day's end-of-day
+score for every user course.
+
+Because it runs inside the backend process, it keeps working as long as the server is up —
+there is no reliance on an external OS cron that can silently stop. The timezone defaults to `Europe/Paris` and can be
+overridden with the `TZ` environment variable.
+
+> **Note:** the score is computed from each word's _current_ review state, so a day that is
+> never recorded cannot be backfilled — its data is lost. Keep the server running across
+> midnight, or run the manual command below to capture the most recent missing day.
+
+## Running the Script Manually
 
 ```bash
 npm run update-scores
 ```
 
-### Automated Execution (Cron)
+This opens its own database connection, records yesterday's score, and exits. Safe to run
+multiple times (idempotent for the same day).
 
+## Automated Execution (legacy external cron)
+
+Only needed if you prefer an external scheduler instead of the in-app one above.
 Set up a cron job to run this script once per day (e.g., at midnight):
 
 #### Linux/Mac (Crontab)

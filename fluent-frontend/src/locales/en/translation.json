@@ -105,6 +105,7 @@
   "dashboard.error": "Failed to load dashboard data",
   "dashboard.title": "Your Progress",
   "dashboard.chart_title": "Words Learned",
+  "dashboard.no_data": "No data recorded",
   "dashboard.rank.Beginner": "Beginner",
   "dashboard.rank.Amateur": "Amateur",
   "dashboard.rank.Advanced": "Advanced",

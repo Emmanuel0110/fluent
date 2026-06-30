@@ -35,8 +35,13 @@ function Dashboard() {
   }
 
   const { progress, rank, chartData, currentStreak, longestStreak } = dashboardData;
-  const maxWords = Math.max(...chartData.map((d) => d.wordsLearned), 1);
-  const minWords = Math.min(...chartData.map((d) => d.wordsLearned));
+  // Days with no recorded data (wordsLearned === null) are excluded from the
+  // min/max range so they don't skew bar heights, and render as a "no data" gap.
+  const recordedValues = chartData
+    .map((d) => d.wordsLearned)
+    .filter((v): v is number => v !== null);
+  const maxWords = Math.max(...recordedValues, 1);
+  const minWords = recordedValues.length ? Math.min(...recordedValues) : 0;
 
   return (
     <div className="dashboard-container">
@@ -69,17 +74,22 @@ function Dashboard() {
         <h2>{t("dashboard.chart_title")}</h2>
         <div className="chart-container">
           {chartData.map((data, index) => {
-            const height = maxWords !== minWords ? ((data.wordsLearned - minWords) / (maxWords - minWords)) * 100 : 100;
+            const noData = data.wordsLearned === null;
+            const height = noData
+              ? 100
+              : maxWords !== minWords
+                ? ((data.wordsLearned! - minWords) / (maxWords - minWords)) * 100
+                : 100;
             return (
               <div key={index} className="chart-bar-wrapper">
                 <div className="chart-bar-container">
                   <div
-                    className="chart-bar"
+                    className={`chart-bar${noData ? " chart-bar--no-data" : ""}`}
                     style={{ height: `${height}%` }}
-                    title={`${data.wordsLearned} words on ${data.date}`}
+                    title={noData ? `${t("dashboard.no_data")} (${data.date})` : `${data.wordsLearned} words on ${data.date}`}
                   >
                     <div className="chart-bar-score">
-                      <span>{data.wordsLearned}</span>
+                      <span>{noData ? "–" : data.wordsLearned}</span>
                     </div>
                     <div className="chart-bar-label">
                       <span>{data.date}</span>

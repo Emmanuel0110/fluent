@@ -236,6 +236,23 @@
   transition: all 0.3s ease-in-out;
 }
 
+/* A day the daily score job never recorded — distinct from a real 0 so an
+   outage is visible instead of looking like the user learned nothing. */
+.chart-bar--no-data {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--surface-muted, #e9ecef),
+    var(--surface-muted, #e9ecef) 6px,
+    var(--surface-muted-alt, #dee2e6) 6px,
+    var(--surface-muted-alt, #dee2e6) 12px
+  );
+  opacity: 0.6;
+}
+
+.chart-bar--no-data .chart-bar-score {
+  color: var(--text-muted);
+}
+
 .chart-bar-label {
   display: flex;
   position: absolute;

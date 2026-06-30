@@ -105,6 +105,7 @@
   "dashboard.error": "Échec du chargement des données",
   "dashboard.title": "Votre progression",
   "dashboard.chart_title": "Mots appris",
+  "dashboard.no_data": "Aucune donnée enregistrée",
   "dashboard.rank.Beginner": "Débutant",
   "dashboard.rank.Amateur": "Amateur",
   "dashboard.rank.Advanced": "Avancé",

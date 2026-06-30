@@ -447,7 +447,9 @@ function getLast7DaysScores(dailyScores) {
 
     result.push({
       date: formattedDate,
-      wordsLearned: scoreEntry ? scoreEntry.score : 0,
+      // null (not 0) means the daily job never recorded this day, so the chart
+      // can render a "no data" gap instead of a misleading zero.
+      wordsLearned: scoreEntry ? scoreEntry.score : null,
     });
   }
 
