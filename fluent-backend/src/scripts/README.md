@@ -4,14 +4,17 @@ This script updates user scores and daily score history for all user courses. It
 
 ## Automated Execution (in-app scheduler)
 
-The score update runs **in-process** via `node-cron`, started by `startScheduler()` in
+The daily jobs run **in-process** via `node-cron`, started by `startScheduler()` in
 [`src/scheduler.js`](../scheduler.js) when the server boots (after the MongoDB connection
-opens). It fires daily at **00:05 server time** and records the previous day's end-of-day
-score for every user course.
+opens):
 
-Because it runs inside the backend process, it keeps working as long as the server is up —
+- **00:05** — `update-scores`: records the previous day's end-of-day score for every user course.
+- **00:10** — `cleanup-data`: deletes old feedback and inactive accounts (runs after the score update).
+
+Because they run inside the backend process, they keep working as long as the server is up —
 there is no reliance on an external OS cron that can silently stop. The timezone defaults to `Europe/Paris` and can be
-overridden with the `TZ` environment variable.
+overridden with the `TZ` environment variable. Each job is wrapped so a failure is logged but
+never crashes the server.
 
 > **Note:** the score is computed from each word's _current_ review state, so a day that is
 > never recorded cannot be backfilled — its data is lost. Keep the server running across
@@ -24,23 +27,25 @@ npm run update-scores
 ```
 
 This opens its own database connection, records yesterday's score, and exits. Safe to run
-multiple times (idempotent for the same day).
+multiple times (idempotent for the same day). The cleanup job has an equivalent manual
+command, `npm run cleanup-data` (add `-- --dry-run` to preview without deleting).
 
 ## Automated Execution (legacy external cron)
 
-Only needed if you prefer an external scheduler instead of the in-app one above.
-Set up a cron job to run this script once per day (e.g., at midnight):
-
-#### Linux/Mac (Crontab)
+Only needed if you prefer an external scheduler instead of the in-app one above. If you use
+this, **remove the matching in-app job** from `src/scheduler.js` so the work doesn't run
+twice. Note that `>>` does **not** create the `logs/` directory — if it is missing the
+redirection fails and the command never runs, so create it (or prefix the line with
+`mkdir -p logs &&`).
 
 ```bash
 # Edit crontab
 crontab -e
 
-# Add this line to run at midnight every day
-0 0 * * * cd /path/to/fluent-backend && npm run update-scores >> logs/score-update.log 2>&1
-# Add this line to run at 1am every day (after score update)
-5 0 * * * cd /path/to/fluent-backend && npm run clean-old-data >> logs/clean-old-data.log 2>&1
+# Run at midnight every day
+0 0 * * * cd /path/to/fluent-backend && mkdir -p logs && npm run update-scores >> logs/score-update.log 2>&1
+# Run 5 min later (after score update)
+5 0 * * * cd /path/to/fluent-backend && mkdir -p logs && npm run cleanup-data >> logs/cleanup-data.log 2>&1
 ```
 
 #### Windows (Task Scheduler)

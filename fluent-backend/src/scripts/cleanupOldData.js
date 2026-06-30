@@ -7,8 +7,6 @@ import { logger } from "../logger.js";
 dotenv.config("./.env");
 
 const TWO_YEARS_MS = 2 * 365 * 24 * 60 * 60 * 1000;
-const cutoffDate = new Date(Date.now() - TWO_YEARS_MS);
-const DRY_RUN = process.argv.includes("--dry-run");
 const MAX_DELETIONS = 10; // Safety threshold to prevent mass deletions in case of a bug
 
 // ObjectId whose embedded timestamp equals cutoffDate — used to filter accounts
@@ -20,16 +18,21 @@ export function dateToObjectId(date) {
   return new mongoose.Types.ObjectId(hex + "0000000000000000");
 }
 
-async function cleanup() {
-  mongoose.set("strictQuery", true);
-  await mongoose.connect(
-    `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`,
-  );
-  if (DRY_RUN) logger.info("Starting data cleanup (DRY RUN, no data will be deleted)");
+/**
+ * Delete old data (feedback + inactive accounts older than 2 years).
+ * Assumes an active mongoose connection already exists — does NOT connect or
+ * disconnect, so it is safe to call from the in-app scheduler alongside the
+ * running server. Throws (rather than calling process.exit) when the deletion
+ * count exceeds the safety threshold, so the caller decides how to react.
+ */
+export async function cleanupOldData({ dryRun = false } = {}) {
+  const cutoffDate = new Date(Date.now() - TWO_YEARS_MS);
+
+  if (dryRun) logger.info("Starting data cleanup (DRY RUN, no data will be deleted)");
   else logger.info("Starting data cleanup");
 
   // 1. Delete feedback older than 2 years
-  if (DRY_RUN) {
+  if (dryRun) {
     const count = await FeedbackModel.countDocuments({ createdAt: { $lt: cutoffDate } });
     logger.info({ count }, "[DRY RUN] Would delete old feedback entries");
   } else {
@@ -46,17 +49,18 @@ async function cleanup() {
     $or: [{ lastLoginAt: { $lt: cutoffDate } }, { lastLoginAt: null, _id: { $lt: dateToObjectId(cutoffDate) } }],
   }).lean();
 
-  if (!DRY_RUN && inactiveUsers.length > MAX_DELETIONS) {
+  if (!dryRun && inactiveUsers.length > MAX_DELETIONS) {
     logger.error(
       { count: inactiveUsers.length, max: MAX_DELETIONS },
       "Aborting: deletion count exceeds safety threshold",
     );
-    await mongoose.disconnect();
-    process.exit(1);
+    throw new Error(
+      `Aborting cleanup: deletion count ${inactiveUsers.length} exceeds safety threshold ${MAX_DELETIONS}`,
+    );
   }
 
   for (const user of inactiveUsers) {
-    if (DRY_RUN) {
+    if (dryRun) {
       logger.info(
         { userId: user._id, email: user.email, lastLoginAt: user.lastLoginAt },
         "[DRY RUN] Would delete user",
@@ -69,17 +73,31 @@ async function cleanup() {
   }
   logger.info(
     { count: inactiveUsers.length },
-    DRY_RUN ? "[DRY RUN] Would delete inactive user accounts" : "Deleted inactive user accounts",
+    dryRun ? "[DRY RUN] Would delete inactive user accounts" : "Deleted inactive user accounts",
   );
 
-  await mongoose.disconnect();
   logger.info("Cleanup complete");
 }
 
-// It should execute when run directly, not when imported for testing
+// CLI entry point: only runs when executed directly (`npm run cleanup-data`),
+// not when imported by the scheduler or tests. Opens and closes its own connection.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  cleanup().catch((err) => {
+  const dryRun = process.argv.includes("--dry-run");
+  mongoose.set("strictQuery", true);
+  try {
+    await mongoose.connect(
+      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`,
+    );
+    await cleanupOldData({ dryRun });
+  } catch (err) {
     logger.error(err, "Cleanup failed");
-    process.exit(1);
-  });
+    process.exitCode = 1;
+  } finally {
+    try {
+      await mongoose.disconnect();
+    } catch (e) {
+      logger.error({ err: e }, "Error closing MongoDB connection");
+    }
+    process.exit();
+  }
 }
