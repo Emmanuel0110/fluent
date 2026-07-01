@@ -4,6 +4,7 @@ import request from "supertest";
 import app from "../app.js";
 import { LexicalItemModel, UserModel, UserCourseModel, MultiLingualConversationModel, StoryNodeModel } from "../models.js";
 import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
 
 const FAKE_TOKEN = "fake-token";
 const FAKE_WORD_ID = "64a1b2c3d4e5f6a7b8c9d0e1";
@@ -12,8 +13,8 @@ const TARGET_LANG_ID = "64a1b2c3d4e5f6a7b8c9d0a2";
 
 function fakeCourseData(overrides = {}) {
   return {
-    sourceLanguage: SOURCE_LANG_ID,
-    targetLanguage: TARGET_LANG_ID,
+    sourceLanguage: new mongoose.Types.ObjectId(SOURCE_LANG_ID),
+    targetLanguage: new mongoose.Types.ObjectId(TARGET_LANG_ID),
     words: [],
     conversations: [],
     ...overrides,
@@ -65,7 +66,7 @@ describe("GET /api/words", () => {
     const SUBSCRIBED_WORD_ID = "64a1b2c3d4e5f6a7b8c9d0e1";
     const UNSUBSCRIBED_WORD_ID = "64a1b2c3d4e5f6a7b8c9d0e2";
 
-    mockCacheMiddleware(fakeCourseData({ words: [{ _id: SUBSCRIBED_WORD_ID }] }));
+    mockCacheMiddleware(fakeCourseData({ words: [{ _id: new mongoose.Types.ObjectId(SUBSCRIBED_WORD_ID) }] }));
 
     const subscribedWord = { _id: SUBSCRIBED_WORD_ID, text: "bonjour", language: SOURCE_LANG_ID, translations: [], tags: [] };
     const unsubscribedWord = { _id: UNSUBSCRIBED_WORD_ID, text: "hello", language: TARGET_LANG_ID, translations: [], tags: [] };

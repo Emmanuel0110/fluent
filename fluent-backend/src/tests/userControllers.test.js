@@ -46,7 +46,7 @@ describe("POST /api/users (register)", () => {
 
     const res = await request(app)
       .post("/api/users")
-      .send({ username: "testuser", password: "password123" });
+      .send({ username: "testuser", password: "password123", email: "testuser@example.com" });
 
     expect(res.status).toBe(409);
     expect(res.body.success).toBe(false);
@@ -59,18 +59,16 @@ describe("POST /api/users (register)", () => {
     const saved = fakeSavedUser();
     jest.spyOn(UserModel.prototype, "save").mockResolvedValue({ ...saved, toObject: () => ({ ...saved }) });
 
-    jest.spyOn(LanguageModel, "find").mockReturnValue({
-      select: jest.fn().mockResolvedValue([
-        { _id: "langFrId", label: "fr" },
-        { _id: "langEnId", label: "en" },
-      ]),
-    });
+    jest.spyOn(LanguageModel, "find").mockResolvedValue([
+      { _id: "langFrId", label: "fr" },
+      { _id: "langEnId", label: "en" },
+    ]);
     jest.spyOn(UserCourseModel.prototype, "save").mockResolvedValue(fakeCourse());
     jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue(saved);
 
     const res = await request(app)
       .post("/api/users")
-      .send({ username: "newuser", password: "password123" });
+      .send({ username: "newuser", password: "password123", email: "newuser@example.com" });
 
     expect(res.status).toBe(200);
     expect(res.body.token).toBe("test-token");
@@ -125,12 +123,10 @@ describe("POST /api/users/auth (login)", () => {
     });
     jest.spyOn(bcrypt, "compare").mockResolvedValue(true);
 
-    jest.spyOn(LanguageModel, "find").mockReturnValue({
-      select: jest.fn().mockResolvedValue([
-        { _id: "langFrId", label: "fr" },
-        { _id: "langEnId", label: "en" },
-      ]),
-    });
+    jest.spyOn(LanguageModel, "find").mockResolvedValue([
+      { _id: "langFrId", label: "fr" },
+      { _id: "langEnId", label: "en" },
+    ]);
     jest.spyOn(UserCourseModel.prototype, "save").mockResolvedValue(fakeCourse());
     jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue(existingUser);
 

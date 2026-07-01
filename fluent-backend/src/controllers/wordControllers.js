@@ -58,27 +58,32 @@ router.post("/", auth, validateWordCreate, (req, res) => {
 });
 
 router.put("/:id", auth, cache, validateWordUpdate, async function (req, res) {
-  const { id: _id } = req.params;
-  const filter = { _id };
-  const { tags, text, language, translations } = req.body;
+  try {
+    const { id: _id } = req.params;
+    const filter = { _id };
+    const { tags, text, language, translations } = req.body;
 
-  // Sanitize word text
-  const sanitizedText = text ? sanitizeText(text) : text;
-  const languagesToUpdate = translations.map((t) => t.language);
-  await LexicalItemModel.updateOne(filter, { text: sanitizedText, language, tags });
-  await LexicalItemModel.updateOne(filter, {
-    $pull: { translations: { language: { $in: languagesToUpdate } } },
-  });
-  const word = await LexicalItemModel.findOneAndUpdate(
-    filter,
-    { $push: { translations: { $each: translations } } },
-    { new: true },
-  ).lean();
-  const completedWord = {
-    ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(word),
-    subscribed: !!req.userCourse.words.find(({ _id }) => _id.equals(word._id)),
-  };
-  res.json({ success: true, data: completedWord });
+    // Sanitize word text
+    const sanitizedText = text ? sanitizeText(text) : text;
+    const languagesToUpdate = translations.map((t) => t.language);
+    await LexicalItemModel.updateOne(filter, { text: sanitizedText, language, tags });
+    await LexicalItemModel.updateOne(filter, {
+      $pull: { translations: { language: { $in: languagesToUpdate } } },
+    });
+    const word = await LexicalItemModel.findOneAndUpdate(
+      filter,
+      { $push: { translations: { $each: translations } } },
+      { new: true },
+    ).lean();
+    const completedWord = {
+      ...onlyKeepLanguages(req.userCourse.sourceLanguage, req.userCourse.targetLanguage)(word),
+      subscribed: !!req.userCourse.words.find(({ _id }) => _id.equals(word._id)),
+    };
+    res.json({ success: true, data: completedWord });
+  } catch (err) {
+    logger.error({ err }, "Word update error");
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 router.delete("/:id", auth, validateWordDelete, async function (req, res) {
