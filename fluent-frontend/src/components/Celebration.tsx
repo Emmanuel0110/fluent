@@ -28,8 +28,12 @@ export default function Celebration({ event, onDone }: { event: CelebrationEvent
     return () => clearTimeout(timer);
   }, [event, onDone]);
 
-  const icon = event.type === "streak" ? "🔥" : "🎉";
-  const message = t(`celebration.${event.type}`, { value: event.value });
+  const icon = event.type === "streak" ? "🔥" : event.type === "rank" ? "🏆" : "🎉";
+  // Rank celebrations carry a rank key (e.g. "Advanced") that must itself be translated.
+  const message =
+    event.type === "rank"
+      ? t("celebration.rank", { value: t(`dashboard.rank.${event.value}`) })
+      : t(`celebration.${event.type}`, { value: event.value });
 
   return (
     <div className="celebration-overlay">

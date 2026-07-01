@@ -226,6 +226,10 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
   const milestone = milestoneCrossed(beforeLearned, afterLearned, WORDS_MILESTONE_STEP);
   if (milestone) celebrations.push({ type: "milestone", value: milestone });
 
+  // Promoting words raises the score, which can push the user into a higher rank.
+  const newRank = rankCrossed(scoreFromWords(userCourse.words), scoreFromWords(afterWords));
+  if (newRank) celebrations.push({ type: "rank", value: newRank });
+
   return celebrations;
 }
 
@@ -361,36 +365,42 @@ async function getDashboardData(req, res) {
  * Score = sum of all words multiplied by their review progress (how many time they have been reviewed with success)
  */
 
+export function scoreFromWords(words, now = new Date()) {
+  let score = 0;
+  for (const word of words || []) {
+    // A word is considered "learned" if it's not overdue (nextReviewDate is in the future)
+    if (word.nextReviewDate && new Date(word.nextReviewDate) > now) {
+      // Score is weighted by reviewDelayInMs (its position in the DELAYS ladder)
+      const weight = DELAYS.indexOf(word.reviewDelayInMs);
+      if (weight > 0) score += weight;
+    }
+  }
+  return score;
+}
+
 export async function calculateUserScore(userCourse) {
   try {
-    if (!userCourse || !userCourse.words) {
-      return 0;
-    }
-
-    const now = new Date();
-    let score = 0;
-
-    for (const word of userCourse.words) {
-      // A word is considered "learned" if it's not overdue (nextReviewDate is in the future)
-      if (word.nextReviewDate && new Date(word.nextReviewDate) > now) {
-        // Score is weighted by reviewDelayInMs
-        const weight = DELAYS.indexOf(word.reviewDelayInMs);
-        score += weight;
-      }
-    }
-
-    return score;
+    return scoreFromWords(userCourse && userCourse.words);
   } catch (error) {
     logger.error({ err: error }, "Error calculating user score");
     return 0;
   }
 }
 
-function getRank(score) {
+// Ranks ordered from lowest to highest; the index is used to detect a rank-up.
+const RANK_ORDER = ["Beginner", "Amateur", "Advanced", "Expert"];
+
+export function getRank(score) {
   if (score >= 10000) return "Expert";
   if (score >= 3000) return "Advanced";
   if (score >= 1000) return "Amateur";
   return "Beginner";
+}
+
+/** Returns the higher rank when the score change crosses a rank boundary upward, or null. */
+export function rankCrossed(scoreBefore, scoreAfter) {
+  const rankAfter = getRank(scoreAfter);
+  return RANK_ORDER.indexOf(rankAfter) > RANK_ORDER.indexOf(getRank(scoreBefore)) ? rankAfter : null;
 }
 
 function getNextRankScore(currentScore) {

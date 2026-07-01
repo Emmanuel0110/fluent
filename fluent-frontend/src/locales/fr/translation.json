@@ -116,6 +116,7 @@
 
   "celebration.streak": "{{value}} jours d'affilée !",
   "celebration.milestone": "{{value}} mots appris !",
+  "celebration.rank": "Nouveau rang atteint : {{value}} !",
 
   "creation.language_section": "Sélection de la langue",
   "creation.conversation_section": "Conversation",

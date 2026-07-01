@@ -1,5 +1,10 @@
 // @ts-nocheck
-import { computeStreakUpdate, countLearnedWords, milestoneCrossed } from "../controllers/userCourseControllers.js";
+import {
+  computeStreakUpdate,
+  countLearnedWords,
+  milestoneCrossed,
+  rankCrossed,
+} from "../controllers/userCourseControllers.js";
 
 describe("computeStreakUpdate", () => {
   // Streaks are compared by calendar day in the server's local time, so the test
@@ -46,5 +51,22 @@ describe("milestoneCrossed", () => {
   test("returns null when no milestone is crossed", () => {
     expect(milestoneCrossed(100, 105, 100)).toBeNull();
     expect(milestoneCrossed(0, 0, 100)).toBeNull();
+  });
+});
+
+describe("rankCrossed", () => {
+  test("returns the new rank when a rank boundary is crossed upward", () => {
+    expect(rankCrossed(999, 1000)).toBe("Amateur"); // Beginner → Amateur
+    expect(rankCrossed(2900, 3200)).toBe("Advanced"); // Amateur → Advanced
+    expect(rankCrossed(9500, 10500)).toBe("Expert"); // Advanced → Expert
+  });
+
+  test("returns null when the rank does not change", () => {
+    expect(rankCrossed(1000, 1500)).toBeNull(); // stays Amateur
+    expect(rankCrossed(0, 999)).toBeNull(); // stays Beginner
+  });
+
+  test("returns null when the score drops to a lower rank", () => {
+    expect(rankCrossed(3200, 900)).toBeNull(); // Advanced → Beginner, no celebration
   });
 });
