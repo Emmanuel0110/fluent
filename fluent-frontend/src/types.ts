@@ -114,10 +114,12 @@ export interface DashboardData {
 }
 
 // A UI event worth celebrating, computed by the backend on review completion.
-// "streak" → consecutive active days; "milestone" → total words learned (multiples of 100).
+// "streak" → consecutive active days; "milestone" → total words learned (multiples of 100);
+// "rank" → the user climbed to a higher rank (value is the rank key, e.g. "Advanced").
 export type CelebrationEvent =
   | { type: "streak"; value: number }
-  | { type: "milestone"; value: number };
+  | { type: "milestone"; value: number }
+  | { type: "rank"; value: string };
 
 export interface Context {
   filteredWords: Word[];

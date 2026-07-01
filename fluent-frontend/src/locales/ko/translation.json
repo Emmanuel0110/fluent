@@ -116,6 +116,7 @@
 
   "celebration.streak": "{{value}}일 연속 학습!",
   "celebration.milestone": "단어 {{value}}개 학습 완료!",
+  "celebration.rank": "새로운 등급 달성: {{value}}!",
 
   "creation.language_section": "언어 선택",
   "creation.conversation_section": "대화",
