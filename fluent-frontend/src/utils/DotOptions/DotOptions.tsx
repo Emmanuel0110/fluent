@@ -10,7 +10,7 @@ const DotOptions: React.FC<DotOptionsProps> = ({ obj, options }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   //Click outside feature ------------------
-  const dropdownMenuRef: any = useRef();
+  const dropdownMenuRef: any = useRef(null);
   useEffect(() => {
     if (isVisible) document.addEventListener("click", globalClickListener);
     return () => document.removeEventListener("click", globalClickListener);
