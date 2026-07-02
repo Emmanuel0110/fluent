@@ -4,6 +4,7 @@ import { validateUpdateLearningData } from "../middleware/validation.js";
 import { redisClient } from "../redis.js";
 import { UserCourseModel } from "../models.js";
 import { MultiLingualConversationModel } from "../models.js";
+import { computeNumberOfKnownWords } from "../scripts/updateUserScores.js";
 import { logger } from "../logger.js";
 import express from "express";
 const router = express.Router();
@@ -364,8 +365,13 @@ async function getDashboardData(req, res) {
     // Calculate progress percentage
     const progress = calculateProgress(score, previousRankScore, nextRankScore);
 
-    // Get last 7 days of scores
-    const last7DaysScores = getLast7DaysScores(userCourse.dailyScores || []);
+    // Today's bar is computed live from the user's current words (same definition as
+    // the nightly script) so it reflects reviews completed since the script last ran,
+    // instead of appearing only after the end-of-day script closes out the day.
+    const todayScore = computeNumberOfKnownWords(userCourse);
+
+    // Get last 7 days of scores, ending with today's live count
+    const last7DaysScores = getLast7DaysScores(userCourse.dailyScores || [], todayScore);
 
     res.json({
       success: true,
@@ -454,7 +460,7 @@ function calculateProgress(currentScore, previousScore, nextScore) {
   return Math.max(0, Math.min(100, percentage));
 }
 
-function getLast7DaysScores(dailyScores) {
+function getLast7DaysScores(dailyScores, todayScore) {
   // Sort by date descending
   const sorted = dailyScores.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -464,14 +470,13 @@ function getLast7DaysScores(dailyScores) {
   // Fill in missing days with 0 score
   const result = [];
 
-  // Get yesterday's date (set to beginning of day for consistency)
+  // Anchor the window on today (set to beginning of day for consistency) so the
+  // rightmost bar is today's live count rather than yesterday's stored snapshot.
   const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  yesterday.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
 
   for (let i = 0; i < 7; i++) {
-    const date = new Date(yesterday);
+    const date = new Date(today);
     date.setDate(date.getDate() - (6 - i));
 
     // Format date as MM/DD
@@ -479,17 +484,25 @@ function getLast7DaysScores(dailyScores) {
     const day = String(date.getDate()).padStart(2, "0");
     const formattedDate = `${month}/${day}`;
 
-    // Find score for this date
-    const scoreEntry = last7Days.find((entry) => {
-      const entryDate = new Date(entry.date);
-      return entryDate.toDateString() === date.toDateString();
-    });
+    let wordsLearned;
+    if (i === 6) {
+      // Today's bar: use the live count so it updates as soon as the dashboard is
+      // reopened after a review, without waiting for the nightly script.
+      wordsLearned = todayScore;
+    } else {
+      // Prior days come from the nightly snapshots. null (not 0) means the daily
+      // job never recorded this day, so the chart can render a "no data" gap
+      // instead of a misleading zero.
+      const scoreEntry = last7Days.find((entry) => {
+        const entryDate = new Date(entry.date);
+        return entryDate.toDateString() === date.toDateString();
+      });
+      wordsLearned = scoreEntry ? scoreEntry.score : null;
+    }
 
     result.push({
       date: formattedDate,
-      // null (not 0) means the daily job never recorded this day, so the chart
-      // can render a "no data" gap instead of a misleading zero.
-      wordsLearned: scoreEntry ? scoreEntry.score : null,
+      wordsLearned,
     });
   }
 
