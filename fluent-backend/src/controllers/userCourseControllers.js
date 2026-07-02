@@ -217,18 +217,28 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
   if (wordUpdates.length > 0) await updateWords(userCourse._id, wordUpdates);
   if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
 
-  // A word counts as "learned" once it has passed at least one review (reviewDelayInMs > 0).
-  // Compare the count before and after this review to detect crossing a multiple of 100.
-  const beforeLearned = countLearnedWords(userCourse.words);
+  // A word counts as "learned" when it is not overdue (see isLearned). Because that
+  // count can drop as words fall due, we compare against the highest step already
+  // celebrated — persisted on the userCourse — so each milestone fires only once.
+  const now = new Date();
   const updatedById = new Map(wordUpdates.map((update) => [update._id.toString(), update]));
   const afterWords = userCourse.words.map((word) => updatedById.get(word._id.toString()) || word);
-  const afterLearned = countLearnedWords(afterWords);
-  const milestone = milestoneCrossed(beforeLearned, afterLearned, WORDS_MILESTONE_STEP);
-  if (milestone) celebrations.push({ type: "milestone", value: milestone });
+  const afterLearned = countLearnedWords(afterWords, now);
+  const milestone = milestoneCrossed(userCourse.highestWordsMilestone || 0, afterLearned, WORDS_MILESTONE_STEP);
+  if (milestone) {
+    celebrations.push({ type: "milestone", value: milestone });
+    await UserCourseModel.updateOne(
+      { _id: userCourse._id },
+      { $set: { highestWordsMilestone: milestone } },
+    );
+  }
 
   // Promoting words raises the score, which can push the user into a higher rank.
-  const newRank = rankCrossed(scoreFromWords(userCourse.words), scoreFromWords(afterWords));
-  if (newRank) celebrations.push({ type: "rank", value: newRank });
+  const newRank = rankCrossed(userCourse.highestRank || "Beginner", scoreFromWords(afterWords, now));
+  if (newRank) {
+    celebrations.push({ type: "rank", value: newRank });
+    await UserCourseModel.updateOne({ _id: userCourse._id }, { $set: { highestRank: newRank } });
+  }
 
   return celebrations;
 }
@@ -254,13 +264,29 @@ export function computeStreakUpdate(currentStreak, lastActiveDate, now = new Dat
   return { streak: 1, changed: true };
 }
 
-export function countLearnedWords(words) {
-  return words.filter((word) => word.reviewDelayInMs > 0).length;
+/**
+ * A word is "learned" when it is not overdue, i.e. its next review lies in the
+ * future. This is the single definition shared by scoreFromWords and
+ * countLearnedWords so the score and the milestone count never disagree.
+ */
+export function isLearned(word, now = new Date()) {
+  return !!(word.nextReviewDate && new Date(word.nextReviewDate) > now);
 }
 
-/** Returns the milestone value crossed (e.g. 100, 200), or null if none was crossed. */
-export function milestoneCrossed(before, after, step) {
-  return Math.floor(after / step) > Math.floor(before / step) ? Math.floor(after / step) * step : null;
+export function countLearnedWords(words, now = new Date()) {
+  return (words || []).filter((word) => isLearned(word, now)).length;
+}
+
+/**
+ * Highest step multiple (e.g. 100, 200) reached by `learnedCount` that lies above
+ * `previousMilestone` — the highest step already celebrated — or null if none.
+ * Comparing against the persisted previous milestone (rather than the pre-review
+ * count) guarantees each step is celebrated only once, even if the learned count
+ * falls and later climbs back across the same boundary.
+ */
+export function milestoneCrossed(previousMilestone, learnedCount, step) {
+  const reached = Math.floor(learnedCount / step) * step;
+  return reached > previousMilestone ? reached : null;
 }
 
 function getUpdate(word, success) {
@@ -368,8 +394,7 @@ async function getDashboardData(req, res) {
 export function scoreFromWords(words, now = new Date()) {
   let score = 0;
   for (const word of words || []) {
-    // A word is considered "learned" if it's not overdue (nextReviewDate is in the future)
-    if (word.nextReviewDate && new Date(word.nextReviewDate) > now) {
+    if (isLearned(word, now)) {
       // Score is weighted by reviewDelayInMs (its position in the DELAYS ladder)
       const weight = DELAYS.indexOf(word.reviewDelayInMs);
       if (weight > 0) score += weight;
@@ -397,10 +422,15 @@ export function getRank(score) {
   return "Beginner";
 }
 
-/** Returns the higher rank when the score change crosses a rank boundary upward, or null. */
-export function rankCrossed(scoreBefore, scoreAfter) {
+/**
+ * Returns the new rank when `scoreAfter` reaches a rank above `previousRank` — the
+ * highest rank already celebrated — or null. Comparing against the persisted rank
+ * (rather than the pre-review score) guarantees each rank is celebrated only once,
+ * even if the score falls and later climbs back across the same boundary.
+ */
+export function rankCrossed(previousRank, scoreAfter) {
   const rankAfter = getRank(scoreAfter);
-  return RANK_ORDER.indexOf(rankAfter) > RANK_ORDER.indexOf(getRank(scoreBefore)) ? rankAfter : null;
+  return RANK_ORDER.indexOf(rankAfter) > RANK_ORDER.indexOf(previousRank) ? rankAfter : null;
 }
 
 function getNextRankScore(currentScore) {

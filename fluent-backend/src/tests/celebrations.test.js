@@ -32,9 +32,18 @@ describe("computeStreakUpdate", () => {
 });
 
 describe("countLearnedWords", () => {
-  test("counts only words reviewed at least once (reviewDelayInMs > 0)", () => {
-    const words = [{ reviewDelayInMs: 0 }, { reviewDelayInMs: 60000 }, { reviewDelayInMs: 0 }, { reviewDelayInMs: 1 }];
-    expect(countLearnedWords(words)).toBe(2);
+  const now = new Date(2026, 5, 29, 10, 0);
+  const future = new Date(2026, 5, 30, 10, 0);
+  const past = new Date(2026, 5, 28, 10, 0);
+
+  test("counts only words that are not overdue (nextReviewDate in the future)", () => {
+    const words = [
+      { nextReviewDate: future }, // learned
+      { nextReviewDate: past }, // overdue → not learned
+      { nextReviewDate: future }, // learned
+      {}, // never scheduled → not learned
+    ];
+    expect(countLearnedWords(words, now)).toBe(2);
   });
 
   test("returns 0 for an empty list", () => {
@@ -43,30 +52,31 @@ describe("countLearnedWords", () => {
 });
 
 describe("milestoneCrossed", () => {
-  test("returns the milestone value when a multiple of the step is crossed", () => {
-    expect(milestoneCrossed(99, 100, 100)).toBe(100);
-    expect(milestoneCrossed(195, 205, 100)).toBe(200);
+  test("returns the new milestone when the count reaches a step above the previous one", () => {
+    expect(milestoneCrossed(0, 100, 100)).toBe(100); // first time reaching 100
+    expect(milestoneCrossed(100, 205, 100)).toBe(200); // already celebrated 100, now at 205
   });
 
-  test("returns null when no milestone is crossed", () => {
-    expect(milestoneCrossed(100, 105, 100)).toBeNull();
+  test("returns null when no new milestone is reached", () => {
+    expect(milestoneCrossed(100, 150, 100)).toBeNull(); // 100 already celebrated
+    expect(milestoneCrossed(200, 150, 100)).toBeNull(); // count dropped below a past milestone
     expect(milestoneCrossed(0, 0, 100)).toBeNull();
   });
 });
 
 describe("rankCrossed", () => {
-  test("returns the new rank when a rank boundary is crossed upward", () => {
-    expect(rankCrossed(999, 1000)).toBe("Amateur"); // Beginner → Amateur
-    expect(rankCrossed(2900, 3200)).toBe("Advanced"); // Amateur → Advanced
-    expect(rankCrossed(9500, 10500)).toBe("Expert"); // Advanced → Expert
+  test("returns the new rank when the score reaches a rank above the previous one", () => {
+    expect(rankCrossed("Beginner", 1000)).toBe("Amateur"); // Beginner → Amateur
+    expect(rankCrossed("Amateur", 3200)).toBe("Advanced"); // Amateur → Advanced
+    expect(rankCrossed("Advanced", 10500)).toBe("Expert"); // Advanced → Expert
   });
 
-  test("returns null when the rank does not change", () => {
-    expect(rankCrossed(1000, 1500)).toBeNull(); // stays Amateur
-    expect(rankCrossed(0, 999)).toBeNull(); // stays Beginner
+  test("returns null when the rank is not above the one already celebrated", () => {
+    expect(rankCrossed("Amateur", 1500)).toBeNull(); // already Amateur
+    expect(rankCrossed("Beginner", 999)).toBeNull(); // stays Beginner
   });
 
-  test("returns null when the score drops to a lower rank", () => {
-    expect(rankCrossed(3200, 900)).toBeNull(); // Advanced → Beginner, no celebration
+  test("returns null when the score drops below a rank already reached", () => {
+    expect(rankCrossed("Advanced", 900)).toBeNull(); // score fell, no re-celebration
   });
 });

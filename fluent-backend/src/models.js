@@ -85,6 +85,13 @@ const UserCourseSchema = new Schema({
   currentStreak: { type: Number, default: 0 },
   longestStreak: { type: Number, default: 0 },
   lastActiveDate: { type: Date },
+  // Highest words milestone (100, 200, ...) already celebrated. Persisted because
+  // the learned-word count is not monotonic (words can become overdue and drop
+  // out), so each step must fire only once even if the count re-crosses it.
+  highestWordsMilestone: { type: Number, default: 0 },
+  // Highest rank already celebrated. Persisted for the same reason: the score can
+  // fall as words become overdue, so a rank-up must be celebrated only once.
+  highestRank: { type: String, default: "Beginner" },
 });
 
 export const UserCourseModel = model("UserCourse", UserCourseSchema);
