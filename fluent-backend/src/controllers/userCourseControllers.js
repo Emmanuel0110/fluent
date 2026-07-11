@@ -199,21 +199,7 @@ async function updateReviewData(reviewedConversationId, successArray, userCourse
   }
   const wordIdsBySentence = await getWordIdsForSentences(reviewedConversationId, userCourse.sourceLanguage);
   if (!wordIdsBySentence || successArray.length !== wordIdsBySentence.length) return celebrations;
-  const wordUpdates = [];
-  const newWordIds = [];
-  const alreadyProcessed = [];
-  wordIdsBySentence.forEach((wordIds) =>
-    wordIds.forEach((wordId, index) => {
-      if (alreadyProcessed.includes(wordId)) return;
-      alreadyProcessed.push(wordId);
-      const word = userCourse.words.find(({ _id }) => _id.equals(wordId));
-      if (word) {
-        wordUpdates.push(getUpdate(word, successArray[index]));
-      } else {
-        newWordIds.push(wordId);
-      }
-    }),
-  );
+  const { wordUpdates, newWordIds } = computeWordUpdates(wordIdsBySentence, successArray, userCourse.words);
 
   if (wordUpdates.length > 0) await updateWords(userCourse._id, wordUpdates);
   if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
@@ -288,6 +274,31 @@ export function countLearnedWords(words, now = new Date()) {
 export function milestoneCrossed(previousMilestone, learnedCount, step) {
   const reached = Math.floor(learnedCount / step) * step;
   return reached > previousMilestone ? reached : null;
+}
+
+/**
+ * Map a review result onto the learner's words. `wordIdsBySentence[i]` holds the
+ * word ids of sentence i, and `successArray[i]` is that sentence's success flag —
+ * so a word inherits the success of the (first) sentence it belongs to. Words seen
+ * for the first time are collected in `newWordIds`; the rest get a review update.
+ */
+export function computeWordUpdates(wordIdsBySentence, successArray, words) {
+  const wordUpdates = [];
+  const newWordIds = [];
+  const alreadyProcessed = [];
+  wordIdsBySentence.forEach((wordIds, sentenceIndex) =>
+    wordIds.forEach((wordId) => {
+      if (alreadyProcessed.includes(wordId)) return;
+      alreadyProcessed.push(wordId);
+      const word = words.find(({ _id }) => _id.equals(wordId));
+      if (word) {
+        wordUpdates.push(getUpdate(word, successArray[sentenceIndex]));
+      } else {
+        newWordIds.push(wordId);
+      }
+    }),
+  );
+  return { wordUpdates, newWordIds };
 }
 
 function getUpdate(word, success) {
