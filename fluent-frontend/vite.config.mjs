@@ -50,6 +50,11 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
+        // Don't let the SPA navigation fallback (index.html) hijack full-page
+        // navigations to the backend API (e.g. the Google OAuth redirect to
+        // /api/users/auth/google). Without this the service worker serves
+        // index.html and React renders its 404 instead of hitting the backend.
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             // Review / usercourse updates are PATCHes to `usercourses`.
