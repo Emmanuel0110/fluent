@@ -123,6 +123,38 @@ button:disabled {
   background-color: var(--bg-selected);
 }
 
+/* Gmail-style swipe-to-remove for suggested conversations */
+.swipeContainer {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+/* The line keeps its own spacing everywhere else; inside a swipe container the
+   container owns the bottom margin so the action background aligns to the row. */
+.swipeContainer .line {
+  margin-bottom: 0;
+}
+
+.swipeAction {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background-color: var(--color-danger);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+  font-weight: 500;
+}
+
+.swipeContent {
+  position: relative;
+  z-index: 1;
+  touch-action: pan-y; /* let the browser scroll vertically; we own horizontal */
+  will-change: transform;
+}
+
 .alignLeft {
   text-align: left;
 }

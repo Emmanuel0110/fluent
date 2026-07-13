@@ -61,6 +61,8 @@
   "conversation.save": "Enregistrer la conversation",
   "conversation.saved": "Enregistré !",
   "conversation.no_suggestion": "Aucune suggestion disponible",
+  "conversation.remove_suggestion": "Retirer",
+  "conversation.remove_suggestion_confirm": "Retirer cette conversation de vos suggestions ?",
   "conversation.add_prerequisite": "Ajouter un prérequis",
 
   "profile.title": "Paramètres",

@@ -148,6 +148,13 @@ export const unsubscribeToRemoteConversation = async (id: string) => {
   );
 };
 
+export const dismissRemoteSuggestion = async (id: string) => {
+  const body = JSON.stringify({ conversationToDismiss: id });
+  return catchApiError(
+    customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body })
+  );
+};
+
 export interface ReviewUpdateResponse {
   success: boolean;
   celebrations?: CelebrationEvent[];

@@ -38,6 +38,7 @@ vi.mock("../APICalls", () => ({
   editRemoteConversationTag: vi.fn(),
   subscribeToRemoteConversation: vi.fn(),
   unsubscribeToRemoteConversation: vi.fn(),
+  dismissRemoteSuggestion: vi.fn(),
   updateRemoteConversationReviewStatus: vi.fn(),
   getRemoteConversationById: vi.fn(),
   getRemoteConversationByWordId: vi.fn(),

@@ -61,6 +61,8 @@
   "conversation.save": "Save conversation",
   "conversation.saved": "Saved!",
   "conversation.no_suggestion": "No suggestion available",
+  "conversation.remove_suggestion": "Remove",
+  "conversation.remove_suggestion_confirm": "Remove this conversation from your suggestions?",
   "conversation.add_prerequisite": "Add prerequisite",
 
   "profile.title": "Settings",

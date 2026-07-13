@@ -61,6 +61,8 @@
   "conversation.save": "대화 저장",
   "conversation.saved": "저장됨!",
   "conversation.no_suggestion": "추천 없음",
+  "conversation.remove_suggestion": "제거",
+  "conversation.remove_suggestion_confirm": "이 대화를 추천에서 제거하시겠습니까?",
   "conversation.add_prerequisite": "전제 추가",
 
   "profile.title": "설정",

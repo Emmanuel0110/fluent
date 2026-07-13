@@ -148,6 +148,14 @@ export const validateUpdateLearningData = [
       }
       return true;
     }),
+  body("conversationToDismiss")
+    .optional()
+    .custom((value) => {
+      if (value && !isValidObjectId(value)) {
+        throw new Error("Conversation ID must be a valid ObjectId");
+      }
+      return true;
+    }),
   body("reviewedConversationId")
     .optional()
     .custom((value) => {
@@ -161,11 +169,17 @@ export const validateUpdateLearningData = [
   body().custom((value) => {
     const hasConversationToSubscribe = !!value.conversationToSubscribe;
     const hasConversationToUnsubscribe = !!value.conversationToUnsubscribe;
+    const hasConversationToDismiss = !!value.conversationToDismiss;
     const hasReviewedConversationId = !!value.reviewedConversationId;
 
-    if (!hasConversationToSubscribe && !hasConversationToUnsubscribe && !hasReviewedConversationId) {
+    if (
+      !hasConversationToSubscribe &&
+      !hasConversationToUnsubscribe &&
+      !hasConversationToDismiss &&
+      !hasReviewedConversationId
+    ) {
       throw new Error(
-        "At least one of conversationToSubscribe, conversationToUnsubscribe, or reviewedConversationId must be provided"
+        "At least one of conversationToSubscribe, conversationToUnsubscribe, conversationToDismiss, or reviewedConversationId must be provided"
       );
     }
 

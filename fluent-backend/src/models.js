@@ -58,6 +58,9 @@ const UserCourseSchema = new Schema({
   sourceLanguage: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   targetLanguage: { type: Schema.Types.ObjectId, ref: "Language", required: true },
   wishListConversations: [{ type: Schema.Types.ObjectId, ref: "MultiLingualConversation" }],
+  // Suggestions the learner explicitly removed; excluded from future suggestions so
+  // a dismissed conversation never reappears (see getUnsubscribedConversations).
+  dismissedSuggestions: [{ type: Schema.Types.ObjectId, ref: "MultiLingualConversation" }],
   story: { type: Schema.Types.ObjectId, ref: "Story" },
   nextStoryNode: { type: Schema.Types.ObjectId, ref: "StoryNode" },
   words: [

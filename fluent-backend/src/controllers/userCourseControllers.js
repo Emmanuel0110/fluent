@@ -17,8 +17,16 @@ async function updateLearningData(req, res) {
   try {
     const { userCourse, user } = req;
     if (userCourse) {
-      const { conversationToSubscribe, conversationToUnsubscribe, reviewedConversationId, successArray } = req.body;
-      if (conversationToSubscribe) {
+      const { conversationToSubscribe, conversationToUnsubscribe, conversationToDismiss, reviewedConversationId, successArray } =
+        req.body;
+      if (conversationToDismiss) {
+        await dismissSuggestion(conversationToDismiss, userCourse);
+        logger.info(
+          { userId: user._id, userCourseId: userCourse._id, conversationId: conversationToDismiss },
+          "Dismissed suggestion",
+        );
+        res.json({ success: true });
+      } else if (conversationToSubscribe) {
         await subscribeToConversation(conversationToSubscribe, userCourse);
         logger.info(
           { userId: user._id, userCourseId: userCourse._id, conversationId: conversationToSubscribe },
@@ -83,6 +91,14 @@ async function getWordIdsForSentences(conversationId, language) {
       return arr;
     }
   }
+}
+
+async function dismissSuggestion(conversationToDismiss, userCourse) {
+  // $addToSet keeps the list free of duplicates if the same suggestion is dismissed twice.
+  await UserCourseModel.updateOne(
+    { _id: userCourse._id },
+    { $addToSet: { dismissedSuggestions: conversationToDismiss } },
+  );
 }
 
 async function subscribeToConversation(conversationToSubscribe, userCourse) {

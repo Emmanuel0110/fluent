@@ -5,9 +5,10 @@ interface Props {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmLabel?: string;
 }
 
-export function ConfirmDialog({ message, onConfirm, onCancel }: Props) {
+export function ConfirmDialog({ message, onConfirm, onCancel, confirmLabel }: Props) {
   const { t } = useTranslation();
   return (
     <div className="blockerDarkBackground" onClick={onCancel}>
@@ -15,7 +16,7 @@ export function ConfirmDialog({ message, onConfirm, onCancel }: Props) {
         <p>{message}</p>
         <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "20px" }}>
           <button className="btn btn-secondary" onClick={onCancel}>{t("common.cancel")}</button>
-          <button className="btn delete-btn" onClick={onConfirm}>{t("common.delete")}</button>
+          <button className="btn delete-btn" onClick={onConfirm}>{confirmLabel ?? t("common.delete")}</button>
         </div>
       </div>
     </div>

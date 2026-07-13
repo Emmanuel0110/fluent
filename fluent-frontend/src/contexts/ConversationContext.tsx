@@ -11,6 +11,7 @@ import {
   editRemoteConversationTag,
   subscribeToRemoteConversation,
   unsubscribeToRemoteConversation,
+  dismissRemoteSuggestion,
   updateRemoteConversationReviewStatus,
   getRemoteConversationById,
   getRemoteConversationByWordId,
@@ -43,6 +44,7 @@ interface ConversationContextType {
   unsubscribeToConversation: (conversation: Conversation) => void;
   fetchMoreUsedInConversations: (wordId: string) => void;
   fetchSuggestions: () => Promise<string[]>;
+  dismissSuggestion: (conversationId: string) => Promise<boolean>;
   getConversationById: (id: string) => Promise<Conversation | undefined>;
   updateConversationReviewStatus: (conversation: ReviewItem) => Promise<void>;
 }
@@ -132,6 +134,11 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
     });
   };
 
+  const dismissSuggestion = async (conversationId: string) => {
+    const res = await dismissRemoteSuggestion(conversationId);
+    return !!(res && (res as { success?: boolean }).success);
+  };
+
   const subscribeToConversation = (conversation: Conversation) => {
     const conversationId = conversation._id;
     subscribeToRemoteConversation(conversationId).then((res) => {
@@ -193,6 +200,7 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
         unsubscribeToConversation,
         fetchMoreUsedInConversations,
         fetchSuggestions,
+        dismissSuggestion,
         getConversationById,
         updateConversationReviewStatus,
       }}

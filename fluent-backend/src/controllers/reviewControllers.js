@@ -192,7 +192,12 @@ async function getUnsubscribedConversations(userCourse) {
     // Step 1: Match conversations containing sentences with wordIds in prerequisites
     {
       $match: {
-        _id: { $nin: userCourse.conversations.map(({ _id }) => _id) },
+        _id: {
+          $nin: [
+            ...userCourse.conversations.map(({ _id }) => _id),
+            ...(userCourse.dismissedSuggestions || []),
+          ],
+        },
         "conversations.language": {
           $all: [
             new mongoose.Types.ObjectId(userCourse.sourceLanguage),
