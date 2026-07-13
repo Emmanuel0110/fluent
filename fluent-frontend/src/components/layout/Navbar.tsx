@@ -60,6 +60,7 @@ function Navbar({ onMenuToggle, onMenuClose }: NavbarProps) {
             <input
               ref={inputRef}
               type="text"
+              placeholder={t("nav.search")}
               value={searchFilter}
               onFocus={onMenuClose}
               onChange={(e) => {

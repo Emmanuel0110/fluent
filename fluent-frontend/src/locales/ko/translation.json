@@ -22,6 +22,7 @@
   "nav.suggestions": "추천",
   "nav.new_conversation": "새 대화",
   "nav.start_review": "복습 시작",
+  "nav.search": "단어 검색...",
 
   "word.source_language": "소스 언어",
   "word.target_language": "목표 언어",

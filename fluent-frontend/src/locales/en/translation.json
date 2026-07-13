@@ -22,6 +22,7 @@
   "nav.suggestions": "Suggestions",
   "nav.new_conversation": "New conversation",
   "nav.start_review": "Start a review",
+  "nav.search": "Search for words...",
 
   "word.source_language": "Source Language",
   "word.target_language": "Target Language",
