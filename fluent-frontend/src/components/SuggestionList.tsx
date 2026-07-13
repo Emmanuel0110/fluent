@@ -1,4 +1,5 @@
 import { SwipeableSuggestion } from "./SwipeableSuggestion";
+import { TutorialOverlay } from "./TutorialOverlay";
 import { useEffect, useState } from "react";
 import { useData } from "../contexts/DataContext";
 import { useTranslation } from "react-i18next";
@@ -31,6 +32,7 @@ export default function SuggestionList() {
 
   return suggestionIds ? (
     <div style={{ height: "100%", overflow: "auto" }}>
+      <TutorialOverlay tutorialId="suggestions" message={t("tutorial.suggestions")} active={suggestionIds.length > 0} />
       <div id="conversationList">
         {conversations
           .filter(({ _id }) => suggestionIds.includes(_id))

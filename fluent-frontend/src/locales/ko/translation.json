@@ -49,6 +49,13 @@
   "review.reveal": "정답 보기",
   "review.next": "다음",
 
+  "tutorial.understood": "이해했어요",
+  "tutorial.next": "다음",
+  "tutorial.review": "에너지를 아끼세요: 5초 안에 단어가 떠오르지 않으면 정답을 확인하세요",
+  "tutorial.review_feel": "더 높은 기준을 세우세요: 각 단어를 따로 떠올리는 것이 아니라 문장 전체를 느껴야 합니다",
+  "tutorial.suggestions": "별표를 눌러 대화를 복습 목록에 추가하세요",
+  "tutorial.dashboard": "학습한 단어 수는 복습하지 않을 때의 망각을 반영하기 때문에 줄어들 수도 있습니다",
+
   "conversation.source_sentence": "소스 문장",
   "conversation.target_sentence": "목표 문장",
   "conversation.add_sentence": "문장 추가",

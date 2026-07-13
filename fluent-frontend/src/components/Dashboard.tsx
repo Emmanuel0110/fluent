@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getDashboardData } from "../APICalls";
 import { DashboardData } from "../types";
 import "./Dashboard.css";
+import { TutorialOverlay } from "./TutorialOverlay";
 import { useTranslation } from "react-i18next";
 
 function Dashboard() {
@@ -45,6 +46,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
+      <TutorialOverlay tutorialId="dashboard" message={t("tutorial.dashboard")} active={true} />
       <div className="dashboard-header">
         <h1>{t("dashboard.title")}</h1>
       </div>

@@ -8,6 +8,7 @@ import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReviewItem from "./ReviewItem";
+import { TutorialOverlay } from "./TutorialOverlay";
 import { useTranslation } from "react-i18next";
 
 function Review() {
@@ -57,7 +58,14 @@ function Review() {
       </div>
     </div>
   ) : (
-    <ReviewItem conversation={reviewList[0]} nextConversation={nextConversation} />
+    <>
+      <TutorialOverlay
+        tutorialId="review"
+        message={[t("tutorial.review"), t("tutorial.review_feel")]}
+        active={reviewList.length > 0}
+      />
+      <ReviewItem conversation={reviewList[0]} nextConversation={nextConversation} />
+    </>
   );
 }
 
