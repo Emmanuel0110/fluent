@@ -51,10 +51,10 @@
 
   "tutorial.understood": "J'ai compris",
   "tutorial.next": "Suivant",
-  "tutorial.review": "Optimise ton énergie : si un mot ne te revient pas après 5 secondes, regarde la réponse",
-  "tutorial.review_feel": "Vise plus haut : ressens la phrase dans son ensemble, pas seulement chaque mot isolé",
+  "tutorial.review": "Si un mot ne te revient pas après 5 secondes, regarde la réponse",
+  "tutorial.review_feel": "Ressens la phrase dans son ensemble, pas seulement chaque mot isolé",
   "tutorial.suggestions": "Clique sur les étoiles pour ajouter des conversations à ta liste de révision",
-  "tutorial.dashboard": "Le nombre de mots appris peut aussi baisser car il prend en compte l'oubli quand vous ne révisez pas",
+  "tutorial.dashboard": "Le nombre de mots appris diminue quand vous ne révisez pas",
 
   "conversation.source_sentence": "Phrase source",
   "conversation.target_sentence": "Phrase cible",

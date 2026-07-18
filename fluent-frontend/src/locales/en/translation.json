@@ -51,10 +51,10 @@
 
   "tutorial.understood": "Got it",
   "tutorial.next": "Next",
-  "tutorial.review": "Save your energy: if a word doesn't come to you after 5 seconds, look at the answer",
-  "tutorial.review_feel": "Aim higher: feel the sentence as a whole, not just each word in isolation",
+  "tutorial.review": "If a word doesn't come to you after 5 seconds, look at the answer",
+  "tutorial.review_feel": "Feel the sentence as a whole, not just each word in isolation",
   "tutorial.suggestions": "Tap the stars to add conversations to your review list",
-  "tutorial.dashboard": "The number of learned words can also go down, because it accounts for forgetting when you don't review",
+  "tutorial.dashboard": "The number of learned words goes down when you don't review",
 
   "conversation.source_sentence": "Source sentence",
   "conversation.target_sentence": "Target sentence",
