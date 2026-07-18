@@ -108,7 +108,7 @@ function ReviewItem({
       <div id="reviewSentences">
         {conversation.multiLingualSentences.map((_, index) => (
           <ReviewSentence
-            key={index}
+            key={`${conversation._id}-${index}`}
             index={index}
             currentSentenceNumber={currentSentenceNumber}
             answerRevealed={answersRevealed[index]}
