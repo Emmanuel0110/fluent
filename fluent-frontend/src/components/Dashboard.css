@@ -63,12 +63,6 @@
   justify-content: center;
 }
 
-.rank-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .rank-label {
   font-size: 0.9rem;
   font-weight: 600;
@@ -353,46 +347,12 @@
   }
 }
 
-.rank-Beginner {
-  mask: url(/images/sprout.svg);
-  background: var(--rank-color);
-  margin: auto;
-  width: 4rem;
-  height: 4rem;
-  mask-repeat: no-repeat;
-  background-position: center;
-  mask-size: contain;
-}
-
-.rank-Amateur {
-  mask: url(/images/book.svg);
-  background: var(--rank-color);
-  margin: auto;
-  width: 4rem;
-  height: 4rem;
-  mask-repeat: no-repeat;
-  background-position: center;
-  mask-size: contain;
-}
-
-.rank-Advanced {
-  mask: url(/images/medal.svg);
-  background: var(--rank-color);
-  margin: auto;
-  width: 4rem;
-  height: 4rem;
-  mask-repeat: no-repeat;
-  background-position: center;
-  mask-size: contain;
-}
-
-.rank-Expert {
-  mask: url(/images/crown.svg);
-  background: var(--icon);
-  margin: auto;
-  width: 4rem;
-  height: 4rem;
-  mask-repeat: no-repeat;
-  background-position: center;
-  mask-size: contain;
+/* The rank medallion. Rendered as inline SVG by <RankBadge>, so it keeps its
+   own gradients and relief — no CSS mask/tint. Sits inside .rank-icon, whose
+   width/height drive the badge size across breakpoints. */
+.rank-badge {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18));
 }

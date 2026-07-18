@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import confetti from "canvas-confetti";
 import { useTranslation } from "react-i18next";
 import { CelebrationEvent } from "../types";
+import { RankBadge } from "./RankBadge";
 import "./Celebration.css";
 
 // How long the toast stays on screen before auto-dismissing (ms).
@@ -28,7 +29,6 @@ export default function Celebration({ event, onDone }: { event: CelebrationEvent
     return () => clearTimeout(timer);
   }, [event, onDone]);
 
-  const icon = event.type === "streak" ? "🔥" : event.type === "rank" ? "🏆" : "🎉";
   // Rank celebrations carry a rank key (e.g. "Advanced") that must itself be translated.
   const message =
     event.type === "rank"
@@ -38,7 +38,14 @@ export default function Celebration({ event, onDone }: { event: CelebrationEvent
   return (
     <div className="celebration-overlay">
       <div className="celebration-toast" key={`${event.type}-${event.value}`} onClick={onDone}>
-        <div className="celebration-icon">{icon}</div>
+        {event.type === "rank" ? (
+          // Show the badge just earned rather than a generic trophy emoji.
+          <div className="celebration-icon celebration-badge">
+            <RankBadge rank={String(event.value)} />
+          </div>
+        ) : (
+          <div className="celebration-icon">{event.type === "streak" ? "🔥" : "🎉"}</div>
+        )}
         <div className="celebration-message">{message}</div>
       </div>
     </div>

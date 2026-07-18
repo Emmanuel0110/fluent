@@ -33,6 +33,12 @@
   animation: celebration-bounce 0.9s ease infinite;
 }
 
+/* Rank-up celebrations render the earned <RankBadge> here instead of an emoji. */
+.celebration-badge {
+  width: 76px;
+  height: 76px;
+}
+
 .celebration-message {
   font-size: 1.35rem;
   font-weight: 700;

@@ -3,6 +3,7 @@ import { getDashboardData } from "../APICalls";
 import { DashboardData } from "../types";
 import "./Dashboard.css";
 import { TutorialOverlay } from "./TutorialOverlay";
+import { RankBadge } from "./RankBadge";
 import { useTranslation } from "react-i18next";
 
 function Dashboard() {
@@ -56,7 +57,7 @@ function Dashboard() {
           <div className="rank-display">
             {rank && (
               <div className="rank-icon">
-                <div className={`rank-${rank}`} />
+                <RankBadge rank={rank} />
               </div>
             )}
             <span className="rank-label">{rank ? t(`dashboard.rank.${rank}`) : ""}</span>
