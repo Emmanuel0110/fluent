@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Word } from "../types";
 import { useContext, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { ConfigContext } from "../contexts/ConfigContext";
 import { Context } from "../types";
 import { useAuth } from "../contexts/AuthContext";
@@ -29,18 +28,16 @@ export const WordLine = ({ word, readonly = false }: { word: Word; readonly?: bo
 
   return (
     <>
-      {showConfirm &&
-        createPortal(
-          <ConfirmDialog
-            message="Are you sure you want to delete this word?"
-            onConfirm={() => {
-              setShowConfirm(false);
-              deleteWord(word._id);
-            }}
-            onCancel={() => setShowConfirm(false)}
-          />,
-          document.body,
-        )}
+      {showConfirm && (
+        <ConfirmDialog
+          message="Are you sure you want to delete this word?"
+          onConfirm={() => {
+            setShowConfirm(false);
+            deleteWord(word._id);
+          }}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
       <div
         ref={lineRef}
         className={"line" + (word._id === wordId ? " selectedLine" : "")}
