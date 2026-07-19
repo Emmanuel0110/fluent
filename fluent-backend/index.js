@@ -12,7 +12,7 @@ const port = 4001;
 mongoose.set("debug", process.env.NODE_ENV === "development");
 mongoose.set("strictQuery", true);
 mongoose.connect(
-  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`
+  `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`,
 );
 mongoose.Promise = Promise;
 
@@ -22,6 +22,8 @@ db.once("open", () => {
   app.listen(process.env.PORT || port, () => {
     logger.info({ port: process.env.PORT || port }, "Server listening");
   });
-  // Start the in-process daily score scheduler once the DB connection is live.
-  startScheduler();
+  // Start the in-process daily jobs only in production.
+  if (process.env.NODE_ENV === "production") {
+    startScheduler();
+  }
 });
