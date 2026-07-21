@@ -12,7 +12,7 @@ dotenv.config("./.env");
  */
 const DELAYS = [
   0,
-  60000, //1000*60 (1 min)
+  600000, //1000*60*10 (10 min)
   3600000, //1000*60*60 (1 hour)
   86400000, //1000*60*60*24 (1 day)
   604800000, //1000*60*60*24*7 (1 week)
@@ -123,7 +123,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   mongoose.set("strictQuery", true);
   try {
     await mongoose.connect(
-      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`
+      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_CLUSTER}.mongodb.net/${process.env.MONGO_DBNAME}?retryWrites=true&w=majority`,
     );
     await updateAllUserScores();
     logger.info("Script completed successfully");
