@@ -49,6 +49,11 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Activate a newly-deployed service worker immediately and take over
+        // open clients, so users get the latest build on their next page load
+        // instead of waiting for every tab to close.
+        clientsClaim: true,
+        skipWaiting: true,
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         // Don't let the SPA navigation fallback (index.html) hijack full-page
         // navigations to the backend API (e.g. the Google OAuth redirect to
