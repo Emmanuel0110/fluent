@@ -163,3 +163,21 @@ const FeedbackSchema = new Schema({
 });
 
 export const FeedbackModel = model("Feedback", FeedbackSchema);
+
+const GroupSchema = new Schema({
+  name: { type: String, required: true, trim: true },
+  // Unique, auto-generated code shared to join the group. It is the group's only
+  // access secret (there is no separate password) and is treated as non-sensitive.
+  inviteCode: { type: String, required: true, unique: true, index: true },
+  targetLanguage: { type: Schema.Types.ObjectId, ref: "Language", required: true },
+  members: [
+    {
+      _id: false,
+      // Both are stored: `user` gives the username, `userCourse` gives the score/rank
+      // for the group's target language (UserCourse has no back-reference to User).
+      user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+      userCourse: { type: Schema.Types.ObjectId, ref: "UserCourse", required: true },
+    },
+  ],
+});
+export const GroupModel = model("Group", GroupSchema);

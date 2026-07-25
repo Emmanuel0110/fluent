@@ -13,6 +13,7 @@ import userCourseRoutes from "./controllers/userCourseControllers.js";
 import wordRoutes from "./controllers/wordControllers.js";
 import languageRoutes from "./controllers/languageControllers.js";
 import feedbackRoutes from "./controllers/feedbackControllers.js";
+import groupRoutes from "./controllers/groupControllers.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -59,6 +60,7 @@ app.use("/api/usercourses", userCourseRoutes);
 app.use("/api/words", wordRoutes);
 app.use("/api/languages", languageRoutes);
 app.use("/api/feedback", feedbackRoutes);
+app.use("/api/groups", groupRoutes);
 
 // 404 handler
 app.use((req, res) => {

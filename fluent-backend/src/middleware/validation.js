@@ -388,3 +388,26 @@ export const validateWordTagCreate = [
     }),
   handleValidationErrors,
 ];
+
+// Group validation rules
+export const validateCreateGroup = [
+  body("name")
+    .trim()
+    .notEmpty()
+    .withMessage("Group name is required")
+    .isLength({ max: 60 })
+    .withMessage("Group name must be at most 60 characters")
+    .isString()
+    .withMessage("Group name must be a string"),
+  handleValidationErrors,
+];
+
+export const validateJoinGroup = [
+  body("inviteCode")
+    .trim()
+    .notEmpty()
+    .withMessage("Invite code is required")
+    .isString()
+    .withMessage("Invite code must be a string"),
+  handleValidationErrors,
+];

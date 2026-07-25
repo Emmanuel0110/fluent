@@ -6,19 +6,28 @@ import { TutorialOverlay } from "./TutorialOverlay";
 import { RankBadge } from "./RankBadge";
 import { useTranslation } from "react-i18next";
 
-function Dashboard() {
+interface DashboardProps {
+  // Custom loader — used to render another group member's dashboard (whose payload
+  // also carries `username`). Defaults to the authenticated user's own dashboard.
+  fetcher?: () => Promise<(DashboardData & { username?: string }) | null>;
+  // The dashboard tutorial only makes sense on the learner's own dashboard.
+  showTutorial?: boolean;
+}
+
+function Dashboard({ fetcher, showTutorial = true }: DashboardProps = {}) {
   const { t } = useTranslation();
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardData, setDashboardData] = useState<(DashboardData & { username?: string }) | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getDashboardData();
+      setLoading(true);
+      const data = await (fetcher ? fetcher() : getDashboardData());
       setDashboardData(data);
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [fetcher]);
 
   if (loading) {
     return (
@@ -47,9 +56,11 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <TutorialOverlay tutorialId="dashboard" message={t("tutorial.dashboard")} active={true} />
+      {showTutorial && (
+        <TutorialOverlay tutorialId="dashboard" message={t("tutorial.dashboard")} active={true} />
+      )}
       <div className="dashboard-header">
-        <h1>{t("dashboard.title")}</h1>
+        <h1>{dashboardData.username ?? t("dashboard.title")}</h1>
       </div>
 
       <div className="dashboard-section">

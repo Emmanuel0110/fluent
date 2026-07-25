@@ -80,6 +80,15 @@ function LeftMenuBar({ isOpen, setOpen }: LeftMenuBarProps) {
               <div className={location.pathname === "/suggestions" ? "selected" : "unselected"}></div>
               <div>{t("nav.suggestions")}</div>
             </div>
+            <div
+              onClick={() => {
+                navigate("/groups");
+                setOpen(false);
+              }}
+            >
+              <div className={location.pathname.startsWith("/groups") ? "selected" : "unselected"}></div>
+              <div>{t("nav.groups")}</div>
+            </div>
           </div>
         </div>
         <div>

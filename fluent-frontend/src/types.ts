@@ -100,6 +100,28 @@ export interface ReviewProgress {
   answersRevealed: boolean[];
 }
 
+export interface GroupSummary {
+  _id: string;
+  name: string;
+  targetLanguage: string; // language label
+  memberCount: number;
+}
+
+export interface GroupMember {
+  userCourseId: string;
+  username: string;
+  score: number;
+  rank: string;
+}
+
+export interface GroupDetail {
+  _id: string;
+  name: string;
+  inviteCode: string;
+  targetLanguage: string; // language label
+  members: GroupMember[];
+}
+
 export interface DashboardData {
   progress: number;
   rank: string;

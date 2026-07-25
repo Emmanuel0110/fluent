@@ -23,6 +23,9 @@ import { DataProvider } from "./contexts/DataContext";
 import { ReviewSettingsProvider } from "./contexts/ReviewSettingsContext";
 import { CelebrationProvider } from "./contexts/CelebrationContext";
 import SuggestionList from "./components/SuggestionList";
+import GroupList from "./components/groups/GroupList";
+import GroupDetail from "./components/groups/GroupDetail";
+import MemberDashboard from "./components/groups/MemberDashboard";
 import AdminRoute from "./AdminRoute";
 import AdminFeedbacks from "./components/AdminFeedbacks";
 import Home from "./pages/Home";
@@ -68,6 +71,9 @@ export default function App() {
             <Route path="words" element={<WordListWithDetail />} />
             <Route path="words/:wordId" element={<WordListWithDetail />} />
             <Route path="suggestions" element={<SuggestionList />} />
+            <Route path="groups" element={<GroupList />} />
+            <Route path="groups/:groupId" element={<GroupDetail />} />
+            <Route path="groups/:groupId/members/:userCourseId" element={<MemberDashboard />} />
             <Route path="conversations" element={<ConversationListWithDetail />} />
             <Route path="conversations/:conversationId" element={<ConversationListWithDetail />} />
             <Route element={<AdminRoute redirectPath="suggestions" />}>

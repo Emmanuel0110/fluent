@@ -1,0 +1,174 @@
+.groups-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.groups-header,
+.group-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.groups-header h1,
+.group-detail-title h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+
+.groups-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.groups-empty {
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Group list */
+.groups-list,
+.member-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.group-row,
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.group-row:hover,
+.member-row:hover {
+  background: var(--bg-hover);
+}
+
+.group-row-flag {
+  width: 1.6rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+  border-radius: 2px;
+}
+
+.group-row-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.group-row-count {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Group detail header */
+.group-detail-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.group-detail-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.group-code-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.group-code-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.group-code {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-primary);
+  background: var(--bg-surface-muted);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+/* Member ranking */
+.member-rank-position {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.member-rank-badge {
+  width: 2.2rem;
+  height: 2.2rem;
+  flex: 0 0 auto;
+  display: inline-flex;
+}
+
+.member-name {
+  flex: 1;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.member-points {
+  color: var(--color-target);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Modals reuse the global .blockerDarkBackground / #above shell */
+.group-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1.25rem;
+}
+
+.group-error {
+  color: var(--color-danger);
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+}
+
+/* Member dashboard wrapper */
+.member-dashboard-wrapper {
+  height: 100%;
+  overflow: auto;
+}
+
+.group-back-link {
+  margin: 0.5rem 0 0 0.5rem;
+  padding: 0.25rem 0.5rem;
+  text-decoration: none;
+}

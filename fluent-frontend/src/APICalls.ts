@@ -1,6 +1,16 @@
 import { url } from "./App";
 import { authHeaders, customFetch, ApiError } from "./utils/http-helpers";
-import { CelebrationEvent, Conversation, ConversationTag, RowConversation, Word, WordTag } from "./types";
+import {
+  CelebrationEvent,
+  Conversation,
+  ConversationTag,
+  DashboardData,
+  GroupDetail,
+  GroupSummary,
+  RowConversation,
+  Word,
+  WordTag,
+} from "./types";
 import { groupById } from "./utils/generalUtils";
 import { formatWords } from "./utils/wordUtils";
 
@@ -267,6 +277,58 @@ export const getSuggestions = async (): Promise<RowConversation[]> => {
 export const getDashboardData = async () => {
   try {
     const res = await customFetch(url + "usercourses/dashboard", { headers: authHeaders() });
+    return res?.success ? res.data : null;
+  } catch {
+    return null;
+  }
+};
+
+export const fetchMyGroups = async (): Promise<GroupSummary[]> => {
+  try {
+    const res = await customFetch(url + "groups", { headers: authHeaders() });
+    return res?.success ? res.data : [];
+  } catch {
+    return [];
+  }
+};
+
+export const fetchGroup = async (groupId: string): Promise<GroupDetail | null> => {
+  try {
+    const res = await customFetch(url + "groups/" + groupId, { headers: authHeaders() });
+    return res?.success ? res.data : null;
+  } catch {
+    return null;
+  }
+};
+
+/** On success returns { success: true, data: { _id, name, inviteCode } }; on failure { success: false, message }. */
+export const createGroup = async (name: string) => {
+  return catchApiError(
+    customFetch(url + "groups", { method: "POST", headers: authHeaders(), body: JSON.stringify({ name }) })
+  );
+};
+
+/** On success returns { success: true, data: { _id, name } }; on failure { success: false, message }. */
+export const joinGroup = async (inviteCode: string) => {
+  return catchApiError(
+    customFetch(url + "groups/join", { method: "POST", headers: authHeaders(), body: JSON.stringify({ inviteCode }) })
+  );
+};
+
+export const leaveGroup = async (groupId: string) => {
+  return catchApiError(
+    customFetch(url + "groups/" + groupId + "/leave", { method: "POST", headers: authHeaders() })
+  );
+};
+
+export const getMemberDashboard = async (
+  groupId: string,
+  userCourseId: string
+): Promise<(DashboardData & { username?: string }) | null> => {
+  try {
+    const res = await customFetch(url + `groups/${groupId}/members/${userCourseId}/dashboard`, {
+      headers: authHeaders(),
+    });
     return res?.success ? res.data : null;
   } catch {
     return null;

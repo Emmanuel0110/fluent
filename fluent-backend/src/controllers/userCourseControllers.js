@@ -374,6 +374,35 @@ const nextReviewDelay = (delay) => {
   return index >= 0 && index < DELAYS.length - 1 ? DELAYS[index + 1] : delay;
 };
 
+// Builds the dashboard payload from a user course. Shared by the learner's own
+// dashboard route and the groups feature (which renders another member's dashboard
+// for the group's target language), so both stay in sync.
+export function buildDashboardData(userCourse) {
+  const score = scoreFromWords(userCourse && userCourse.words) || 0;
+  const currentRank = getRank(score);
+  const nextRankScore = getNextRankScore(score);
+  const previousRankScore = getPreviousRankScore(score);
+
+  // Calculate progress percentage
+  const progress = calculateProgress(score, previousRankScore, nextRankScore);
+
+  // Today's bar is computed live from the user's current words (same definition as
+  // the nightly script) so it reflects reviews completed since the script last ran,
+  // instead of appearing only after the end-of-day script closes out the day.
+  const todayScore = computeNumberOfKnownWords(userCourse);
+
+  // Get last 7 days of scores, ending with today's live count
+  const last7DaysScores = getLast7DaysScores(userCourse.dailyScores || [], todayScore);
+
+  return {
+    progress: progress,
+    rank: currentRank,
+    chartData: last7DaysScores,
+    currentStreak: userCourse.currentStreak || 0,
+    longestStreak: userCourse.longestStreak || 0,
+  };
+}
+
 async function getDashboardData(req, res) {
   try {
     const { userCourse } = req;
@@ -384,31 +413,9 @@ async function getDashboardData(req, res) {
       });
     }
 
-    const score = (await calculateUserScore(userCourse)) || 0;
-    const currentRank = getRank(score);
-    const nextRankScore = getNextRankScore(score);
-    const previousRankScore = getPreviousRankScore(score);
-
-    // Calculate progress percentage
-    const progress = calculateProgress(score, previousRankScore, nextRankScore);
-
-    // Today's bar is computed live from the user's current words (same definition as
-    // the nightly script) so it reflects reviews completed since the script last ran,
-    // instead of appearing only after the end-of-day script closes out the day.
-    const todayScore = computeNumberOfKnownWords(userCourse);
-
-    // Get last 7 days of scores, ending with today's live count
-    const last7DaysScores = getLast7DaysScores(userCourse.dailyScores || [], todayScore);
-
     res.json({
       success: true,
-      data: {
-        progress: progress,
-        rank: currentRank,
-        chartData: last7DaysScores,
-        currentStreak: userCourse.currentStreak || 0,
-        longestStreak: userCourse.longestStreak || 0,
-      },
+      data: buildDashboardData(userCourse),
     });
   } catch (error) {
     logger.error({ err: error }, "Dashboard error");
