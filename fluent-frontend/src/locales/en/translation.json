@@ -47,6 +47,7 @@
 
   "review.nothing": "Nothing to review",
   "review.see_suggestions": "See suggestions",
+  "review.start": "Start review",
   "review.reveal": "Reveal Answer",
   "review.next": "Next",
 
@@ -54,7 +55,6 @@
   "tutorial.next": "Next",
   "tutorial.review": "If a word doesn't come to you after 5 seconds, look at the answer",
   "tutorial.review_feel": "Feel the sentence as a whole, not just each word in isolation",
-  "tutorial.suggestions": "Tap the stars to add conversations to your review list",
   "tutorial.dashboard": "The number of learned words goes down when you don't review",
 
   "conversation.source_sentence": "Source sentence",
@@ -70,6 +70,10 @@
   "conversation.save": "Save conversation",
   "conversation.saved": "Saved!",
   "conversation.no_suggestion": "No suggestion available",
+  "conversation.add_to_review_deck": "Add to review deck",
+  "conversation.in_review_deck": "Already in your review deck",
+  "conversation.remove_from_review_deck_confirm": "Remove this conversation from your review deck?",
+  "conversation.open_detail": "Open conversation",
   "conversation.remove_suggestion": "Remove",
   "conversation.remove_suggestion_confirm": "Remove this conversation from your suggestions?",
   "conversation.add_prerequisite": "Add prerequisite",

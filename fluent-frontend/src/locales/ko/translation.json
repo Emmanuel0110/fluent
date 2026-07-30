@@ -47,6 +47,7 @@
 
   "review.nothing": "복습할 내용이 없습니다",
   "review.see_suggestions": "추천 보기",
+  "review.start": "복습 시작",
   "review.reveal": "정답 보기",
   "review.next": "다음",
 
@@ -54,7 +55,6 @@
   "tutorial.next": "다음",
   "tutorial.review": "5초 안에 단어가 떠오르지 않으면 정답을 확인하세요",
   "tutorial.review_feel": "각 단어를 따로 떠올리는 것이 아니라 문장 전체를 느껴야 합니다",
-  "tutorial.suggestions": "별표를 눌러 대화를 복습 목록에 추가하세요",
   "tutorial.dashboard": "복습하지 않으면 학습한 단어 수가 줄어듭니다",
 
   "conversation.source_sentence": "소스 문장",
@@ -70,6 +70,10 @@
   "conversation.save": "대화 저장",
   "conversation.saved": "저장됨!",
   "conversation.no_suggestion": "추천 없음",
+  "conversation.add_to_review_deck": "복습 덱에 추가",
+  "conversation.in_review_deck": "이미 복습 덱에 있습니다",
+  "conversation.remove_from_review_deck_confirm": "이 대화를 복습 덱에서 제거할까요?",
+  "conversation.open_detail": "대화 열기",
   "conversation.remove_suggestion": "제거",
   "conversation.remove_suggestion_confirm": "이 대화를 추천에서 제거하시겠습니까?",
   "conversation.add_prerequisite": "전제 추가",

@@ -144,8 +144,8 @@ export const deleteRemoteConversation = async (conversationId: string) => {
   );
 };
 
-export const subscribeToRemoteConversation = async (id: string) => {
-  const body = JSON.stringify({ conversationToSubscribe: id });
+export const subscribeToRemoteConversations = async (ids: string[]) => {
+  const body = JSON.stringify({ conversationsToSubscribe: ids });
   return catchApiError(
     customFetch(url + "usercourses", { method: "PATCH", headers: authHeaders(), body })
   );

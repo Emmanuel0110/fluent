@@ -47,6 +47,7 @@
 
   "review.nothing": "Rien à réviser",
   "review.see_suggestions": "Voir les suggestions",
+  "review.start": "Commencer la révision",
   "review.reveal": "Révéler la réponse",
   "review.next": "Suivant",
 
@@ -54,7 +55,6 @@
   "tutorial.next": "Suivant",
   "tutorial.review": "Si un mot ne te revient pas après 5 secondes, regarde la réponse",
   "tutorial.review_feel": "Ressens la phrase dans son ensemble, pas seulement chaque mot isolé",
-  "tutorial.suggestions": "Clique sur les étoiles pour ajouter des conversations à ta liste de révision",
   "tutorial.dashboard": "Le nombre de mots appris diminue quand vous ne révisez pas",
 
   "conversation.source_sentence": "Phrase source",
@@ -70,6 +70,10 @@
   "conversation.save": "Enregistrer la conversation",
   "conversation.saved": "Enregistré !",
   "conversation.no_suggestion": "Aucune suggestion disponible",
+  "conversation.add_to_review_deck": "Ajouter au paquet de révision",
+  "conversation.in_review_deck": "Déjà dans votre paquet de révision",
+  "conversation.remove_from_review_deck_confirm": "Retirer cette conversation de votre paquet de révision ?",
+  "conversation.open_detail": "Ouvrir la conversation",
   "conversation.remove_suggestion": "Retirer",
   "conversation.remove_suggestion_confirm": "Retirer cette conversation de vos suggestions ?",
   "conversation.add_prerequisite": "Ajouter un prérequis",

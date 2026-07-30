@@ -9,17 +9,27 @@ import { useAuth } from "../contexts/AuthContext";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { useTranslation } from "react-i18next";
 
+/**
+ * A conversation row. By default clicking it opens the conversation; when
+ * `onSelect` is given the row is in selection mode instead (used by the
+ * suggestion page), where clicking toggles the selection and the chevron is
+ * what opens the detail.
+ */
 export const ConversationLine = ({
   conversation,
   readOnly = false,
+  selected = false,
+  onSelect,
 }: {
   conversation: Conversation;
   readOnly?: boolean;
+  selected?: boolean;
+  onSelect?: () => void;
 }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { conversationId, wordId } = useParams();
-  const { deleteConversation, subscribeToConversation, unsubscribeToConversation } = useData();
+  const { deleteConversation } = useData();
   const { openConversation, editConversation } = useContext(ConfigContext) as Context;
   const [showConfirm, setShowConfirm] = useState(false);
   const lineRef = useRef<HTMLDivElement>(null);
@@ -41,13 +51,9 @@ export const ConversationLine = ({
     editConversation(conversation._id);
   };
 
-  const handleSubscribe = (e: React.MouseEvent) => {
+  const onOpen = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (conversation.subscribed) {
-      unsubscribeToConversation(conversation);
-    } else {
-      subscribeToConversation(conversation);
-    }
+    openConversation(conversation._id);
   };
 
   const onDelete = (e: React.MouseEvent) => {
@@ -66,8 +72,12 @@ export const ConversationLine = ({
       )}
       <div
         ref={lineRef}
-        className={"line" + (conversation._id === conversationId ? " selectedLine" : "")}
-        onClick={() => openConversation(conversation._id)}
+        className={
+          "line" +
+          (conversation._id === conversationId ? " selectedLine" : "") +
+          (selected ? " selectedForDeck" : "")
+        }
+        onClick={onSelect || (() => openConversation(conversation._id))}
       >
         <div className="sentenceLines">
           {conversation.multiLingualSentences.map((multiLingualSentence, index) => (
@@ -75,11 +85,8 @@ export const ConversationLine = ({
           ))}
         </div>
         <div className="lineOptions">
-          <div
-            className={"subscribe" + (conversation.subscribed ? " subscribed" : "")}
-            onClick={readOnly ? undefined : handleSubscribe}
-            style={readOnly ? { pointerEvents: "none" } : undefined}
-          ></div>
+          {conversation.subscribed && <div className="inDeckBadge" title={t("conversation.in_review_deck")}></div>}
+          {onSelect && <div className="openDetail" onClick={onOpen} title={t("conversation.open_detail")}></div>}
           {!readOnly && user?.isAdmin && (
             <>
               <div className="edit" onClick={onEdit}></div>

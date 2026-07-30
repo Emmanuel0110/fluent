@@ -321,7 +321,8 @@
     width: 100%;
   }
 
-  .subscribe {
+  .inDeckBadge,
+  .openDetail {
     width: 1.8rem;
     height: 1.8rem;
   }

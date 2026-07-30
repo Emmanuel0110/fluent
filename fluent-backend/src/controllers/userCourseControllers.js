@@ -17,7 +17,7 @@ async function updateLearningData(req, res) {
   try {
     const { userCourse, user } = req;
     if (userCourse) {
-      const { conversationToSubscribe, conversationToUnsubscribe, conversationToDismiss, reviewedConversationId, successArray } =
+      const { conversationsToSubscribe, conversationToUnsubscribe, conversationToDismiss, reviewedConversationId, successArray } =
         req.body;
       if (conversationToDismiss) {
         await dismissSuggestion(conversationToDismiss, userCourse);
@@ -26,11 +26,11 @@ async function updateLearningData(req, res) {
           "Dismissed suggestion",
         );
         res.json({ success: true });
-      } else if (conversationToSubscribe) {
-        await subscribeToConversation(conversationToSubscribe, userCourse);
+      } else if (conversationsToSubscribe) {
+        await subscribeToConversations(conversationsToSubscribe, userCourse);
         logger.info(
-          { userId: user._id, userCourseId: userCourse._id, conversationId: conversationToSubscribe },
-          "Subscribed to conversation",
+          { userId: user._id, userCourseId: userCourse._id, conversationIds: conversationsToSubscribe },
+          "Subscribed to conversations",
         );
         res.json({ success: true });
       } else if (conversationToUnsubscribe) {
@@ -101,31 +101,64 @@ async function dismissSuggestion(conversationToDismiss, userCourse) {
   );
 }
 
-async function subscribeToConversation(conversationToSubscribe, userCourse) {
-  if (!userCourse.conversations.find(({ _id }) => _id.equals(conversationToSubscribe))) {
-    await UserCourseModel.updateOne(
-      { _id: userCourse._id },
-      { $push: { conversations: { _id: conversationToSubscribe, lastReviewDate: new Date() } } },
-    );
-    const wordIds = await getWordIdsForConversation(conversationToSubscribe, userCourse.sourceLanguage);
-    const uniqIds = [...new Set(wordIds)];
-    const [wordUpdates, newWordIds] = uniqIds.reduce(
-      ([wordUpdates, newWordIds], wordId) => {
-        const word = userCourse.words.find(({ _id }) => _id.equals(wordId));
-        if (word) {
-          wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + 1 });
-        } else {
-          newWordIds.push(wordId);
-        }
-        return [wordUpdates, newWordIds];
-      },
-      [[], []],
-    );
-    if (wordUpdates.length > 0) await updateWordsSubscription(userCourse._id, wordUpdates);
-    if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds);
-  } else {
-    logger.debug({ conversationToSubscribe }, "Already subscribed to conversation");
+/**
+ * Adds every selected conversation to the review deck in a single pass. The word
+ * ref-counts are aggregated in memory before being written, so a word shared by
+ * several of the conversations is incremented once per conversation instead of
+ * each conversation overwriting the previous one's count.
+ */
+async function subscribeToConversations(conversationsToSubscribe, userCourse) {
+  const newConversationIds = conversationsToSubscribe.filter(
+    (conversationId) => !userCourse.conversations.find(({ _id }) => _id.equals(conversationId)),
+  );
+  if (newConversationIds.length === 0) {
+    logger.debug({ conversationsToSubscribe }, "Already subscribed to conversations");
+    return;
   }
+
+  await UserCourseModel.updateOne(
+    { _id: userCourse._id },
+    {
+      $push: {
+        conversations: { $each: newConversationIds.map((_id) => ({ _id, lastReviewDate: new Date() })) },
+      },
+    },
+  );
+
+  // getWordIdsForConversation already returns each word once per conversation, so
+  // the tally below counts how many of the added conversations use a given word.
+  const countByWordId = new Map();
+  for (const conversationId of newConversationIds) {
+    const wordIds = await getWordIdsForConversation(conversationId, userCourse.sourceLanguage);
+    for (const wordId of wordIds) {
+      countByWordId.set(wordId, (countByWordId.get(wordId) || 0) + 1);
+    }
+  }
+
+  const { wordUpdates, newWordIds } = computeSubscriptionUpdates(countByWordId, userCourse.words);
+
+  if (wordUpdates.length > 0) await updateWordsSubscription(userCourse._id, wordUpdates);
+  if (newWordIds.length > 0) await addNewWords(userCourse._id, newWordIds, countByWordId);
+}
+
+/**
+ * Splits the words introduced by a batch of conversations into the already known
+ * ones — whose ref-count grows by the number of conversations that use them — and
+ * the brand new ones. Adding the whole count at once is what keeps two
+ * conversations sharing a word from overwriting each other's increment.
+ */
+export function computeSubscriptionUpdates(countByWordId, words) {
+  const wordUpdates = [];
+  const newWordIds = [];
+  countByWordId.forEach((count, wordId) => {
+    const word = words.find(({ _id }) => _id.equals(wordId));
+    if (word) {
+      wordUpdates.push({ ...word, numberOfSentencesUsedIn: word.numberOfSentencesUsedIn + count });
+    } else {
+      newWordIds.push(wordId);
+    }
+  });
+  return { wordUpdates, newWordIds };
 }
 
 async function unsubscribeToConversation(conversationToUnsubscribe, userCourse) {
@@ -349,12 +382,14 @@ async function updateWords(userCourseId, updates) {
   }
 }
 
-async function addNewWords(userCourseId, newWordIds) {
+// countByWordId lets a batch subscription start a brand new word at the number of
+// conversations that introduced it; callers adding one conversation can omit it.
+async function addNewWords(userCourseId, newWordIds, countByWordId) {
   const newWords = newWordIds.map((wordId) => ({
     _id: wordId,
     nextReviewDate: new Date(Date.now()),
     reviewDelayInMs: 0,
-    numberOfSentencesUsedIn: 1,
+    numberOfSentencesUsedIn: countByWordId?.get(wordId) || 1,
   }));
   await UserCourseModel.updateOne({ _id: userCourseId }, { $push: { words: { $each: newWords } } });
 }

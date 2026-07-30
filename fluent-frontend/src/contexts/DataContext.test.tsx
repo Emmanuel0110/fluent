@@ -36,7 +36,7 @@ vi.mock("../APICalls", () => ({
   deleteRemoteConversation: vi.fn(),
   saveNewConversationTag: vi.fn(),
   editRemoteConversationTag: vi.fn(),
-  subscribeToRemoteConversation: vi.fn(),
+  subscribeToRemoteConversations: vi.fn(),
   unsubscribeToRemoteConversation: vi.fn(),
   dismissRemoteSuggestion: vi.fn(),
   updateRemoteConversationReviewStatus: vi.fn(),
@@ -83,6 +83,17 @@ const rowConv: RowConversation = {
   subscribed: false,
   conversations: [
     { language: SOURCE, sentences: [{ text: "Hello", prerequisites: [] }] },
+    { language: TARGET, sentences: [{ text: "Bonjour", prerequisites: [] }] },
+  ],
+};
+
+// A second conversation, so batch subscription can be checked against a list
+const otherRowConv: RowConversation = {
+  _id: "conv2",
+  tags: [],
+  subscribed: false,
+  conversations: [
+    { language: SOURCE, sentences: [{ text: "Good morning", prerequisites: [] }] },
     { language: TARGET, sentences: [{ text: "Bonjour", prerequisites: [] }] },
   ],
 };
@@ -412,40 +423,52 @@ describe("saveConversationTag", () => {
   });
 });
 
-// ------------------------------------------------------------------ subscribeToConversation
+// ------------------------------------------------------------------ subscribeToConversations
 
-describe("subscribeToConversation", () => {
-  it("sets subscribed=true for the conversation on success", async () => {
-    vi.mocked(APICalls.fetchConversations).mockResolvedValue([rowConv]);
-    vi.mocked(APICalls.subscribeToRemoteConversation).mockResolvedValue({ success: true });
+describe("subscribeToConversations", () => {
+  it("marks every given conversation as subscribed and sends them in one call", async () => {
+    vi.mocked(APICalls.fetchConversations).mockResolvedValue([rowConv, otherRowConv]);
+    vi.mocked(APICalls.subscribeToRemoteConversations).mockResolvedValue({ success: true });
 
     const result = await renderDataHook();
 
     act(() => {
-      result.current.subscribeToConversation(formattedConv);
+      result.current.subscribeToConversations(["conv1", "conv2"]);
     });
 
     await waitFor(() => {
-      const conv = result.current.conversations.find((c) => c._id === "conv1");
-      expect(conv?.subscribed).toBe(true);
+      expect(result.current.conversations.find((c) => c._id === "conv1")?.subscribed).toBe(true);
+      expect(result.current.conversations.find((c) => c._id === "conv2")?.subscribed).toBe(true);
     });
-    expect(APICalls.subscribeToRemoteConversation).toHaveBeenCalledWith("conv1");
+    expect(APICalls.subscribeToRemoteConversations).toHaveBeenCalledTimes(1);
+    expect(APICalls.subscribeToRemoteConversations).toHaveBeenCalledWith(["conv1", "conv2"]);
   });
 
-  it("does not update subscribed state when the API fails", async () => {
+  it("leaves conversations that were not selected untouched", async () => {
+    vi.mocked(APICalls.fetchConversations).mockResolvedValue([rowConv, otherRowConv]);
+    vi.mocked(APICalls.subscribeToRemoteConversations).mockResolvedValue({ success: true });
+
+    const result = await renderDataHook();
+
+    act(() => {
+      result.current.subscribeToConversations(["conv1"]);
+    });
+
+    await waitFor(() => {
+      expect(result.current.conversations.find((c) => c._id === "conv1")?.subscribed).toBe(true);
+    });
+    expect(result.current.conversations.find((c) => c._id === "conv2")?.subscribed).toBe(false);
+  });
+
+  it("does not call the API when nothing is selected", async () => {
     vi.mocked(APICalls.fetchConversations).mockResolvedValue([rowConv]);
-    vi.mocked(APICalls.subscribeToRemoteConversation).mockResolvedValue({ success: false });
 
     const result = await renderDataHook();
     act(() => {
-      result.current.subscribeToConversation(formattedConv);
+      result.current.subscribeToConversations([]);
     });
 
-    // Let the promise settle
-    await act(async () => {});
-
-    const conv = result.current.conversations.find((c) => c._id === "conv1");
-    expect(conv?.subscribed).toBe(false);
+    expect(APICalls.subscribeToRemoteConversations).not.toHaveBeenCalled();
   });
 });
 

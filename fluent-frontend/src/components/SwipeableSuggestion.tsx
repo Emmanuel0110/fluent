@@ -17,9 +17,13 @@ const MAX_TRANSLATE = 120;
 export function SwipeableSuggestion({
   conversation,
   onDismiss,
+  selected,
+  onSelect,
 }: {
   conversation: Conversation;
   onDismiss: (id: string) => void;
+  selected: boolean;
+  onSelect: () => void;
 }) {
   const { t } = useTranslation();
   const [offset, setOffset] = useState(0); // current translateX (<= 0, left only)
@@ -107,7 +111,7 @@ export function SwipeableSuggestion({
           onTouchEnd={handleTouchEnd}
           onClickCapture={handleClickCapture}
         >
-          <ConversationLine conversation={conversation} />
+          <ConversationLine conversation={conversation} selected={selected} onSelect={onSelect} />
         </div>
       </div>
     </>

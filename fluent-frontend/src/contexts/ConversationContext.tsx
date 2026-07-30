@@ -9,7 +9,7 @@ import {
   deleteRemoteConversation,
   saveNewConversationTag,
   editRemoteConversationTag,
-  subscribeToRemoteConversation,
+  subscribeToRemoteConversations,
   unsubscribeToRemoteConversation,
   dismissRemoteSuggestion,
   updateRemoteConversationReviewStatus,
@@ -40,7 +40,7 @@ interface ConversationContextType {
   saveConversation: (infos: Conversation) => Promise<string | undefined>;
   deleteConversation: (id: string) => Promise<void>;
   saveConversationTag: (infos: ConversationTag) => Promise<void>;
-  subscribeToConversation: (conversation: Conversation) => void;
+  subscribeToConversations: (conversationIds: string[]) => Promise<void>;
   unsubscribeToConversation: (conversation: Conversation) => void;
   fetchMoreUsedInConversations: (wordId: string) => void;
   fetchSuggestions: () => Promise<string[]>;
@@ -139,17 +139,17 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
     return !!(res && (res as { success?: boolean }).success);
   };
 
-  const subscribeToConversation = (conversation: Conversation) => {
-    const conversationId = conversation._id;
-    subscribeToRemoteConversation(conversationId).then((res) => {
-      if (res.success) {
-        setConversations((conversations) =>
-          conversations.map((conversation) =>
-            conversation._id === conversationId ? { ...conversation, subscribed: true } : conversation
-          )
-        );
-      }
-    });
+  // Optimistic: the deck is updated locally right away so adding a whole batch never
+  // blocks the UI. The promise is returned only for callers that must not run before
+  // the server knows about the new conversations (starting a review right after).
+  const subscribeToConversations = (conversationIds: string[]): Promise<void> => {
+    if (!conversationIds.length) return Promise.resolve();
+    setConversations((conversations) =>
+      conversations.map((conversation) =>
+        conversationIds.includes(conversation._id) ? { ...conversation, subscribed: true } : conversation
+      )
+    );
+    return subscribeToRemoteConversations(conversationIds).then(() => undefined);
   };
 
   const unsubscribeToConversation = (conversation: Conversation) => {
@@ -196,7 +196,7 @@ export const ConversationProvider: React.FC<{ children: ReactNode }> = ({ childr
         saveConversation,
         deleteConversation,
         saveConversationTag,
-        subscribeToConversation,
+        subscribeToConversations,
         unsubscribeToConversation,
         fetchMoreUsedInConversations,
         fetchSuggestions,

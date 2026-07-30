@@ -132,14 +132,16 @@ export const validateFeedbackQuery = [
 
 // User Course validation rules
 export const validateUpdateLearningData = [
-  body("conversationToSubscribe")
+  body("conversationsToSubscribe")
     .optional()
-    .custom((value) => {
-      if (value && !isValidObjectId(value)) {
-        throw new Error("Conversation ID must be a valid ObjectId");
-      }
-      return true;
-    }),
+    .isArray({ min: 1 })
+    .withMessage("conversationsToSubscribe must be a non-empty array"),
+  body("conversationsToSubscribe.*").custom((value) => {
+    if (!isValidObjectId(value)) {
+      throw new Error("Conversation ID must be a valid ObjectId");
+    }
+    return true;
+  }),
   body("conversationToUnsubscribe")
     .optional()
     .custom((value) => {
@@ -167,19 +169,21 @@ export const validateUpdateLearningData = [
   body("successArray").optional().isArray().withMessage("successArray must be an array"),
   body("successArray.*").optional().isBoolean().withMessage("Each element of successArray must be a boolean"),
   body().custom((value) => {
-    const hasConversationToSubscribe = !!value.conversationToSubscribe;
+    const hasConversationsToSubscribe = Array.isArray(value.conversationsToSubscribe)
+      ? value.conversationsToSubscribe.length > 0
+      : false;
     const hasConversationToUnsubscribe = !!value.conversationToUnsubscribe;
     const hasConversationToDismiss = !!value.conversationToDismiss;
     const hasReviewedConversationId = !!value.reviewedConversationId;
 
     if (
-      !hasConversationToSubscribe &&
+      !hasConversationsToSubscribe &&
       !hasConversationToUnsubscribe &&
       !hasConversationToDismiss &&
       !hasReviewedConversationId
     ) {
       throw new Error(
-        "At least one of conversationToSubscribe, conversationToUnsubscribe, conversationToDismiss, or reviewedConversationId must be provided"
+        "At least one of conversationsToSubscribe, conversationToUnsubscribe, conversationToDismiss, or reviewedConversationId must be provided"
       );
     }
 
