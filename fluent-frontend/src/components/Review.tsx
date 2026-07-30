@@ -8,6 +8,7 @@ import { updateCacheWithNewConversations } from "../utils/conversationUtils";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import ReviewItem from "./ReviewItem";
+import ReviewTimeSplash from "./ReviewTimeSplash";
 import { TutorialOverlay } from "./TutorialOverlay";
 import { useTranslation } from "react-i18next";
 
@@ -50,21 +51,28 @@ function Review() {
     });
   };
 
-  return reviewList.length === 0 ? (
-    <div>
-      <div id="nothingToReview">{t("review.nothing")}</div>
-      <div className="hcenter">
-        <Button onClick={() => navigate("/suggestions")}>{t("review.see_suggestions")}</Button>
-      </div>
-    </div>
-  ) : (
+  return (
     <>
-      <TutorialOverlay
-        tutorialId="review"
-        message={[t("tutorial.review"), t("tutorial.review_feel")]}
-        active={reviewList.length > 0}
-      />
-      <ReviewItem conversation={reviewList[0]} nextConversation={nextConversation} />
+      {/* Outside the branch below on purpose: the greeting shows on arrival, before
+          getReviewList() has said whether there is anything due. */}
+      <ReviewTimeSplash />
+      {reviewList.length === 0 ? (
+        <div>
+          <div id="nothingToReview">{t("review.nothing")}</div>
+          <div className="hcenter">
+            <Button onClick={() => navigate("/suggestions")}>{t("review.see_suggestions")}</Button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <TutorialOverlay
+            tutorialId="review"
+            message={[t("tutorial.review"), t("tutorial.review_feel")]}
+            active={reviewList.length > 0}
+          />
+          <ReviewItem conversation={reviewList[0]} nextConversation={nextConversation} />
+        </>
+      )}
     </>
   );
 }
