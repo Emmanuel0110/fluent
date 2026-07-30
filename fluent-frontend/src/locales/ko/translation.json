@@ -71,6 +71,7 @@
   "conversation.saved": "저장됨!",
   "conversation.no_suggestion": "추천 없음",
   "conversation.add_to_review_deck": "복습 덱에 추가",
+  "conversation.added_to_review_deck": "추가됨",
   "conversation.in_review_deck": "이미 복습 덱에 있습니다",
   "conversation.remove_from_review_deck_confirm": "이 대화를 복습 덱에서 제거할까요?",
   "conversation.open_detail": "대화 열기",

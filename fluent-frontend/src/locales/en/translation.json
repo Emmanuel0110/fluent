@@ -71,6 +71,7 @@
   "conversation.saved": "Saved!",
   "conversation.no_suggestion": "No suggestion available",
   "conversation.add_to_review_deck": "Add to review deck",
+  "conversation.added_to_review_deck": "Added",
   "conversation.in_review_deck": "Already in your review deck",
   "conversation.remove_from_review_deck_confirm": "Remove this conversation from your review deck?",
   "conversation.open_detail": "Open conversation",

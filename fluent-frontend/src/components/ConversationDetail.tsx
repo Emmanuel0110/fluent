@@ -14,6 +14,10 @@ export default function ConversationDetail({ conversation }: { conversation: Con
   const { user } = useAuth();
   const { t } = useTranslation();
   const [showConfirm, setShowConfirm] = useState(false);
+  // Id — not a flag — of the conversation added from here, so the "Ajouté"
+  // confirmation stays on that one conversation. Switching tabs re-renders this
+  // component instead of remounting it, so a flag would follow the user around.
+  const [justAddedId, setJustAddedId] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const searchTag = (tagId: string) => {
@@ -24,8 +28,14 @@ export default function ConversationDetail({ conversation }: { conversation: Con
     }
   };
 
+  const handleAdd = () => {
+    setJustAddedId(conversation._id);
+    subscribeToConversations([conversation._id]);
+  };
+
   const handleRemove = () => {
     setShowConfirm(false);
+    setJustAddedId(null);
     unsubscribeToConversation(conversation);
   };
 
@@ -68,10 +78,13 @@ export default function ConversationDetail({ conversation }: { conversation: Con
         {conversation.subscribed ? (
           <button type="button" className="deckButton inDeck" onClick={() => setShowConfirm(true)}>
             <span className="checkIcon"></span>
-            {t("conversation.in_review_deck")}
+            {/* Short confirmation right after the click, then the wording that makes
+                sense on a later visit. Both states remove, so a mistaken add is
+                undone from the same button. */}
+            {justAddedId === conversation._id ? t("conversation.added_to_review_deck") : t("conversation.in_review_deck")}
           </button>
         ) : (
-          <button type="button" className="deckButton add" onClick={() => subscribeToConversations([conversation._id])}>
+          <button type="button" className="deckButton add" onClick={handleAdd}>
             {t("conversation.add_to_review_deck")}
           </button>
         )}

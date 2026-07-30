@@ -71,6 +71,7 @@
   "conversation.saved": "Enregistré !",
   "conversation.no_suggestion": "Aucune suggestion disponible",
   "conversation.add_to_review_deck": "Ajouter au paquet de révision",
+  "conversation.added_to_review_deck": "Ajouté",
   "conversation.in_review_deck": "Déjà dans votre paquet de révision",
   "conversation.remove_from_review_deck_confirm": "Retirer cette conversation de votre paquet de révision ?",
   "conversation.open_detail": "Ouvrir la conversation",

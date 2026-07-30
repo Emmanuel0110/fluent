@@ -223,9 +223,13 @@ button:disabled {
   font-weight: 500;
 }
 
+/* Opaque on purpose: the row slides over .swipeAction, so anything translucent
+   in here (the deck selection tint, for one) would let the red show through. */
 .swipeContent {
   position: relative;
   z-index: 1;
+  background-color: var(--bg-surface);
+  border-radius: 10px;
   touch-action: pan-y; /* let the browser scroll vertically; we own horizontal */
   will-change: transform;
 }
@@ -565,13 +569,16 @@ a.nav-link {
   padding: 20px;
 }
 
+/* Above every panel that can be open behind a modal — the mobile detail panel
+   (999) and the mobile side menu (1000) both live in the root stacking context,
+   so an overlay portalled to <body> has to outrank them to be visible at all. */
 .blockerDarkBackground {
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: 20;
+  z-index: 1500;
   background-color: var(--shadow-overlay);
 }
 
