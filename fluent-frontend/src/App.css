@@ -123,10 +123,9 @@ button:disabled {
   background-color: var(--bg-selected);
 }
 
-/* Picked out for the review deck but not submitted yet. Uses an outline rather
-   than a background tint so it can never be read as "already in your deck". */
+/* Picked out for the review deck but not submitted yet. The tint sits over the
+   opaque .swipeContent behind it, so it reads as a wash rather than a fill. */
 .selectedForDeck {
-  outline: 2px solid var(--color-btn-primary);
   background-color: var(--accent-shadow);
 }
 
