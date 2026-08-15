@@ -77,6 +77,63 @@ describe("POST /api/users (register)", () => {
   });
 });
 
+describe("PATCH /api/users/display-name", () => {
+  const FAKE_TOKEN = "fake-token";
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    process.env.JWT_SECRET = "test-secret";
+    jest.spyOn(jwt, "verify").mockReturnValue({ _id: FAKE_USER_ID });
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it("returns 401 without an auth token", async () => {
+    const res = await request(app).patch("/api/users/display-name").send({ displayName: "Manu" });
+    expect(res.status).toBe(401);
+  });
+
+  it("saves the display name and leaves the username untouched", async () => {
+    const update = jest
+      .spyOn(UserModel, "findByIdAndUpdate")
+      .mockResolvedValue(fakeSavedUser({ displayName: "Manu" }));
+
+    const res = await request(app)
+      .patch("/api/users/display-name")
+      .set("x-auth-token", FAKE_TOKEN)
+      .send({ displayName: "  Manu  " });
+
+    expect(res.status).toBe(200);
+    expect(res.body.displayName).toBe("Manu");
+    expect(update).toHaveBeenCalledWith(FAKE_USER_ID, { displayName: "Manu" }, { new: true });
+  });
+
+  it("unsets the display name when given an empty string", async () => {
+    const update = jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue(fakeSavedUser());
+
+    const res = await request(app)
+      .patch("/api/users/display-name")
+      .set("x-auth-token", FAKE_TOKEN)
+      .send({ displayName: "" });
+
+    expect(res.status).toBe(200);
+    expect(res.body.displayName).toBe("");
+    expect(update).toHaveBeenCalledWith(FAKE_USER_ID, { $unset: { displayName: "" } }, { new: true });
+  });
+
+  it("returns 400 when the display name exceeds 30 characters", async () => {
+    const res = await request(app)
+      .patch("/api/users/display-name")
+      .set("x-auth-token", FAKE_TOKEN)
+      .send({ displayName: "x".repeat(31) });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+});
+
 describe("POST /api/users/auth (login)", () => {
   beforeEach(() => {
     jest.clearAllMocks();

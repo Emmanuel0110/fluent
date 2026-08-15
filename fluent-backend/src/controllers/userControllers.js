@@ -8,6 +8,7 @@ import {
   validateForgotPassword,
   validateResetPassword,
   validateUpdateEmail,
+  validateUpdateDisplayName,
 } from "../middleware/validation.js";
 import { asyncHandler } from "../middleware/errorHandler.js";
 import { sanitizeText } from "../utils/sanitize.js";
@@ -214,6 +215,23 @@ router.patch(
     if (existing) return res.status(409).json({ success: false, message: "Email already in use" });
     await UserModel.findByIdAndUpdate(req.user._id, { email: normalized });
     res.json({ success: true, email: normalized });
+  }),
+);
+
+// Cosmetic only: the login `username` is never touched here.
+router.patch(
+  "/display-name",
+  auth,
+  validateUpdateDisplayName,
+  asyncHandler(async function (req, res) {
+    const displayName = sanitizeText(req.body.displayName).trim();
+    const user = await UserModel.findByIdAndUpdate(
+      req.user._id,
+      // Unset rather than store "" so resolveDisplayName falls back to the username.
+      displayName ? { displayName } : { $unset: { displayName: "" } },
+      { new: true },
+    );
+    res.json({ success: true, displayName: user.displayName ?? "" });
   }),
 );
 
@@ -456,6 +474,7 @@ router.get(
       exportedAt: new Date().toISOString(),
       profile: {
         username: user.username,
+        displayName: user.displayName,
         email: user.email,
         oauthProvider: user.oauthProvider,
         lastLoginAt: user.lastLoginAt,

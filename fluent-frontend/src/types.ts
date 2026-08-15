@@ -3,7 +3,8 @@ import { Dispatch, SetStateAction } from "react";
 export interface User {
   isAdmin: boolean;
   _id: string;
-  username: string;
+  username: string; // login identifier, not editable
+  displayName?: string; // optional cosmetic label; falls back to username when unset
   email?: string;
   oauthProvider?: "google";
   sourceLanguage: string; //source language of the last course
@@ -109,7 +110,7 @@ export interface GroupSummary {
 
 export interface GroupMember {
   userCourseId: string;
-  username: string;
+  displayName: string;
   score: number;
   rank: string;
 }

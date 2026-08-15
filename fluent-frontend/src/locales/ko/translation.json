@@ -86,6 +86,8 @@
   "profile.manually": "수동 (클릭하여 확인)",
   "profile.delay": "지연 시간 (초):",
   "profile.dark_mode": "다크 모드",
+  "profile.display_name": "표시 이름",
+  "profile.display_name_hint": "대시보드와 그룹에 표시됩니다. 비워 두면 사용자 이름({{username}})이 사용됩니다.",
   "profile.email": "이메일 주소",
   "profile.data_privacy": "데이터 및 개인정보",
   "profile.privacy_policy": "개인정보처리방침",

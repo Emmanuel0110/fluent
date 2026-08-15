@@ -86,6 +86,8 @@
   "profile.manually": "Manuellement (cliquer pour révéler)",
   "profile.delay": "Délai (secondes) :",
   "profile.dark_mode": "Mode sombre",
+  "profile.display_name": "Nom affiché",
+  "profile.display_name_hint": "Affiché sur votre tableau de bord et dans vos groupes. Laissez vide pour utiliser votre nom d'utilisateur ({{username}}).",
   "profile.email": "Adresse email",
   "profile.data_privacy": "Données et confidentialité",
   "profile.privacy_policy": "Politique de confidentialité",

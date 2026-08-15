@@ -324,7 +324,7 @@ export const leaveGroup = async (groupId: string) => {
 export const getMemberDashboard = async (
   groupId: string,
   userCourseId: string
-): Promise<(DashboardData & { username?: string }) | null> => {
+): Promise<(DashboardData & { displayName?: string }) | null> => {
   try {
     const res = await customFetch(url + `groups/${groupId}/members/${userCourseId}/dashboard`, {
       headers: authHeaders(),

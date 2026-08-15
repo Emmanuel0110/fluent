@@ -181,6 +181,13 @@
 }
 
 /* Errors */
+.profile-field-hint {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
 .profile-error {
   color: var(--color-error, #dc3545);
   font-size: 0.85rem;

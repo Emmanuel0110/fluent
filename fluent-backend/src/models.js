@@ -24,6 +24,10 @@ export const ConversationTagModel = model("ConversationTag", ConversationTagSche
 const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true, trim: true },
+  // Free-form label shown in the UI (dashboard, group member lists). Purely
+  // cosmetic: `username` remains the login identifier and is never changed.
+  // Falls back to `username` when unset — see resolveDisplayName.
+  displayName: { type: String, trim: true, maxlength: 30 },
   password: { type: String, select: false }, // Made optional for OAuth users
   email: { type: String, trim: true, sparse: true, index: true },
   oauthProvider: { type: String, enum: ["google"] },

@@ -88,6 +88,19 @@ export const validateUpdateEmail = [
   handleValidationErrors,
 ];
 
+export const validateUpdateDisplayName = [
+  // An empty string is allowed and clears the display name, falling back to the username.
+  body("displayName")
+    .exists()
+    .withMessage("Display name is required")
+    .isString()
+    .withMessage("Display name must be a string")
+    .trim()
+    .isLength({ max: 30 })
+    .withMessage("Display name must be at most 30 characters"),
+  handleValidationErrors,
+];
+
 export const validateForgotPassword = [
   body("email").trim().notEmpty().withMessage("Email is required").isEmail().withMessage("Email must be valid"),
   handleValidationErrors,

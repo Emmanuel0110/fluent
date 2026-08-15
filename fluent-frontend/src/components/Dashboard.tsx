@@ -8,15 +8,15 @@ import { useTranslation } from "react-i18next";
 
 interface DashboardProps {
   // Custom loader — used to render another group member's dashboard (whose payload
-  // also carries `username`). Defaults to the authenticated user's own dashboard.
-  fetcher?: () => Promise<(DashboardData & { username?: string }) | null>;
+  // also carries `displayName`). Defaults to the authenticated user's own dashboard.
+  fetcher?: () => Promise<(DashboardData & { displayName?: string }) | null>;
   // The dashboard tutorial only makes sense on the learner's own dashboard.
   showTutorial?: boolean;
 }
 
 function Dashboard({ fetcher, showTutorial = true }: DashboardProps = {}) {
   const { t } = useTranslation();
-  const [dashboardData, setDashboardData] = useState<(DashboardData & { username?: string }) | null>(null);
+  const [dashboardData, setDashboardData] = useState<(DashboardData & { displayName?: string }) | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ function Dashboard({ fetcher, showTutorial = true }: DashboardProps = {}) {
         <TutorialOverlay tutorialId="dashboard" message={t("tutorial.dashboard")} active={true} />
       )}
       <div className="dashboard-header">
-        <h1>{dashboardData.username ?? t("dashboard.title")}</h1>
+        <h1>{dashboardData.displayName ?? t("dashboard.title")}</h1>
       </div>
 
       <div className="dashboard-section">

@@ -125,6 +125,15 @@ export const updateEmail = (email: string): Promise<string> => {
   }).then((res: any) => res.email);
 };
 
+/** Resolves to the saved display name — "" when cleared, meaning the username is shown instead. */
+export const updateDisplayName = (displayName: string): Promise<string> => {
+  return customFetch(url + "users/display-name", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify({ displayName }),
+  }).then((res: any) => res.displayName);
+};
+
 export const forgotPassword = (
   email: string,
   setSuccess: (msg: string) => void,

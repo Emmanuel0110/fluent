@@ -86,6 +86,8 @@
   "profile.manually": "Manually (click to reveal)",
   "profile.delay": "Delay (seconds):",
   "profile.dark_mode": "Dark mode",
+  "profile.display_name": "Display name",
+  "profile.display_name_hint": "Shown on your dashboard and to your groups. Leave empty to use your username ({{username}}).",
   "profile.email": "Email address",
   "profile.data_privacy": "Data & Privacy",
   "profile.privacy_policy": "Privacy policy",

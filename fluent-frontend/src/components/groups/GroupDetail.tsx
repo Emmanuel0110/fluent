@@ -74,7 +74,7 @@ function GroupDetail() {
             <span className="member-rank-badge">
               <RankBadge rank={member.rank} />
             </span>
-            <span className="member-name">{member.username}</span>
+            <span className="member-name">{member.displayName}</span>
             <span className="member-points">
               {member.score} {t("group.points")}
             </span>

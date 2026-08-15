@@ -4,11 +4,12 @@ import { useReviewSettings } from "../../contexts/ReviewSettingsContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../contexts/LanguageContext";
-import { updateEmail, exportUserData } from "../../auth/authActions";
+import { updateEmail, updateDisplayName, exportUserData } from "../../auth/authActions";
 import { ApiError } from "../../utils/http-helpers";
 import { useNavigate } from "react-router-dom";
 import DeleteAccountConfirmDialog from "./DeleteAccountConfirmDialog";
 import { nativeNames, translatedNames } from "../../constants/languages";
+import { User } from "../../types";
 import { FlagIcon } from "../../utils/FlagIcon";
 
 function Profile() {
@@ -23,6 +24,8 @@ function Profile() {
   const [autoReviewDelay, setAutoReviewDelay] = useState<number>(settings.autoReviewDelay);
   const [tempEmail, setTempEmail] = useState(user?.email ?? "");
   const [emailError, setEmailError] = useState("");
+  const [tempDisplayName, setTempDisplayName] = useState(user?.displayName ?? "");
+  const [displayNameError, setDisplayNameError] = useState("");
   const [tempSourceLanguage, setTempSourceLanguage] = useState<string>(sourceLanguage);
   const [tempTargetLanguage, setTempTargetLanguage] = useState<string>(targetLanguage);
   const [langError, setLangError] = useState("");
@@ -43,6 +46,7 @@ function Profile() {
   const handleSave = async () => {
     setSaving(true);
     setEmailError("");
+    setDisplayNameError("");
     setLangError("");
 
     updateSettings({ reviewMode, autoReviewDelay, theme: tempTheme });
@@ -62,16 +66,32 @@ function Profile() {
       }
     }
 
+    // Accumulated and applied in a single setUser at the end: `user` is captured by
+    // this closure, so setting it per-field would make each call drop the previous one.
+    const userUpdates: Partial<User> = {};
+
+    const trimmedDisplayName = tempDisplayName.trim();
+    if (trimmedDisplayName !== (user?.displayName ?? "")) {
+      try {
+        const saved = await updateDisplayName(trimmedDisplayName);
+        userUpdates.displayName = saved || undefined;
+      } catch (err) {
+        setDisplayNameError(err instanceof ApiError ? err.userMessage : String(err));
+        hasError = true;
+      }
+    }
+
     const normalizedEmail = tempEmail.trim().toLowerCase();
     if (normalizedEmail !== (user?.email ?? "")) {
       try {
-        const saved = await updateEmail(normalizedEmail);
-        setUser({ ...user!, email: saved });
+        userUpdates.email = await updateEmail(normalizedEmail);
       } catch (err) {
         setEmailError(err instanceof ApiError ? err.userMessage : String(err));
         hasError = true;
       }
     }
+
+    if (user && Object.keys(userUpdates).length > 0) setUser({ ...user, ...userUpdates });
 
     setSaving(false);
     if (!hasError) navigate(-1);
@@ -202,6 +222,23 @@ function Profile() {
 
         <section className="profile-section">
           <h2 className="profile-section-heading">{t("profile.section_account")}</h2>
+          <div className="profile-field">
+            <label htmlFor="profile-display-name">{t("profile.display_name")}</label>
+            <input
+              id="profile-display-name"
+              type="text"
+              maxLength={30}
+              value={tempDisplayName}
+              placeholder={user?.username ?? ""}
+              onChange={(e) => {
+                setTempDisplayName(e.target.value);
+                setDisplayNameError("");
+              }}
+              className="profile-input"
+            />
+            <p className="profile-field-hint">{t("profile.display_name_hint", { username: user?.username ?? "" })}</p>
+            {displayNameError && <p className="profile-error">{displayNameError}</p>}
+          </div>
           <div className="profile-field">
             <label htmlFor="profile-email">{t("profile.email")}</label>
             <input

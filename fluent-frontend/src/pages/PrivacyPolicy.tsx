@@ -25,8 +25,8 @@ const PrivacyPolicy: React.FC = () => {
           <h2>2. Data we collect</h2>
           <ul>
             <li>
-              <strong>Account data</strong>: username, email address, hashed password (or OAuth provider identifier for
-              Google sign-in).
+              <strong>Account data</strong>: username, optional display name, email address, hashed password (or OAuth
+              provider identifier for Google sign-in).
             </li>
             <li>
               <strong>Learning data</strong>: words, conversations, review scores, and progress history tied to your

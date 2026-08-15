@@ -4,6 +4,7 @@ import { validateCreateGroup, validateJoinGroup } from "../middleware/validation
 import { GroupModel, UserCourseModel } from "../models.js";
 import { buildDashboardData, scoreFromWords, getRank } from "./userCourseControllers.js";
 import { logger } from "../logger.js";
+import { resolveDisplayName } from "../utils/displayName.js";
 import sanitizeHtml from "sanitize-html";
 import crypto from "crypto";
 import express from "express";
@@ -130,7 +131,7 @@ router.get("/:groupId", auth, async (req, res, next) => {
   try {
     const group = await GroupModel.findById(req.params.groupId)
       .populate("targetLanguage", "label")
-      .populate("members.user", "username")
+      .populate("members.user", "username displayName")
       .populate("members.userCourse", "words")
       .lean();
 
@@ -149,7 +150,7 @@ router.get("/:groupId", auth, async (req, res, next) => {
         const score = scoreFromWords(m.userCourse.words);
         return {
           userCourseId: m.userCourse._id,
-          username: m.user.username,
+          displayName: resolveDisplayName(m.user),
           score,
           rank: getRank(score),
         };
@@ -176,7 +177,7 @@ router.get("/:groupId", auth, async (req, res, next) => {
 router.get("/:groupId/members/:userCourseId/dashboard", auth, async (req, res, next) => {
   try {
     const { groupId, userCourseId } = req.params;
-    const group = await GroupModel.findById(groupId).populate("members.user", "username").lean();
+    const group = await GroupModel.findById(groupId).populate("members.user", "username displayName").lean();
     if (!group) {
       return res.status(404).json({ success: false, message: "Group not found" });
     }
@@ -194,7 +195,7 @@ router.get("/:groupId/members/:userCourseId/dashboard", auth, async (req, res, n
 
     res.json({
       success: true,
-      data: { ...buildDashboardData(userCourse), username: target.user?.username },
+      data: { ...buildDashboardData(userCourse), displayName: resolveDisplayName(target.user) },
     });
   } catch (error) {
     next(error);

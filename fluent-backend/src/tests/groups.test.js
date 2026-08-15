@@ -160,8 +160,25 @@ describe("Groups API", () => {
       const res = await request(app).get(`/api/groups/${GROUP_ID}`).set("x-auth-token", FAKE_TOKEN);
 
       expect(res.status).toBe(200);
-      expect(res.body.data.members.map((m) => m.username)).toEqual(["ace", "me"]);
+      expect(res.body.data.members.map((m) => m.displayName)).toEqual(["ace", "me"]);
       expect(res.body.data.members[0].score).toBeGreaterThan(res.body.data.members[1].score);
+    });
+
+    it("shows a member's displayName instead of their username when set", async () => {
+      stubGroup({
+        _id: GROUP_ID,
+        name: "Team",
+        inviteCode: "ABC123",
+        targetLanguage: { label: "en" },
+        members: [
+          { user: { _id: new mongoose.Types.ObjectId(USER_ID), username: "me", displayName: "Emmanuel" }, userCourse: { _id: new mongoose.Types.ObjectId(COURSE_ID), words: [] } },
+        ],
+      });
+
+      const res = await request(app).get(`/api/groups/${GROUP_ID}`).set("x-auth-token", FAKE_TOKEN);
+
+      expect(res.status).toBe(200);
+      expect(res.body.data.members[0].displayName).toBe("Emmanuel");
     });
 
     it("returns 403 when the requester is not a member", async () => {
