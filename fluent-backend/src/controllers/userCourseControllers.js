@@ -489,12 +489,22 @@ export async function calculateUserScore(userCourse) {
 
 // Ranks ordered from lowest to highest; the index is used to detect a rank-up.
 const RANK_ORDER = ["Beginner", "Amateur", "Advanced", "Expert"];
+// Score at which each rank of RANK_ORDER starts. The rank lookup and the progress
+// bar both derive from this single list so their bands can never drift apart.
+const RANK_THRESHOLDS = [0, 1000, 3000, 10000];
+// Target used to keep the bar moving once the highest rank is reached.
+const BEYOND_EXPERT_SCORE = 100000;
 
 export function getRank(score) {
-  if (score >= 10000) return "Expert";
-  if (score >= 3000) return "Advanced";
-  if (score >= 1000) return "Amateur";
-  return "Beginner";
+  return RANK_ORDER[rankIndex(score)];
+}
+
+function rankIndex(score) {
+  let index = 0;
+  for (let i = 0; i < RANK_THRESHOLDS.length; i++) {
+    if (score >= RANK_THRESHOLDS[i]) index = i;
+  }
+  return index;
 }
 
 /**
@@ -508,18 +518,15 @@ export function rankCrossed(previousRank, scoreAfter) {
   return RANK_ORDER.indexOf(rankAfter) > RANK_ORDER.indexOf(previousRank) ? rankAfter : null;
 }
 
+// Score that ends the current rank band: the next rank's threshold, or a target
+// beyond Expert once the last rank is reached.
 function getNextRankScore(currentScore) {
-  if (currentScore < 1000) return 1000;
-  if (currentScore < 3000) return 3000;
-  if (currentScore < 10000) return 10000;
-  return 100000; // Beyond expert
+  return RANK_THRESHOLDS[rankIndex(currentScore) + 1] ?? BEYOND_EXPERT_SCORE;
 }
 
+// Score that starts the current rank band, so the bar resets to 0% on a rank-up.
 function getPreviousRankScore(currentScore) {
-  if (currentScore >= 800) return 300;
-  if (currentScore >= 300) return 100;
-  if (currentScore >= 100) return 0;
-  return 0;
+  return RANK_THRESHOLDS[rankIndex(currentScore)];
 }
 
 function calculateProgress(currentScore, previousScore, nextScore) {
