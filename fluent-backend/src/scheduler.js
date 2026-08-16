@@ -1,6 +1,7 @@
 import cron from "node-cron";
 import { updateAllUserScores } from "./scripts/updateUserScores.js";
 import { cleanupOldData } from "./scripts/cleanupOldData.js";
+import { checkReferentialIntegrity } from "./scripts/checkIntegrity.js";
 import { logger } from "./logger.js";
 
 // Daily jobs, run in-process so they fire as long as the backend is up — no
@@ -8,8 +9,11 @@ import { logger } from "./logger.js";
 //   00:05 — record the previous day's end-of-day score for every user course.
 //   00:10 — delete old feedback and inactive accounts (runs after the score
 //           update, preserving the original cron ordering).
+//   00:15 — report dangling ObjectId references (read-only; runs last so it sees
+//           the state the cleanup left behind).
 const DAILY_SCORE_UPDATE = "5 0 * * *";
 const DAILY_CLEANUP = "10 0 * * *";
+const DAILY_INTEGRITY_CHECK = "15 0 * * *";
 
 const tasks = [];
 
@@ -36,10 +40,11 @@ export function startScheduler() {
   tasks.push(
     cron.schedule(DAILY_SCORE_UPDATE, runSafely("update-scores", updateAllUserScores), { timezone }),
     cron.schedule(DAILY_CLEANUP, runSafely("cleanup-data", () => cleanupOldData({ dryRun: false })), { timezone }),
+    cron.schedule(DAILY_INTEGRITY_CHECK, runSafely("check-integrity", checkReferentialIntegrity), { timezone }),
   );
 
   logger.info(
-    { scoreUpdate: DAILY_SCORE_UPDATE, cleanup: DAILY_CLEANUP, timezone },
+    { scoreUpdate: DAILY_SCORE_UPDATE, cleanup: DAILY_CLEANUP, integrityCheck: DAILY_INTEGRITY_CHECK, timezone },
     "Daily jobs scheduled",
   );
   return tasks;
