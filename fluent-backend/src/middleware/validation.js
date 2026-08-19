@@ -1,5 +1,6 @@
 import { body, param, query, validationResult } from "express-validator";
 import mongoose from "mongoose";
+import { SUPPORTED_LANGUAGES } from "../services/googleTts.js";
 
 // Middleware to handle validation errors
 export const handleValidationErrors = (req, res, next) => {
@@ -426,5 +427,26 @@ export const validateJoinGroup = [
     .withMessage("Invite code is required")
     .isString()
     .withMessage("Invite code must be a string"),
+  handleValidationErrors,
+];
+
+export const validateTtsRequest = [
+  body("text")
+    .isString()
+    .withMessage("Text must be a string")
+    .bail()
+    .trim()
+    .notEmpty()
+    .withMessage("Text is required")
+    // Sentences and vocabulary entries are short; the cap only exists to keep a
+    // single request from burning a large share of the monthly quota.
+    .isLength({ max: 500 })
+    .withMessage("Text must be at most 500 characters"),
+  body("language")
+    .isString()
+    .withMessage("Language must be a string")
+    .bail()
+    .isIn(SUPPORTED_LANGUAGES)
+    .withMessage(`Language must be one of: ${SUPPORTED_LANGUAGES.join(", ")}`),
   handleValidationErrors,
 ];

@@ -357,3 +357,21 @@ export const fetchFeedbacks = async (page: number = 1, limit: number = 50) => {
     return { feedbacks: [], pagination: null };
   }
 };
+
+/**
+ * Absolute URL of the synthesized audio for a sentence, or null when the backend
+ * cannot produce it (no credentials configured, network error). The returned path
+ * is rooted at the API origin rather than under /api, hence resolving it against `url`.
+ */
+export const fetchSpeechUrl = async (text: string, language: string): Promise<string | null> => {
+  try {
+    const res = await customFetch(url + "tts", {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify({ text, language }),
+    });
+    return res?.success ? new URL(res.data.url, url).href : null;
+  } catch {
+    return null;
+  }
+};
