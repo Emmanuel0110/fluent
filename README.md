@@ -1,15 +1,77 @@
-# Fluent — Dev Setup
+# Fluent
 
-A language learning app with a React/TypeScript frontend and a Node.js/Express backend.
+Spaced-repetition language learning from bilingual conversations. React/TypeScript
+SPA, Node/Express API, MongoDB.
 
-## Prerequisites
+Production: **[fluent.study](https://fluent.study)**
+Content pipeline: [fluent-content-macros](https://github.com/Emmanuel0110/fluent-content-macros)
+
+![Conversation review](fluent-frontend/src/pages/slides/conversation-review.png)
+
+## Data model
+
+Scheduling operates on lexical items; exposure happens through conversations.
+
+| Collection | Shape |
+|---|---|
+| `LexicalItem` | One word, expression or grammar pattern, in one language. `translations[]` holds `{ language, lexicalItems[] }` — a many-to-many graph across languages, not a pair. `tags[] → WordTag`. |
+| `MultiLingualConversation` | One exchange in several languages. Each sentence carries `prerequisites[] → LexicalItem`. |
+| `UserCourse` | One (source, target) pair per user. `words[]` carries `nextReviewDate` per item, `conversations[]` carries `lastReviewDate`. Plus score, streaks, rank, milestones. |
+| `Story` / `StoryNode` | Node graph. Each node has `prerequisites[] → LexicalItem` and `nextIds[]`; a node opens once its prerequisites are acquired. |
+
+A `LexicalItem` id is referenced from four sites:
+`LexicalItem.translations[].lexicalItems`, `UserCourse.words[]._id`,
+`MultiLingualConversation…sentences[].prerequisites`, `StoryNode.prerequisites`.
+Merging or deleting an item repoints all four — see the pipeline repo.
+
+## Constraints
+
+- **Item text is an identity key.** `-고 싶다` and `-고 싶어요` stored as two rows
+  split one learner's progress across both. Citation-form conventions are enforced
+  at generation time in the pipeline repo.
+- **Vocabulary syncs incrementally.** The client caches words in local storage and
+  calls `GET /api/words?lastUpdateDate=…` for the delta.
+- **Redis is optional in development.** `--no-redis` skips the cache middleware;
+  MongoDB is the only hard dependency.
+- **Audio is pre-generated** per sentence, after translation review, and cached.
+  Not synthesised at request time.
+
+## Stack
+
+| | |
+|---|---|
+| Frontend | React 18, TypeScript 5, Vite 7, vite-plugin-pwa (service worker), i18next (en/fr/ko) |
+| Backend | Express 4, Mongoose 8, Redis, JWT + Google OAuth, Google Cloud TTS, pino |
+| Tooling | Jest, Vitest, GitHub Actions, PM2, Node 20 |
+
+## Tests
+
+85 backend (Jest, supertest, models mocked — no database needed), 27 frontend
+(Vitest, Testing Library).
+
+```bash
+cd fluent-backend  && npm test
+cd fluent-frontend && npm test
+```
+
+## CI/CD
+
+`.github/workflows/node.js.yml`. A `test` job runs both suites and the frontend
+build; `deploy` declares `needs: test`. Pull requests run tests without deploying.
+Deployment is ssh, build, `rsync` into the API's static directory, `pm2 reload` —
+with `script_stop` set, so a failing step aborts the rest of the script instead of
+publishing the previous build.
+
+## Local setup
+
+### Prerequisites
 
 - **Node.js** (v18+)
 - **npm**
 - A **MongoDB Atlas** cluster (connection details go in the backend `.env`) — don't forget to whitelist your IP in Atlas under **Network Access** before connecting
 - A **Redis** instance (optional — the backend skips it when started with `--no-redis`)
 
-## 1. Install dependencies
+### 1. Install dependencies
 
 Run this once from the repo root. It installs root-level tooling (concurrently) and the dependencies for both workspaces.
 
@@ -19,9 +81,9 @@ cd fluent-backend && npm install
 cd ../fluent-frontend && npm install
 ```
 
-## 2. Configure environment variables
+### 2. Configure environment variables
 
-### Backend — `fluent-backend/.env`
+#### Backend — `fluent-backend/.env`
 
 Create the file with the following keys:
 
@@ -43,7 +105,7 @@ GOOGLE_REDIRECT_URI=http://localhost:3000/login?provider=google
 FRONTEND_URL=http://localhost:3000
 ```
 
-### Frontend — `fluent-frontend/.env.development`
+#### Frontend — `fluent-frontend/.env.development`
 
 Create the file with the following keys:
 
@@ -51,7 +113,7 @@ Create the file with the following keys:
 VITE_API_URL=http://localhost:4001/api/
 ```
 
-## 3. Start the dev servers
+### 3. Start the dev servers
 
 From the **repo root**, run both servers concurrently:
 
@@ -71,7 +133,7 @@ npm run dev:backend   # backend only
 npm run dev:frontend  # frontend only
 ```
 
-## 4. Running tests
+### 4. Running tests
 
 ```bash
 # Backend (Jest + supertest)
