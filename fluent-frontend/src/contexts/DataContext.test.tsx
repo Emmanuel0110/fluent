@@ -52,6 +52,7 @@ vi.mock("../services/localStorageService", () => ({
       localStorageWords: null,
       lastUpdateDate: undefined,
       updateLocalStorageWords: vi.fn(),
+      clearCache: vi.fn(),
     };
   }),
 }));
@@ -62,7 +63,19 @@ const SOURCE = "en";
 const TARGET = "fr";
 
 const wordTag: WordTag = { _id: "wtag1", language: SOURCE, label: "greetings" };
+// The formatted shape the context exposes to components.
 const convTag: ConversationTag = { _id: "ctag1", sourceLabel: "greetings", targetLabel: "salutations" };
+
+// The shape the API actually returns: one label per language, flattened
+// client-side by formatConversationTags. Mocks must return this, not convTag —
+// a mock that answers with the formatted shape is testing a fiction.
+const rawConvTag = {
+  _id: "ctag1",
+  labels: [
+    { language: SOURCE, label: "greetings" },
+    { language: TARGET, label: "salutations" },
+  ],
+};
 
 // RowWord as the API returns it (save/edit endpoints)
 const rowWord: RowWord = {
@@ -161,7 +174,7 @@ afterEach(() => {
 describe("loadAllData", () => {
   it("fetches wordTags, conversationTags, words, and conversations on mount", async () => {
     vi.mocked(APICalls.fetchWordTags).mockResolvedValue([wordTag]);
-    vi.mocked(APICalls.fetchConversationTags).mockResolvedValue([convTag]);
+    vi.mocked(APICalls.fetchConversationTags).mockResolvedValue([rawConvTag]);
     vi.mocked(APICalls.fetchWords).mockResolvedValue({ [formattedWord._id]: formattedWord });
     vi.mocked(APICalls.fetchConversations).mockResolvedValue([rowConv]);
 
@@ -400,7 +413,7 @@ describe("deleteConversation", () => {
 describe("saveConversationTag", () => {
   it("calls saveNewConversationTag for a new tag and adds it to state", async () => {
     const newTag: ConversationTag = { _id: "", sourceLabel: "a", targetLabel: "b" };
-    vi.mocked(APICalls.saveNewConversationTag).mockResolvedValue({ success: true, data: convTag });
+    vi.mocked(APICalls.saveNewConversationTag).mockResolvedValue({ success: true, data: rawConvTag });
 
     const result = await renderDataHook();
     await act(async () => {
@@ -412,7 +425,7 @@ describe("saveConversationTag", () => {
   });
 
   it("calls editRemoteConversationTag for an existing tag", async () => {
-    vi.mocked(APICalls.editRemoteConversationTag).mockResolvedValue({ success: true, data: convTag });
+    vi.mocked(APICalls.editRemoteConversationTag).mockResolvedValue({ success: true, data: rawConvTag });
 
     const result = await renderDataHook();
     await act(async () => {
